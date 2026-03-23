@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our History – Nukala Family Tree</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .timeline {
+      position: relative;
+      max-width: 760px;
+      margin: 0 auto;
+      padding-left: 32px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--sage-light), var(--gold-light), var(--sage-light));
+      border-radius: 2px;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 48px;
+      padding-left: 28px;
+      animation: fadeIn 0.6s ease forwards;
+      opacity: 0;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -7px; top: 6px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--warm-white);
+      border: 2.5px solid var(--sage);
+    }
+
+    .timeline-item.gold-dot::before { border-color: var(--gold); }
+
+    .timeline-year {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 6px;
+    }
+
+    .timeline-item.gold-dot .timeline-year { color: var(--gold); }
+
+    .timeline-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+
+    .timeline-body {
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      font-weight: 300;
+      max-width: 600px;
+    }
+
+    .timeline-tag {
+      display: inline-block;
+      background: var(--sage-light);
+      color: var(--sage-dark);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-top: 10px;
+    }
+
+    .timeline-item.gold-dot .timeline-tag {
+      background: var(--gold-light);
+      color: #8a6a00;
+    }
+
+    .history-intro {
+      max-width: 680px;
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 52px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+    }
+
+    .add-story-bar {
+      background: linear-gradient(135deg, #f0f5f0, #faf8f4);
+      border: 1px solid var(--sage-light);
+      border-radius: 16px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    .add-story-bar p {
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    .add-story-bar strong { color: var(--sage-dark); }
+
+    .btn-outline {
+      padding: 11px 22px;
+      border: 1.5px solid var(--sage);
+      color: var(--sage-dark);
+      background: white;
+      border-radius: 10px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-outline:hover {
+      background: var(--sage-dark);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+
+  <nav>
+    <a class="nav-brand" href="home.html">🌳 <span>Nukala</span> Family Tree</a>
+    <ul class="nav-links">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="tree.html">Family Tree</a></li>
+      <li><a href="history.html" class="active">Our History</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-logout" onclick="logout()">Sign Out</button>
+  </nav>
+
+  <main>
+    <div class="page-hero">
+      <p class="eyebrow">Our Story</p>
+      <h1>The <em>Nukala</em> Family History</h1>
+      <div class="hero-divider"></div>
+      <p>A journey through time — the milestones, moments, and memories that shaped who we are.</p>
+    </div>
+
+    <div class="content-area">
+      <p class="history-intro fade-in">
+        "A family's story is a river — it flows through time, carves its own path, and nourishes everything it touches. Here begins the story of the Nukala family."
+      </p>
+
+      <div class="add-story-bar fade-in stagger-2">
+        <p><strong>Have a family story to share?</strong><br>Contribute your memories, milestones, or historical details to this archive.</p>
+        <a class="btn-outline" href="contact.html">+ Add a Story</a>
+      </div>
+
+      <div class="timeline">
+
+        <div class="timeline-item gold-dot fade-in stagger-1">
+          <div class="timeline-year">Origins</div>
+          <div class="timeline-title">The Nukala Family Roots</div>
+          <div class="timeline-body">
+            The Nukala family traces its origins to India, with a rich heritage spanning multiple generations. Edit this section to add the real story of your ancestors — where they came from, what they did, and what they believed in.
+          </div>
+          <span class="timeline-tag">📍 Origins</span>
+        </div>
+
+        <div class="timeline-item fade-in stagger-2">
+          <div class="timeline-year">Early Days</div>
+          <div class="timeline-title">Founding the Family</div>
+          <div class="timeline-body">
+            Add the story of how your grandparents or great-grandparents built their lives, their professions, their faith, and the values they passed down. This is your space to record their legacy.
+          </div>
+          <span class="timeline-tag">🏡 Family</span>
+        </div>
+
+        <div class="timeline-item fade-in stagger-3">
+          <div class="timeline-year">A Milestone Year</div>
+          <div class="timeline-title">A Key Moment in the Family</div>
+          <div class="timeline-body">
+            Document a significant event — a migration, a celebration, an achievement, or a challenge that the family overcame together. Every family has defining moments. This is where you record yours.
+          </div>
+          <span class="timeline-tag">⭐ Milestone</span>
+        </div>
+
+        <div class="timeline-item gold-dot fade-in stagger-4">
+          <div class="timeline-year">Next Generation</div>
+          <div class="timeline-title">Growing the Family</div>
+          <div class="timeline-body">
+            Add stories about the next generation — education, marriages, births, moves to new cities or countries. Record the moments that marked the growth and evolution of the Nukala family.
+          </div>
+          <span class="timeline-tag">🌱 Growth</span>
+        </div>
+
+        <div class="timeline-item fade-in stagger-5">
+          <div class="timeline-year">Today</div>
+          <div class="timeline-title">The Nukala Family Today</div>
+          <div class="timeline-body">
+            Write about where the family stands today — the values carried forward, the members spread across the world, and the traditions still held dear. The story continues to be written by each one of us.
+          </div>
+          <span class="timeline-tag">🌍 Present Day</span>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
+  </footer>
+</body>
+</html>

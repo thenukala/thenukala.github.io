@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Family Tree – Nukala Family Tree</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .tree-wrapper {
+      overflow-x: auto;
+      padding: 20px 40px 60px;
+    }
+
+    .tree-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      min-width: 800px;
+    }
+
+    /* Generation row */
+    .gen-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    /* Person card */
+    .person {
+      background: var(--warm-white);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      width: 160px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .person:hover {
+      border-color: var(--sage);
+      box-shadow: 0 6px 24px rgba(138,171,138,0.2);
+      transform: translateY(-2px);
+    }
+
+    .person.ancestor { border-color: var(--gold-light); background: #fffdf7; }
+    .person.ancestor:hover { border-color: var(--gold); }
+
+    .person-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--sage-light);
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .person.female .person-avatar { background: #f0e8f5; }
+    .person.ancestor .person-avatar { background: var(--gold-light); }
+
+    .person-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .person-dates {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      letter-spacing: 0.04em;
+    }
+
+    .person-relation {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-top: 6px;
+    }
+
+    /* Connectors */
+    .connector-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+      position: relative;
+      height: 40px;
+    }
+
+    .v-line {
+      width: 2px;
+      height: 40px;
+      background: var(--sage-light);
+      margin: 0 auto;
+    }
+
+    .h-connector {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      height: 40px;
+    }
+
+    .h-connector::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px; height: 20px;
+      background: var(--sage-light);
+      transform: translateX(-50%);
+    }
+
+    .couple-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .heart-connector {
+      font-size: 14px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .gen-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    /* Info panel */
+    .info-panel {
+      position: fixed;
+      right: -360px;
+      top: var(--nav-height);
+      width: 340px;
+      height: calc(100vh - var(--nav-height));
+      background: var(--warm-white);
+      border-left: 1px solid var(--border);
+      padding: 32px 28px;
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 50;
+      overflow-y: auto;
+    }
+
+    .info-panel.open { right: 0; }
+
+    .info-close {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: none; border: none;
+      font-size: 1.2rem; cursor: pointer;
+      color: var(--text-light);
+    }
+
+    .info-panel h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .info-panel .info-role {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 20px;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .info-row-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      min-width: 80px;
+      padding-top: 2px;
+    }
+
+    .info-row-value {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    .add-member-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, var(--sage-dark), var(--sage));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 4px;
+      box-shadow: 0 4px 14px rgba(92,122,92,0.3);
+      transition: all 0.2s;
+    }
+
+    .add-member-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(92,122,92,0.4); }
+
+    .notice {
+      background: #f0f5f0;
+      border: 1px solid var(--sage-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 0.82rem;
+      color: var(--sage-dark);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+
+  <nav>
+    <a class="nav-brand" href="home.html">🌳 <span>Nukala</span> Family Tree</a>
+    <ul class="nav-links">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="tree.html" class="active">Family Tree</a></li>
+      <li><a href="history.html">Our History</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-logout" onclick="logout()">Sign Out</button>
+  </nav>
+
+  <main>
+    <div class="page-hero">
+      <p class="eyebrow">Explore</p>
+      <h1>The <em>Nukala</em> Family Tree</h1>
+      <div class="hero-divider"></div>
+      <p>Click on any family member to view their details. Add new members as your family grows.</p>
+    </div>
+
+    <div class="content-area">
+      <div class="notice">
+        💡 <strong>This is a starter template.</strong> Edit the <code>tree.html</code> file to add your real family members, their names, dates, and relationships.
+      </div>
+
+      <div class="tree-wrapper">
+        <div class="tree-container">
+
+          <!-- Generation 1: Great-Grandparents -->
+          <div class="gen-label">Great-Grandparents</div>
+          <div class="gen-row">
+            <div class="couple-row">
+              <div class="person ancestor" onclick="showInfo('ggf1')">
+                <div class="person-avatar">👴</div>
+                <div class="person-name">Ancestor<br>Nukala</div>
+                <div class="person-dates">1900 – 1975</div>
+                <div class="person-relation">Great-Grandfather</div>
+              </div>
+              <div class="heart-connector">💛</div>
+              <div class="person ancestor female" onclick="showInfo('ggm1')">
+                <div class="person-avatar">👵</div>
+                <div class="person-name">Ancestor<br>Nukala</div>
+                <div class="person-dates">1905 – 1980</div>
+                <div class="person-relation">Great-Grandmother</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="connector-row"><div class="v-line"></div></div>
+
+          <!-- Generation 2: Grandparents -->
+          <div class="gen-label">Grandparents</div>
+          <div class="gen-row">
+            <div class="couple-row">
+              <div class="person" onclick="showInfo('gf1')">
+                <div class="person-avatar">👴</div>
+                <div class="person-name">Grandfather<br>Nukala</div>
+                <div class="person-dates">1930 – 2005</div>
+                <div class="person-relation">Grandfather</div>
+              </div>
+              <div class="heart-connector">💛</div>
+              <div class="person female" onclick="showInfo('gm1')">
+                <div class="person-avatar">👵</div>
+                <div class="person-name">Grandmother<br>Nukala</div>
+                <div class="person-dates">1935 –</div>
+                <div class="person-relation">Grandmother</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="connector-row"><div class="v-line"></div></div>
+
+          <!-- Generation 3: Parents -->
+          <div class="gen-label">Parents</div>
+          <div class="gen-row" style="gap: 48px;">
+            <div class="couple-row">
+              <div class="person" onclick="showInfo('f1')">
+                <div class="person-avatar">👨</div>
+                <div class="person-name">Father<br>Nukala</div>
+                <div class="person-dates">1960 –</div>
+                <div class="person-relation">Father</div>
+              </div>
+              <div class="heart-connector">💛</div>
+              <div class="person female" onclick="showInfo('m1')">
+                <div class="person-avatar">👩</div>
+                <div class="person-name">Mother<br>Nukala</div>
+                <div class="person-dates">1963 –</div>
+                <div class="person-relation">Mother</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="connector-row"><div class="v-line"></div></div>
+
+          <!-- Generation 4: Children -->
+          <div class="gen-label">Children</div>
+          <div class="gen-row">
+            <div class="person" onclick="showInfo('c1')">
+              <div class="person-avatar">🧑</div>
+              <div class="person-name">Child One<br>Nukala</div>
+              <div class="person-dates">1985 –</div>
+              <div class="person-relation">Son / Daughter</div>
+            </div>
+            <div class="person female" onclick="showInfo('c2')">
+              <div class="person-avatar">🧑</div>
+              <div class="person-name">Child Two<br>Nukala</div>
+              <div class="person-dates">1988 –</div>
+              <div class="person-relation">Son / Daughter</div>
+            </div>
+            <div class="person" onclick="showInfo('c3')">
+              <div class="person-avatar">🧑</div>
+              <div class="person-name">Child Three<br>Nukala</div>
+              <div class="person-dates">1991 –</div>
+              <div class="person-relation">Son / Daughter</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top: 32px;">
+        <button class="add-member-btn" onclick="alert('To add members, edit the tree.html file and duplicate a .person block with your family details!')">
+          ＋ Add Family Member
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Info Side Panel -->
+  <div class="info-panel" id="infoPanel">
+    <button class="info-close" onclick="closeInfo()">✕</button>
+    <div id="infoPanelContent"></div>
+  </div>
+
+  <footer>
+    &copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
+  </footer>
+
+  <script>
+    const members = {
+      ggf1: { name: 'Ancestor Nukala', role: 'Great-Grandfather', born: '1900', died: '1975', birthplace: 'India', notes: 'Edit tree.html to add real details here.' },
+      ggm1: { name: 'Ancestor Nukala', role: 'Great-Grandmother', born: '1905', died: '1980', birthplace: 'India', notes: 'Edit tree.html to add real details here.' },
+      gf1: { name: 'Grandfather Nukala', role: 'Grandfather', born: '1930', died: '2005', birthplace: 'India', notes: 'Edit tree.html to add real details here.' },
+      gm1: { name: 'Grandmother Nukala', role: 'Grandmother', born: '1935', died: '', birthplace: 'India', notes: 'Edit tree.html to add real details here.' },
+      f1: { name: 'Father Nukala', role: 'Father', born: '1960', died: '', birthplace: 'India', notes: 'Edit tree.html to add real details here.' },
+      m1: { name: 'Mother Nukala', role: 'Mother', born: '1963', died: '', birthplace: 'India', notes: 'Edit tree.html to add real details here.' },
+      c1: { name: 'Child One Nukala', role: 'Son / Daughter', born: '1985', died: '', birthplace: 'India', notes: 'Edit tree.html to add real details here.' },
+      c2: { name: 'Child Two Nukala', role: 'Son / Daughter', born: '1988', died: '', birthplace: 'India', notes: 'Edit tree.html to add real details here.' },
+      c3: { name: 'Child Three Nukala', role: 'Son / Daughter', born: '1991', died: '', birthplace: 'India', notes: 'Edit tree.html to add real details here.' },
+    };
+
+    function showInfo(id) {
+      const m = members[id];
+      if (!m) return;
+      document.getElementById('infoPanelContent').innerHTML = `
+        <h2>${m.name}</h2>
+        <div class="info-role">${m.role}</div>
+        <div class="info-row"><div class="info-row-label">Born</div><div class="info-row-value">${m.born || '–'}</div></div>
+        ${m.died ? `<div class="info-row"><div class="info-row-label">Died</div><div class="info-row-value">${m.died}</div></div>` : ''}
+        <div class="info-row"><div class="info-row-label">Birthplace</div><div class="info-row-value">${m.birthplace || '–'}</div></div>
+        <div class="info-row"><div class="info-row-label">Notes</div><div class="info-row-value">${m.notes || '–'}</div></div>
+      `;
+      document.getElementById('infoPanel').classList.add('open');
+    }
+
+    function closeInfo() {
+      document.getElementById('infoPanel').classList.remove('open');
+    }
+  </script>
+</body>
+</html>

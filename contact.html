@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact – Nukala Family Tree</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Left info column */
+    .contact-info h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .contact-info h2 em { font-style: italic; color: var(--sage-dark); }
+
+    .contact-info p {
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 28px;
+    }
+
+    .contact-ways {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-way {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 18px 20px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .contact-way:hover { border-color: var(--sage-light); }
+
+    .contact-way-icon { font-size: 22px; flex-shrink: 0; }
+
+    .contact-way-title {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .contact-way-desc {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* Form */
+    .contact-form {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+    }
+
+    .contact-form h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--text-dark);
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      margin-bottom: 7px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text-dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--sage);
+      box-shadow: 0 0 0 3px rgba(138,171,138,0.12);
+      background: white;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--sage-dark), var(--sage));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(92,122,92,0.3);
+    }
+
+    .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(92,122,92,0.4); }
+
+    .success-msg {
+      display: none;
+      background: #f0f7f0;
+      border: 1px solid var(--sage-light);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.9rem;
+      color: var(--sage-dark);
+    }
+
+    .privacy-note {
+      font-size: 0.72rem;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+
+  <nav>
+    <a class="nav-brand" href="home.html">🌳 <span>Nukala</span> Family Tree</a>
+    <ul class="nav-links">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="tree.html">Family Tree</a></li>
+      <li><a href="history.html">Our History</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <button class="nav-logout" onclick="logout()">Sign Out</button>
+  </nav>
+
+  <main>
+    <div class="page-hero">
+      <p class="eyebrow">Contribute</p>
+      <h1>Get <em>In Touch</em></h1>
+      <div class="hero-divider"></div>
+      <p>Have a story to share, a photo to contribute, or a correction to suggest? We'd love to hear from you.</p>
+    </div>
+
+    <div class="content-area">
+      <div class="contact-grid">
+
+        <div class="contact-info fade-in stagger-1">
+          <h2>Help Us <em>Grow</em><br>the Archive</h2>
+          <p>This family tree is a living archive — it grows richer with every contribution. Whether you have old photographs, family stories, or genealogical details, every piece of information helps preserve our shared heritage.</p>
+
+          <div class="contact-ways">
+            <div class="contact-way">
+              <div class="contact-way-icon">📸</div>
+              <div>
+                <div class="contact-way-title">Share a Photo</div>
+                <div class="contact-way-desc">Send old or new family photos to be added to the gallery.</div>
+              </div>
+            </div>
+            <div class="contact-way">
+              <div class="contact-way-icon">📝</div>
+              <div>
+                <div class="contact-way-title">Add a Story</div>
+                <div class="contact-way-desc">Share a memory, anecdote, or family history entry.</div>
+              </div>
+            </div>
+            <div class="contact-way">
+              <div class="contact-way-icon">🌿</div>
+              <div>
+                <div class="contact-way-title">Update the Tree</div>
+                <div class="contact-way-desc">Add new family members, births, marriages, or corrections.</div>
+              </div>
+            </div>
+            <div class="contact-way">
+              <div class="contact-way-icon">🔑</div>
+              <div>
+                <div class="contact-way-title">Request Access</div>
+                <div class="contact-way-desc">Know a family member who needs the site password? Let us know.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form fade-in stagger-2">
+          <h3>Send a Message</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">First Name</label>
+              <input type="text" id="fname" placeholder="Your first name"/>
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name</label>
+              <input type="text" id="lname" placeholder="Your last name"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="your@email.com"/>
+          </div>
+
+          <div class="form-group">
+            <label for="subject">What would you like to do?</label>
+            <select id="subject">
+              <option value="">— Select a reason —</option>
+              <option>Share a family photo</option>
+              <option>Add a family story or memory</option>
+              <option>Suggest a correction to the tree</option>
+              <option>Add a new family member</option>
+              <option>Request site access for someone</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Your Message</label>
+            <textarea id="message" placeholder="Tell us what you'd like to share or contribute..."></textarea>
+          </div>
+
+          <button class="submit-btn" onclick="submitForm()">Send Message →</button>
+
+          <div class="success-msg" id="successMsg">
+            ✅ Thank you! Your message has been noted.<br/>
+            <small>To enable real email sending, connect this form to <a href="https://formspree.io" target="_blank" style="color: var(--sage-dark);">Formspree</a> (free).</small>
+          </div>
+
+          <p class="privacy-note">🔒 This form is for family members only. Your details stay within the family.</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
+  </footer>
+
+  <script>
+    function submitForm() {
+      const name = document.getElementById('fname').value;
+      const email = document.getElementById('email').value;
+      if (!name || !email) {
+        alert('Please fill in at least your name and email.');
+        return;
+      }
+      document.getElementById('successMsg').style.display = 'block';
+      document.getElementById('fname').value = '';
+      document.getElementById('lname').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('subject').value = '';
+      document.getElementById('message').value = '';
+    }
+  </script>
+</body>
+</html>

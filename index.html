@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nukala Family Tree</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #faf8f4;
+      --warm-white: #ffffff;
+      --sage: #8aab8a;
+      --sage-light: #c8ddc8;
+      --sage-dark: #5c7a5c;
+      --text-dark: #2c2c2c;
+      --text-mid: #6b6b6b;
+      --text-light: #a0a0a0;
+      --gold: #c9a84c;
+      --gold-light: #e8d5a0;
+      --border: #e8e2d8;
+    }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Decorative background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(138,171,138,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 90%, rgba(201,168,76,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.6) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Floating leaf shapes */
+    .leaf {
+      position: fixed;
+      border-radius: 50% 0 50% 0;
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .leaf-1 { width: 300px; height: 300px; background: var(--sage); top: -80px; left: -80px; transform: rotate(45deg); }
+    .leaf-2 { width: 200px; height: 200px; background: var(--gold); bottom: -60px; right: -60px; transform: rotate(45deg); }
+    .leaf-3 { width: 150px; height: 150px; background: var(--sage-dark); top: 60%; left: -40px; transform: rotate(20deg); }
+
+    .login-card {
+      position: relative;
+      z-index: 1;
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 56px 52px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tree-icon {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 40px;
+      animation: sway 4s ease-in-out infinite;
+      display: inline-block;
+      width: 100%;
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+
+    .subtitle-line {
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(to right, var(--sage), var(--gold));
+      margin: 12px auto 24px;
+      border-radius: 2px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--text-dark);
+      text-align: center;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+
+    h1 span {
+      font-style: italic;
+      color: var(--sage-dark);
+    }
+
+    .tagline {
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: var(--text-light);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-family: 'Jost', sans-serif;
+      font-size: 1rem;
+      color: var(--text-dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="password"]:focus {
+      border-color: var(--sage);
+      box-shadow: 0 0 0 3px rgba(138,171,138,0.15);
+      background: #fff;
+    }
+
+    .error-msg {
+      font-size: 0.78rem;
+      color: #c0614a;
+      margin-top: 6px;
+      display: none;
+      padding-left: 4px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--sage-dark) 0%, var(--sage) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      box-shadow: 0 4px 16px rgba(92,122,92,0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(92,122,92,0.4);
+    }
+
+    .btn:active { transform: translateY(0); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 28px 0 20px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .divider span {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    .footer-note strong {
+      color: var(--sage-dark);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="leaf leaf-1"></div>
+  <div class="leaf leaf-2"></div>
+  <div class="leaf leaf-3"></div>
+
+  <div class="login-card">
+    <div class="tree-icon">🌳</div>
+    <div class="subtitle-line"></div>
+    <h1>The <span>Nukala</span><br>Family Tree</h1>
+    <p class="tagline">A private family archive</p>
+
+    <div class="form-group">
+      <label for="password">Family Password</label>
+      <input type="password" id="password" placeholder="Enter your family password" autocomplete="current-password" />
+      <div class="error-msg" id="error">Incorrect password. Please try again.</div>
+    </div>
+
+    <button class="btn" onclick="checkPassword()">Enter Family Archive →</button>
+
+    <div class="divider"><span>secured &amp; private</span></div>
+
+    <p class="footer-note">
+      This site is exclusively for the <strong>Nukala family</strong>.<br/>
+      Please contact the family administrator for access.
+    </p>
+  </div>
+
+  <script>
+    // ---- SET YOUR PASSWORD HERE ----
+    const FAMILY_PASSWORD = "nukala2024";
+    // --------------------------------
+
+    document.getElementById('password').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    function checkPassword() {
+      const input = document.getElementById('password').value;
+      const error = document.getElementById('error');
+
+      if (input === FAMILY_PASSWORD) {
+        sessionStorage.setItem('nukala_auth', 'true');
+        window.location.href = 'home.html';
+      } else {
+        error.style.display = 'block';
+        document.getElementById('password').style.borderColor = '#c0614a';
+        document.getElementById('password').style.boxShadow = '0 0 0 3px rgba(192,97,74,0.12)';
+        document.getElementById('password').value = '';
+        setTimeout(() => {
+          document.getElementById('password').style.borderColor = '';
+          document.getElementById('password').style.boxShadow = '';
+        }, 2000);
+      }
+    }
+  </script>
+</body>
+</html>

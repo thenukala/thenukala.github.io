@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home – Nukala Family Tree</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .hero-banner {
+      background: linear-gradient(135deg, #f0f5f0 0%, #faf8f4 60%, #fdf9f0 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 40px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::before {
+      content: '🌳';
+      position: absolute;
+      font-size: 280px;
+      opacity: 0.04;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-banner .eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 16px;
+    }
+
+    .hero-banner h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 300;
+      color: var(--text-dark);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero-banner h1 em { font-style: italic; color: var(--sage-dark); }
+
+    .hero-banner p {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      max-width: 500px;
+      margin: 0 auto 32px;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .hero-divider {
+      width: 60px; height: 2px;
+      background: linear-gradient(to right, var(--sage), var(--gold));
+      border-radius: 2px;
+      margin: 0 auto 28px;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--sage-dark);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-light);
+    }
+
+    /* Quick Nav Cards */
+    .quick-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: 56px auto 0;
+      padding: 0 40px;
+    }
+
+    .quick-card {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quick-card:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+      border-color: var(--sage-light);
+    }
+
+    .quick-card-icon { font-size: 28px; }
+
+    .quick-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--text-dark);
+    }
+
+    .quick-card-desc {
+      font-size: 0.82rem;
+      color: var(--text-mid);
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    .quick-card-arrow {
+      font-size: 0.8rem;
+      color: var(--sage);
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    /* Welcome section */
+    .welcome-section {
+      max-width: 1100px;
+      margin: 56px auto 0;
+      padding: 0 40px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .welcome-section { grid-template-columns: 1fr; }
+      .quick-nav { padding: 0 20px; }
+      .hero-banner { padding: 80px 20px 48px; }
+      .hero-stats { gap: 28px; }
+    }
+
+    .welcome-text h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 400;
+      margin-bottom: 16px;
+      color: var(--text-dark);
+    }
+
+    .welcome-text h2 em { font-style: italic; color: var(--sage-dark); }
+
+    .welcome-text p {
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      margin-bottom: 12px;
+      font-weight: 300;
+    }
+
+    .recent-updates h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 20px;
+      color: var(--text-dark);
+    }
+
+    .update-item {
+      display: flex;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .update-item:last-child { border-bottom: none; }
+
+    .update-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--sage);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .update-title {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 3px;
+    }
+
+    .update-date {
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+
+  <nav>
+    <a class="nav-brand" href="home.html">🌳 <span>Nukala</span> Family Tree</a>
+    <ul class="nav-links">
+      <li><a href="home.html" class="active">Home</a></li>
+      <li><a href="tree.html">Family Tree</a></li>
+      <li><a href="history.html">Our History</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-logout" onclick="logout()">Sign Out</button>
+  </nav>
+
+  <main>
+    <div class="hero-banner">
+      <p class="eyebrow">Welcome to the</p>
+      <h1>The <em>Nukala</em><br>Family Archive</h1>
+      <div class="hero-divider"></div>
+      <p>A private space to celebrate our roots, preserve our stories, and stay connected across generations.</p>
+
+      <div class="hero-stats">
+        <div class="stat fade-in stagger-1">
+          <span class="stat-number">∞</span>
+          <span class="stat-label">Generations</span>
+        </div>
+        <div class="stat fade-in stagger-2">
+          <span class="stat-number">🌍</span>
+          <span class="stat-label">Family Members</span>
+        </div>
+        <div class="stat fade-in stagger-3">
+          <span class="stat-number">📖</span>
+          <span class="stat-label">Stories Shared</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-nav">
+      <a class="quick-card fade-in stagger-1" href="tree.html">
+        <div class="quick-card-icon">🌿</div>
+        <div class="quick-card-title">Family Tree</div>
+        <div class="quick-card-desc">Explore our family connections, branches, and lineage.</div>
+        <div class="quick-card-arrow">View tree →</div>
+      </a>
+      <a class="quick-card fade-in stagger-2" href="history.html">
+        <div class="quick-card-icon">📜</div>
+        <div class="quick-card-title">Our History</div>
+        <div class="quick-card-desc">Read stories, milestones, and heritage of the Nukala family.</div>
+        <div class="quick-card-arrow">Read more →</div>
+      </a>
+      <a class="quick-card fade-in stagger-3" href="gallery.html">
+        <div class="quick-card-icon">🖼️</div>
+        <div class="quick-card-title">Photo Gallery</div>
+        <div class="quick-card-desc">Browse cherished photos and memories across the years.</div>
+        <div class="quick-card-arrow">View photos →</div>
+      </a>
+      <a class="quick-card fade-in stagger-4" href="contact.html">
+        <div class="quick-card-icon">✉️</div>
+        <div class="quick-card-title">Get in Touch</div>
+        <div class="quick-card-desc">Contribute your own stories, photos, or corrections.</div>
+        <div class="quick-card-arrow">Contact us →</div>
+      </a>
+    </div>
+
+    <div class="welcome-section">
+      <div class="welcome-text fade-in stagger-2">
+        <h2>Our <em>Roots</em> Run Deep</h2>
+        <p>Welcome to the Nukala Family Tree — a private, members-only archive dedicated to preserving and celebrating our shared heritage.</p>
+        <p>This site is a living record of who we are: our ancestors, our stories, our photos, and the bonds that tie us together across generations and geographies.</p>
+        <p>We invite every family member to contribute — add your memories, upload old photographs, and help build this archive for generations to come.</p>
+      </div>
+
+      <div class="recent-updates card fade-in stagger-3">
+        <h2>Recent Updates</h2>
+        <div class="update-item">
+          <div class="update-dot"></div>
+          <div>
+            <div class="update-title">Website launched! 🎉</div>
+            <div class="update-date">Welcome to the Nukala Family Tree</div>
+          </div>
+        </div>
+        <div class="update-item">
+          <div class="update-dot"></div>
+          <div>
+            <div class="update-title">Gallery section added</div>
+            <div class="update-date">Start uploading family photos</div>
+          </div>
+        </div>
+        <div class="update-item">
+          <div class="update-dot"></div>
+          <div>
+            <div class="update-title">Family history page ready</div>
+            <div class="update-date">Add your family milestones</div>
+          </div>
+        </div>
+        <div class="update-item">
+          <div class="update-dot"></div>
+          <div>
+            <div class="update-title">Invite family members</div>
+            <div class="update-date">Share the password with loved ones</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
+  </footer>
+</body>
+</html>
