@@ -498,83 +498,204 @@
     </div>
   </main>
 
-  <!-- Info Panel -->
+  <!-- Info / Edit Panel -->
   <div class="info-panel" id="infoPanel">
     <button class="info-close" onclick="closeInfo()">✕</button>
     <div id="infoPanelContent"></div>
   </div>
 
+  <!-- Edit Modal -->
+  <div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+    <div style="background:white;border-radius:20px;padding:36px;width:90%;max-width:480px;position:relative;animation:fadeUp 0.3s ease;max-height:90vh;overflow-y:auto;">
+      <button onclick="closeEdit()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:#a0a0a0;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;">✕</button>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin-bottom:4px;color:#2c2c2c;">Edit Family Member</h2>
+      <p style="font-size:0.78rem;color:#a0a0a0;margin-bottom:24px;">Changes are saved automatically to your browser.</p>
+      <input type="hidden" id="editId"/>
+      <div style="display:grid;gap:14px;">
+        <div>
+          <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Full Name</label>
+          <input id="eName" type="text" placeholder="e.g. Ramu Nukala" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
+        </div>
+        <div>
+          <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Relationship / Role</label>
+          <input id="eRole" type="text" placeholder="e.g. Grandfather, Father, Uncle" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Year Born</label>
+            <input id="eBorn" type="text" placeholder="e.g. 1942" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Year Passed (if applicable)</label>
+            <input id="eDied" type="text" placeholder="e.g. 2005 or leave blank" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Birthplace / Hometown</label>
+          <input id="ePlace" type="text" placeholder="e.g. Hyderabad, India" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
+        </div>
+        <div>
+          <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Notes / Story</label>
+          <textarea id="eNotes" rows="3" placeholder="Add a short biography, memories, or fun facts..." style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;resize:vertical;"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button onclick="saveEdit()" style="flex:1;padding:13px;background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;border:none;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.85rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">💾 Save Changes</button>
+        <button onclick="closeEdit()" style="padding:13px 20px;background:white;color:#6b6b6b;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.85rem;cursor:pointer;">Cancel</button>
+      </div>
+      <p style="font-size:0.72rem;color:#c8ddc8;text-align:center;margin-top:12px;">✅ Saved to your browser automatically. No upload needed!</p>
+    </div>
+  </div>
+
   <footer>&copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love</footer>
 
   <script>
-    // ── MEMBER DATA — Replace with your real family details ──
-    const members = {
-      ggp1m: { name:'GG-Grandfather Nukala', role:'Great-Great-Grandfather', born:'1880', died:'1950', place:'India', notes:'Edit tree.html to add real details.' },
-      ggp1f: { name:'GG-Grandmother Nukala', role:'Great-Great-Grandmother', born:'1885', died:'1955', place:'India', notes:'Edit tree.html to add real details.' },
-      ggp2m: { name:'GG-Grandfather Maternal', role:'Great-Great-Grandfather', born:'1878', died:'1948', place:'India', notes:'Edit tree.html to add real details.' },
-      ggp2f: { name:'GG-Grandmother Maternal', role:'Great-Great-Grandmother', born:'1882', died:'1952', place:'India', notes:'Edit tree.html to add real details.' },
-      ggf1:  { name:'Great-Grandfather Nukala', role:'Great-Grandfather', born:'1905', died:'1970', place:'India', notes:'Edit tree.html to add real details.' },
-      ggm1:  { name:'Great-Grandmother Nukala', role:'Great-Grandmother', born:'1908', died:'1975', place:'India', notes:'Edit tree.html to add real details.' },
-      ggf2:  { name:'Great-Grandfather Maternal', role:'Great-Grandfather', born:'1903', died:'1968', place:'India', notes:'Edit tree.html to add real details.' },
-      ggm2:  { name:'Great-Grandmother Maternal', role:'Great-Grandmother', born:'1907', died:'1972', place:'India', notes:'Edit tree.html to add real details.' },
-      pgf:   { name:'Paternal Grandfather', role:'Grandfather', born:'1930', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      pgm:   { name:'Paternal Grandmother', role:'Grandmother', born:'1933', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      mgf:   { name:'Maternal Grandfather', role:'Grandfather', born:'1932', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      mgm:   { name:'Maternal Grandmother', role:'Grandmother', born:'1935', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      unc1:  { name:'Uncle 1 Nukala', role:'Uncle', born:'1955', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      aun1:  { name:'Aunt 1 Nukala', role:'Aunt', born:'1957', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      dad:   { name:'Father Nukala', role:'Father', born:'1958', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      mum:   { name:'Mother Nukala', role:'Mother', born:'1961', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      aun2:  { name:'Aunt 2 Nukala', role:'Aunt', born:'1963', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      unc2:  { name:'Uncle 2 Nukala', role:'Uncle', born:'1965', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      aun3:  { name:'Aunt 3 Nukala', role:'Aunt', born:'1967', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      cou1:  { name:'Cousin 1 Nukala', role:'Cousin', born:'1980', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      cou2:  { name:'Cousin 2 Nukala', role:'Cousin', born:'1982', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      you:   { name:'You Nukala', role:'You ⭐', born:'1985', died:'', place:'India', notes:'This is you! Update with your real details.' },
-      sp:    { name:'Your Spouse', role:'Spouse', born:'1987', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      sib1:  { name:'Sibling 1 Nukala', role:'Brother/Sister', born:'1988', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      sib1sp:{ name:'Sibling 1 Spouse', role:'In-law', born:'1990', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      sib2:  { name:'Sibling 2 Nukala', role:'Brother/Sister', born:'1991', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      cou3:  { name:'Cousin 3 Nukala', role:'Cousin', born:'1989', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      ch1:   { name:'Child 1 Nukala', role:'Son/Daughter', born:'2010', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      ch2:   { name:'Child 2 Nukala', role:'Son/Daughter', born:'2013', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      ch3:   { name:'Child 3 Nukala', role:'Son/Daughter', born:'2016', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      neph1: { name:'Nephew/Niece 1', role:'Nephew/Niece', born:'2012', died:'', place:'India', notes:'Edit tree.html to add real details.' },
-      neph2: { name:'Nephew/Niece 2', role:'Nephew/Niece', born:'2015', died:'', place:'India', notes:'Edit tree.html to add real details.' },
+    // ── DEFAULT DATA ──
+    const defaultMembers = {
+      ggp1m: { name:'GG-Grandfather Nukala', role:'Great-Great-Grandfather', born:'1880', died:'1950', place:'India', notes:'Click Edit to update with real details.' },
+      ggp1f: { name:'GG-Grandmother Nukala', role:'Great-Great-Grandmother', born:'1885', died:'1955', place:'India', notes:'Click Edit to update with real details.' },
+      ggp2m: { name:'GG-Grandfather Maternal', role:'Great-Great-Grandfather', born:'1878', died:'1948', place:'India', notes:'Click Edit to update with real details.' },
+      ggp2f: { name:'GG-Grandmother Maternal', role:'Great-Great-Grandmother', born:'1882', died:'1952', place:'India', notes:'Click Edit to update with real details.' },
+      ggf1:  { name:'Great-Grandfather Nukala', role:'Great-Grandfather', born:'1905', died:'1970', place:'India', notes:'Click Edit to update with real details.' },
+      ggm1:  { name:'Great-Grandmother Nukala', role:'Great-Grandmother', born:'1908', died:'1975', place:'India', notes:'Click Edit to update with real details.' },
+      ggf2:  { name:'Great-Grandfather Maternal', role:'Great-Grandfather', born:'1903', died:'1968', place:'India', notes:'Click Edit to update with real details.' },
+      ggm2:  { name:'Great-Grandmother Maternal', role:'Great-Grandmother', born:'1907', died:'1972', place:'India', notes:'Click Edit to update with real details.' },
+      pgf:   { name:'Paternal Grandfather', role:'Grandfather', born:'1930', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      pgm:   { name:'Paternal Grandmother', role:'Grandmother', born:'1933', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      mgf:   { name:'Maternal Grandfather', role:'Grandfather', born:'1932', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      mgm:   { name:'Maternal Grandmother', role:'Grandmother', born:'1935', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      unc1:  { name:'Uncle 1 Nukala', role:'Uncle', born:'1955', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      aun1:  { name:'Aunt 1 Nukala', role:'Aunt', born:'1957', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      dad:   { name:'Father Nukala', role:'Father', born:'1958', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      mum:   { name:'Mother Nukala', role:'Mother', born:'1961', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      aun2:  { name:'Aunt 2 Nukala', role:'Aunt', born:'1963', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      unc2:  { name:'Uncle 2 Nukala', role:'Uncle', born:'1965', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      aun3:  { name:'Aunt 3 Nukala', role:'Aunt', born:'1967', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      cou1:  { name:'Cousin 1 Nukala', role:'Cousin', born:'1980', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      cou2:  { name:'Cousin 2 Nukala', role:'Cousin', born:'1982', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      you:   { name:'You Nukala', role:'You ⭐', born:'1985', died:'', place:'India', notes:'This is you! Click Edit to update your details.' },
+      sp:    { name:'Your Spouse', role:'Spouse', born:'1987', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      sib1:  { name:'Sibling 1 Nukala', role:'Brother/Sister', born:'1988', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      sib1sp:{ name:'Sibling 1 Spouse', role:'In-law', born:'1990', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      sib2:  { name:'Sibling 2 Nukala', role:'Brother/Sister', born:'1991', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      cou3:  { name:'Cousin 3 Nukala', role:'Cousin', born:'1989', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      ch1:   { name:'Child 1 Nukala', role:'Son/Daughter', born:'2010', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      ch2:   { name:'Child 2 Nukala', role:'Son/Daughter', born:'2013', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      ch3:   { name:'Child 3 Nukala', role:'Son/Daughter', born:'2016', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      neph1: { name:'Nephew/Niece 1', role:'Nephew/Niece', born:'2012', died:'', place:'India', notes:'Click Edit to update with real details.' },
+      neph2: { name:'Nephew/Niece 2', role:'Nephew/Niece', born:'2015', died:'', place:'India', notes:'Click Edit to update with real details.' },
     };
 
+    // ── LOAD FROM LOCALSTORAGE (persists across visits) ──
+    let members = JSON.parse(localStorage.getItem('nukala_tree_data') || 'null') || JSON.parse(JSON.stringify(defaultMembers));
+
+    // ── APPLY SAVED DATA TO TREE CARDS ON PAGE LOAD ──
+    function applyDataToCards() {
+      Object.keys(members).forEach(id => {
+        const m = members[id];
+        const card = document.querySelector(`.person[data-id="${id}"]`);
+        if (!card) return;
+        const nameEl = card.querySelector('.person-name');
+        const datesEl = card.querySelector('.person-dates');
+        const relEl = card.querySelector('.person-relation');
+        if (nameEl) nameEl.textContent = m.name;
+        if (datesEl) datesEl.textContent = m.born + (m.died ? ' – ' + m.died : ' –');
+        if (relEl) relEl.textContent = m.role;
+      });
+    }
+
+    // ── VIEW PANEL ──
     function si(id) {
-      const m = members[id]; if(!m) return;
+      const m = members[id]; if (!m) return;
       document.getElementById('infoPanelContent').innerHTML = `
         <div class="info-avatar">👤</div>
         <h2>${m.name}</h2>
         <div class="info-role">${m.role}</div>
         <div class="info-divider"></div>
-        <div class="info-row"><div class="info-label">Born</div><div class="info-value">${m.born||'–'}</div></div>
-        ${m.died?`<div class="info-row"><div class="info-label">Passed</div><div class="info-value">${m.died}</div></div>`:''}
-        <div class="info-row"><div class="info-label">Birthplace</div><div class="info-value">${m.place||'–'}</div></div>
+        <div class="info-row"><div class="info-label">Born</div><div class="info-value">${m.born || '–'}</div></div>
+        ${m.died ? `<div class="info-row"><div class="info-label">Passed</div><div class="info-value">${m.died}</div></div>` : ''}
+        <div class="info-row"><div class="info-label">Birthplace</div><div class="info-value">${m.place || '–'}</div></div>
         <div class="info-divider"></div>
-        <div class="info-notes">${m.notes}</div>
+        <div class="info-notes">${m.notes || 'No notes yet.'}</div>
+        <div style="margin-top:20px;">
+          <button onclick="openEdit('${id}')" style="width:100%;padding:12px;background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;border:none;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.82rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">✏️ Edit This Person</button>
+        </div>
       `;
       document.getElementById('infoPanel').classList.add('open');
     }
+
     function closeInfo() { document.getElementById('infoPanel').classList.remove('open'); }
 
+    // ── EDIT MODAL ──
+    function openEdit(id) {
+      const m = members[id]; if (!m) return;
+      document.getElementById('editId').value = id;
+      document.getElementById('eName').value = m.name || '';
+      document.getElementById('eRole').value = m.role || '';
+      document.getElementById('eBorn').value = m.born || '';
+      document.getElementById('eDied').value = m.died || '';
+      document.getElementById('ePlace').value = m.place || '';
+      document.getElementById('eNotes').value = m.notes || '';
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
+
+    function saveEdit() {
+      const id = document.getElementById('editId').value;
+      members[id] = {
+        name:  document.getElementById('eName').value.trim(),
+        role:  document.getElementById('eRole').value.trim(),
+        born:  document.getElementById('eBorn').value.trim(),
+        died:  document.getElementById('eDied').value.trim(),
+        place: document.getElementById('ePlace').value.trim(),
+        notes: document.getElementById('eNotes').value.trim(),
+      };
+      // Save to localStorage
+      localStorage.setItem('nukala_tree_data', JSON.stringify(members));
+      // Update the card on the tree
+      applyDataToCards();
+      // Refresh side panel
+      closeEdit();
+      si(id);
+      // Show success toast
+      showToast('✅ Saved! ' + members[id].name);
+    }
+
+    // ── TOAST NOTIFICATION ──
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.textContent = msg;
+      t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#5c7a5c;color:white;padding:12px 24px;border-radius:30px;font-family:Jost,sans-serif;font-size:0.85rem;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.15);animation:fadeUp 0.3s ease;';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+
+    // ── ZOOM ──
     let zoom = 1;
-    function zoomIn()  { zoom = Math.min(zoom+0.1, 2);   applyZoom(); }
-    function zoomOut() { zoom = Math.max(zoom-0.1, 0.4); applyZoom(); }
+    function zoomIn()   { zoom = Math.min(zoom+0.1, 2);   applyZoom(); }
+    function zoomOut()  { zoom = Math.max(zoom-0.1, 0.4); applyZoom(); }
     function resetZoom(){ zoom = 1; applyZoom(); }
     function applyZoom(){
       document.getElementById('treeCanvas').style.transform = `scale(${zoom})`;
       document.getElementById('zoomLabel').textContent = Math.round(zoom*100)+'%';
     }
 
-    function expandAll()  { document.querySelectorAll('.family-units').forEach(el=>el.style.display='flex'); }
-    function collapseAll(){ document.querySelectorAll('.family-units').forEach((el,i)=>{ if(i>0) el.style.display='none'; }); }
+    function expandAll()   { document.querySelectorAll('.family-units').forEach(el => el.style.display='flex'); }
+    function collapseAll() { document.querySelectorAll('.family-units').forEach((el,i) => { if(i>0) el.style.display='none'; }); }
 
     function addTip() {
-      alert('To add a family member:\n\n1. Open tree.html in Notepad (Windows)\n2. Find the generation you want to add to\n3. Copy any person block:\n   <div class="family-unit"><div class="couple"><div class="person">...</div></div></div>\n4. Paste it after the last person in that generation\n5. Update the name, dates and ID\n6. Save and upload to GitHub');
+      alert('To add a NEW family member to a generation:\n\n1. Open tree.html in Notepad\n2. Find the generation you want\n3. Copy any <div class="family-unit">...</div> block\n4. Paste it after the last person\n5. Give it a new data-id (e.g. data-id="newperson1")\n6. Add the same ID to the members list in the script\n7. Upload to GitHub\n\nThen you can edit the name/details from the website directly!');
     }
+
+    // ── INIT ──
+    // Add data-id attributes to person cards so we can update them
+    document.querySelectorAll('.person[onclick]').forEach(card => {
+      const match = card.getAttribute('onclick').match(/si\('(.+?)'\)/);
+      if (match) card.setAttribute('data-id', match[1]);
+    });
+
+    applyDataToCards();
   </script>
 </body>
 </html>
