@@ -54,6 +54,13 @@ nav {
   gap: 10px;
 }
 
+.nav-brand img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
 .nav-brand span { color: var(--sage-dark); font-style: italic; }
 
 .nav-links {

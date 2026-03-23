@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nukala Family Tree</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#5c7a5c"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="Nukala"/>
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -77,13 +85,20 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .tree-icon {
+    .logo-icon {
       text-align: center;
       margin-bottom: 8px;
-      font-size: 40px;
+      display: block;
+      width: 100%;
+    }
+
+    .logo-icon img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
       animation: sway 4s ease-in-out infinite;
       display: inline-block;
-      width: 100%;
+      border-radius: 16px;
     }
 
     @keyframes sway {
@@ -231,7 +246,7 @@
   <div class="leaf leaf-3"></div>
 
   <div class="login-card">
-    <div class="tree-icon">🌳</div>
+    <div class="logo-icon"><img src="logo.png" alt="Nukala Family Logo"/></div>
     <div class="subtitle-line"></div>
     <h1>The <span>Nukala</span><br>Family Tree</h1>
     <p class="tagline">A private family archive</p>
@@ -253,8 +268,17 @@
   </div>
 
   <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => console.log('Nukala PWA: Service Worker registered'))
+          .catch(err => console.log('SW error:', err));
+      });
+    }
+
     // ---- SET YOUR PASSWORD HERE ----
-    const FAMILY_PASSWORD = "nukala";
+    const FAMILY_PASSWORD = "nukala2024";
     // --------------------------------
 
     document.getElementById('password').addEventListener('keydown', function(e) {
