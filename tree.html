@@ -3,194 +3,151 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nukala Family</title>
+  <title>Family Tree – Nukala Family Tree</title>
   <link rel="stylesheet" href="shared.css"/>
   <link rel="icon" href="favicon.ico"/>
   <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
-    .tree-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
+    .tree-toolbar {
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: wrap; margin-bottom: 16px;
     }
-    .ctrl-btn {
-      padding: 9px 18px;
-      border-radius: 10px;
-      border: 1.5px solid var(--border);
-      background: white;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: var(--text-mid);
-      cursor: pointer;
-      transition: all 0.2s;
+    .tb-btn {
+      padding: 8px 16px; border-radius: 9px;
+      border: 1.5px solid var(--border); background: white;
+      font-family: 'Jost', sans-serif; font-size: 0.76rem;
+      font-weight: 500; letter-spacing: 0.08em;
+      color: var(--text-mid); cursor: pointer; transition: all 0.2s;
     }
-    .ctrl-btn:hover { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
-    .zoom-controls { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-    .zoom-btn {
-      width: 34px; height: 34px;
-      border-radius: 8px;
-      border: 1.5px solid var(--border);
-      background: white;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
-      color: var(--text-mid);
+    .tb-btn:hover { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
+    .tb-btn.active { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
+    .tb-sep { width: 1px; height: 28px; background: var(--border); }
+    .zoom-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+    .z-btn {
+      width: 32px; height: 32px; border-radius: 8px;
+      border: 1.5px solid var(--border); background: white;
+      font-size: 1rem; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      color: var(--text-mid); transition: all 0.2s;
     }
-    .zoom-btn:hover { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
-    .zoom-label { font-size: 0.78rem; color: var(--text-mid); min-width: 40px; text-align: center; }
+    .z-btn:hover { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
+    .z-label { font-size: 0.75rem; color: var(--text-mid); min-width: 38px; text-align: center; }
 
+    /* Viewport */
     .tree-viewport {
-      width: 100%;
-      overflow: auto;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: linear-gradient(135deg, #f8faf8, #faf8f4);
-      min-height: 500px;
+      width: 100%; overflow: auto;
+      border: 1px solid var(--border); border-radius: 16px;
+      background: radial-gradient(circle at 20% 20%, rgba(138,171,138,0.06) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 50%),
+                  #faf8f4;
+      min-height: 500px; position: relative; cursor: grab;
+      user-select: none;
     }
+    .tree-viewport:active { cursor: grabbing; }
     .tree-canvas {
-      padding: 40px 40px 60px;
-      display: inline-block;
-      min-width: 100%;
-      transform-origin: top left;
-      transition: transform 0.2s;
+      position: relative; display: inline-block;
+      transform-origin: top left; transition: transform 0.15s;
+      padding: 60px;
     }
 
-    /* Generation */
-    .gen-header {
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 16px; margin-top: 12px;
+    /* SVG connector layer */
+    #connectorSvg {
+      position: absolute; top: 0; left: 0;
+      pointer-events: none; overflow: visible;
     }
-    .gen-badge {
-      font-size: 0.68rem; font-weight: 600;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: white; background: var(--sage-dark);
-      padding: 4px 14px; border-radius: 20px; white-space: nowrap;
-    }
-    .gen-line { flex: 1; height: 1px; background: var(--border); }
-    .gen-add-btn {
-      font-size: 0.72rem; font-weight: 500;
-      color: var(--sage-dark); background: white;
-      border: 1.5px dashed var(--sage-light);
-      border-radius: 8px; padding: 4px 12px;
-      cursor: pointer; font-family: 'Jost', sans-serif;
-      transition: all 0.2s; white-space: nowrap;
-    }
-    .gen-add-btn:hover { background: var(--sage-light); }
-
-    .family-units {
-      display: flex; flex-wrap: wrap;
-      gap: 28px; padding-left: 24px; margin-bottom: 4px;
-    }
-    .family-unit { display: flex; flex-direction: column; align-items: center; }
-
-    /* Couple */
-    .couple { display: flex; align-items: center; gap: 5px; }
-    .heart-link { font-size: 12px; color: var(--gold); flex-shrink: 0; }
 
     /* Person card */
-    .person {
+    .pcard {
+      position: absolute;
+      width: 148px;
       background: white; border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 12px 14px; width: 145px;
+      border-radius: 14px; padding: 14px 12px;
       text-align: center; cursor: pointer;
       transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    .person:hover { border-color: var(--sage); box-shadow: 0 4px 16px rgba(138,171,138,0.2); transform: translateY(-2px); }
-    .person.ancestor { border-color: var(--gold-light); background: #fffdf7; }
-    .person.ancestor:hover { border-color: var(--gold); }
-    .person.female { border-color: #e8d8f0; }
-    .person.female:hover { border-color: #c8a0dc; }
-    .person.deceased { opacity: 0.72; background: #f8f8f8; }
-    .person.you { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(138,171,138,0.15); }
+    .pcard:hover { border-color: var(--sage); box-shadow: 0 6px 20px rgba(138,171,138,0.2); transform: translateY(-2px); z-index: 10; }
+    .pcard.female { border-color: #e0d0f0; }
+    .pcard.female:hover { border-color: #b090d0; }
+    .pcard.ancestor { border-color: var(--gold-light); background: #fffdf7; }
+    .pcard.ancestor:hover { border-color: var(--gold); }
+    .pcard.deceased { opacity: 0.72; background: #f8f8f8; border-style: dashed; }
+    .pcard.selected { border-color: var(--sage-dark); box-shadow: 0 0 0 3px rgba(92,122,92,0.2); }
 
-    .person-avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--sage-light); margin: 0 auto 7px;
+    .pc-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--sage-light); margin: 0 auto 8px;
       display: flex; align-items: center; justify-content: center;
       font-size: 18px; position: relative;
     }
-    .person.female .person-avatar { background: #f0e8f8; }
-    .person.ancestor .person-avatar { background: var(--gold-light); }
-    .person.deceased .person-avatar { background: #e8e8e8; }
-    .deceased-mark {
-      position: absolute; bottom: -2px; right: -2px;
-      width: 14px; height: 14px; background: #888;
-      border-radius: 50%; font-size: 8px;
-      display: flex; align-items: center; justify-content: center;
-      color: white; border: 1.5px solid white;
+    .pcard.female .pc-avatar { background: #f0e8f8; }
+    .pcard.ancestor .pc-avatar { background: var(--gold-light); }
+    .pcard.deceased .pc-avatar { background: #e8e8e8; }
+    .pc-deceased-dot {
+      position: absolute; bottom: -1px; right: -1px;
+      width: 14px; height: 14px; background: #999;
+      border-radius: 50%; border: 2px solid white;
+      font-size: 7px; display: flex; align-items: center; justify-content: center; color: white;
     }
-    .person-name { font-family: 'Cormorant Garamond',serif; font-size: 0.88rem; font-weight: 600; color: var(--text-dark); line-height: 1.2; margin-bottom: 2px; }
-    .person-dates { font-size: 0.62rem; color: var(--text-light); letter-spacing: 0.04em; margin-bottom: 2px; }
-    .person-relation { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage-dark); }
-    .person.female .person-relation { color: #9060b0; }
-    .person.ancestor .person-relation { color: #a07020; }
+    .pc-name { font-family: 'Cormorant Garamond', serif; font-size: 0.88rem; font-weight: 600; color: var(--text-dark); line-height: 1.2; margin-bottom: 2px; }
+    .pc-role { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 2px; }
+    .pcard.female .pc-role { color: #9060b0; }
+    .pcard.ancestor .pc-role { color: #a07020; }
+    .pc-dates { font-size: 0.6rem; color: var(--text-light); }
 
-    /* Connectors */
-    .v-down { width: 2px; height: 22px; background: var(--sage-light); margin: 0 auto; }
+    /* SVG lines */
+    .line-parent { stroke: #c8ddc8; stroke-width: 2; fill: none; }
+    .line-spouse { stroke: #e8d5a0; stroke-width: 2; fill: none; stroke-dasharray: 5,3; }
 
-    /* Add placeholder */
-    .add-card {
-      width: 145px; min-height: 90px;
-      border: 2px dashed var(--sage-light); border-radius: 12px;
-      background: rgba(138,171,138,0.03);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 3px;
-      cursor: pointer; color: var(--sage);
-      font-family: 'Jost',sans-serif; font-size: 0.7rem;
-      font-weight: 500; letter-spacing: 0.08em;
-      transition: all 0.2s; flex-shrink: 0;
+    /* Side panel */
+    .side-panel {
+      position: fixed; right: -380px; top: var(--nav-height);
+      width: 360px; height: calc(100vh - var(--nav-height));
+      background: white; border-left: 1px solid var(--border);
+      padding: 28px; z-index: 50; overflow-y: auto;
+      transition: right 0.3s cubic-bezier(0.16,1,0.3,1);
     }
-    .add-card:hover { border-color: var(--sage); background: rgba(138,171,138,0.08); color: var(--sage-dark); }
-    .add-card .plus { font-size: 18px; font-weight: 300; }
+    .side-panel.open { right: 0; }
+    .sp-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--text-light); width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+    .sp-close:hover { background: var(--border); }
+    .sp-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 14px; }
+    .sp-name { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; margin-bottom: 2px; line-height: 1.2; }
+    .sp-role { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 20px; }
+    .sp-div { height: 1px; background: var(--border); margin: 14px 0; }
+    .sp-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    .sp-lbl { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); min-width: 86px; padding-top: 2px; flex-shrink: 0; }
+    .sp-val { font-size: 0.86rem; color: var(--text-dark); line-height: 1.6; }
+    .sp-notes { background: var(--cream); border-radius: 10px; padding: 12px 14px; font-size: 0.82rem; color: var(--text-mid); line-height: 1.7; font-style: italic; margin-top: 12px; }
+    .sp-relations { margin-top: 14px; }
+    .sp-rel-title { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); margin-bottom: 8px; }
+    .sp-rel-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--cream); border: 1px solid var(--border);
+      border-radius: 20px; padding: 5px 12px; margin: 4px 4px 0 0;
+      font-size: 0.75rem; color: var(--text-dark); cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sp-rel-chip:hover { background: var(--sage-light); border-color: var(--sage); }
+    .sp-actions { display: flex; gap: 8px; margin-top: 20px; }
+    .sp-btn-edit { flex: 1; padding: 11px; background: linear-gradient(135deg,var(--sage-dark),var(--sage)); color: white; border: none; border-radius: 10px; font-family: 'Jost',sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
+    .sp-btn-admin { padding: 11px 16px; background: white; color: var(--sage-dark); border: 1.5px solid var(--sage-light); border-radius: 10px; font-family: 'Jost',sans-serif; font-size: 0.78rem; cursor: pointer; }
 
     /* Legend */
-    .legend {
-      display: flex; gap: 16px; flex-wrap: wrap;
-      margin-bottom: 16px; padding: 12px 18px;
-      background: white; border: 1px solid var(--border);
-      border-radius: 12px; align-items: center;
-    }
-    .legend-title { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); }
-    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.73rem; color: var(--text-mid); }
-    .l-dot { width: 11px; height: 11px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; padding: 11px 16px; background: white; border: 1px solid var(--border); border-radius: 11px; align-items: center; }
+    .lg-title { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); }
+    .lg-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-mid); }
+    .lg-box { width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
+    .lg-line { width: 24px; height: 2px; flex-shrink: 0; }
 
-    /* Info panel */
-    .info-panel {
-      position: fixed; right: -400px; top: var(--nav-height);
-      width: 360px; height: calc(100vh - var(--nav-height));
-      background: var(--warm-white); border-left: 1px solid var(--border);
-      padding: 28px; transition: right 0.35s cubic-bezier(0.16,1,0.3,1);
-      z-index: 50; overflow-y: auto;
-    }
-    .info-panel.open { right: 0; }
-    .info-close {
-      position: absolute; top: 18px; right: 18px;
-      background: none; border: none; font-size: 1.1rem;
-      cursor: pointer; color: var(--text-light);
-      width: 30px; height: 30px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .info-close:hover { background: var(--border); }
-    .info-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 14px; }
-    .info-panel h2 { font-family: 'Cormorant Garamond',serif; font-size: 1.6rem; font-weight: 400; color: var(--text-dark); margin-bottom: 3px; line-height: 1.2; }
-    .info-role { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 20px; }
-    .info-divider { height: 1px; background: var(--border); margin: 12px 0; }
-    .info-row { display: flex; gap: 10px; margin-bottom: 10px; }
-    .info-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); min-width: 84px; padding-top: 2px; flex-shrink: 0; }
-    .info-value { font-size: 0.86rem; color: var(--text-dark); line-height: 1.6; }
-    .info-notes { background: var(--cream); border-radius: 10px; padding: 12px 14px; font-size: 0.83rem; color: var(--text-mid); line-height: 1.7; font-style: italic; margin-top: 14px; }
+    /* Empty state */
+    .empty-tree { text-align: center; padding: 80px 40px; color: var(--text-light); }
+    .empty-tree .ei { font-size: 56px; margin-bottom: 20px; }
+    .empty-tree h3 { font-family: 'Cormorant Garamond',serif; font-size: 1.4rem; font-weight: 400; color: var(--text-dark); margin-bottom: 8px; }
+    .empty-tree p { font-size: 0.85rem; line-height: 1.7; margin-bottom: 20px; }
+    .empty-tree a { display: inline-block; padding: 12px 24px; background: var(--sage-dark); color: white; border-radius: 10px; text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
 
-    .notice { background: #f0f5f0; border: 1px solid var(--sage-light); border-radius: 12px; padding: 13px 18px; font-size: 0.82rem; color: var(--sage-dark); margin-bottom: 20px; line-height: 1.6; }
-    .how-to { margin-top: 20px; background: white; border: 1px solid var(--border); border-radius: 14px; padding: 22px 26px; }
-    .how-to h3 { font-family: 'Cormorant Garamond',serif; font-size: 1.15rem; margin-bottom: 10px; color: var(--text-dark); }
-    .how-to p { font-size: 0.83rem; color: var(--text-mid); line-height: 1.8; }
-    .how-to code { background: var(--cream); padding: 1px 5px; border-radius: 4px; font-size: 0.8rem; }
+    /* Notice */
+    .notice { background: #f0f5f0; border: 1px solid var(--sage-light); border-radius: 11px; padding: 12px 16px; font-size: 0.8rem; color: var(--sage-dark); margin-bottom: 16px; line-height: 1.6; }
   </style>
 </head>
 <body>
@@ -212,490 +169,347 @@
       <p class="eyebrow">Explore</p>
       <h1>The <em>Nukala</em> Family Tree</h1>
       <div class="hero-divider"></div>
-      <p>Click any person to see their details. Supports unlimited generations, spouses, siblings and children.</p>
+      <p>Click any person to see their details and family connections. Lines show parent-child and spouse relationships.</p>
     </div>
 
     <div class="content-area">
-      <div class="notice">💡 <strong>Starter template.</strong> Open <code>tree.html</code> and replace placeholder names/dates with your real family details. Duplicate any person block to add more members.</div>
 
-      <!-- Legend + controls -->
+      <!-- Legend -->
       <div class="legend">
-        <span class="legend-title">Key</span>
-        <div class="legend-item"><div class="l-dot" style="background:#fffdf7;border-color:#e8d5a0;"></div>Ancestor</div>
-        <div class="legend-item"><div class="l-dot" style="background:white;border-color:#e8e2d8;"></div>Male</div>
-        <div class="legend-item"><div class="l-dot" style="background:white;border-color:#e8d8f0;"></div>Female</div>
-        <div class="legend-item"><div class="l-dot" style="background:#f8f8f8;border-color:#ccc;"></div>Deceased</div>
-        <div class="legend-item">💛 Spouse</div>
-        <div class="legend-item" style="margin-left:auto; display:flex; gap:8px;">
-          <button class="ctrl-btn" onclick="expandAll()">Expand All</button>
-          <button class="ctrl-btn" onclick="collapseAll()">Collapse All</button>
+        <span class="lg-title">Key</span>
+        <div class="lg-item"><div class="lg-box" style="background:#fffdf7;border-color:#e8d5a0;"></div>Ancestor</div>
+        <div class="lg-item"><div class="lg-box" style="background:white;border-color:#e8e2d8;"></div>Male</div>
+        <div class="lg-item"><div class="lg-box" style="background:white;border-color:#e0d0f0;"></div>Female</div>
+        <div class="lg-item"><div class="lg-box" style="background:#f8f8f8;border-color:#ccc;border-style:dashed;"></div>Deceased</div>
+        <div class="lg-item"><div class="lg-line" style="background:#c8ddc8;"></div>Parent–Child</div>
+        <div class="lg-item"><div class="lg-line" style="background:#e8d5a0;border-top:2px dashed #e8d5a0;height:0;"></div>Spouse</div>
+        <div style="margin-left:auto;">
+          <a href="admin.html" style="font-size:0.74rem;color:var(--sage-dark);text-decoration:none;font-weight:500;">⚙️ Manage Members →</a>
         </div>
       </div>
 
-      <!-- Zoom -->
-      <div class="tree-controls">
-        <span style="font-size:0.8rem;color:var(--text-mid);">🔍 Zoom:</span>
-        <div class="zoom-controls">
-          <button class="zoom-btn" onclick="zoomOut()">−</button>
-          <span class="zoom-label" id="zoomLabel">100%</span>
-          <button class="zoom-btn" onclick="zoomIn()">+</button>
-          <button class="ctrl-btn" onclick="resetZoom()">Reset</button>
+      <!-- Toolbar -->
+      <div class="tree-toolbar">
+        <button class="tb-btn" onclick="fitToScreen()">⊡ Fit Screen</button>
+        <button class="tb-btn" onclick="resetView()">↺ Reset</button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn" id="btnShowSpouse" onclick="toggleSpouseLines()" class="active">💛 Spouse Lines</button>
+        <button class="tb-btn" id="btnShowParent" onclick="toggleParentLines()">🌿 Parent Lines</button>
+        <div class="tb-sep"></div>
+        <div class="zoom-wrap">
+          <button class="z-btn" onclick="zoomOut()">−</button>
+          <span class="z-label" id="zoomLbl">100%</span>
+          <button class="z-btn" onclick="zoomIn()">+</button>
         </div>
       </div>
 
-      <!-- Tree -->
-      <div class="tree-viewport">
+      <!-- Tree viewport -->
+      <div class="tree-viewport" id="treeVp">
         <div class="tree-canvas" id="treeCanvas">
+          <svg id="connectorSvg" width="1" height="1"></svg>
+          <div id="cardsLayer"></div>
+        </div>
+      </div>
 
-          <!-- ══════════════════════════════════
-               GEN 1 — GREAT-GREAT-GRANDPARENTS
-          ══════════════════════════════════ -->
-          <div class="gen-header">
-            <span class="gen-badge">Generation 1 · Great-Great-Grandparents</span>
-            <div class="gen-line"></div>
-            <button class="gen-add-btn" onclick="addTip()">+ Add</button>
-          </div>
-          <div class="family-units" id="gen1">
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person ancestor deceased" onclick="si('ggp1m')"><div class="person-avatar">👴<div class="deceased-mark">✝</div></div><div class="person-name">GG-Grandfather Nukala</div><div class="person-dates">1880 – 1950</div><div class="person-relation">GG-Grandfather</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person ancestor female deceased" onclick="si('ggp1f')"><div class="person-avatar">👵<div class="deceased-mark">✝</div></div><div class="person-name">GG-Grandmother Nukala</div><div class="person-dates">1885 – 1955</div><div class="person-relation">GG-Grandmother</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person ancestor deceased" onclick="si('ggp2m')"><div class="person-avatar">👴<div class="deceased-mark">✝</div></div><div class="person-name">GG-Grandfather Maternal</div><div class="person-dates">1878 – 1948</div><div class="person-relation">GG-Grandfather</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person ancestor female deceased" onclick="si('ggp2f')"><div class="person-avatar">👵<div class="deceased-mark">✝</div></div><div class="person-name">GG-Grandmother Maternal</div><div class="person-dates">1882 – 1952</div><div class="person-relation">GG-Grandmother</div></div>
-              </div>
-            </div>
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Family</div></div></div>
-          </div>
-          <div class="v-down"></div>
-
-          <!-- ══════════════════════════════════
-               GEN 2 — GREAT-GRANDPARENTS
-          ══════════════════════════════════ -->
-          <div class="gen-header">
-            <span class="gen-badge">Generation 2 · Great-Grandparents</span>
-            <div class="gen-line"></div>
-            <button class="gen-add-btn" onclick="addTip()">+ Add</button>
-          </div>
-          <div class="family-units" id="gen2">
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person ancestor deceased" onclick="si('ggf1')"><div class="person-avatar">👴<div class="deceased-mark">✝</div></div><div class="person-name">Great-Grandfather Nukala</div><div class="person-dates">1905 – 1970</div><div class="person-relation">Great-Grandfather</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person ancestor female deceased" onclick="si('ggm1')"><div class="person-avatar">👵<div class="deceased-mark">✝</div></div><div class="person-name">Great-Grandmother Nukala</div><div class="person-dates">1908 – 1975</div><div class="person-relation">Great-Grandmother</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person ancestor deceased" onclick="si('ggf2')"><div class="person-avatar">👴<div class="deceased-mark">✝</div></div><div class="person-name">Great-Grandfather Maternal</div><div class="person-dates">1903 – 1968</div><div class="person-relation">Great-Grandfather</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person ancestor female deceased" onclick="si('ggm2')"><div class="person-avatar">👵<div class="deceased-mark">✝</div></div><div class="person-name">Great-Grandmother Maternal</div><div class="person-dates">1907 – 1972</div><div class="person-relation">Great-Grandmother</div></div>
-              </div>
-            </div>
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Family</div></div></div>
-          </div>
-          <div class="v-down"></div>
-
-          <!-- ══════════════════════════════════
-               GEN 3 — GRANDPARENTS
-          ══════════════════════════════════ -->
-          <div class="gen-header">
-            <span class="gen-badge">Generation 3 · Grandparents</span>
-            <div class="gen-line"></div>
-            <button class="gen-add-btn" onclick="addTip()">+ Add</button>
-          </div>
-          <div class="family-units" id="gen3">
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person ancestor" onclick="si('pgf')"><div class="person-avatar">👴</div><div class="person-name">Paternal Grandfather</div><div class="person-dates">1930 –</div><div class="person-relation">Grandfather</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person ancestor female" onclick="si('pgm')"><div class="person-avatar">👵</div><div class="person-name">Paternal Grandmother</div><div class="person-dates">1933 –</div><div class="person-relation">Grandmother</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person ancestor" onclick="si('mgf')"><div class="person-avatar">👴</div><div class="person-name">Maternal Grandfather</div><div class="person-dates">1932 –</div><div class="person-relation">Grandfather</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person ancestor female" onclick="si('mgm')"><div class="person-avatar">👵</div><div class="person-name">Maternal Grandmother</div><div class="person-dates">1935 –</div><div class="person-relation">Grandmother</div></div>
-              </div>
-            </div>
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Family</div></div></div>
-          </div>
-          <div class="v-down"></div>
-
-          <!-- ══════════════════════════════════
-               GEN 4 — PARENTS + AUNTS/UNCLES
-          ══════════════════════════════════ -->
-          <div class="gen-header">
-            <span class="gen-badge">Generation 4 · Parents, Aunts &amp; Uncles</span>
-            <div class="gen-line"></div>
-            <button class="gen-add-btn" onclick="addTip()">+ Add</button>
-          </div>
-          <div class="family-units" id="gen4">
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person" onclick="si('unc1')"><div class="person-avatar">👨</div><div class="person-name">Uncle 1 Nukala</div><div class="person-dates">1955 –</div><div class="person-relation">Uncle</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person female" onclick="si('aun1')"><div class="person-avatar">👩</div><div class="person-name">Aunt 1 Nukala</div><div class="person-dates">1957 –</div><div class="person-relation">Aunt</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person" onclick="si('dad')"><div class="person-avatar">👨</div><div class="person-name">Father Nukala</div><div class="person-dates">1958 –</div><div class="person-relation">Father</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person female" onclick="si('mum')"><div class="person-avatar">👩</div><div class="person-name">Mother Nukala</div><div class="person-dates">1961 –</div><div class="person-relation">Mother</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person female" onclick="si('aun2')"><div class="person-avatar">👩</div><div class="person-name">Aunt 2 Nukala</div><div class="person-dates">1963 –</div><div class="person-relation">Aunt</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person" onclick="si('unc2')"><div class="person-avatar">👨</div><div class="person-name">Uncle 2 Nukala</div><div class="person-dates">1965 –</div><div class="person-relation">Uncle</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person female" onclick="si('aun3')"><div class="person-avatar">👩</div><div class="person-name">Aunt 3 Nukala</div><div class="person-dates">1967 –</div><div class="person-relation">Aunt</div></div>
-              </div>
-            </div>
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Member</div></div></div>
-          </div>
-          <div class="v-down"></div>
-
-          <!-- ══════════════════════════════════
-               GEN 5 — YOU + SIBLINGS + COUSINS
-          ══════════════════════════════════ -->
-          <div class="gen-header">
-            <span class="gen-badge">Generation 5 · You, Siblings &amp; Cousins</span>
-            <div class="gen-line"></div>
-            <button class="gen-add-btn" onclick="addTip()">+ Add</button>
-          </div>
-          <div class="family-units" id="gen5">
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person" onclick="si('cou1')"><div class="person-avatar">🧑</div><div class="person-name">Cousin 1 Nukala</div><div class="person-dates">1980 –</div><div class="person-relation">Cousin</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person female" onclick="si('cou2')"><div class="person-avatar">🧑</div><div class="person-name">Cousin 2 Nukala</div><div class="person-dates">1982 –</div><div class="person-relation">Cousin</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person you" onclick="si('you')"><div class="person-avatar">⭐</div><div class="person-name">You Nukala</div><div class="person-dates">1985 –</div><div class="person-relation">You</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person female" onclick="si('sp')"><div class="person-avatar">👩</div><div class="person-name">Your Spouse</div><div class="person-dates">1987 –</div><div class="person-relation">Spouse</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person" onclick="si('sib1')"><div class="person-avatar">🧑</div><div class="person-name">Sibling 1 Nukala</div><div class="person-dates">1988 –</div><div class="person-relation">Brother/Sister</div></div>
-                <div class="heart-link">💛</div>
-                <div class="person female" onclick="si('sib1sp')"><div class="person-avatar">🧑</div><div class="person-name">Sibling 1 Spouse</div><div class="person-dates">1990 –</div><div class="person-relation">In-law</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person female" onclick="si('sib2')"><div class="person-avatar">🧑</div><div class="person-name">Sibling 2 Nukala</div><div class="person-dates">1991 –</div><div class="person-relation">Brother/Sister</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person" onclick="si('cou3')"><div class="person-avatar">🧑</div><div class="person-name">Cousin 3 Nukala</div><div class="person-dates">1989 –</div><div class="person-relation">Cousin</div></div>
-              </div>
-            </div>
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Member</div></div></div>
-          </div>
-          <div class="v-down"></div>
-
-          <!-- ══════════════════════════════════
-               GEN 6 — CHILDREN + NEPHEWS/NIECES
-          ══════════════════════════════════ -->
-          <div class="gen-header">
-            <span class="gen-badge">Generation 6 · Children, Nephews &amp; Nieces</span>
-            <div class="gen-line"></div>
-            <button class="gen-add-btn" onclick="addTip()">+ Add</button>
-          </div>
-          <div class="family-units" id="gen6">
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person" onclick="si('ch1')"><div class="person-avatar">👦</div><div class="person-name">Child 1 Nukala</div><div class="person-dates">2010 –</div><div class="person-relation">Son/Daughter</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person female" onclick="si('ch2')"><div class="person-avatar">👧</div><div class="person-name">Child 2 Nukala</div><div class="person-dates">2013 –</div><div class="person-relation">Son/Daughter</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person" onclick="si('ch3')"><div class="person-avatar">👦</div><div class="person-name">Child 3 Nukala</div><div class="person-dates">2016 –</div><div class="person-relation">Son/Daughter</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person female" onclick="si('neph1')"><div class="person-avatar">👧</div><div class="person-name">Nephew/Niece 1</div><div class="person-dates">2012 –</div><div class="person-relation">Nephew/Niece</div></div>
-              </div>
-            </div>
-            <div class="family-unit">
-              <div class="couple">
-                <div class="person" onclick="si('neph2')"><div class="person-avatar">👦</div><div class="person-name">Nephew/Niece 2</div><div class="person-dates">2015 –</div><div class="person-relation">Nephew/Niece</div></div>
-              </div>
-            </div>
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Child</div></div></div>
-          </div>
-          <div class="v-down"></div>
-
-          <!-- ══════════════════════════════════
-               GEN 7 — GRANDCHILDREN
-          ══════════════════════════════════ -->
-          <div class="gen-header">
-            <span class="gen-badge">Generation 7 · Grandchildren</span>
-            <div class="gen-line"></div>
-            <button class="gen-add-btn" onclick="addTip()">+ Add</button>
-          </div>
-          <div class="family-units" id="gen7">
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Grandchild</div></div></div>
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Grandchild</div></div></div>
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Grandchild</div></div></div>
-          </div>
-          <div class="v-down"></div>
-
-          <!-- ══════════════════════════════════
-               GEN 8 — GREAT-GRANDCHILDREN
-          ══════════════════════════════════ -->
-          <div class="gen-header">
-            <span class="gen-badge">Generation 8 · Great-Grandchildren</span>
-            <div class="gen-line"></div>
-            <button class="gen-add-btn" onclick="addTip()">+ Add</button>
-          </div>
-          <div class="family-units" id="gen8">
-            <div class="family-unit"><div class="add-card" onclick="addTip()"><div class="plus">＋</div><div>Add Member</div></div></div>
-          </div>
-
-        </div><!-- end tree-canvas -->
-      </div><!-- end tree-viewport -->
-
-      <div class="how-to">
-        <h3>📝 How to Add More Family Members</h3>
-        <p>
-          Open <code>tree.html</code> in a text editor (Notepad on Windows).<br/>
-          To <strong>add a person</strong>: copy any <code>&lt;div class="person"&gt;...&lt;/div&gt;</code> block and paste it inside a <code>&lt;div class="family-unit"&gt;</code>.<br/>
-          To <strong>add a spouse</strong>: wrap two person cards in a <code>&lt;div class="couple"&gt;</code> with <code>&lt;div class="heart-link"&gt;💛&lt;/div&gt;</code> between them.<br/>
-          To <strong>add a generation</strong>: copy an entire generation block and update the generation number, badge text, and person details.<br/>
-          To <strong>mark someone deceased</strong>: add the class <code>deceased</code> to their person div.<br/>
-          To <strong>mark someone as female</strong>: add the class <code>female</code> to their person div.<br/>
-          The tree supports <strong>unlimited generations</strong> — just keep adding! 🌳
-        </p>
+      <div class="notice" style="margin-top:16px;">
+        💡 <strong>To add or link family members:</strong> Go to <a href="admin.html" style="color:var(--sage-dark);">admin.html</a> → Add a person → set their <strong>Father ID</strong>, <strong>Mother ID</strong> and <strong>Spouse ID</strong> fields to automatically draw connecting lines on the tree.
       </div>
 
     </div>
   </main>
 
-  <!-- Info / Edit Panel -->
-  <div class="info-panel" id="infoPanel">
-    <button class="info-close" onclick="closeInfo()">✕</button>
-    <div id="infoPanelContent"></div>
-  </div>
-
-  <!-- Edit Modal -->
-  <div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
-    <div style="background:white;border-radius:20px;padding:36px;width:90%;max-width:480px;position:relative;animation:fadeUp 0.3s ease;max-height:90vh;overflow-y:auto;">
-      <button onclick="closeEdit()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:#a0a0a0;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;">✕</button>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin-bottom:4px;color:#2c2c2c;">Edit Family Member</h2>
-      <p style="font-size:0.78rem;color:#a0a0a0;margin-bottom:24px;">Changes are saved automatically to your browser.</p>
-      <input type="hidden" id="editId"/>
-      <div style="display:grid;gap:14px;">
-        <div>
-          <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Full Name</label>
-          <input id="eName" type="text" placeholder="e.g. Ramu Nukala" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
-        </div>
-        <div>
-          <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Relationship / Role</label>
-          <input id="eRole" type="text" placeholder="e.g. Grandfather, Father, Uncle" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div>
-            <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Year Born</label>
-            <input id="eBorn" type="text" placeholder="e.g. 1942" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
-          </div>
-          <div>
-            <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Year Passed (if applicable)</label>
-            <input id="eDied" type="text" placeholder="e.g. 2005 or leave blank" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
-          </div>
-        </div>
-        <div>
-          <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Birthplace / Hometown</label>
-          <input id="ePlace" type="text" placeholder="e.g. Hyderabad, India" style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"/>
-        </div>
-        <div>
-          <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:6px;">Notes / Story</label>
-          <textarea id="eNotes" rows="3" placeholder="Add a short biography, memories, or fun facts..." style="width:100%;padding:11px 14px;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;resize:vertical;"></textarea>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:20px;">
-        <button onclick="saveEdit()" style="flex:1;padding:13px;background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;border:none;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.85rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">💾 Save Changes</button>
-        <button onclick="closeEdit()" style="padding:13px 20px;background:white;color:#6b6b6b;border:1.5px solid #e8e2d8;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.85rem;cursor:pointer;">Cancel</button>
-      </div>
-      <p style="font-size:0.72rem;color:#c8ddc8;text-align:center;margin-top:12px;">✅ Saved to your browser automatically. No upload needed!</p>
-    </div>
+  <!-- Side Panel -->
+  <div class="side-panel" id="sidePanel">
+    <button class="sp-close" onclick="closePanel()">✕</button>
+    <div id="sidePanelContent"></div>
   </div>
 
   <footer>&copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love</footer>
 
   <script>
-    // ── DEFAULT DATA ──
-    const defaultMembers = {
-      ggp1m: { name:'GG-Grandfather Nukala', role:'Great-Great-Grandfather', born:'1880', died:'1950', place:'India', notes:'Click Edit to update with real details.' },
-      ggp1f: { name:'GG-Grandmother Nukala', role:'Great-Great-Grandmother', born:'1885', died:'1955', place:'India', notes:'Click Edit to update with real details.' },
-      ggp2m: { name:'GG-Grandfather Maternal', role:'Great-Great-Grandfather', born:'1878', died:'1948', place:'India', notes:'Click Edit to update with real details.' },
-      ggp2f: { name:'GG-Grandmother Maternal', role:'Great-Great-Grandmother', born:'1882', died:'1952', place:'India', notes:'Click Edit to update with real details.' },
-      ggf1:  { name:'Great-Grandfather Nukala', role:'Great-Grandfather', born:'1905', died:'1970', place:'India', notes:'Click Edit to update with real details.' },
-      ggm1:  { name:'Great-Grandmother Nukala', role:'Great-Grandmother', born:'1908', died:'1975', place:'India', notes:'Click Edit to update with real details.' },
-      ggf2:  { name:'Great-Grandfather Maternal', role:'Great-Grandfather', born:'1903', died:'1968', place:'India', notes:'Click Edit to update with real details.' },
-      ggm2:  { name:'Great-Grandmother Maternal', role:'Great-Grandmother', born:'1907', died:'1972', place:'India', notes:'Click Edit to update with real details.' },
-      pgf:   { name:'Paternal Grandfather', role:'Grandfather', born:'1930', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      pgm:   { name:'Paternal Grandmother', role:'Grandmother', born:'1933', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      mgf:   { name:'Maternal Grandfather', role:'Grandfather', born:'1932', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      mgm:   { name:'Maternal Grandmother', role:'Grandmother', born:'1935', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      unc1:  { name:'Uncle 1 Nukala', role:'Uncle', born:'1955', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      aun1:  { name:'Aunt 1 Nukala', role:'Aunt', born:'1957', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      dad:   { name:'Father Nukala', role:'Father', born:'1958', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      mum:   { name:'Mother Nukala', role:'Mother', born:'1961', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      aun2:  { name:'Aunt 2 Nukala', role:'Aunt', born:'1963', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      unc2:  { name:'Uncle 2 Nukala', role:'Uncle', born:'1965', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      aun3:  { name:'Aunt 3 Nukala', role:'Aunt', born:'1967', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      cou1:  { name:'Cousin 1 Nukala', role:'Cousin', born:'1980', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      cou2:  { name:'Cousin 2 Nukala', role:'Cousin', born:'1982', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      you:   { name:'You Nukala', role:'You ⭐', born:'1985', died:'', place:'India', notes:'This is you! Click Edit to update your details.' },
-      sp:    { name:'Your Spouse', role:'Spouse', born:'1987', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      sib1:  { name:'Sibling 1 Nukala', role:'Brother/Sister', born:'1988', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      sib1sp:{ name:'Sibling 1 Spouse', role:'In-law', born:'1990', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      sib2:  { name:'Sibling 2 Nukala', role:'Brother/Sister', born:'1991', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      cou3:  { name:'Cousin 3 Nukala', role:'Cousin', born:'1989', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      ch1:   { name:'Child 1 Nukala', role:'Son/Daughter', born:'2010', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      ch2:   { name:'Child 2 Nukala', role:'Son/Daughter', born:'2013', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      ch3:   { name:'Child 3 Nukala', role:'Son/Daughter', born:'2016', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      neph1: { name:'Nephew/Niece 1', role:'Nephew/Niece', born:'2012', died:'', place:'India', notes:'Click Edit to update with real details.' },
-      neph2: { name:'Nephew/Niece 2', role:'Nephew/Niece', born:'2015', died:'', place:'India', notes:'Click Edit to update with real details.' },
-    };
+    // ══════════════════════════════════════════════════════
+    // DATA
+    // ══════════════════════════════════════════════════════
+    function loadMembers() {
+      return JSON.parse(localStorage.getItem('nukala_tree_data') || '{}');
+    }
 
-    // ── LOAD FROM LOCALSTORAGE (persists across visits) ──
-    let members = JSON.parse(localStorage.getItem('nukala_tree_data') || 'null') || JSON.parse(JSON.stringify(defaultMembers));
+    // ══════════════════════════════════════════════════════
+    // LAYOUT ENGINE — positions cards by generation
+    // ══════════════════════════════════════════════════════
+    const CARD_W = 148, CARD_H = 110, H_GAP = 36, V_GAP = 80;
 
-    // ── APPLY SAVED DATA TO TREE CARDS ON PAGE LOAD ──
-    function applyDataToCards() {
-      Object.keys(members).forEach(id => {
-        const m = members[id];
-        const card = document.querySelector(`.person[data-id="${id}"]`);
-        if (!card) return;
-        const nameEl = card.querySelector('.person-name');
-        const datesEl = card.querySelector('.person-dates');
-        const relEl = card.querySelector('.person-relation');
-        if (nameEl) nameEl.textContent = m.name;
-        if (datesEl) datesEl.textContent = m.born + (m.died ? ' – ' + m.died : ' –');
-        if (relEl) relEl.textContent = m.role;
+    function layoutTree(members) {
+      const list = Object.values(members);
+      if (list.length === 0) return {};
+
+      // Group by generation
+      const byGen = {};
+      list.forEach(m => {
+        const g = parseInt(m.gen) || 9;
+        if (!byGen[g]) byGen[g] = [];
+        byGen[g].push(m);
+      });
+
+      const positions = {};
+      const gens = Object.keys(byGen).sort((a,b) => a-b);
+
+      gens.forEach((gen, gi) => {
+        const members = byGen[gen];
+        const rowWidth = members.length * CARD_W + (members.length - 1) * H_GAP;
+        const startX = Math.max(60, 500 - rowWidth / 2);
+        const y = 60 + gi * (CARD_H + V_GAP);
+        members.forEach((m, i) => {
+          positions[m.id] = {
+            x: startX + i * (CARD_W + H_GAP),
+            y: y
+          };
+        });
+      });
+
+      return positions;
+    }
+
+    // ══════════════════════════════════════════════════════
+    // RENDER TREE
+    // ══════════════════════════════════════════════════════
+    let showSpouseLines = true;
+    let showParentLines = true;
+    let zoom = 1;
+    let selectedId = null;
+
+    function renderTree() {
+      const members = loadMembers();
+      const list = Object.values(members);
+      const cardsLayer = document.getElementById('cardsLayer');
+      const svg = document.getElementById('connectorSvg');
+      cardsLayer.innerHTML = '';
+      svg.innerHTML = '';
+
+      if (list.length === 0) {
+        cardsLayer.innerHTML = `
+          <div class="empty-tree">
+            <div class="ei">🌳</div>
+            <h3>Your Family Tree is Empty</h3>
+            <p>Start by adding family members in the admin panel.<br/>Once added, set their relationships to see connecting lines.</p>
+            <a href="admin.html">⚙️ Go to Admin Panel</a>
+          </div>`;
+        svg.setAttribute('width', '800');
+        svg.setAttribute('height', '400');
+        return;
+      }
+
+      const positions = layoutTree(members);
+
+      // Calculate canvas size
+      let maxX = 0, maxY = 0;
+      Object.values(positions).forEach(p => {
+        maxX = Math.max(maxX, p.x + CARD_W + 60);
+        maxY = Math.max(maxY, p.y + CARD_H + 60);
+      });
+
+      svg.setAttribute('width', maxX);
+      svg.setAttribute('height', maxY);
+      document.getElementById('treeCanvas').style.width = maxX + 'px';
+      document.getElementById('treeCanvas').style.height = maxY + 'px';
+
+      // Draw connector lines first (behind cards)
+      list.forEach(m => {
+        const pos = positions[m.id];
+        if (!pos) return;
+        const cx = pos.x + CARD_W / 2;
+        const cy = pos.y + CARD_H / 2;
+
+        // Parent → Child lines
+        if (showParentLines) {
+          ['fatherId', 'motherId'].forEach(rel => {
+            if (m[rel] && positions[m[rel]]) {
+              const ppos = positions[m[rel]];
+              const pcx = ppos.x + CARD_W / 2;
+              const pcy = ppos.y + CARD_H;
+              const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+              const midY = pcy + (pos.y - pcy) / 2;
+              path.setAttribute('d', `M${pcx},${pcy} C${pcx},${midY} ${cx},${midY} ${cx},${pos.y}`);
+              path.setAttribute('class','line-parent');
+              svg.appendChild(path);
+            }
+          });
+        }
+
+        // Spouse lines
+        if (showSpouseLines && m.spouseId && positions[m.spouseId]) {
+          const sppos = positions[m.spouseId];
+          // Only draw once (from lower id to avoid duplicate)
+          if (m.id < m.spouseId) {
+            const spcx = sppos.x + CARD_W / 2;
+            const spcy = sppos.y + CARD_H / 2;
+            const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+            line.setAttribute('x1', pos.x + CARD_W);
+            line.setAttribute('y1', cy);
+            line.setAttribute('x2', sppos.x);
+            line.setAttribute('y2', spcy);
+            line.setAttribute('class','line-spouse');
+            svg.appendChild(line);
+
+            // Heart in middle
+            const heartTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
+            heartTxt.setAttribute('x', (pos.x + CARD_W + sppos.x) / 2);
+            heartTxt.setAttribute('y', cy + 5);
+            heartTxt.setAttribute('text-anchor','middle');
+            heartTxt.setAttribute('font-size','14');
+            heartTxt.textContent = '💛';
+            svg.appendChild(heartTxt);
+          }
+        }
+      });
+
+      // Render person cards
+      list.forEach(m => {
+        const pos = positions[m.id];
+        if (!pos) return;
+
+        const name = [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Unnamed';
+        const shortName = name.length > 16 ? name.substring(0,14)+'…' : name;
+        const dates = m.born ? (m.born + (m.died ? '–'+m.died : '')) : '';
+        const emoji = m.female ? '👩' : '👨';
+        const classes = ['pcard', m.female?'female':'', m.ancestor?'ancestor':'', m.deceased?'deceased':'', m.id===selectedId?'selected':''].filter(Boolean).join(' ');
+
+        const card = document.createElement('div');
+        card.className = classes;
+        card.style.left = pos.x + 'px';
+        card.style.top = pos.y + 'px';
+        card.setAttribute('data-id', m.id);
+        card.innerHTML = `
+          <div class="pc-avatar">
+            ${emoji}
+            ${m.deceased ? '<div class="pc-deceased-dot">✝</div>' : ''}
+          </div>
+          <div class="pc-name">${shortName}</div>
+          <div class="pc-role">${m.role||'–'}</div>
+          <div class="pc-dates">${dates}</div>
+        `;
+        card.addEventListener('click', () => showPanel(m.id));
+        cardsLayer.appendChild(card);
       });
     }
 
-    // ── VIEW PANEL ──
-    function si(id) {
-      const m = members[id]; if (!m) return;
-      document.getElementById('infoPanelContent').innerHTML = `
-        <div class="info-avatar">👤</div>
-        <h2>${m.name}</h2>
-        <div class="info-role">${m.role}</div>
-        <div class="info-divider"></div>
-        <div class="info-row"><div class="info-label">Born</div><div class="info-value">${m.born || '–'}</div></div>
-        ${m.died ? `<div class="info-row"><div class="info-label">Passed</div><div class="info-value">${m.died}</div></div>` : ''}
-        <div class="info-row"><div class="info-label">Birthplace</div><div class="info-value">${m.place || '–'}</div></div>
-        <div class="info-divider"></div>
-        <div class="info-notes">${m.notes || 'No notes yet.'}</div>
-        <div style="margin-top:20px;">
-          <button onclick="openEdit('${id}')" style="width:100%;padding:12px;background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;border:none;border-radius:10px;font-family:'Jost',sans-serif;font-size:0.82rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">✏️ Edit This Person</button>
+    // ══════════════════════════════════════════════════════
+    // SIDE PANEL
+    // ══════════════════════════════════════════════════════
+    function showPanel(id) {
+      const members = loadMembers();
+      const m = members[id]; if(!m) return;
+      selectedId = id;
+      renderTree();
+
+      const name = [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Unnamed';
+      const emoji = m.female ? '👩' : '👨';
+
+      // Find relatives
+      const all = Object.values(members);
+      const father = m.fatherId ? members[m.fatherId] : null;
+      const mother = m.motherId ? members[m.motherId] : null;
+      const spouse = m.spouseId ? members[m.spouseId] : null;
+      const children = all.filter(x => x.fatherId===id || x.motherId===id);
+      const siblings = all.filter(x => x.id!==id && ((m.fatherId && x.fatherId===m.fatherId)||(m.motherId && x.motherId===m.motherId)));
+
+      function relChip(person, label) {
+        if (!person) return '';
+        const n = [person.firstName, person.lastName].filter(Boolean).join(' ');
+        return `<span class="sp-rel-chip" onclick="showPanel('${person.id}')">${label}: ${n}</span>`;
+      }
+
+      const relHtml = [
+        father ? relChip(father,'Father') : '',
+        mother ? relChip(mother,'Mother') : '',
+        spouse ? relChip(spouse,'Spouse') : '',
+        ...children.map(c => relChip(c,'Child')),
+        ...siblings.map(s => relChip(s,'Sibling')),
+      ].filter(Boolean).join('');
+
+      document.getElementById('sidePanelContent').innerHTML = `
+        <div class="sp-avatar" style="${m.female?'background:#f0e8f8':m.ancestor?'background:var(--gold-light)':''}">${emoji}</div>
+        <div class="sp-name">${name}</div>
+        <div class="sp-role">${m.role||'–'} · Gen ${m.gen||'?'}</div>
+        <div class="sp-div"></div>
+        ${m.born?`<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">${m.born}</div></div>`:''}
+        ${m.died?`<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">${m.died}</div></div>`:''}
+        ${m.place?`<div class="sp-row"><div class="sp-lbl">Birthplace</div><div class="sp-val">${m.place}</div></div>`:''}
+        ${m.occupation?`<div class="sp-row"><div class="sp-lbl">Occupation</div><div class="sp-val">${m.occupation}</div></div>`:''}
+        ${m.spouse?`<div class="sp-row"><div class="sp-lbl">Spouse</div><div class="sp-val">${m.spouse}</div></div>`:''}
+        ${m.notes?`<div class="sp-notes">${m.notes}</div>`:''}
+        ${relHtml?`<div class="sp-div"></div><div class="sp-relations"><div class="sp-rel-title">Family Connections</div>${relHtml}</div>`:''}
+        <div class="sp-actions">
+          <button class="sp-btn-admin" onclick="window.location.href='admin.html'">⚙️ Edit in Admin</button>
         </div>
       `;
-      document.getElementById('infoPanel').classList.add('open');
+      document.getElementById('sidePanel').classList.add('open');
     }
 
-    function closeInfo() { document.getElementById('infoPanel').classList.remove('open'); }
-
-    // ── EDIT MODAL ──
-    function openEdit(id) {
-      const m = members[id]; if (!m) return;
-      document.getElementById('editId').value = id;
-      document.getElementById('eName').value = m.name || '';
-      document.getElementById('eRole').value = m.role || '';
-      document.getElementById('eBorn').value = m.born || '';
-      document.getElementById('eDied').value = m.died || '';
-      document.getElementById('ePlace').value = m.place || '';
-      document.getElementById('eNotes').value = m.notes || '';
-      document.getElementById('editModal').style.display = 'flex';
+    function closePanel() {
+      selectedId = null;
+      document.getElementById('sidePanel').classList.remove('open');
+      renderTree();
     }
 
-    function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
-
-    function saveEdit() {
-      const id = document.getElementById('editId').value;
-      members[id] = {
-        name:  document.getElementById('eName').value.trim(),
-        role:  document.getElementById('eRole').value.trim(),
-        born:  document.getElementById('eBorn').value.trim(),
-        died:  document.getElementById('eDied').value.trim(),
-        place: document.getElementById('ePlace').value.trim(),
-        notes: document.getElementById('eNotes').value.trim(),
-      };
-      // Save to localStorage
-      localStorage.setItem('nukala_tree_data', JSON.stringify(members));
-      // Update the card on the tree
-      applyDataToCards();
-      // Refresh side panel
-      closeEdit();
-      si(id);
-      // Show success toast
-      showToast('✅ Saved! ' + members[id].name);
+    // ══════════════════════════════════════════════════════
+    // TOGGLE LINES
+    // ══════════════════════════════════════════════════════
+    function toggleSpouseLines() {
+      showSpouseLines = !showSpouseLines;
+      document.getElementById('btnShowSpouse').classList.toggle('active', showSpouseLines);
+      renderTree();
+    }
+    function toggleParentLines() {
+      showParentLines = !showParentLines;
+      document.getElementById('btnShowParent').classList.toggle('active', showParentLines);
+      renderTree();
     }
 
-    // ── TOAST NOTIFICATION ──
-    function showToast(msg) {
-      const t = document.createElement('div');
-      t.textContent = msg;
-      t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#5c7a5c;color:white;padding:12px 24px;border-radius:30px;font-family:Jost,sans-serif;font-size:0.85rem;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.15);animation:fadeUp 0.3s ease;';
-      document.body.appendChild(t);
-      setTimeout(() => t.remove(), 3000);
-    }
-
-    // ── ZOOM ──
-    let zoom = 1;
-    function zoomIn()   { zoom = Math.min(zoom+0.1, 2);   applyZoom(); }
-    function zoomOut()  { zoom = Math.max(zoom-0.1, 0.4); applyZoom(); }
-    function resetZoom(){ zoom = 1; applyZoom(); }
-    function applyZoom(){
+    // ══════════════════════════════════════════════════════
+    // ZOOM & PAN
+    // ══════════════════════════════════════════════════════
+    function zoomIn()    { zoom = Math.min(zoom+0.1,2.5); applyZoom(); }
+    function zoomOut()   { zoom = Math.max(zoom-0.1,0.3); applyZoom(); }
+    function applyZoom() {
       document.getElementById('treeCanvas').style.transform = `scale(${zoom})`;
-      document.getElementById('zoomLabel').textContent = Math.round(zoom*100)+'%';
+      document.getElementById('zoomLbl').textContent = Math.round(zoom*100)+'%';
+    }
+    function resetView() { zoom=1; applyZoom(); document.getElementById('treeVp').scrollTo(0,0); }
+    function fitToScreen() {
+      const vp = document.getElementById('treeVp');
+      const canvas = document.getElementById('treeCanvas');
+      const scaleX = vp.clientWidth / canvas.scrollWidth;
+      const scaleY = vp.clientHeight / canvas.scrollHeight;
+      zoom = Math.min(scaleX, scaleY, 1) * 0.9;
+      applyZoom();
     }
 
-    function expandAll()   { document.querySelectorAll('.family-units').forEach(el => el.style.display='flex'); }
-    function collapseAll() { document.querySelectorAll('.family-units').forEach((el,i) => { if(i>0) el.style.display='none'; }); }
-
-    function addTip() {
-      alert('To add a NEW family member to a generation:\n\n1. Open tree.html in Notepad\n2. Find the generation you want\n3. Copy any <div class="family-unit">...</div> block\n4. Paste it after the last person\n5. Give it a new data-id (e.g. data-id="newperson1")\n6. Add the same ID to the members list in the script\n7. Upload to GitHub\n\nThen you can edit the name/details from the website directly!');
-    }
-
-    // ── INIT ──
-    // Add data-id attributes to person cards so we can update them
-    document.querySelectorAll('.person[onclick]').forEach(card => {
-      const match = card.getAttribute('onclick').match(/si\('(.+?)'\)/);
-      if (match) card.setAttribute('data-id', match[1]);
+    // Drag to pan
+    let isDragging = false, dragStartX, dragStartY, scrollStartX, scrollStartY;
+    const vp = document.getElementById('treeVp');
+    vp.addEventListener('mousedown', e => {
+      if (e.target.closest('.pcard')) return;
+      isDragging = true; dragStartX = e.clientX; dragStartY = e.clientY;
+      scrollStartX = vp.scrollLeft; scrollStartY = vp.scrollTop;
     });
+    window.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      vp.scrollLeft = scrollStartX - (e.clientX - dragStartX);
+      vp.scrollTop  = scrollStartY - (e.clientY - dragStartY);
+    });
+    window.addEventListener('mouseup', () => isDragging = false);
 
-    applyDataToCards();
+    // Mouse wheel zoom
+    vp.addEventListener('wheel', e => {
+      e.preventDefault();
+      e.deltaY < 0 ? zoomIn() : zoomOut();
+    }, { passive: false });
+
+    // ══════════════════════════════════════════════════════
+    // INIT
+    // ══════════════════════════════════════════════════════
+    renderTree();
   </script>
 </body>
 </html>

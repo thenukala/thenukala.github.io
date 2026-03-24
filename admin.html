@@ -478,6 +478,23 @@
         <textarea id="fNotes" placeholder="Share a story, memory, or biography about this person..."></textarea>
       </div>
 
+      <div class="sidebar-title" style="margin-bottom:6px;margin-top:8px;">🔗 Link to Family Tree</div>
+      <p style="font-size:0.75rem;color:#a0a0a0;margin-bottom:12px;line-height:1.5;">Paste the <strong>Member ID</strong> of parents or spouse to draw connecting lines on the tree. Find IDs by clicking <strong>"📋 Copy ID"</strong> on any member card.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Father's Member ID</label>
+          <input type="text" id="fFatherId" placeholder="Paste father's ID here"/>
+        </div>
+        <div class="form-group">
+          <label>Mother's Member ID</label>
+          <input type="text" id="fMotherId" placeholder="Paste mother's ID here"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Spouse's Member ID</label>
+        <input type="text" id="fSpouseId" placeholder="Paste spouse's ID here"/>
+      </div>
+
       <div class="sidebar-title" style="margin-bottom:10px;">Properties</div>
       <div class="checkbox-row">
         <label class="checkbox-item"><input type="checkbox" id="fFemale"/><span>👩 Female</span></label>
@@ -620,6 +637,7 @@
             </div>
             ${m.notes ? `<div class="member-notes">${m.notes.substring(0,100)}${m.notes.length>100?'…':''}</div>` : ''}
             <div class="member-actions">
+              <button class="btn-edit" onclick="copyId('${m.id}')" title="Copy Member ID for linking" style="flex:none;padding:8px 10px;background:var(--cream);color:var(--text-mid);border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:0.68rem;cursor:pointer;">📋 ID</button>
               <button class="btn-edit" onclick="openEditModal('${m.id}')">✏️ Edit</button>
               <button class="btn-del" onclick="deleteMember('${m.id}')">🗑️</button>
             </div>
@@ -676,11 +694,14 @@
       document.getElementById('fFemale').checked = !!m.female;
       document.getElementById('fAncestor').checked = !!m.ancestor;
       document.getElementById('fDeceased').checked = !!m.deceased;
+      document.getElementById('fFatherId').value = m.fatherId || '';
+      document.getElementById('fMotherId').value = m.motherId || '';
+      document.getElementById('fSpouseId').value = m.spouseId || '';
       document.getElementById('memberModal').classList.add('open');
     }
 
     function clearForm() {
-      ['fFirstName','fLastName','fBorn','fDied','fPlace','fSpouse','fOccupation','fNotes','fCustomRole'].forEach(id => {
+      ['fFirstName','fLastName','fBorn','fDied','fPlace','fSpouse','fOccupation','fNotes','fCustomRole','fFatherId','fMotherId','fSpouseId'].forEach(id => {
         const el = document.getElementById(id); if(el) el.value = '';
       });
       document.getElementById('fRole').value = '';
@@ -773,6 +794,12 @@
     // ══════════════════════════════════
     // TOAST
     // ══════════════════════════════════
+    function copyId(id) {
+      navigator.clipboard.writeText(id).then(() => {
+        showToast('📋 ID copied! Now paste it into the link field of another member.');
+      });
+    }
+
     function showToast(msg) {
       const t = document.createElement('div');
       t.className = 'toast';
