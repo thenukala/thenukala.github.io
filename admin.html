@@ -3,813 +3,1184 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin – Nukala Family Tree</title>
+  <title>Admin – Nukala Family</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="icon" href="favicon.ico"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --cream: #faf8f4; --white: #ffffff;
-      --sage: #8aab8a; --sage-light: #c8ddc8; --sage-dark: #5c7a5c;
-      --gold: #c9a84c; --gold-light: #e8d5a0;
-      --text-dark: #2c2c2c; --text-mid: #6b6b6b; --text-light: #a0a0a0;
-      --border: #e8e2d8; --red: #c0614a;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --cream:#faf8f4;--white:#fff;
+      --sage:#8aab8a;--sage-l:#c8ddc8;--sage-d:#5c7a5c;
+      --gold:#c9a84c;--gold-l:#e8d5a0;
+      --td:#2c2c2c;--tm:#6b6b6b;--tl:#a0a0a0;
+      --border:#e8e2d8;--red:#c0614a;--blue:#4a7ab0;--purple:#7050a0;
     }
-    body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; }
+    body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--td);min-height:100vh;}
 
-    /* ── LOGIN SCREEN ── */
-    #loginScreen {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(138,171,138,0.12) 0%, transparent 60%),
-                  radial-gradient(ellipse 60% 80% at 80% 90%, rgba(201,168,76,0.08) 0%, transparent 60%), var(--cream);
-    }
-    .login-card {
-      background: white; border: 1px solid var(--border); border-radius: 24px;
-      padding: 48px 44px; width: 100%; max-width: 420px;
-      box-shadow: 0 4px 40px rgba(0,0,0,0.06);
-      animation: fadeUp 0.6s ease forwards;
-    }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    /* LOGIN */
+    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;
+      background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(138,171,138,.12) 0%,transparent 60%),var(--cream);}
+    .lcard{background:var(--white);border:1px solid var(--border);border-radius:24px;padding:48px 44px;width:100%;max-width:420px;box-shadow:0 4px 40px rgba(0,0,0,.06);animation:fadeUp .6s ease forwards;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .llogo{text-align:center;margin-bottom:8px;} .llogo img{width:72px;height:72px;object-fit:contain;border-radius:12px;}
+    .ltitle{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;text-align:center;margin-bottom:4px;}
+    .lsub{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tl);text-align:center;margin-bottom:32px;}
+    .flbl{display:block;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:7px;}
+    .finp{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Jost',sans-serif;font-size:.9rem;color:var(--td);background:var(--cream);outline:none;transition:border-color .2s;margin-bottom:14px;}
+    .finp:focus{border-color:var(--sage);background:var(--white);}
+    .btnp{width:100%;padding:14px;background:linear-gradient(135deg,var(--sage-d),var(--sage));color:var(--white);border:none;border-radius:12px;font-family:'Jost',sans-serif;font-size:.85rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 16px rgba(92,122,92,.3);transition:all .2s;}
+    .btnp:hover{transform:translateY(-1px);}
+    .errmsg{color:var(--red);font-size:.78rem;margin-top:8px;display:none;text-align:center;}
 
-    .login-logo { text-align:center; margin-bottom:6px; }
-    .login-logo img { width:72px; height:72px; object-fit:contain; border-radius:12px; }
-    .login-title { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:400; text-align:center; margin-bottom:4px; }
-    .login-sub { font-size:0.72rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-light); text-align:center; margin-bottom:32px; }
-    .form-label { display:block; font-size:0.7rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-mid); margin-bottom:7px; }
-    .form-input {
-      width:100%; padding:13px 16px; border:1.5px solid var(--border); border-radius:10px;
-      font-family:'Jost',sans-serif; font-size:0.9rem; color:var(--text-dark); background:var(--cream);
-      outline:none; transition:border-color 0.2s, box-shadow 0.2s; margin-bottom:14px;
-    }
-    .form-input:focus { border-color:var(--sage); box-shadow:0 0 0 3px rgba(138,171,138,0.15); background:white; }
-    .btn-primary {
-      width:100%; padding:14px; background:linear-gradient(135deg,var(--sage-dark),var(--sage));
-      color:white; border:none; border-radius:12px; font-family:'Jost',sans-serif;
-      font-size:0.85rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase;
-      cursor:pointer; box-shadow:0 4px 16px rgba(92,122,92,0.3); transition:all 0.2s;
-    }
-    .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(92,122,92,0.4); }
-    .error-msg { color:var(--red); font-size:0.78rem; margin-top:8px; display:none; text-align:center; }
+    /* SHELL */
+    #adminUI{display:none;}
+    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .tb-brand{display:flex;align-items:center;gap:10px;}
+    .tb-brand img{width:30px;height:30px;object-fit:contain;border-radius:6px;}
+    .tb-brand h1{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;}
+    .tb-badge{background:var(--red);color:var(--white);font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;}
+    .tb-right{display:flex;align-items:center;gap:10px;}
+    .tb-view{font-size:.75rem;color:var(--sage-d);text-decoration:none;font-weight:500;padding:7px 14px;border:1.5px solid var(--sage-l);border-radius:8px;transition:all .2s;}
+    .tb-view:hover{background:var(--sage-d);color:var(--white);border-color:var(--sage-d);}
+    .tb-out{font-size:.75rem;color:var(--tm);background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .2s;}
+    .tb-out:hover{border-color:var(--red);color:var(--red);}
 
-    /* ── MAIN ADMIN UI ── */
-    #adminUI { display:none; }
+    .shell{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 62px);}
+    .sidebar{background:var(--white);border-right:1px solid var(--border);padding:20px 14px;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;}
+    .nav-section{font-size:.64rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tl);padding:0 10px;margin:18px 0 8px;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .2s;border:none;width:100%;background:none;font-family:'Jost',sans-serif;font-size:.82rem;font-weight:500;color:var(--tm);text-align:left;}
+    .nav-item:hover{background:var(--cream);}
+    .nav-item.active{background:linear-gradient(135deg,rgba(92,122,92,.12),rgba(138,171,138,.08));color:var(--sage-d);}
+    .nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
+    .main{padding:28px 32px;overflow-y:auto;}
+    .page-section{display:none;}
+    .page-section.active{display:block;}
+    .sec-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:4px;}
+    .sec-title em{font-style:italic;color:var(--sage-d);}
+    .sec-sub{font-size:.82rem;color:var(--tm);margin-bottom:24px;font-weight:300;}
+    .sec-div{height:2px;width:50px;background:linear-gradient(to right,var(--sage),var(--gold));border-radius:2px;margin-bottom:24px;}
 
-    /* Top bar */
-    .topbar {
-      background:white; border-bottom:1px solid var(--border); padding:0 32px;
-      height:64px; display:flex; align-items:center; justify-content:space-between;
-      position:sticky; top:0; z-index:100;
-    }
-    .topbar-brand { display:flex; align-items:center; gap:10px; }
-    .topbar-brand img { width:32px; height:32px; object-fit:contain; border-radius:6px; }
-    .topbar-brand h1 { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:400; }
-    .topbar-brand span { color:var(--sage-dark); font-style:italic; }
-    .topbar-badge { background:var(--red); color:white; font-size:0.65rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
-    .topbar-actions { display:flex; align-items:center; gap:12px; }
-    .btn-sm {
-      padding:8px 16px; border-radius:9px; font-family:'Jost',sans-serif; font-size:0.75rem;
-      font-weight:500; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.2s;
-    }
-    .btn-outline-sm { background:white; color:var(--text-mid); border:1.5px solid var(--border); }
-    .btn-outline-sm:hover { border-color:var(--sage); color:var(--sage-dark); }
-    .btn-green-sm { background:var(--sage-dark); color:white; border:none; box-shadow:0 2px 8px rgba(92,122,92,0.3); }
-    .btn-green-sm:hover { background:var(--sage); }
-    .btn-red-sm { background:var(--red); color:white; border:none; }
-    .btn-red-sm:hover { opacity:0.85; }
+    .panel{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px;}
+    .panel-title{font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+    .panel-title span{flex:1;height:1px;background:var(--border);}
 
-    /* Layout */
-    .admin-layout { display:grid; grid-template-columns:300px 1fr; min-height:calc(100vh - 64px); }
+    .fgrp{margin-bottom:14px;}
+    .fgrp label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:6px;}
+    .fgrp input,.fgrp textarea,.fgrp select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--td);background:var(--cream);outline:none;transition:border-color .2s;}
+    .fgrp input:focus,.fgrp textarea:focus,.fgrp select:focus{border-color:var(--sage);background:var(--white);}
+    .fgrp textarea{resize:vertical;min-height:80px;}
+    .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
 
-    /* Sidebar */
-    .sidebar {
-      background:white; border-right:1px solid var(--border);
-      padding:24px 20px; overflow-y:auto; max-height:calc(100vh - 64px);
-      position:sticky; top:64px;
-    }
-    .sidebar-section { margin-bottom:28px; }
-    .sidebar-title { font-size:0.68rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-light); margin-bottom:12px; }
+    .btn{padding:10px 20px;border-radius:10px;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border:none;}
+    .btn-green{background:linear-gradient(135deg,var(--sage-d),var(--sage));color:var(--white);box-shadow:0 3px 10px rgba(92,122,92,.25);}
+    .btn-green:hover{transform:translateY(-1px);}
+    .btn-outline{background:var(--white);color:var(--tm);border:1.5px solid var(--border);}
+    .btn-outline:hover{border-color:var(--sage);color:var(--sage-d);}
+    .btn-red{background:var(--red);color:var(--white);}
+    .btn-sm{padding:7px 14px;font-size:.7rem;}
 
-    /* Generation tabs */
-    .gen-tab {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 14px; border-radius:10px; cursor:pointer;
-      transition:background 0.2s; margin-bottom:4px; border:none;
-      width:100%; background:none; font-family:'Jost',sans-serif;
-      text-align:left;
-    }
-    .gen-tab:hover { background:var(--cream); }
-    .gen-tab.active { background:linear-gradient(135deg,rgba(92,122,92,0.1),rgba(138,171,138,0.08)); }
-    .gen-tab-label { font-size:0.82rem; font-weight:500; color:var(--text-dark); }
-    .gen-tab-count { font-size:0.7rem; color:var(--text-light); background:var(--cream); padding:2px 8px; border-radius:10px; }
-    .gen-tab.active .gen-tab-label { color:var(--sage-dark); }
+    .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
+    .stat-box{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+    .stat-box .num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--sage-d);display:block;}
+    .stat-box .lbl{font-size:.62rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);}
 
-    /* Stats */
-    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .stat-card { background:var(--cream); border-radius:10px; padding:14px; text-align:center; }
-    .stat-num { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; color:var(--sage-dark); display:block; }
-    .stat-lbl { font-size:0.65rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-light); }
+    /* Member cards */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+    .mcard{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:14px;transition:box-shadow .2s,border-color .2s;}
+    .mcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.06);border-color:var(--sage-l);}
+    .mcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+    .mavatar{width:44px;height:44px;border-radius:50%;background:var(--sage-l);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden;border:2px solid var(--border);}
+    .mavatar img{width:100%;height:100%;object-fit:cover;}
+    .mavatar.f{background:#f0e8f8;border-color:#e0d0f0;}
+    .mavatar.a{background:var(--gold-l);border-color:var(--gold-l);}
+    .mavatar.d{background:#e8e8e8;}
+    .mavatar.il{background:#f0e8f8;border-color:#d0c0e0;}
+    .mname{font-family:'Cormorant Garamond',serif;font-size:.98rem;font-weight:600;color:var(--td);}
+    .mrole{font-size:.62rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--sage-d);}
+    .mdates{font-size:.66rem;color:var(--tl);}
+    .mtags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+    .tag{font-size:.58rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:20px;}
+    .tag-g{background:rgba(92,122,92,.1);color:var(--sage-d);}
+    .tag-f{background:#f0e8f8;color:#9060b0;}
+    .tag-a{background:var(--gold-l);color:#8a6a00;}
+    .tag-d{background:#f0f0f0;color:#888;}
+    .tag-il{background:#e8e0f0;color:var(--purple);}
+    .mactions{display:flex;gap:5px;flex-wrap:wrap;}
+    .mbtn{padding:6px 10px;background:var(--cream);color:var(--sage-d);border:1.5px solid var(--sage-l);border-radius:7px;font-family:'Jost',sans-serif;font-size:.66rem;font-weight:500;cursor:pointer;transition:all .2s;}
+    .mbtn:hover{background:var(--sage-d);color:var(--white);border-color:var(--sage-d);}
+    .mbtn-red{background:var(--white);color:var(--red);border-color:#f0d0c8;}
+    .mbtn-red:hover{background:var(--red);color:var(--white);}
 
-    /* Main content */
-    .main-content { padding:28px 32px; overflow-y:auto; }
+    /* Photo upload */
+    .photo-upload-area{border:2px dashed var(--sage-l);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--white);margin-bottom:10px;}
+    .photo-upload-area:hover{border-color:var(--sage);background:#f5faf5;}
+    .photo-preview{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--border);margin-bottom:8px;}
+    .photo-url-input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;margin-top:8px;}
+    .photo-url-input:focus{border-color:var(--sage);}
 
-    .content-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
-    .content-header h2 { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:400; }
-    .content-header h2 em { font-style:italic; color:var(--sage-dark); }
+    /* Gallery */
+    .gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-top:14px;}
+    .gal-item{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+    .gal-img{width:100%;height:130px;object-fit:cover;display:block;background:linear-gradient(135deg,var(--sage-l),var(--gold-l));}
+    .gal-placeholder{width:100%;height:130px;background:linear-gradient(135deg,var(--sage-l),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:32px;}
+    .gal-info{padding:8px 10px;}
+    .gal-title{font-size:.8rem;font-weight:500;color:var(--td);}
+    .gal-cat{font-size:.62rem;color:var(--tl);}
+    .gal-actions{display:flex;gap:5px;padding:6px 10px;border-top:1px solid var(--border);}
 
-    /* Search bar */
-    .search-bar {
-      display:flex; align-items:center; gap:10px; margin-bottom:20px;
-      background:white; border:1.5px solid var(--border); border-radius:12px;
-      padding:10px 16px;
-    }
-    .search-bar input { flex:1; border:none; outline:none; font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--text-dark); background:transparent; }
-    .search-bar span { color:var(--text-light); }
+    /* Timeline */
+    .tl-item{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;}
+    .tl-year{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--sage-d);min-width:60px;flex-shrink:0;}
+    .tl-body{flex:1;}
+    .tl-title-txt{font-weight:500;color:var(--td);margin-bottom:4px;font-size:.9rem;}
+    .tl-desc{font-size:.78rem;color:var(--tm);line-height:1.6;}
+    .tl-actions{display:flex;gap:6px;margin-top:8px;}
 
-    /* Member cards grid */
-    .members-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+    /* Facts */
+    .fact-admin-item{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;}
+    .fact-admin-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--sage-l),rgba(138,171,138,.2));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+    .fact-admin-body{flex:1;}
+    .fact-admin-title{font-weight:600;font-size:.9rem;color:var(--td);margin-bottom:3px;}
+    .fact-admin-desc{font-size:.76rem;color:var(--tm);line-height:1.5;}
+    .fact-admin-meta{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;}
+    .fact-admin-tag{font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:rgba(92,122,92,.1);color:var(--sage-d);}
 
-    .member-card {
-      background:white; border:1.5px solid var(--border); border-radius:14px;
-      padding:20px; transition:box-shadow 0.2s, border-color 0.2s;
-      position:relative;
-    }
-    .member-card:hover { box-shadow:0 4px 20px rgba(0,0,0,0.06); border-color:var(--sage-light); }
+    /* Contacts */
+    .contact-admin-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:14px;transition:box-shadow .2s,border-color .2s;}
+    .contact-admin-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.06);border-color:var(--sage-l);}
 
-    .member-card-top { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
-    .member-avatar {
-      width:44px; height:44px; border-radius:50%; flex-shrink:0;
-      display:flex; align-items:center; justify-content:center; font-size:20px;
-      background:var(--sage-light);
-    }
-    .member-avatar.female { background:#f0e8f8; }
-    .member-avatar.ancestor { background:var(--gold-light); }
-    .member-avatar.deceased { background:#e8e8e8; }
+    /* Announcements */
+    .ann-hist-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:.82rem;}
+    .ann-hist-item:last-child{border-bottom:none;}
 
-    .member-info { flex:1; min-width:0; }
-    .member-name { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:600; color:var(--text-dark); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .member-role { font-size:0.7rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:var(--sage-dark); margin-bottom:2px; }
-    .member-dates { font-size:0.72rem; color:var(--text-light); }
-
-    .member-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
-    .tag { font-size:0.62rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; padding:3px 9px; border-radius:20px; }
-    .tag-gen { background:rgba(92,122,92,0.1); color:var(--sage-dark); }
-    .tag-female { background:#f0e8f8; color:#9060b0; }
-    .tag-ancestor { background:var(--gold-light); color:#8a6a00; }
-    .tag-deceased { background:#f0f0f0; color:#888; }
-
-    .member-notes { font-size:0.78rem; color:var(--text-mid); line-height:1.5; margin-bottom:14px; font-style:italic; border-top:1px solid var(--border); padding-top:10px; }
-
-    .member-actions { display:flex; gap:8px; }
-    .btn-edit { flex:1; padding:8px; background:var(--cream); color:var(--sage-dark); border:1.5px solid var(--sage-light); border-radius:8px; font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
-    .btn-edit:hover { background:var(--sage-dark); color:white; border-color:var(--sage-dark); }
-    .btn-del { padding:8px 12px; background:white; color:var(--red); border:1.5px solid #f0d0c8; border-radius:8px; font-family:'Jost',sans-serif; font-size:0.72rem; cursor:pointer; transition:all 0.2s; }
-    .btn-del:hover { background:var(--red); color:white; border-color:var(--red); }
-
-    /* Empty state */
-    .empty-state { text-align:center; padding:60px 20px; color:var(--text-light); }
-    .empty-state .icon { font-size:48px; margin-bottom:16px; }
-    .empty-state p { font-size:0.88rem; line-height:1.6; }
+    /* Search */
+    .search-bar{display:flex;align-items:center;gap:10px;background:var(--white);border:1.5px solid var(--border);border-radius:11px;padding:8px 13px;margin-bottom:14px;}
+    .search-bar input{flex:1;border:none;outline:none;font-family:'Jost',sans-serif;font-size:.84rem;color:var(--td);background:transparent;}
 
     /* Modal */
-    .modal-overlay {
-      display:none; position:fixed; inset:0;
-      background:rgba(0,0,0,0.5); z-index:200;
-      align-items:center; justify-content:center;
-      backdrop-filter:blur(4px); padding:20px;
-    }
-    .modal-overlay.open { display:flex; }
-    .modal {
-      background:white; border-radius:20px; padding:36px;
-      width:100%; max-width:540px; max-height:90vh;
-      overflow-y:auto; position:relative;
-      animation:fadeUp 0.3s ease;
-    }
-    .modal h2 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:400; margin-bottom:4px; }
-    .modal .modal-sub { font-size:0.75rem; color:var(--text-light); margin-bottom:24px; }
-    .modal-close { position:absolute; top:16px; right:16px; background:none; border:none; font-size:1.1rem; cursor:pointer; color:var(--text-light); width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; }
-    .modal-close:hover { background:var(--border); }
+    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:16px;}
+    .modal-bg.open{display:flex;}
+    .modal{background:var(--white);border-radius:20px;padding:28px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;position:relative;animation:fadeUp .3s ease;}
+    .modal h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:3px;}
+    .modal-sub{font-size:.74rem;color:var(--tl);margin-bottom:18px;}
+    .modal-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:1rem;cursor:pointer;color:var(--tl);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
+    .modal-close:hover{background:var(--border);}
+    .modal-footer{display:flex;gap:10px;margin-top:18px;}
 
-    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    .form-group { margin-bottom:14px; }
-    .form-group label { display:block; font-size:0.7rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-mid); margin-bottom:6px; }
-    .form-group input, .form-group select, .form-group textarea {
-      width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:10px;
-      font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--text-dark); background:var(--cream);
-      outline:none; transition:border-color 0.2s;
-    }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--sage); background:white; }
-    .form-group textarea { resize:vertical; min-height:80px; }
+    .cbrow{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
+    .cbitem{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);}
+    .cbitem input{width:15px;height:15px;accent-color:var(--sage-d);cursor:pointer;}
 
-    .checkbox-row { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:14px; }
-    .checkbox-item { display:flex; align-items:center; gap:8px; cursor:pointer; }
-    .checkbox-item input { width:16px; height:16px; accent-color:var(--sage-dark); cursor:pointer; }
-    .checkbox-item span { font-size:0.82rem; color:var(--text-mid); }
+    .setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+    .setting-row:last-child{border-bottom:none;}
+    .setting-lbl{font-size:.85rem;font-weight:500;color:var(--td);}
+    .setting-desc{font-size:.73rem;color:var(--tl);margin-top:2px;}
 
-    .modal-footer { display:flex; gap:10px; margin-top:20px; }
+    .notice{background:#f0f5f0;border:1px solid var(--sage-l);border-radius:10px;padding:11px 15px;font-size:.76rem;color:var(--sage-d);margin-bottom:14px;line-height:1.6;}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--sage-d);color:var(--white);padding:11px 22px;border-radius:28px;font-size:.82rem;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.15);animation:fadeUp .3s ease;white-space:nowrap;}
 
-    /* Toast */
-    .toast {
-      position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
-      background:var(--sage-dark); color:white; padding:12px 24px; border-radius:30px;
-      font-size:0.85rem; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.15);
-      animation:fadeUp 0.3s ease; white-space:nowrap;
-    }
-
-    /* Export box */
-    .export-box { background:var(--cream); border:1px solid var(--border); border-radius:12px; padding:20px; margin-top:20px; }
-    .export-box h3 { font-family:'Cormorant Garamond',serif; font-size:1.1rem; margin-bottom:8px; }
-    .export-box p { font-size:0.8rem; color:var(--text-mid); line-height:1.6; margin-bottom:12px; }
-    .export-btn { padding:10px 20px; background:white; border:1.5px solid var(--border); border-radius:9px; font-family:'Jost',sans-serif; font-size:0.78rem; font-weight:500; cursor:pointer; margin-right:8px; transition:all 0.2s; }
-    .export-btn:hover { border-color:var(--sage); color:var(--sage-dark); }
-
-    @media (max-width:768px) {
-      .admin-layout { grid-template-columns:1fr; }
-      .sidebar { position:static; max-height:none; }
-      .form-row { grid-template-columns:1fr; }
-    }
+    @media(max-width:768px){.shell{grid-template-columns:1fr;}.sidebar{position:static;height:auto;}.stats-row{grid-template-columns:1fr 1fr 1fr;}.frow,.frow3{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
 
-  <!-- ══════════════════════════════════
-       LOGIN SCREEN
-  ══════════════════════════════════ -->
-  <div id="loginScreen">
-    <div class="login-card">
-      <div class="login-logo"><img src="logo.png" alt="Nukala Logo"/></div>
-      <h1 class="login-title">Admin Panel</h1>
-      <p class="login-sub">Nukala Family Tree · Restricted Access</p>
-      <label class="form-label" for="adminPass">Admin Password</label>
-      <input class="form-input" type="password" id="adminPass" placeholder="Enter admin password" autocomplete="current-password"/>
-      <div class="error-msg" id="loginError">Incorrect password. Please try again.</div>
-      <button class="btn-primary" style="margin-top:8px;" onclick="adminLogin()">Access Admin Panel →</button>
-      <p style="text-align:center;margin-top:16px;font-size:0.75rem;color:var(--text-light);">
-        <a href="home.html" style="color:var(--sage-dark);text-decoration:none;">← Back to Family Tree</a>
-      </p>
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="lcard">
+    <div class="llogo"><img src="logo.png" alt="Nukala"/></div>
+    <h1 class="ltitle">Admin Panel</h1>
+    <p class="lsub">Nukala Family · Full CMS</p>
+    <label class="flbl">Admin Password</label>
+    <input class="finp" type="password" id="adminPass" placeholder="Enter admin password"/>
+    <div class="errmsg" id="loginErr">Incorrect password.</div>
+    <button class="btnp" style="margin-top:8px;" onclick="doLogin()">Enter Admin →</button>
+    <p style="text-align:center;margin-top:14px;font-size:.74rem;color:var(--tl);">
+      <a href="home.html" style="color:var(--sage-d);text-decoration:none;">← Back to Website</a>
+    </p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminUI">
+  <div class="topbar">
+    <div class="tb-brand">
+      <img src="logo.png" alt="Logo"/>
+      <h1 id="tbSiteName">Nukala</h1>
+      <span class="tb-badge">CMS</span>
+    </div>
+    <div class="tb-right">
+      <a href="home.html" class="tb-view" target="_blank">👁 View Site</a>
+      <button class="tb-out" onclick="doLogout()">Sign Out</button>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════
-       MAIN ADMIN UI
-  ══════════════════════════════════ -->
-  <div id="adminUI">
+  <div class="shell">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="nav-section">Dashboard</div>
+      <button class="nav-item active" onclick="showSec('dashboard',this)"><span class="nav-icon">📊</span>Overview</button>
 
-    <!-- Top Bar -->
-    <div class="topbar">
-      <div class="topbar-brand">
-        <img src="logo.png" alt="Logo"/>
-        <h1><span>Nukala</span> Family Tree</h1>
-        <span class="topbar-badge">Admin</span>
-      </div>
-      <div class="topbar-actions">
-        <button class="btn-sm btn-outline-sm" onclick="exportData()">📥 Export Data</button>
-        <button class="btn-sm btn-green-sm" onclick="openAddModal()">＋ Add Person</button>
-        <button class="btn-sm btn-outline-sm" onclick="adminLogout()">Sign Out</button>
-      </div>
+      <div class="nav-section">Family Tree</div>
+      <button class="nav-item" onclick="showSec('members',this)"><span class="nav-icon">👥</span>Members</button>
+
+      <div class="nav-section">Website Pages</div>
+      <button class="nav-item" onclick="showSec('home',this)"><span class="nav-icon">🏠</span>Home Page</button>
+      <button class="nav-item" onclick="showSec('history',this)"><span class="nav-icon">📜</span>History</button>
+      <button class="nav-item" onclick="showSec('gallery',this)"><span class="nav-icon">🖼️</span>Gallery</button>
+      <button class="nav-item" onclick="showSec('facts',this)"><span class="nav-icon">🌟</span>Facts</button>
+      <button class="nav-item" onclick="showSec('contact',this)"><span class="nav-icon">✉️</span>Contact</button>
+
+      <div class="nav-section">Communication</div>
+      <button class="nav-item" onclick="showSec('contacts',this)"><span class="nav-icon">📱</span>Contacts</button>
+      <button class="nav-item" onclick="showSec('announcements',this)"><span class="nav-icon">📣</span>Announcements</button>
+
+      <div class="nav-section">Admin</div>
+      <button class="nav-item" onclick="showSec('settings',this)"><span class="nav-icon">⚙️</span>Settings</button>
+      <button class="nav-item" onclick="exportAll()"><span class="nav-icon">📥</span>Export Backup</button>
+      <button class="nav-item" onclick="document.getElementById('importModal').classList.add('open')"><span class="nav-icon">📤</span>Import Backup</button>
     </div>
 
-    <!-- Layout -->
-    <div class="admin-layout">
+    <!-- Main -->
+    <div class="main">
 
-      <!-- Sidebar -->
-      <div class="sidebar">
-        <div class="sidebar-section">
-          <div class="sidebar-title">Family Statistics</div>
-          <div class="stats-grid">
-            <div class="stat-card"><span class="stat-num" id="statTotal">0</span><span class="stat-lbl">Total</span></div>
-            <div class="stat-card"><span class="stat-num" id="statGens">0</span><span class="stat-lbl">Generations</span></div>
-            <div class="stat-card"><span class="stat-num" id="statLiving">0</span><span class="stat-lbl">Living</span></div>
-            <div class="stat-card"><span class="stat-num" id="statDeceased">0</span><span class="stat-lbl">Passed</span></div>
+      <!-- DASHBOARD -->
+      <div class="page-section active" id="sec-dashboard">
+        <div class="sec-title">Welcome, <em>Admin</em></div>
+        <p class="sec-sub">Manage your entire Nukala Family website from here.</p>
+        <div class="sec-div"></div>
+        <div class="stats-row">
+          <div class="stat-box"><span class="num" id="d-members">0</span><span class="lbl">Members</span></div>
+          <div class="stat-box"><span class="num" id="d-photos">0</span><span class="lbl">Photos</span></div>
+          <div class="stat-box"><span class="num" id="d-history">0</span><span class="lbl">History</span></div>
+          <div class="stat-box"><span class="num" id="d-facts">0</span><span class="lbl">Facts</span></div>
+          <div class="stat-box"><span class="num" id="d-gens">0</span><span class="lbl">Generations</span></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Quick Actions <span></span></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-green" onclick="showSec('members',null);openMemberModal()">➕ Add Member</button>
+            <button class="btn btn-outline" onclick="showSec('gallery',null);openGalModal()">📸 Add Photo</button>
+            <button class="btn btn-outline" onclick="showSec('history',null);openHistModal()">📜 Add History</button>
+            <button class="btn btn-outline" onclick="showSec('facts',null);openFactModal()">🌟 Add Fact</button>
+            <button class="btn btn-outline" onclick="showSec('settings',null)">⚙️ Settings</button>
           </div>
         </div>
-
-        <div class="sidebar-section">
-          <div class="sidebar-title">Browse by Generation</div>
-          <button class="gen-tab active" id="tab-all" onclick="filterGen('all', this)">
-            <span class="gen-tab-label">All Members</span>
-            <span class="gen-tab-count" id="count-all">0</span>
-          </button>
-          <button class="gen-tab" id="tab-1" onclick="filterGen('1', this)">
-            <span class="gen-tab-label">Generation 1</span>
-            <span class="gen-tab-count" id="count-1">0</span>
-          </button>
-          <button class="gen-tab" id="tab-2" onclick="filterGen('2', this)">
-            <span class="gen-tab-label">Generation 2</span>
-            <span class="gen-tab-count" id="count-2">0</span>
-          </button>
-          <button class="gen-tab" id="tab-3" onclick="filterGen('3', this)">
-            <span class="gen-tab-label">Generation 3</span>
-            <span class="gen-tab-count" id="count-3">0</span>
-          </button>
-          <button class="gen-tab" id="tab-4" onclick="filterGen('4', this)">
-            <span class="gen-tab-label">Generation 4</span>
-            <span class="gen-tab-count" id="count-4">0</span>
-          </button>
-          <button class="gen-tab" id="tab-5" onclick="filterGen('5', this)">
-            <span class="gen-tab-label">Generation 5</span>
-            <span class="gen-tab-count" id="count-5">0</span>
-          </button>
-          <button class="gen-tab" id="tab-6" onclick="filterGen('6', this)">
-            <span class="gen-tab-label">Generation 6</span>
-            <span class="gen-tab-count" id="count-6">0</span>
-          </button>
-          <button class="gen-tab" id="tab-7" onclick="filterGen('7', this)">
-            <span class="gen-tab-label">Generation 7</span>
-            <span class="gen-tab-count" id="count-7">0</span>
-          </button>
-          <button class="gen-tab" id="tab-8" onclick="filterGen('8', this)">
-            <span class="gen-tab-label">Generation 8</span>
-            <span class="gen-tab-count" id="count-8">0</span>
-          </button>
-        </div>
-
-        <div class="sidebar-section">
-          <div class="sidebar-title">Quick Actions</div>
-          <button class="gen-tab" onclick="openAddModal()" style="color:var(--sage-dark);">
-            <span class="gen-tab-label">＋ Add New Person</span>
-          </button>
-          <button class="gen-tab" onclick="exportData()">
-            <span class="gen-tab-label">📥 Export as JSON</span>
-          </button>
-          <button class="gen-tab" onclick="importPrompt()">
-            <span class="gen-tab-label">📤 Import JSON</span>
-          </button>
-          <button class="gen-tab" onclick="if(confirm('Reset ALL data to defaults?')) resetData();" style="color:var(--red);">
-            <span class="gen-tab-label">🗑️ Reset All Data</span>
-          </button>
+        <div class="panel">
+          <div class="panel-title">Recent Activity <span></span></div>
+          <div id="recentAct" style="font-size:.82rem;color:var(--tm);line-height:2;">Loading...</div>
         </div>
       </div>
 
-      <!-- Main Content -->
-      <div class="main-content">
-        <div class="content-header">
-          <h2 id="contentTitle">All <em>Family Members</em></h2>
-          <button class="btn-sm btn-green-sm" onclick="openAddModal()">＋ Add Person</button>
+      <!-- MEMBERS -->
+      <div class="page-section" id="sec-members">
+        <div class="sec-title"><em>Family</em> Members</div>
+        <p class="sec-sub">Add members with photos. Set Father/Mother/Spouse IDs to link them on the tree. Mark wives/husbands-in-law with the In-law checkbox.</p>
+        <div class="sec-div"></div>
+        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn-green" onclick="openMemberModal()">➕ Add Member</button>
+          <button class="btn btn-outline" onclick="exportMembers()">📥 Export</button>
+          <select onchange="filterMGen(this.value)" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.76rem;color:var(--tm);background:var(--white);outline:none;margin-left:auto;">
+            <option value="">All Generations</option>
+            <option value="1">Gen 1</option><option value="2">Gen 2</option><option value="3">Gen 3</option>
+            <option value="4">Gen 4</option><option value="5">Gen 5</option><option value="6">Gen 6</option>
+            <option value="7">Gen 7</option><option value="8">Gen 8</option>
+          </select>
         </div>
+        <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search members..." oninput="searchM(this.value)"/></div>
+        <div class="cards-grid" id="membersGrid"></div>
+      </div>
 
-        <div class="search-bar">
-          <span>🔍</span>
-          <input type="text" placeholder="Search by name, role or birthplace..." oninput="searchMembers(this.value)" id="searchInput"/>
+      <!-- HOME PAGE -->
+      <div class="page-section" id="sec-home">
+        <div class="sec-title">Edit <em>Home Page</em></div>
+        <p class="sec-sub">Update all content shown on the home page.</p>
+        <div class="sec-div"></div>
+        <div class="panel">
+          <div class="panel-title">Navigation & Branding <span></span></div>
+          <div class="notice">💡 This controls the site name shown in the navigation bar across ALL pages.</div>
+          <div class="frow">
+            <div class="fgrp"><label>Nav Bar Name (shown next to logo)</label><input type="text" id="homeNavName" placeholder="e.g. NUKALA"/></div>
+            <div class="fgrp"><label>Site Subtitle (for browser tab)</label><input type="text" id="homeSiteSubtitle" placeholder="e.g. Family Tree"/></div>
+          </div>
         </div>
-
-        <div class="members-grid" id="membersGrid"></div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════
-       ADD / EDIT MODAL
-  ══════════════════════════════════ -->
-  <div class="modal-overlay" id="memberModal">
-    <div class="modal">
-      <button class="modal-close" onclick="closeModal()">✕</button>
-      <h2 id="modalTitle">Add Family Member</h2>
-      <p class="modal-sub" id="modalSub">Fill in the details below. All fields except name are optional.</p>
-      <input type="hidden" id="editingId"/>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>First Name *</label>
-          <input type="text" id="fFirstName" placeholder="e.g. Ramu"/>
+        <div class="panel">
+          <div class="panel-title">Hero Section <span></span></div>
+          <div class="fgrp"><label>Page Title</label><input type="text" id="homeTitle" placeholder="e.g. The Nukala Family Archive"/></div>
+          <div class="fgrp"><label>Tagline</label><input type="text" id="homeTagline" placeholder="e.g. A private family archive"/></div>
+          <div class="fgrp"><label>Welcome Message</label><textarea id="homeWelcome" placeholder="Write a warm welcome message..."></textarea></div>
         </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" id="fLastName" placeholder="e.g. Nukala"/>
+        <div class="panel">
+          <div class="panel-title">Stats <span></span></div>
+          <div class="frow3">
+            <div class="fgrp"><label>Stat 1 Number</label><input type="text" id="homeStat1Num" placeholder="e.g. 6"/></div>
+            <div class="fgrp"><label>Stat 1 Label</label><input type="text" id="homeStat1Lbl" placeholder="Generations"/></div>
+            <div></div>
+            <div class="fgrp"><label>Stat 2 Number</label><input type="text" id="homeStat2Num" placeholder="e.g. 45"/></div>
+            <div class="fgrp"><label>Stat 2 Label</label><input type="text" id="homeStat2Lbl" placeholder="Family Members"/></div>
+            <div></div>
+            <div class="fgrp"><label>Stat 3 Number</label><input type="text" id="homeStat3Num" placeholder="e.g. 20"/></div>
+            <div class="fgrp"><label>Stat 3 Label</label><input type="text" id="homeStat3Lbl" placeholder="Stories Shared"/></div>
+          </div>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label>Relationship / Role *</label>
-        <select id="fRole">
-          <option value="">— Select relationship —</option>
-          <optgroup label="Ancestors">
-            <option>Great-Great-Grandfather</option>
-            <option>Great-Great-Grandmother</option>
-            <option>Great-Grandfather</option>
-            <option>Great-Grandmother</option>
-          </optgroup>
-          <optgroup label="Grandparents">
-            <option>Grandfather</option>
-            <option>Grandmother</option>
-          </optgroup>
-          <optgroup label="Parents & Siblings of Parents">
-            <option>Father</option>
-            <option>Mother</option>
-            <option>Uncle</option>
-            <option>Aunt</option>
-          </optgroup>
-          <optgroup label="Your Generation">
-            <option>You</option>
-            <option>Spouse</option>
-            <option>Brother</option>
-            <option>Sister</option>
-            <option>Cousin</option>
-            <option>Brother-in-law</option>
-            <option>Sister-in-law</option>
-          </optgroup>
-          <optgroup label="Children's Generation">
-            <option>Son</option>
-            <option>Daughter</option>
-            <option>Nephew</option>
-            <option>Niece</option>
-          </optgroup>
-          <optgroup label="Grandchildren">
-            <option>Grandson</option>
-            <option>Granddaughter</option>
-          </optgroup>
-          <optgroup label="Great-Grandchildren">
-            <option>Great-Grandson</option>
-            <option>Great-Granddaughter</option>
-          </optgroup>
-          <option value="other">Other (type below)</option>
-        </select>
-      </div>
-
-      <div class="form-group" id="customRoleGroup" style="display:none;">
-        <label>Custom Role</label>
-        <input type="text" id="fCustomRole" placeholder="Type custom relationship..."/>
-      </div>
-
-      <div class="form-group">
-        <label>Generation Number</label>
-        <select id="fGen">
-          <option value="">— Select generation —</option>
-          <option value="1">Generation 1 — Great-Great-Grandparents</option>
-          <option value="2">Generation 2 — Great-Grandparents</option>
-          <option value="3">Generation 3 — Grandparents</option>
-          <option value="4">Generation 4 — Parents / Aunts / Uncles</option>
-          <option value="5">Generation 5 — You / Siblings / Cousins</option>
-          <option value="6">Generation 6 — Children / Nephews / Nieces</option>
-          <option value="7">Generation 7 — Grandchildren</option>
-          <option value="8">Generation 8 — Great-Grandchildren</option>
-        </select>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Year of Birth</label>
-          <input type="text" id="fBorn" placeholder="e.g. 1942"/>
+        <div class="panel">
+          <div class="panel-title">About Section <span></span></div>
+          <div class="fgrp"><label>Heading</label><input type="text" id="homeAboutTitle" placeholder="e.g. Our Roots Run Deep"/></div>
+          <div class="fgrp"><label>Paragraph 1</label><textarea id="homeAbout1" placeholder="First paragraph..."></textarea></div>
+          <div class="fgrp"><label>Paragraph 2</label><textarea id="homeAbout2" placeholder="Second paragraph..."></textarea></div>
+          <div class="fgrp"><label>Paragraph 3</label><textarea id="homeAbout3" placeholder="Third paragraph..."></textarea></div>
         </div>
-        <div class="form-group">
-          <label>Year Passed Away</label>
-          <input type="text" id="fDied" placeholder="Leave blank if living"/>
+        <button class="btn btn-green" onclick="saveHome()">💾 Save Home Page</button>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="page-section" id="sec-history">
+        <div class="sec-title">Family <em>History</em></div>
+        <p class="sec-sub">Add timeline events to the History page.</p>
+        <div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openHistModal()">➕ Add Event</button>
+        <div id="historyList"></div>
+      </div>
+
+      <!-- GALLERY -->
+      <div class="page-section" id="sec-gallery">
+        <div class="sec-title">Photo <em>Gallery</em></div>
+        <p class="sec-sub">Add photos by URL (imgbb.com is free) or paste a direct image link.</p>
+        <div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openGalModal()">➕ Add Photo</button>
+        <div class="gal-grid" id="galleryGrid"></div>
+      </div>
+
+      <!-- FACTS -->
+      <div class="page-section" id="sec-facts">
+        <div class="sec-title">Interesting <em>Facts</em></div>
+        <p class="sec-sub">Add fascinating firsts, achievements and traditions from the Nukala family.</p>
+        <div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openFactModal()">➕ Add Fact</button>
+        <div id="factsList"></div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="page-section" id="sec-contact">
+        <div class="sec-title">Contact <em>Page</em></div>
+        <p class="sec-sub">Update contact details shown on the Contact page.</p>
+        <div class="sec-div"></div>
+        <div class="panel">
+          <div class="panel-title">Contact Details <span></span></div>
+          <div class="frow">
+            <div class="fgrp"><label>Admin Name</label><input type="text" id="cName" placeholder="e.g. Ramu Nukala"/></div>
+            <div class="fgrp"><label>Contact Email</label><input type="text" id="cEmail" placeholder="family@email.com"/></div>
+          </div>
+          <div class="fgrp"><label>Contact Message</label><textarea id="cMsg" placeholder="Message shown on contact page..."></textarea></div>
+          <div class="fgrp"><label>Formspree Form ID (for real email submissions)</label><input type="text" id="cFormspree" placeholder="e.g. xyzabc12"/></div>
         </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Birthplace / Hometown</label>
-          <input type="text" id="fPlace" placeholder="e.g. Hyderabad, India"/>
+        <div class="panel">
+          <div class="panel-title">Contact Ways <span></span></div>
+          <div class="frow"><div class="fgrp"><label>Way 1 Icon</label><input type="text" id="cw1i" placeholder="📸"/></div><div class="fgrp"><label>Way 1 Title</label><input type="text" id="cw1t" placeholder="Share a Photo"/></div></div>
+          <div class="fgrp"><label>Way 1 Description</label><input type="text" id="cw1d" placeholder="Send family photos..."/></div>
+          <div class="frow"><div class="fgrp"><label>Way 2 Icon</label><input type="text" id="cw2i" placeholder="📝"/></div><div class="fgrp"><label>Way 2 Title</label><input type="text" id="cw2t" placeholder="Add a Story"/></div></div>
+          <div class="fgrp"><label>Way 2 Description</label><input type="text" id="cw2d" placeholder="Share a memory..."/></div>
         </div>
-        <div class="form-group">
-          <label>Spouse Name</label>
-          <input type="text" id="fSpouse" placeholder="e.g. Lakshmi Nukala"/>
+        <button class="btn btn-green" onclick="saveContact()">💾 Save Contact Page</button>
+      </div>
+
+      <!-- CONTACTS -->
+      <div class="page-section" id="sec-contacts">
+        <div class="sec-title">Family <em>Contacts</em></div>
+        <p class="sec-sub">Store private contact details for each family member.</p>
+        <div class="sec-div"></div>
+        <div style="display:flex;gap:10px;margin-bottom:14px;">
+          <button class="btn btn-outline btn-sm" style="margin-left:auto;" onclick="exportContacts()">📥 Export CSV</button>
         </div>
+        <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search contacts..." oninput="searchContacts(this.value)" id="cSearch"/></div>
+        <div class="cards-grid" id="contactsGrid"></div>
       </div>
 
-      <div class="form-group">
-        <label>Occupation / Profession</label>
-        <input type="text" id="fOccupation" placeholder="e.g. Farmer, Teacher, Engineer"/>
-      </div>
-
-      <div class="form-group">
-        <label>Notes / Biography / Memories</label>
-        <textarea id="fNotes" placeholder="Share a story, memory, or biography about this person..."></textarea>
-      </div>
-
-      <div class="sidebar-title" style="margin-bottom:6px;margin-top:8px;">🔗 Link to Family Tree</div>
-      <p style="font-size:0.75rem;color:#a0a0a0;margin-bottom:12px;line-height:1.5;">Paste the <strong>Member ID</strong> of parents or spouse to draw connecting lines on the tree. Find IDs by clicking <strong>"📋 Copy ID"</strong> on any member card.</p>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Father's Member ID</label>
-          <input type="text" id="fFatherId" placeholder="Paste father's ID here"/>
-        </div>
-        <div class="form-group">
-          <label>Mother's Member ID</label>
-          <input type="text" id="fMotherId" placeholder="Paste mother's ID here"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Spouse's Member ID</label>
-        <input type="text" id="fSpouseId" placeholder="Paste spouse's ID here"/>
-      </div>
-
-      <div class="sidebar-title" style="margin-bottom:10px;">Properties</div>
-      <div class="checkbox-row">
-        <label class="checkbox-item"><input type="checkbox" id="fFemale"/><span>👩 Female</span></label>
-        <label class="checkbox-item"><input type="checkbox" id="fAncestor"/><span>🏛️ Ancestor</span></label>
-        <label class="checkbox-item"><input type="checkbox" id="fDeceased"/><span>✝️ Deceased</span></label>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn-primary" style="flex:1;" onclick="saveMember()">💾 Save Member</button>
-        <button class="btn-sm btn-outline-sm" style="padding:12px 20px;" onclick="closeModal()">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Import Modal -->
-  <div class="modal-overlay" id="importModal">
-    <div class="modal" style="max-width:480px;">
-      <button class="modal-close" onclick="document.getElementById('importModal').classList.remove('open')">✕</button>
-      <h2>Import Family Data</h2>
-      <p class="modal-sub">Paste your exported JSON data below to restore or import family members.</p>
-      <div class="form-group">
-        <label>JSON Data</label>
-        <textarea id="importData" rows="8" placeholder="Paste your exported JSON here..."></textarea>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-primary" style="flex:1;" onclick="doImport()">📤 Import Data</button>
-        <button class="btn-sm btn-outline-sm" style="padding:12px 20px;" onclick="document.getElementById('importModal').classList.remove('open')">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // ══════════════════════════════════
-    // ADMIN PASSWORD — Change this!
-    // ══════════════════════════════════
-    const ADMIN_PASSWORD = 'nukala_admin_2024';
-
-    // ══════════════════════════════════
-    // DATA MANAGEMENT
-    // ══════════════════════════════════
-    function loadData() {
-      return JSON.parse(localStorage.getItem('nukala_tree_data') || '{}');
-    }
-    function saveData(data) {
-      localStorage.setItem('nukala_tree_data', JSON.stringify(data));
-    }
-
-    // ══════════════════════════════════
-    // LOGIN
-    // ══════════════════════════════════
-    document.getElementById('adminPass').addEventListener('keydown', e => { if(e.key==='Enter') adminLogin(); });
-
-    function adminLogin() {
-      const pw = document.getElementById('adminPass').value;
-      if (pw === ADMIN_PASSWORD) {
-        sessionStorage.setItem('nukala_admin', 'true');
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('adminUI').style.display = 'block';
-        renderAll();
-      } else {
-        document.getElementById('loginError').style.display = 'block';
-        document.getElementById('adminPass').value = '';
-      }
-    }
-
-    function adminLogout() {
-      sessionStorage.removeItem('nukala_admin');
-      window.location.href = 'home.html';
-    }
-
-    // Auto-login if session active
-    if (sessionStorage.getItem('nukala_admin') === 'true') {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminUI').style.display = 'block';
-    }
-
-    // ══════════════════════════════════
-    // RENDER
-    // ══════════════════════════════════
-    let currentFilter = 'all';
-    let currentSearch = '';
-
-    function renderAll() {
-      const data = loadData();
-      const members = Object.values(data);
-
-      // Stats
-      document.getElementById('statTotal').textContent = members.length;
-      const gens = [...new Set(members.map(m => m.gen).filter(Boolean))];
-      document.getElementById('statGens').textContent = gens.length;
-      document.getElementById('statLiving').textContent = members.filter(m => !m.died).length;
-      document.getElementById('statDeceased').textContent = members.filter(m => m.died).length;
-
-      // Gen counts
-      document.getElementById('count-all').textContent = members.length;
-      for (let g=1; g<=8; g++) {
-        document.getElementById(`count-${g}`).textContent = members.filter(m => m.gen == g).length;
-      }
-
-      // Filter
-      let filtered = members;
-      if (currentFilter !== 'all') filtered = filtered.filter(m => m.gen == currentFilter);
-      if (currentSearch) {
-        const q = currentSearch.toLowerCase();
-        filtered = filtered.filter(m =>
-          (m.firstName+' '+m.lastName).toLowerCase().includes(q) ||
-          (m.role||'').toLowerCase().includes(q) ||
-          (m.place||'').toLowerCase().includes(q)
-        );
-      }
-
-      // Render grid
-      const grid = document.getElementById('membersGrid');
-      if (filtered.length === 0) {
-        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="icon">🌿</div><p>No family members found.<br/>Click <strong>"+ Add Person"</strong> to get started!</p></div>`;
-        return;
-      }
-
-      grid.innerHTML = filtered.sort((a,b) => (a.gen||9) - (b.gen||9)).map(m => {
-        const name = [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Unnamed';
-        const avatarClass = m.deceased ? 'deceased' : m.ancestor ? 'ancestor' : m.female ? 'female' : '';
-        const emoji = m.deceased ? '👤' : m.female ? '👩' : '👨';
-        const dates = [m.born, m.died ? `† ${m.died}` : ''].filter(Boolean).join(' · ') || '–';
-        return `
-          <div class="member-card">
-            <div class="member-card-top">
-              <div class="member-avatar ${avatarClass}">${emoji}</div>
-              <div class="member-info">
-                <div class="member-name">${name}</div>
-                <div class="member-role">${m.role||'–'}</div>
-                <div class="member-dates">${dates}</div>
-              </div>
+      <!-- ANNOUNCEMENTS -->
+      <div class="page-section" id="sec-announcements">
+        <div class="sec-title">Send <em>Announcement</em></div>
+        <p class="sec-sub">Send a message to family members via Email or WhatsApp.</p>
+        <div class="sec-div"></div>
+        <div class="panel">
+          <div class="panel-title">📣 Compose <span></span></div>
+          <div class="fgrp"><label>Subject / Title</label><input type="text" id="annTitle" placeholder="e.g. Family Reunion 2025!"/></div>
+          <div class="fgrp"><label>Message</label><textarea id="annMsg" rows="5" placeholder="Dear Nukala Family,&#10;&#10;We are excited to announce..."></textarea></div>
+          <div class="fgrp">
+            <label>Recipients</label>
+            <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+              <button class="btn btn-outline btn-sm" onclick="selAll()">✅ All</button>
+              <button class="btn btn-outline btn-sm" onclick="selNone()">⬜ None</button>
+              <span id="recCount" style="font-size:.76rem;color:var(--sage-d);padding:8px 0;"></span>
             </div>
-            <div class="member-tags">
-              ${m.gen ? `<span class="tag tag-gen">Gen ${m.gen}</span>` : ''}
-              ${m.female ? `<span class="tag tag-female">Female</span>` : ''}
-              ${m.ancestor ? `<span class="tag tag-ancestor">Ancestor</span>` : ''}
-              ${m.died ? `<span class="tag tag-deceased">Deceased</span>` : ''}
-              ${m.spouse ? `<span class="tag tag-gen">💛 ${m.spouse}</span>` : ''}
-            </div>
-            ${m.notes ? `<div class="member-notes">${m.notes.substring(0,100)}${m.notes.length>100?'…':''}</div>` : ''}
-            <div class="member-actions">
-              <button class="btn-edit" onclick="copyId('${m.id}')" title="Copy Member ID for linking" style="flex:none;padding:8px 10px;background:var(--cream);color:var(--text-mid);border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:0.68rem;cursor:pointer;">📋 ID</button>
-              <button class="btn-edit" onclick="openEditModal('${m.id}')">✏️ Edit</button>
-              <button class="btn-del" onclick="deleteMember('${m.id}')">🗑️</button>
+            <div id="recipientsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;max-height:280px;overflow-y:auto;border:1.5px solid var(--border);border-radius:10px;padding:10px;background:var(--cream);"></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="panel">
+            <div class="panel-title">📧 Email <span></span></div>
+            <div class="fgrp"><label>From Name</label><input type="text" id="annFrom" placeholder="e.g. Ramu Nukala"/></div>
+            <button class="btn btn-green" style="width:100%;" onclick="sendEmail()">📧 Open in Email App</button>
+          </div>
+          <div class="panel">
+            <div class="panel-title">📱 WhatsApp <span></span></div>
+            <div class="fgrp"><label>Group Name (optional)</label><input type="text" id="annGroup" placeholder="Nukala Family Group"/></div>
+            <button class="btn btn-green" style="width:100%;background:linear-gradient(135deg,#128c7e,#25d366);" onclick="sendWA()">📱 Generate WhatsApp</button>
+          </div>
+        </div>
+        <div class="panel" id="annPreviewPanel" style="display:none;">
+          <div class="panel-title">👁 Preview <span></span></div>
+          <div id="annPreview" style="background:var(--cream);border-radius:10px;padding:16px;font-size:.84rem;color:var(--td);line-height:1.8;white-space:pre-wrap;"></div>
+          <button class="btn btn-outline btn-sm" style="margin-top:10px;" onclick="copyAnn()">📋 Copy</button>
+        </div>
+        <div class="panel">
+          <div class="panel-title">📋 History <span></span></div>
+          <div id="annHistory"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page-section" id="sec-settings">
+        <div class="sec-title">Site <em>Settings</em></div>
+        <p class="sec-sub">Manage passwords and site preferences.</p>
+        <div class="sec-div"></div>
+        <div class="panel">
+          <div class="panel-title">Passwords <span></span></div>
+          <div class="setting-row">
+            <div><div class="setting-lbl">Family Site Password</div><div class="setting-desc">Password to enter the website</div></div>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="newSitePass" placeholder="New password" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.8rem;width:150px;outline:none;"/>
+              <button class="btn btn-outline btn-sm" onclick="saveSitePass()">Update</button>
             </div>
           </div>
-        `;
-      }).join('');
-    }
+          <div class="setting-row">
+            <div><div class="setting-lbl">Admin Password</div><div class="setting-desc">Password for this admin panel</div></div>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="newAdminPass" placeholder="New password" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.8rem;width:150px;outline:none;"/>
+              <button class="btn btn-outline btn-sm" onclick="saveAdminPass()">Update</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Site Identity <span></span></div>
+          <div class="frow">
+            <div class="fgrp"><label>Family Name</label><input type="text" id="setFamily" placeholder="e.g. Nukala"/></div>
+            <div class="fgrp"><label>Footer Text</label><input type="text" id="setFooter" placeholder="e.g. © 2024 The Nukala Family"/></div>
+          </div>
+          <button class="btn btn-green btn-sm" onclick="saveIdentity()">💾 Save</button>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Data Management <span></span></div>
+          <div class="setting-row">
+            <div><div class="setting-lbl">Export All</div><div class="setting-desc">Full backup of all data</div></div>
+            <button class="btn btn-outline btn-sm" onclick="exportAll()">📥 Export</button>
+          </div>
+          <div class="setting-row">
+            <div><div class="setting-lbl">Import</div><div class="setting-desc">Restore from backup</div></div>
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('importModal').classList.add('open')">📤 Import</button>
+          </div>
+          <div class="setting-row">
+            <div><div class="setting-lbl">Reset All</div><div class="setting-desc" style="color:var(--red);">⚠️ Permanently delete everything</div></div>
+            <button class="btn btn-red btn-sm" onclick="if(confirm('Delete ALL data?'))resetAll()">🗑️ Reset</button>
+          </div>
+        </div>
+      </div>
 
-    function filterGen(gen, el) {
-      currentFilter = gen;
-      document.querySelectorAll('.gen-tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
-      const titles = { all:'All', '1':'Generation 1', '2':'Generation 2', '3':'Generation 3', '4':'Generation 4', '5':'Generation 5', '6':'Generation 6', '7':'Generation 7', '8':'Generation 8' };
-      document.getElementById('contentTitle').innerHTML = `${titles[gen]} <em>Family Members</em>`;
-      renderAll();
-    }
+    </div><!-- end main -->
+  </div><!-- end shell -->
+</div><!-- end adminUI -->
 
-    function searchMembers(q) {
-      currentSearch = q;
-      renderAll();
-    }
+<!-- MEMBER MODAL -->
+<div class="modal-bg" id="memberModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeMemberModal()">✕</button>
+    <h2 id="mmTitle">Add Family Member</h2>
+    <p class="modal-sub">Fill in details. Use Photo to show a picture on the tree.</p>
+    <input type="hidden" id="mmId"/>
 
-    // ══════════════════════════════════
-    // ADD / EDIT MODAL
-    // ══════════════════════════════════
-    document.getElementById('fRole').addEventListener('change', function() {
-      document.getElementById('customRoleGroup').style.display = this.value === 'other' ? 'block' : 'none';
-    });
+    <!-- PHOTO SECTION -->
+    <div class="panel-title" style="margin-bottom:8px;">📸 Member Photo <span></span></div>
+    <div class="photo-upload-area" onclick="document.getElementById('mmPhotoFile').click()">
+      <img id="mmPhotoPreview" class="photo-preview" style="display:none;" alt="Preview"/>
+      <div id="mmPhotoPlaceholder">
+        <div style="font-size:28px;margin-bottom:6px;">📷</div>
+        <div style="font-size:.78rem;color:var(--tm);">Click to upload photo<br/><span style="color:var(--tl);font-size:.7rem;">or paste URL below</span></div>
+      </div>
+      <input type="file" id="mmPhotoFile" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)"/>
+    </div>
+    <input type="text" class="photo-url-input" id="mmPhotoUrl" placeholder="Or paste photo URL: https://..." oninput="previewPhotoUrl(this.value)"/>
+    <div style="margin-bottom:14px;"></div>
 
-    function openAddModal() {
-      document.getElementById('editingId').value = '';
-      document.getElementById('modalTitle').textContent = 'Add Family Member';
-      document.getElementById('modalSub').textContent = 'Fill in the details. Only name is required.';
-      clearForm();
-      document.getElementById('memberModal').classList.add('open');
-    }
+    <div class="frow">
+      <div class="fgrp"><label>First Name *</label><input type="text" id="mmFirst" placeholder="e.g. Ramu"/></div>
+      <div class="fgrp"><label>Last Name</label><input type="text" id="mmLast" placeholder="e.g. Nukala"/></div>
+    </div>
+    <div class="fgrp">
+      <label>Relationship *</label>
+      <select id="mmRole">
+        <option value="">— Select —</option>
+        <optgroup label="Ancestors"><option>Great-Great-Grandfather</option><option>Great-Great-Grandmother</option><option>Great-Grandfather</option><option>Great-Grandmother</option></optgroup>
+        <optgroup label="Grandparents"><option>Grandfather</option><option>Grandmother</option></optgroup>
+        <optgroup label="Parents"><option>Father</option><option>Mother</option><option>Uncle</option><option>Aunt</option></optgroup>
+        <optgroup label="Your Generation"><option>You</option><option>Spouse</option><option>Wife</option><option>Husband</option><option>Brother</option><option>Sister</option><option>Cousin</option><option>Brother-in-law</option><option>Sister-in-law</option></optgroup>
+        <optgroup label="In-laws"><option>Father-in-law</option><option>Mother-in-law</option><option>Grandfather-in-law</option><option>Grandmother-in-law</option></optgroup>
+        <optgroup label="Children"><option>Son</option><option>Daughter</option><option>Nephew</option><option>Niece</option><option>Son-in-law</option><option>Daughter-in-law</option></optgroup>
+        <optgroup label="Grandchildren"><option>Grandson</option><option>Granddaughter</option></optgroup>
+        <option value="other">Other...</option>
+      </select>
+    </div>
+    <div class="fgrp" id="mmCustomRoleGrp" style="display:none;"><label>Custom Role</label><input type="text" id="mmCustomRole" placeholder="Type role..."/></div>
+    <div class="fgrp">
+      <label>Generation</label>
+      <select id="mmGen">
+        <option value="">— Select —</option>
+        <option value="1">Gen 1 — Great-Great-Grandparents</option>
+        <option value="2">Gen 2 — Great-Grandparents</option>
+        <option value="3">Gen 3 — Grandparents</option>
+        <option value="4">Gen 4 — Parents / Aunts / Uncles</option>
+        <option value="5">Gen 5 — You / Siblings / Cousins</option>
+        <option value="6">Gen 6 — Children / In-laws</option>
+        <option value="7">Gen 7 — Grandchildren</option>
+        <option value="8">Gen 8 — Great-Grandchildren</option>
+      </select>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Year Born</label><input type="text" id="mmBorn" placeholder="e.g. 1942"/></div>
+      <div class="fgrp"><label>Year Passed</label><input type="text" id="mmDied" placeholder="Leave blank if living"/></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Birthplace</label><input type="text" id="mmPlace" placeholder="e.g. Hyderabad, India"/></div>
+      <div class="fgrp"><label>Occupation</label><input type="text" id="mmOcc" placeholder="e.g. Farmer"/></div>
+    </div>
+    <div class="fgrp"><label>Notes / Biography</label><textarea id="mmNotes" placeholder="Any stories or biography..."></textarea></div>
 
-    function openEditModal(id) {
-      const data = loadData();
-      const m = data[id]; if(!m) return;
-      document.getElementById('editingId').value = id;
-      document.getElementById('modalTitle').textContent = 'Edit Family Member';
-      document.getElementById('modalSub').textContent = 'Update the details and save.';
-      document.getElementById('fFirstName').value = m.firstName || '';
-      document.getElementById('fLastName').value = m.lastName || '';
-      document.getElementById('fRole').value = m.role || '';
-      document.getElementById('fGen').value = m.gen || '';
-      document.getElementById('fBorn').value = m.born || '';
-      document.getElementById('fDied').value = m.died || '';
-      document.getElementById('fPlace').value = m.place || '';
-      document.getElementById('fSpouse').value = m.spouse || '';
-      document.getElementById('fOccupation').value = m.occupation || '';
-      document.getElementById('fNotes').value = m.notes || '';
-      document.getElementById('fFemale').checked = !!m.female;
-      document.getElementById('fAncestor').checked = !!m.ancestor;
-      document.getElementById('fDeceased').checked = !!m.deceased;
-      document.getElementById('fFatherId').value = m.fatherId || '';
-      document.getElementById('fMotherId').value = m.motherId || '';
-      document.getElementById('fSpouseId').value = m.spouseId || '';
-      document.getElementById('memberModal').classList.add('open');
-    }
+    <div class="panel-title" style="margin-bottom:6px;margin-top:4px;">🔗 Family Links <span></span></div>
+    <p style="font-size:.72rem;color:var(--tl);margin-bottom:10px;">Copy IDs from member cards (📋 button) and paste below to draw connecting lines on the tree.</p>
+    <div class="frow">
+      <div class="fgrp"><label>Father's Member ID</label><input type="text" id="mmFather" placeholder="Paste father's ID"/></div>
+      <div class="fgrp"><label>Mother's Member ID</label><input type="text" id="mmMother" placeholder="Paste mother's ID"/></div>
+    </div>
+    <div class="fgrp"><label>Spouse's Member ID (husband or wife)</label><input type="text" id="mmSpouse" placeholder="Paste spouse's ID — creates a 💛 connection"/></div>
 
-    function clearForm() {
-      ['fFirstName','fLastName','fBorn','fDied','fPlace','fSpouse','fOccupation','fNotes','fCustomRole','fFatherId','fMotherId','fSpouseId'].forEach(id => {
-        const el = document.getElementById(id); if(el) el.value = '';
-      });
-      document.getElementById('fRole').value = '';
-      document.getElementById('fGen').value = '';
-      document.getElementById('fFemale').checked = false;
-      document.getElementById('fAncestor').checked = false;
-      document.getElementById('fDeceased').checked = false;
-      document.getElementById('customRoleGroup').style.display = 'none';
-    }
+    <div class="panel-title" style="margin-bottom:8px;margin-top:4px;">Properties <span></span></div>
+    <div class="cbrow">
+      <label class="cbitem"><input type="checkbox" id="mmFemale"/><span>👩 Female</span></label>
+      <label class="cbitem"><input type="checkbox" id="mmAncestor"/><span>🏛️ Ancestor</span></label>
+      <label class="cbitem"><input type="checkbox" id="mmDeceased"/><span>✝️ Deceased</span></label>
+      <label class="cbitem"><input type="checkbox" id="mmInlaw"/><span>💜 In-law (from another family)</span></label>
+    </div>
 
-    function closeModal() { document.getElementById('memberModal').classList.remove('open'); }
+    <div class="modal-footer">
+      <button class="btn btn-green" style="flex:1;" onclick="saveMember()">💾 Save Member</button>
+      <button class="btn btn-outline" onclick="closeMemberModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
-    function saveMember() {
-      const firstName = document.getElementById('fFirstName').value.trim();
-      if (!firstName) { alert('Please enter a first name.'); return; }
+<!-- HISTORY MODAL -->
+<div class="modal-bg" id="historyModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeHistModal()">✕</button>
+    <h2 id="hmTitle">Add History Event</h2>
+    <p class="modal-sub">Add a milestone to the family timeline.</p>
+    <input type="hidden" id="hmId"/>
+    <div class="frow">
+      <div class="fgrp"><label>Year / Era *</label><input type="text" id="hmYear" placeholder="e.g. 1952"/></div>
+      <div class="fgrp"><label>Category</label>
+        <select id="hmTag"><option>📍 Origins</option><option>🏡 Family</option><option>⭐ Milestone</option><option>🌱 Growth</option><option>🌍 Present Day</option><option>💒 Marriage</option><option>🎓 Education</option><option>✈️ Migration</option><option>🏆 Achievement</option></select>
+      </div>
+    </div>
+    <div class="fgrp"><label>Event Title *</label><input type="text" id="hmTitle2" placeholder="e.g. Family moves to Hyderabad"/></div>
+    <div class="fgrp"><label>Description</label><textarea id="hmDesc" placeholder="Describe this event..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-green" style="flex:1;" onclick="saveHist()">💾 Save</button>
+      <button class="btn btn-outline" onclick="closeHistModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
-      const roleVal = document.getElementById('fRole').value;
-      const role = roleVal === 'other' ? document.getElementById('fCustomRole').value.trim() : roleVal;
+<!-- GALLERY MODAL -->
+<div class="modal-bg" id="galleryModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeGalModal()">✕</button>
+    <h2 id="gmTitle">Add Photo</h2>
+    <p class="modal-sub">Add a photo using a URL. Use imgbb.com to host photos for free.</p>
+    <input type="hidden" id="gmId"/>
+    <div class="fgrp"><label>Photo Title *</label><input type="text" id="gmTitle2" placeholder="e.g. Family Reunion 1995"/></div>
+    <div class="fgrp">
+      <label>Image URL</label>
+      <input type="text" id="gmUrl" placeholder="https://..." oninput="previewGal(this.value)"/>
+      <p style="font-size:.7rem;color:var(--tl);margin-top:5px;">Upload to <strong>imgbb.com</strong> (free) → copy link → paste here</p>
+    </div>
+    <div id="gmPreview" style="display:none;margin-bottom:12px;">
+      <img id="gmPreviewImg" style="width:100%;height:150px;object-fit:cover;border-radius:10px;border:1px solid var(--border);" alt=""/>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Category</label>
+        <select id="gmCat"><option value="family">Family</option><option value="vintage">Vintage</option><option value="celebrations">Celebrations</option><option value="travel">Travel</option><option value="other">Other</option></select>
+      </div>
+      <div class="fgrp"><label>Year</label><input type="text" id="gmYear" placeholder="e.g. 1995"/></div>
+    </div>
+    <div class="fgrp"><label>Caption</label><textarea id="gmCaption" rows="2" placeholder="Describe this photo..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-green" style="flex:1;" onclick="saveGal()">💾 Save</button>
+      <button class="btn btn-outline" onclick="closeGalModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
-      const id = document.getElementById('editingId').value || 'member_' + Date.now();
-      const data = loadData();
-      data[id] = {
-        id, firstName,
-        lastName: document.getElementById('fLastName').value.trim(),
-        role, gen: document.getElementById('fGen').value,
-        born: document.getElementById('fBorn').value.trim(),
-        died: document.getElementById('fDied').value.trim(),
-        place: document.getElementById('fPlace').value.trim(),
-        spouse: document.getElementById('fSpouse').value.trim(),
-        occupation: document.getElementById('fOccupation').value.trim(),
-        notes: document.getElementById('fNotes').value.trim(),
-        female: document.getElementById('fFemale').checked,
-        ancestor: document.getElementById('fAncestor').checked,
-        deceased: document.getElementById('fDeceased').checked || !!document.getElementById('fDied').value.trim(),
-      };
-      saveData(data);
-      closeModal();
-      renderAll();
-      showToast('✅ ' + firstName + ' saved successfully!');
-    }
+<!-- FACTS MODAL -->
+<div class="modal-bg" id="factModal">
+  <div class="modal" style="max-width:500px;">
+    <button class="modal-close" onclick="closeFactModal()">✕</button>
+    <h2 id="fmTitle">Add Interesting Fact</h2>
+    <p class="modal-sub">Share a family first, achievement, tradition or fun fact.</p>
+    <input type="hidden" id="fmId"/>
+    <div class="fgrp"><label>Fact Title *</label><input type="text" id="fmTitle2" placeholder="e.g. First Doctor in the Family"/></div>
+    <div class="fgrp"><label>Description</label><textarea id="fmDesc" placeholder="e.g. Dr. Ramu Nukala was the first person in the family to earn a medical degree, in 1978..."></textarea></div>
+    <div class="frow">
+      <div class="fgrp"><label>Category</label>
+        <select id="fmCat">
+          <option value="Achievement">🏆 Achievement</option>
+          <option value="Milestone">⭐ Milestone</option>
+          <option value="Tradition">🎭 Tradition</option>
+          <option value="Record">📊 Record</option>
+          <option value="Fun Fact">😄 Fun Fact</option>
+          <option value="Other">📌 Other</option>
+        </select>
+      </div>
+      <div class="fgrp"><label>Icon (emoji)</label><input type="text" id="fmIcon" placeholder="e.g. 🏥 🎓 👨‍⚕️"/></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Person Involved</label><input type="text" id="fmPerson" placeholder="e.g. Dr. Ramu Nukala"/></div>
+      <div class="fgrp"><label>Year</label><input type="text" id="fmYear" placeholder="e.g. 1978"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-green" style="flex:1;" onclick="saveFact()">💾 Save Fact</button>
+      <button class="btn btn-outline" onclick="closeFactModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
-    function deleteMember(id) {
-      const data = loadData();
-      const name = [data[id]?.firstName, data[id]?.lastName].filter(Boolean).join(' ') || 'this person';
-      if (!confirm(`Delete ${name} from the family tree? This cannot be undone.`)) return;
-      delete data[id];
-      saveData(data);
-      renderAll();
-      showToast('🗑️ Member deleted.');
-    }
+<!-- IMPORT MODAL -->
+<div class="modal-bg" id="importModal">
+  <div class="modal" style="max-width:440px;">
+    <button class="modal-close" onclick="document.getElementById('importModal').classList.remove('open')">✕</button>
+    <h2>Import Backup</h2>
+    <p class="modal-sub">Paste exported JSON to restore all data.</p>
+    <div class="fgrp"><label>JSON Data</label><textarea id="importData" rows="8" placeholder="Paste JSON here..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-green" style="flex:1;" onclick="doImport()">📤 Import</button>
+      <button class="btn btn-outline" onclick="document.getElementById('importModal').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
 
-    // ══════════════════════════════════
-    // EXPORT / IMPORT
-    // ══════════════════════════════════
-    function exportData() {
-      const data = loadData();
-      const json = JSON.stringify(data, null, 2);
-      const blob = new Blob([json], {type:'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'nukala-family-tree-backup.json';
-      a.click();
-      showToast('📥 Data exported!');
-    }
+<script>
+// ═══════════════════════════════════════
+// PASSWORDS & AUTH
+// ═══════════════════════════════════════
+const getAdminPass=()=>localStorage.getItem('nukala_admin_pass')||'nukala_admin_2024';
+const getSitePass=()=>localStorage.getItem('nukala_site_pass')||'nukala2024';
 
-    function importPrompt() {
-      document.getElementById('importData').value = '';
-      document.getElementById('importModal').classList.add('open');
-    }
+document.getElementById('adminPass').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+function doLogin(){
+  if(document.getElementById('adminPass').value===getAdminPass()){
+    sessionStorage.setItem('nukala_admin','true');
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminUI').style.display='block';
+    init();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+    document.getElementById('adminPass').value='';
+  }
+}
+function doLogout(){ sessionStorage.removeItem('nukala_admin'); window.location.href='home.html'; }
+if(sessionStorage.getItem('nukala_admin')==='true'){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminUI').style.display='block';
+}
 
-    function doImport() {
-      try {
-        const raw = document.getElementById('importData').value.trim();
-        const parsed = JSON.parse(raw);
-        saveData(parsed);
-        document.getElementById('importModal').classList.remove('open');
-        renderAll();
-        showToast('📤 Data imported successfully!');
-      } catch(e) {
-        alert('Invalid JSON data. Please check your export file and try again.');
-      }
-    }
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const LS={members:'nukala_tree_data',contacts:'nukala_contacts',gallery:'nukala_gallery',history:'nukala_history',facts:'nukala_facts',home:'nukala_home',contact:'nukala_contact',settings:'nukala_settings',log:'nukala_log',annLog:'nukala_ann_log'};
+const load=k=>JSON.parse(localStorage.getItem(LS[k]||k)||'{}');
+const loadArr=k=>JSON.parse(localStorage.getItem(LS[k]||k)||'[]');
+const save=(k,v)=>localStorage.setItem(LS[k]||k,JSON.stringify(v));
 
-    function resetData() {
-      localStorage.removeItem('nukala_tree_data');
-      renderAll();
-      showToast('🗑️ All data reset.');
-    }
+// ═══════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════
+function showSec(id,el){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  const loaders={members:renderMembers,gallery:renderGallery,history:renderHistory,facts:renderFacts,home:loadHomeForm,contact:loadContactForm,settings:loadSettings2,contacts:renderContacts,announcements:renderAnn,dashboard:renderDash};
+  if(loaders[id]) loaders[id]();
+}
 
-    // ══════════════════════════════════
-    // TOAST
-    // ══════════════════════════════════
-    function copyId(id) {
-      navigator.clipboard.writeText(id).then(() => {
-        showToast('📋 ID copied! Now paste it into the link field of another member.');
-      });
-    }
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+function init(){
+  const s=load('settings');
+  if(s.familyName) document.getElementById('tbSiteName').textContent=s.familyName;
+  renderDash();
+  document.getElementById('mmRole').addEventListener('change',function(){
+    document.getElementById('mmCustomRoleGrp').style.display=this.value==='other'?'block':'none';
+  });
+}
+if(sessionStorage.getItem('nukala_admin')==='true') setTimeout(init,100);
 
-    function showToast(msg) {
-      const t = document.createElement('div');
-      t.className = 'toast';
-      t.textContent = msg;
-      document.body.appendChild(t);
-      setTimeout(() => t.remove(), 3000);
-    }
+// ═══════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════
+function renderDash(){
+  const m=Object.values(load('members'));
+  const g=loadArr('gallery'),h=loadArr('history'),f=loadArr('facts');
+  const gens=[...new Set(m.map(x=>x.gen).filter(Boolean))];
+  document.getElementById('d-members').textContent=m.length;
+  document.getElementById('d-photos').textContent=g.length;
+  document.getElementById('d-history').textContent=h.length;
+  document.getElementById('d-facts').textContent=f.length;
+  document.getElementById('d-gens').textContent=gens.length;
+  const log=loadArr('log');
+  document.getElementById('recentAct').innerHTML=log.length
+    ?log.slice(-6).reverse().map(l=>`<div style="padding:5px 0;border-bottom:1px solid var(--border);color:var(--tm);">${l}</div>`).join('')
+    :'<span style="color:var(--tl);">No activity yet.</span>';
+}
+function logAct(msg){ const log=loadArr('log'); log.push(`${new Date().toLocaleDateString()} — ${msg}`); save('log',log.slice(-50)); }
 
-    // Init
-    if (sessionStorage.getItem('nukala_admin') === 'true') renderAll();
-  </script>
+// ═══════════════════════════════════════
+// MEMBERS
+// ═══════════════════════════════════════
+let mFilter='',mGenFilter='';
+function searchM(q){ mFilter=q; renderMembers(); }
+function filterMGen(g){ mGenFilter=g; renderMembers(); }
+
+function renderMembers(){
+  const data=load('members');
+  let list=Object.values(data);
+  if(mGenFilter) list=list.filter(m=>m.gen==mGenFilter);
+  if(mFilter){ const q=mFilter.toLowerCase(); list=list.filter(m=>([m.firstName,m.lastName,m.role,m.place].join(' ')).toLowerCase().includes(q)); }
+  list.sort((a,b)=>(parseInt(a.gen)||9)-(parseInt(b.gen)||9));
+  const grid=document.getElementById('membersGrid');
+  if(!list.length){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--tl);"><div style="font-size:42px;margin-bottom:12px;">🌿</div><p>No members yet. Click <strong>Add Member</strong>!</p></div>'; return; }
+  grid.innerHTML=list.map(m=>{
+    const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+    const avatarCls=m.deceased?'d':m.ancestor?'a':m.inlaw?'il':m.female?'f':'';
+    const emoji=m.female?'👩':m.ancestor?'👴':'👨';
+    const dates=[m.born,m.died?'† '+m.died:''].filter(Boolean).join(' · ')||'–';
+    const avatar=m.photo?`<div class="mavatar ${avatarCls}"><img src="${m.photo}" alt="${name}" onerror="this.parentNode.innerHTML='${emoji}'"/></div>`:`<div class="mavatar ${avatarCls}">${emoji}</div>`;
+    return `<div class="mcard">
+      <div class="mcard-top">${avatar}<div>
+        <div class="mname">${name}</div>
+        <div class="mrole">${m.role||'–'}</div>
+        <div class="mdates">${dates}</div>
+      </div></div>
+      <div class="mtags">
+        ${m.gen?`<span class="tag tag-g">Gen ${m.gen}</span>`:''}
+        ${m.female?`<span class="tag tag-f">F</span>`:''}
+        ${m.ancestor?`<span class="tag tag-a">Ancestor</span>`:''}
+        ${m.inlaw?`<span class="tag tag-il">In-law</span>`:''}
+        ${m.deceased||m.died?`<span class="tag tag-d">✝</span>`:''}
+        ${m.spouseId?`<span class="tag" style="background:#fdf5e0;color:#8a6a00;">💛</span>`:''}
+      </div>
+      <div class="mactions">
+        <button class="mbtn" onclick="copyId('${m.id}')" title="Copy ID">📋 ID</button>
+        <button class="mbtn" onclick="openEditMember('${m.id}')">✏️</button>
+        <button class="mbtn mbtn-red" onclick="delMember('${m.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openMemberModal(){
+  document.getElementById('mmId').value='';
+  document.getElementById('mmTitle').textContent='Add Family Member';
+  ['mmFirst','mmLast','mmBorn','mmDied','mmPlace','mmOcc','mmNotes','mmFather','mmMother','mmSpouse','mmCustomRole','mmPhotoUrl'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('mmRole').value='';document.getElementById('mmGen').value='';
+  document.getElementById('mmFemale').checked=false;document.getElementById('mmAncestor').checked=false;
+  document.getElementById('mmDeceased').checked=false;document.getElementById('mmInlaw').checked=false;
+  document.getElementById('mmPhotoPreview').style.display='none';
+  document.getElementById('mmPhotoPlaceholder').style.display='block';
+  document.getElementById('mmCustomRoleGrp').style.display='none';
+  document.getElementById('memberModal').classList.add('open');
+}
+
+function openEditMember(id){
+  const m=load('members')[id]; if(!m) return;
+  document.getElementById('mmId').value=id;
+  document.getElementById('mmTitle').textContent='Edit Family Member';
+  document.getElementById('mmFirst').value=m.firstName||'';
+  document.getElementById('mmLast').value=m.lastName||'';
+  document.getElementById('mmRole').value=m.role||'';
+  document.getElementById('mmGen').value=m.gen||'';
+  document.getElementById('mmBorn').value=m.born||'';
+  document.getElementById('mmDied').value=m.died||'';
+  document.getElementById('mmPlace').value=m.place||'';
+  document.getElementById('mmOcc').value=m.occupation||'';
+  document.getElementById('mmNotes').value=m.notes||'';
+  document.getElementById('mmFather').value=m.fatherId||'';
+  document.getElementById('mmMother').value=m.motherId||'';
+  document.getElementById('mmSpouse').value=m.spouseId||'';
+  document.getElementById('mmFemale').checked=!!m.female;
+  document.getElementById('mmAncestor').checked=!!m.ancestor;
+  document.getElementById('mmDeceased').checked=!!m.deceased;
+  document.getElementById('mmInlaw').checked=!!m.inlaw;
+  if(m.photo){
+    document.getElementById('mmPhotoPreview').src=m.photo;
+    document.getElementById('mmPhotoPreview').style.display='block';
+    document.getElementById('mmPhotoPlaceholder').style.display='none';
+    document.getElementById('mmPhotoUrl').value=m.photo;
+  } else {
+    document.getElementById('mmPhotoPreview').style.display='none';
+    document.getElementById('mmPhotoPlaceholder').style.display='block';
+    document.getElementById('mmPhotoUrl').value='';
+  }
+  document.getElementById('memberModal').classList.add('open');
+}
+
+function closeMemberModal(){ document.getElementById('memberModal').classList.remove('open'); }
+
+// Photo handling
+function handlePhotoUpload(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    document.getElementById('mmPhotoPreview').src=e.target.result;
+    document.getElementById('mmPhotoPreview').style.display='block';
+    document.getElementById('mmPhotoPlaceholder').style.display='none';
+    document.getElementById('mmPhotoUrl').value=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewPhotoUrl(url){
+  if(url){
+    document.getElementById('mmPhotoPreview').src=url;
+    document.getElementById('mmPhotoPreview').style.display='block';
+    document.getElementById('mmPhotoPlaceholder').style.display='none';
+  } else {
+    document.getElementById('mmPhotoPreview').style.display='none';
+    document.getElementById('mmPhotoPlaceholder').style.display='block';
+  }
+}
+
+function saveMember(){
+  const first=document.getElementById('mmFirst').value.trim();
+  if(!first){ alert('Please enter a first name.'); return; }
+  const roleVal=document.getElementById('mmRole').value;
+  const role=roleVal==='other'?document.getElementById('mmCustomRole').value.trim():roleVal;
+  const id=document.getElementById('mmId').value||'member_'+Date.now();
+  const data=load('members');
+  const photo=document.getElementById('mmPhotoUrl').value.trim();
+  data[id]={
+    id,firstName:first,lastName:document.getElementById('mmLast').value.trim(),
+    role,gen:document.getElementById('mmGen').value,
+    born:document.getElementById('mmBorn').value.trim(),died:document.getElementById('mmDied').value.trim(),
+    place:document.getElementById('mmPlace').value.trim(),occupation:document.getElementById('mmOcc').value.trim(),
+    notes:document.getElementById('mmNotes').value.trim(),photo:photo||'',
+    fatherId:document.getElementById('mmFather').value.trim(),
+    motherId:document.getElementById('mmMother').value.trim(),
+    spouseId:document.getElementById('mmSpouse').value.trim(),
+    female:document.getElementById('mmFemale').checked,
+    ancestor:document.getElementById('mmAncestor').checked,
+    deceased:document.getElementById('mmDeceased').checked||!!document.getElementById('mmDied').value.trim(),
+    inlaw:document.getElementById('mmInlaw').checked,
+  };
+  save('members',data);
+  closeMemberModal(); renderMembers(); renderDash();
+  logAct('Member saved: '+first); toast('✅ '+first+' saved!');
+}
+
+function delMember(id){
+  const data=load('members');
+  const name=[data[id]?.firstName,data[id]?.lastName].filter(Boolean).join(' ')||'member';
+  if(!confirm('Delete '+name+'?')) return;
+  delete data[id]; save('members',data); renderMembers(); renderDash();
+  logAct('Member deleted: '+name); toast('🗑️ Deleted.');
+}
+
+function copyId(id){ navigator.clipboard.writeText(id).then(()=>toast('📋 ID copied! Paste into another member\'s link field.')); }
+function exportMembers(){ dl(load('members'),'nukala-members.json'); }
+
+// ═══════════════════════════════════════
+// HISTORY
+// ═══════════════════════════════════════
+function renderHistory(){
+  const list=loadArr('history');
+  const el=document.getElementById('historyList');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:60px;color:var(--tl);"><div style="font-size:36px;margin-bottom:10px;">📜</div><p>No events yet.</p></div>'; return; }
+  el.innerHTML=list.map((h,i)=>`<div class="tl-item">
+    <div class="tl-year">${h.year}</div>
+    <div class="tl-body">
+      <div class="tl-title-txt">${h.title}</div>
+      ${h.desc?`<div class="tl-desc">${h.desc}</div>`:''}
+      <div style="margin-top:6px;font-size:.62rem;background:rgba(92,122,92,.1);color:var(--sage-d);padding:2px 8px;border-radius:20px;display:inline-block;">${h.tag||''}</div>
+      <div class="tl-actions">
+        <button class="btn btn-outline btn-sm" onclick="openEditHist(${i})">✏️ Edit</button>
+        <button class="btn btn-red btn-sm" onclick="delHist(${i})">🗑️</button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function openHistModal(){ document.getElementById('hmId').value=''; document.getElementById('hmTitle').textContent='Add History Event'; ['hmYear','hmTitle2','hmDesc'].forEach(id=>document.getElementById(id).value=''); document.getElementById('hmTag').value='📍 Origins'; document.getElementById('historyModal').classList.add('open'); }
+function openEditHist(i){ const h=loadArr('history')[i]; if(!h) return; document.getElementById('hmId').value=i; document.getElementById('hmTitle').textContent='Edit Event'; document.getElementById('hmYear').value=h.year||''; document.getElementById('hmTitle2').value=h.title||''; document.getElementById('hmDesc').value=h.desc||''; document.getElementById('hmTag').value=h.tag||'📍 Origins'; document.getElementById('historyModal').classList.add('open'); }
+function closeHistModal(){ document.getElementById('historyModal').classList.remove('open'); }
+function saveHist(){ const year=document.getElementById('hmYear').value.trim(),title=document.getElementById('hmTitle2').value.trim(); if(!year||!title){ alert('Enter year and title.'); return; } const list=loadArr('history'),idx=document.getElementById('hmId').value; const item={year,title,desc:document.getElementById('hmDesc').value.trim(),tag:document.getElementById('hmTag').value}; if(idx!=='') list[parseInt(idx)]=item; else list.push(item); save('history',list); closeHistModal(); renderHistory(); renderDash(); logAct('History event: '+title); toast('✅ Event saved!'); }
+function delHist(i){ if(!confirm('Delete?')) return; const list=loadArr('history'); list.splice(i,1); save('history',list); renderHistory(); renderDash(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════════════
+// GALLERY
+// ═══════════════════════════════════════
+function renderGallery(){
+  const list=loadArr('gallery');
+  const grid=document.getElementById('galleryGrid');
+  if(!list.length){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--tl);"><div style="font-size:36px;margin-bottom:10px;">🖼️</div><p>No photos yet.</p></div>'; return; }
+  grid.innerHTML=list.map((g,i)=>`<div class="gal-item">
+    ${g.url?`<img class="gal-img" src="${g.url}" alt="${g.title}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/><div class="gal-placeholder" style="display:none;">🖼️</div>`:`<div class="gal-placeholder">🖼️</div>`}
+    <div class="gal-info"><div class="gal-title">${g.title}</div><div class="gal-cat">${g.cat||''} ${g.year?'· '+g.year:''}</div></div>
+    <div class="gal-actions">
+      <button class="mbtn" style="flex:1;" onclick="openEditGal(${i})">✏️</button>
+      <button class="mbtn mbtn-red" onclick="delGal(${i})">🗑️</button>
+    </div>
+  </div>`).join('');
+}
+
+function previewGal(url){ const p=document.getElementById('gmPreview'),img=document.getElementById('gmPreviewImg'); if(url){ img.src=url; p.style.display='block'; } else p.style.display='none'; }
+function openGalModal(){ document.getElementById('gmId').value=''; document.getElementById('gmTitle').textContent='Add Photo'; ['gmTitle2','gmUrl','gmYear','gmCaption'].forEach(id=>document.getElementById(id).value=''); document.getElementById('gmCat').value='family'; document.getElementById('gmPreview').style.display='none'; document.getElementById('galleryModal').classList.add('open'); }
+function openEditGal(i){ const g=loadArr('gallery')[i]; if(!g) return; document.getElementById('gmId').value=i; document.getElementById('gmTitle').textContent='Edit Photo'; document.getElementById('gmTitle2').value=g.title||''; document.getElementById('gmUrl').value=g.url||''; document.getElementById('gmCat').value=g.cat||'family'; document.getElementById('gmYear').value=g.year||''; document.getElementById('gmCaption').value=g.caption||''; if(g.url){ document.getElementById('gmPreviewImg').src=g.url; document.getElementById('gmPreview').style.display='block'; } document.getElementById('galleryModal').classList.add('open'); }
+function closeGalModal(){ document.getElementById('galleryModal').classList.remove('open'); }
+function saveGal(){ const title=document.getElementById('gmTitle2').value.trim(); if(!title){ alert('Enter a title.'); return; } const list=loadArr('gallery'),idx=document.getElementById('gmId').value; const item={title,url:document.getElementById('gmUrl').value.trim(),cat:document.getElementById('gmCat').value,year:document.getElementById('gmYear').value.trim(),caption:document.getElementById('gmCaption').value.trim()}; if(idx!=='') list[parseInt(idx)]=item; else list.push(item); save('gallery',list); closeGalModal(); renderGallery(); renderDash(); logAct('Photo: '+title); toast('✅ Photo saved!'); }
+function delGal(i){ if(!confirm('Delete?')) return; const list=loadArr('gallery'); list.splice(i,1); save('gallery',list); renderGallery(); renderDash(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════════════
+// FACTS
+// ═══════════════════════════════════════
+function renderFacts(){
+  const list=loadArr('facts');
+  const el=document.getElementById('factsList');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:60px;color:var(--tl);"><div style="font-size:36px;margin-bottom:10px;">🌟</div><p>No facts yet. Click <strong>Add Fact</strong>!</p></div>'; return; }
+  el.innerHTML=list.map((f,i)=>`<div class="fact-admin-item">
+    <div class="fact-admin-icon">${f.icon||'📌'}</div>
+    <div class="fact-admin-body">
+      <div class="fact-admin-title">${f.title}</div>
+      ${f.desc?`<div class="fact-admin-desc">${f.desc}</div>`:''}
+      <div class="fact-admin-meta">
+        <span class="fact-admin-tag">${f.category||'Other'}</span>
+        ${f.person?`<span style="font-size:.7rem;color:var(--tl);">👤 ${f.person}</span>`:''}
+        ${f.year?`<span style="font-size:.7rem;color:var(--tl);">📅 ${f.year}</span>`:''}
+      </div>
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <button class="btn btn-outline btn-sm" onclick="openEditFact(${i})">✏️ Edit</button>
+        <button class="btn btn-red btn-sm" onclick="delFact(${i})">🗑️</button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function openFactModal(){ document.getElementById('fmId').value=''; document.getElementById('fmTitle').textContent='Add Interesting Fact'; ['fmTitle2','fmDesc','fmIcon','fmPerson','fmYear'].forEach(id=>document.getElementById(id).value=''); document.getElementById('fmCat').value='Achievement'; document.getElementById('factModal').classList.add('open'); }
+function openEditFact(i){ const f=loadArr('facts')[i]; if(!f) return; document.getElementById('fmId').value=i; document.getElementById('fmTitle').textContent='Edit Fact'; document.getElementById('fmTitle2').value=f.title||''; document.getElementById('fmDesc').value=f.desc||''; document.getElementById('fmCat').value=f.category||'Achievement'; document.getElementById('fmIcon').value=f.icon||''; document.getElementById('fmPerson').value=f.person||''; document.getElementById('fmYear').value=f.year||''; document.getElementById('factModal').classList.add('open'); }
+function closeFactModal(){ document.getElementById('factModal').classList.remove('open'); }
+function saveFact(){ const title=document.getElementById('fmTitle2').value.trim(); if(!title){ alert('Enter a title.'); return; } const list=loadArr('facts'),idx=document.getElementById('fmId').value; const item={title,desc:document.getElementById('fmDesc').value.trim(),category:document.getElementById('fmCat').value,icon:document.getElementById('fmIcon').value.trim(),person:document.getElementById('fmPerson').value.trim(),year:document.getElementById('fmYear').value.trim()}; if(idx!=='') list[parseInt(idx)]=item; else list.push(item); save('facts',list); closeFactModal(); renderFacts(); renderDash(); logAct('Fact: '+title); toast('✅ Fact saved!'); }
+function delFact(i){ if(!confirm('Delete?')) return; const list=loadArr('facts'); list.splice(i,1); save('facts',list); renderFacts(); renderDash(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════════════
+// HOME PAGE
+// ═══════════════════════════════════════
+function loadHomeForm(){
+  const d=load('home'),s=load('settings');
+  document.getElementById('homeNavName').value=d.navName||s.familyName||'NUKALA';
+  document.getElementById('homeSiteSubtitle').value=d.siteSubtitle||'Family Tree';
+  document.getElementById('homeTitle').value=d.title||'';
+  document.getElementById('homeTagline').value=d.tagline||'';
+  document.getElementById('homeWelcome').value=d.welcome||'';
+  document.getElementById('homeStat1Num').value=d.stat1num||'';document.getElementById('homeStat1Lbl').value=d.stat1lbl||'Generations';
+  document.getElementById('homeStat2Num').value=d.stat2num||'';document.getElementById('homeStat2Lbl').value=d.stat2lbl||'Family Members';
+  document.getElementById('homeStat3Num').value=d.stat3num||'';document.getElementById('homeStat3Lbl').value=d.stat3lbl||'Stories Shared';
+  document.getElementById('homeAboutTitle').value=d.aboutTitle||'';
+  document.getElementById('homeAbout1').value=d.about1||'';document.getElementById('homeAbout2').value=d.about2||'';document.getElementById('homeAbout3').value=d.about3||'';
+}
+function saveHome(){
+  const navName=document.getElementById('homeNavName').value.trim()||'NUKALA';
+  save('home',{navName,siteSubtitle:document.getElementById('homeSiteSubtitle').value.trim(),title:document.getElementById('homeTitle').value.trim(),tagline:document.getElementById('homeTagline').value.trim(),welcome:document.getElementById('homeWelcome').value.trim(),stat1num:document.getElementById('homeStat1Num').value.trim(),stat1lbl:document.getElementById('homeStat1Lbl').value.trim(),stat2num:document.getElementById('homeStat2Num').value.trim(),stat2lbl:document.getElementById('homeStat2Lbl').value.trim(),stat3num:document.getElementById('homeStat3Num').value.trim(),stat3lbl:document.getElementById('homeStat3Lbl').value.trim(),aboutTitle:document.getElementById('homeAboutTitle').value.trim(),about1:document.getElementById('homeAbout1').value.trim(),about2:document.getElementById('homeAbout2').value.trim(),about3:document.getElementById('homeAbout3').value.trim()});
+  // Also update settings family name
+  const s=load('settings'); s.familyName=navName; save('settings',s);
+  document.getElementById('tbSiteName').textContent=navName;
+  logAct('Home page updated'); toast('✅ Home page saved!');
+}
+
+// ═══════════════════════════════════════
+// CONTACT PAGE
+// ═══════════════════════════════════════
+function loadContactForm(){
+  const d=load('contact');
+  document.getElementById('cName').value=d.name||'';document.getElementById('cEmail').value=d.email||'';
+  document.getElementById('cMsg').value=d.msg||'';document.getElementById('cFormspree').value=d.formspree||'';
+  document.getElementById('cw1i').value=d.cw1icon||'📸';document.getElementById('cw1t').value=d.cw1title||'Share a Photo';document.getElementById('cw1d').value=d.cw1desc||'';
+  document.getElementById('cw2i').value=d.cw2icon||'📝';document.getElementById('cw2t').value=d.cw2title||'Add a Story';document.getElementById('cw2d').value=d.cw2desc||'';
+}
+function saveContact(){ save('contact',{name:document.getElementById('cName').value.trim(),email:document.getElementById('cEmail').value.trim(),msg:document.getElementById('cMsg').value.trim(),formspree:document.getElementById('cFormspree').value.trim(),cw1icon:document.getElementById('cw1i').value.trim(),cw1title:document.getElementById('cw1t').value.trim(),cw1desc:document.getElementById('cw1d').value.trim(),cw2icon:document.getElementById('cw2i').value.trim(),cw2title:document.getElementById('cw2t').value.trim(),cw2desc:document.getElementById('cw2d').value.trim()}); logAct('Contact page updated'); toast('✅ Contact page saved!'); }
+
+// ═══════════════════════════════════════
+// CONTACTS
+// ═══════════════════════════════════════
+let cSearchQ='';
+function searchContacts(q){ cSearchQ=q; renderContacts(); }
+function renderContacts(){
+  const members=Object.values(load('members'));
+  const contacts=load('contacts');
+  let list=members;
+  if(cSearchQ){ const q=cSearchQ.toLowerCase(); list=list.filter(m=>{ const c=contacts[m.id]||{}; return ([m.firstName,m.lastName,c.city,c.email].join(' ')).toLowerCase().includes(q); }); }
+  list.sort((a,b)=>(parseInt(a.gen)||9)-(parseInt(b.gen)||9));
+  const grid=document.getElementById('contactsGrid');
+  if(!list.length){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--tl);">No members yet.</div>'; return; }
+  grid.innerHTML=list.map(m=>{
+    const c=contacts[m.id]||{};
+    const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+    const has=c.phone||c.email||c.city;
+    const photo=m.photo?`<div class="mavatar" style="width:36px;height:36px;overflow:hidden;border-radius:50%;border:2px solid var(--border);flex-shrink:0;"><img src="${m.photo}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentNode.innerHTML='${m.female?'👩':'👨'}'"/></div>`:`<div class="mavatar ${m.female?'f':'a'}" style="width:36px;height:36px;flex-shrink:0;">${m.female?'👩':'👨'}</div>`;
+    return `<div class="contact-admin-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        ${photo}
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;">${name}</div>
+          <div style="font-size:.6rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--sage-d);">${m.role||'–'}</div>
+        </div>
+        <span style="font-size:.6rem;${has?'background:#f0f5f0;color:var(--sage-d)':'background:#faf0f0;color:var(--red)'};padding:2px 7px;border-radius:10px;font-weight:500;">${has?'✅':'No info'}</span>
+      </div>
+      ${c.phone?`<div style="font-size:.76rem;color:var(--tm);margin-bottom:3px;">📱 ${c.phone}</div>`:''}
+      ${c.email?`<div style="font-size:.76rem;color:var(--tm);margin-bottom:3px;">📧 ${c.email}</div>`:''}
+      ${c.city?`<div style="font-size:.76rem;color:var(--tm);margin-bottom:3px;">📍 ${c.city}</div>`:''}
+      ${c.birthday?`<div style="font-size:.76rem;color:var(--tm);margin-bottom:3px;">🎂 ${c.birthday}</div>`:''}
+      ${c.social?`<div style="font-size:.76rem;color:var(--tm);margin-bottom:3px;">📘 ${c.social}</div>`:''}
+      <button class="btn btn-outline btn-sm" style="width:100%;margin-top:8px;" onclick="openContactEdit('${m.id}')">${has?'✏️ Edit':'➕ Add'} Contact</button>
+    </div>`;
+  }).join('');
+}
+
+function openContactEdit(memberId){
+  const members=load('members'),contacts=load('contacts');
+  const m=members[memberId]; if(!m) return;
+  const c=contacts[memberId]||{};
+  const name=[m.firstName,m.lastName].filter(Boolean).join(' ');
+  const old=document.getElementById('contactEditModal');
+  if(old) old.remove();
+  const modal=document.createElement('div');
+  modal.id='contactEditModal';modal.className='modal-bg open';
+  modal.innerHTML=`<div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="document.getElementById('contactEditModal').remove()">✕</button>
+    <h2>${name}</h2><p class="modal-sub">Contact details — admin only.</p>
+    <div class="fgrp"><label>📱 Phone</label><input type="text" id="ce-phone" value="${c.phone||''}" placeholder="+91 98765 43210"/></div>
+    <div class="fgrp"><label>📧 Email</label><input type="text" id="ce-email" value="${c.email||''}" placeholder="email@example.com"/></div>
+    <div class="fgrp"><label>📍 City / Country</label><input type="text" id="ce-city" value="${c.city||''}" placeholder="Hyderabad, India"/></div>
+    <div class="fgrp"><label>🎂 Birthday</label><input type="text" id="ce-birthday" value="${c.birthday||''}" placeholder="15 August"/></div>
+    <div class="fgrp"><label>📘 Social Media</label><input type="text" id="ce-social" value="${c.social||''}" placeholder="facebook.com/..."/></div>
+    <div class="fgrp"><label>📝 Notes</label><textarea id="ce-notes" rows="2">${c.notes||''}</textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-green" style="flex:1;" onclick="saveContactEntry('${memberId}')">💾 Save</button>
+      <button class="btn btn-outline" onclick="document.getElementById('contactEditModal').remove()">Cancel</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+function saveContactEntry(id){
+  const contacts=load('contacts');
+  contacts[id]={phone:document.getElementById('ce-phone').value.trim(),email:document.getElementById('ce-email').value.trim(),city:document.getElementById('ce-city').value.trim(),birthday:document.getElementById('ce-birthday').value.trim(),social:document.getElementById('ce-social').value.trim(),notes:document.getElementById('ce-notes').value.trim()};
+  save('contacts',contacts);
+  document.getElementById('contactEditModal').remove();
+  renderContacts(); logAct('Contact updated'); toast('✅ Contact saved!');
+}
+
+function exportContacts(){
+  const members=Object.values(load('members')),contacts=load('contacts');
+  const rows=[['Name','Role','Gen','Phone','Email','City','Birthday','Social']];
+  members.forEach(m=>{ const c=contacts[m.id]||{}; rows.push([[m.firstName,m.lastName].filter(Boolean).join(' '),m.role||'',m.gen||'',c.phone||'',c.email||'',c.city||'',c.birthday||'',c.social||'']); });
+  const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='nukala-contacts.csv'; a.click();
+  toast('📥 Contacts exported!');
+}
+
+// ═══════════════════════════════════════
+// ANNOUNCEMENTS
+// ═══════════════════════════════════════
+function renderAnn(){
+  const members=Object.values(load('members')),contacts=load('contacts');
+  const recList=document.getElementById('recipientsList');
+  if(!members.length){ recList.innerHTML='<p style="color:var(--tl);font-size:.78rem;padding:8px;">No members yet.</p>'; return; }
+  recList.innerHTML=members.sort((a,b)=>(parseInt(a.gen)||9)-(parseInt(b.gen)||9)).map(m=>{
+    const c=contacts[m.id]||{};
+    const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+    return `<label style="display:flex;align-items:center;gap:7px;padding:7px 9px;background:white;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.78rem;">
+      <input type="checkbox" class="rcb" data-id="${m.id}" data-name="${name}" data-email="${c.email||''}" data-phone="${c.phone||''}" style="accent-color:var(--sage-d);width:14px;height:14px;"/>
+      <div><div style="font-weight:500;color:var(--td);">${name}</div>
+      <div style="font-size:.66rem;color:var(--tl);">${c.email||'<span style="color:var(--red);">No email</span>'}</div></div>
+    </label>`;
+  }).join('');
+  document.querySelectorAll('.rcb').forEach(cb=>cb.addEventListener('change',updateRecCount));
+  updateRecCount();
+  const al=loadArr('annLog');
+  document.getElementById('annHistory').innerHTML=al.length?al.slice(-8).reverse().map(a=>`<div class="ann-hist-item"><strong>${a.title}</strong><br/><span style="font-size:.7rem;color:var(--tl);">${a.date} · ${a.count} member(s) via ${a.via}</span></div>`).join(''):'<span style="color:var(--tl);font-size:.82rem;">No announcements yet.</span>';
+}
+
+function updateRecCount(){ document.getElementById('recCount').textContent=document.querySelectorAll('.rcb:checked').length+' selected'; }
+function selAll(){ document.querySelectorAll('.rcb').forEach(c=>c.checked=true); updateRecCount(); }
+function selNone(){ document.querySelectorAll('.rcb').forEach(c=>c.checked=false); updateRecCount(); }
+function getSelected(){ const s=[]; document.querySelectorAll('.rcb:checked').forEach(c=>s.push({id:c.dataset.id,name:c.dataset.name,email:c.dataset.email,phone:c.dataset.phone})); return s; }
+
+function buildAnn(){ const t=document.getElementById('annTitle').value.trim(),m=document.getElementById('annMsg').value.trim(); if(!t||!m){ alert('Enter title and message.'); return null; } return {title:t,msg:m}; }
+
+function sendEmail(){
+  const ann=buildAnn(); if(!ann) return;
+  const rec=getSelected(); if(!rec.length){ alert('Select recipients.'); return; }
+  const withEmail=rec.filter(r=>r.email);
+  if(!withEmail.length){ alert('No emails found. Add emails in Contacts first.'); return; }
+  const from=document.getElementById('annFrom').value.trim()||'The Nukala Family';
+  window.location.href=`mailto:${withEmail.map(r=>r.email).join(',')}?subject=${encodeURIComponent(ann.title)}&body=${encodeURIComponent(`Dear Family,\n\n${ann.msg}\n\nWith love,\n${from}`)}`;
+  logAnnouncement(ann.title,withEmail.length,'Email'); toast('📧 Email client opened!');
+}
+
+function sendWA(){
+  const ann=buildAnn(); if(!ann) return;
+  const rec=getSelected(); if(!rec.length){ alert('Select recipients.'); return; }
+  const msg=`🌳 *${ann.title}*\n\nDear Nukala Family,\n\n${ann.msg}\n\n— The Nukala Family`;
+  navigator.clipboard.writeText(msg).then(()=>{
+    document.getElementById('annPreview').textContent=msg;
+    document.getElementById('annPreviewPanel').style.display='block';
+    const url=rec.length===1&&rec[0].phone?`https://wa.me/${rec[0].phone.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`;
+    setTimeout(()=>window.open(url,'_blank'),500);
+    logAnnouncement(ann.title,rec.length,'WhatsApp'); toast('📱 Message copied & WhatsApp opened!');
+  });
+}
+
+function copyAnn(){ navigator.clipboard.writeText(document.getElementById('annPreview').textContent).then(()=>toast('📋 Copied!')); }
+function logAnnouncement(title,count,via){ const al=loadArr('annLog'); al.push({title,count,via,date:new Date().toLocaleDateString()}); save('annLog',al); logAct('Announcement: '+title); renderAnn(); }
+
+// ═══════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════
+function loadSettings2(){ const s=load('settings'); document.getElementById('setFamily').value=s.familyName||'Nukala'; document.getElementById('setFooter').value=s.footer||''; }
+function saveSitePass(){ const p=document.getElementById('newSitePass').value.trim(); if(!p){ alert('Enter password.'); return; } localStorage.setItem('nukala_site_pass',p); document.getElementById('newSitePass').value=''; logAct('Site password updated'); toast('✅ Password updated!'); }
+function saveAdminPass(){ const p=document.getElementById('newAdminPass').value.trim(); if(!p){ alert('Enter password.'); return; } localStorage.setItem('nukala_admin_pass',p); document.getElementById('newAdminPass').value=''; logAct('Admin password updated'); toast('✅ Admin password updated!'); }
+function saveIdentity(){ const s=load('settings'); s.familyName=document.getElementById('setFamily').value.trim(); s.footer=document.getElementById('setFooter').value.trim(); save('settings',s); document.getElementById('tbSiteName').textContent=s.familyName; logAct('Identity updated'); toast('✅ Saved!'); }
+
+// ═══════════════════════════════════════
+// EXPORT / IMPORT / RESET
+// ═══════════════════════════════════════
+function dl(data,filename){ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); }
+function exportAll(){ dl({members:load('members'),contacts:load('contacts'),gallery:loadArr('gallery'),history:loadArr('history'),facts:loadArr('facts'),home:load('home'),contact:load('contact'),settings:load('settings')},'nukala-backup-'+new Date().toISOString().split('T')[0]+'.json'); toast('📥 Full backup exported!'); }
+function doImport(){ try{ const p=JSON.parse(document.getElementById('importData').value.trim()); if(p.members)save('members',p.members); if(p.contacts)save('contacts',p.contacts); if(p.gallery)save('gallery',p.gallery); if(p.history)save('history',p.history); if(p.facts)save('facts',p.facts); if(p.home)save('home',p.home); if(p.contact)save('contact',p.contact); if(p.settings)save('settings',p.settings); document.getElementById('importModal').classList.remove('open'); renderDash(); toast('📤 Imported!'); } catch(e){ alert('Invalid JSON.'); } }
+function resetAll(){ Object.values(LS).forEach(k=>localStorage.removeItem(k)); renderDash(); toast('🗑️ Reset.'); }
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
+</script>
 </body>
 </html>

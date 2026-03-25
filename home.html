@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Home – Nukala</title>
+  <title>Home – Nukala Family Tree</title>
   <link rel="stylesheet" href="shared.css"/>
   <link rel="icon" href="favicon.ico"/>
   <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
@@ -16,7 +16,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .hero-banner::before {
       content: '';
       position: absolute;
@@ -27,231 +26,84 @@
       transform: translate(-50%, -50%);
       pointer-events: none;
     }
+    .hero-eyebrow { font-size: .72rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 16px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem,6vw,4rem); font-weight: 300; color: var(--text-dark); line-height: 1.1; margin-bottom: 20px; }
+    .hero-title em { font-style: italic; color: var(--sage-dark); }
+    .hero-tagline { font-size: .95rem; color: var(--text-mid); max-width: 500px; margin: 0 auto 32px; font-weight: 300; line-height: 1.7; }
+    .hero-divider { width: 60px; height: 2px; background: linear-gradient(to right,var(--sage),var(--gold)); border-radius: 2px; margin: 0 auto 28px; }
+    .hero-stats { display: flex; justify-content: center; gap: 48px; margin-top: 40px; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: var(--sage-dark); display: block; }
+    .stat-label { font-size: .72rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--text-light); }
 
-    .hero-banner .eyebrow {
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--sage-dark);
-      margin-bottom: 16px;
-    }
-
-    .hero-banner h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      font-weight: 300;
-      color: var(--text-dark);
-      line-height: 1.1;
-      margin-bottom: 20px;
-    }
-
-    .hero-banner h1 em { font-style: italic; color: var(--sage-dark); }
-
-    .hero-banner p {
-      font-size: 0.95rem;
-      color: var(--text-mid);
-      max-width: 500px;
-      margin: 0 auto 32px;
-      font-weight: 300;
-      line-height: 1.7;
-    }
-
-    .hero-divider {
-      width: 60px; height: 2px;
-      background: linear-gradient(to right, var(--sage), var(--gold));
-      border-radius: 2px;
-      margin: 0 auto 28px;
-    }
-
-    .hero-stats {
-      display: flex;
-      justify-content: center;
-      gap: 48px;
-      margin-top: 40px;
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      text-align: center;
-    }
-
-    .stat-number {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.2rem;
-      font-weight: 300;
-      color: var(--sage-dark);
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-light);
-    }
-
-    /* Quick Nav Cards */
-    .quick-nav {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      max-width: 1100px;
-      margin: 56px auto 0;
-      padding: 0 40px;
-    }
-
-    .quick-card {
-      background: var(--warm-white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px 24px;
-      text-decoration: none;
-      color: inherit;
-      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .quick-card:hover {
-      box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-      transform: translateY(-3px);
-      border-color: var(--sage-light);
-    }
-
+    .quick-nav { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 20px; max-width: 1100px; margin: 56px auto 0; padding: 0 40px; }
+    .quick-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; text-decoration: none; color: inherit; transition: box-shadow .2s, transform .2s, border-color .2s; display: flex; flex-direction: column; gap: 10px; }
+    .quick-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.08); transform: translateY(-3px); border-color: var(--sage-light); }
     .quick-card-icon { font-size: 28px; }
+    .quick-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; color: var(--text-dark); }
+    .quick-card-desc { font-size: .82rem; color: var(--text-mid); font-weight: 300; line-height: 1.5; }
+    .quick-card-arrow { font-size: .8rem; color: var(--sage); margin-top: auto; padding-top: 8px; }
 
-    .quick-card-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-weight: 400;
-      color: var(--text-dark);
-    }
-
-    .quick-card-desc {
-      font-size: 0.82rem;
-      color: var(--text-mid);
-      font-weight: 300;
-      line-height: 1.5;
-    }
-
-    .quick-card-arrow {
-      font-size: 0.8rem;
-      color: var(--sage);
-      margin-top: auto;
-      padding-top: 8px;
-    }
-
-    /* Welcome section */
-    .welcome-section {
-      max-width: 1100px;
-      margin: 56px auto 0;
-      padding: 0 40px 80px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      align-items: start;
-    }
-
-    @media (max-width: 768px) {
-      .welcome-section { grid-template-columns: 1fr; }
-      .quick-nav { padding: 0 20px; }
-      .hero-banner { padding: 80px 20px 48px; }
-      .hero-stats { gap: 28px; }
-    }
-
-    .welcome-text h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.7rem;
-      font-weight: 400;
-      margin-bottom: 16px;
-      color: var(--text-dark);
-    }
-
+    .welcome-section { max-width: 1100px; margin: 56px auto 0; padding: 0 40px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    @media(max-width:768px){ .welcome-section{grid-template-columns:1fr;} .quick-nav{padding:0 20px;} .hero-banner{padding:80px 20px 48px;} .hero-stats{gap:28px;} }
+    .welcome-text h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 400; margin-bottom: 16px; color: var(--text-dark); }
     .welcome-text h2 em { font-style: italic; color: var(--sage-dark); }
+    .welcome-text p { font-size: .9rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 12px; font-weight: 300; }
 
-    .welcome-text p {
-      font-size: 0.9rem;
-      color: var(--text-mid);
-      line-height: 1.8;
-      margin-bottom: 12px;
-      font-weight: 300;
-    }
-
-    .recent-updates h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      font-weight: 400;
-      margin-bottom: 20px;
-      color: var(--text-dark);
-    }
-
-    .update-item {
-      display: flex;
-      gap: 14px;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
+    .recent-updates h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 20px; color: var(--text-dark); }
+    .update-item { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); }
     .update-item:last-child { border-bottom: none; }
+    .update-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); margin-top: 6px; flex-shrink: 0; }
+    .update-title { font-size: .88rem; font-weight: 500; color: var(--text-dark); margin-bottom: 3px; }
+    .update-date { font-size: .75rem; color: var(--text-light); }
 
-    .update-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--sage);
-      margin-top: 6px;
-      flex-shrink: 0;
-    }
-
-    .update-title {
-      font-size: 0.88rem;
-      font-weight: 500;
-      color: var(--text-dark);
-      margin-bottom: 3px;
-    }
-
-    .update-date {
-      font-size: 0.75rem;
-      color: var(--text-light);
-    }
+    /* Birthday banner */
+    .bday-banner { background: linear-gradient(135deg,#fffdf0,#fdf5e0); border: 1px solid var(--gold-light); border-radius: 14px; padding: 16px 20px; margin: 0 40px 20px; display: none; }
+    .bday-banner-inner { display: flex; align-items: center; gap: 12px; }
+    .bday-banner p { font-size: .88rem; color: var(--text-dark); line-height: 1.5; }
   </style>
 </head>
 <body>
   <script src="auth.js"></script>
-
   <nav>
-    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Nukala Logo"/> <span>Nukala</span> Family Tree</a>
+    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
     <ul class="nav-links">
       <li><a href="home.html" class="active">Home</a></li>
       <li><a href="tree.html">Family Tree</a></li>
       <li><a href="history.html">Our History</a></li>
       <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="facts.html">Facts</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
   </nav>
 
   <main>
-    <div class="hero-banner">
-      <p class="eyebrow">Welcome to the</p>
-      <h1>The <em>Nukala</em><br>Family Archive</h1>
-      <div class="hero-divider"></div>
-      <p>A private space to celebrate our roots, preserve our stories, and stay connected across generations.</p>
+    <!-- Birthday Banner -->
+    <div class="bday-banner" id="bdayBanner">
+      <div class="bday-banner-inner">
+        <span style="font-size:28px;">🎂</span>
+        <p id="bdayText"></p>
+      </div>
+    </div>
 
+    <div class="hero-banner">
+      <p class="hero-eyebrow">Welcome to the</p>
+      <h1 class="hero-title" id="heroTitle">The <em>Nukala</em><br>Family Archive</h1>
+      <div class="hero-divider"></div>
+      <p class="hero-tagline" id="heroTagline">A private space to celebrate our roots, preserve our stories, and stay connected across generations.</p>
       <div class="hero-stats">
         <div class="stat fade-in stagger-1">
-          <span class="stat-number">∞</span>
-          <span class="stat-label">Generations</span>
+          <span class="stat-number" id="stat1num">∞</span>
+          <span class="stat-label" id="stat1lbl">Generations</span>
         </div>
         <div class="stat fade-in stagger-2">
-          <span class="stat-number">🌍</span>
-          <span class="stat-label">Family Members</span>
+          <span class="stat-number" id="stat2num">🌍</span>
+          <span class="stat-label" id="stat2lbl">Family Members</span>
         </div>
         <div class="stat fade-in stagger-3">
-          <span class="stat-number">📖</span>
-          <span class="stat-label">Stories Shared</span>
+          <span class="stat-number" id="stat3num">📖</span>
+          <span class="stat-label" id="stat3lbl">Stories Shared</span>
         </div>
       </div>
     </div>
@@ -285,48 +137,110 @@
 
     <div class="welcome-section">
       <div class="welcome-text fade-in stagger-2">
-        <h2>Our <em>Roots</em> Run Deep</h2>
-        <p>Welcome to the Nukala Family Tree — a private, members-only archive dedicated to preserving and celebrating our shared heritage.</p>
-        <p>This site is a living record of who we are: our ancestors, our stories, our photos, and the bonds that tie us together across generations and geographies.</p>
-        <p>We invite every family member to contribute — add your memories, upload old photographs, and help build this archive for generations to come.</p>
+        <h2 id="aboutTitle">Our <em>Roots</em> Run Deep</h2>
+        <p id="aboutP1">Welcome to the Nukala Family Tree — a private, members-only archive dedicated to preserving and celebrating our shared heritage.</p>
+        <p id="aboutP2">This site is a living record of who we are: our ancestors, our stories, our photos, and the bonds that tie us together across generations and geographies.</p>
+        <p id="aboutP3">We invite every family member to contribute — add your memories, upload old photographs, and help build this archive for generations to come.</p>
       </div>
 
       <div class="recent-updates card fade-in stagger-3">
         <h2>Recent Updates</h2>
-        <div class="update-item">
-          <div class="update-dot"></div>
-          <div>
-            <div class="update-title">Website launched! 🎉</div>
-            <div class="update-date">Welcome to the Nukala Family Tree</div>
-          </div>
-        </div>
-        <div class="update-item">
-          <div class="update-dot"></div>
-          <div>
-            <div class="update-title">Gallery section added</div>
-            <div class="update-date">Start uploading family photos</div>
-          </div>
-        </div>
-        <div class="update-item">
-          <div class="update-dot"></div>
-          <div>
-            <div class="update-title">Family history page ready</div>
-            <div class="update-date">Add your family milestones</div>
-          </div>
-        </div>
-        <div class="update-item">
-          <div class="update-dot"></div>
-          <div>
-            <div class="update-title">Invite family members</div>
-            <div class="update-date">Share the password with loved ones</div>
-          </div>
+        <div id="recentUpdatesList">
+          <div class="update-item"><div class="update-dot"></div><div><div class="update-title">Website launched! 🎉</div><div class="update-date">Welcome to the Nukala Family Tree</div></div></div>
         </div>
       </div>
     </div>
   </main>
 
   <footer>
-    &copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
+    &copy; 2024 <strong id="footerText">The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
   </footer>
+
+  <script>
+    // ── Load CMS data and populate page ──
+    function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
+    function loadArr(k){ return JSON.parse(localStorage.getItem(k)||'[]'); }
+
+    function initHome(){
+      // Nav site name
+      const hd=load('nukala_home')||{};
+      const navEl=document.getElementById('navSiteName');
+      if(navEl && hd.navName) navEl.textContent=hd.navName;
+
+      // Home page content
+      const h = load('nukala_home')||{};
+      if(h.title) document.getElementById('heroTitle').innerHTML = h.title.replace('Nukala','<em>Nukala</em>');
+      if(h.tagline) document.getElementById('heroTagline').textContent = h.tagline;
+      if(h.stat1num) document.getElementById('stat1num').textContent = h.stat1num;
+      if(h.stat1lbl) document.getElementById('stat1lbl').textContent = h.stat1lbl;
+      if(h.stat2num) document.getElementById('stat2num').textContent = h.stat2num;
+      if(h.stat2lbl) document.getElementById('stat2lbl').textContent = h.stat2lbl;
+      if(h.stat3num) document.getElementById('stat3num').textContent = h.stat3num;
+      if(h.stat3lbl) document.getElementById('stat3lbl').textContent = h.stat3lbl;
+      if(h.aboutTitle) document.getElementById('aboutTitle').innerHTML = h.aboutTitle;
+      if(h.about1) document.getElementById('aboutP1').textContent = h.about1;
+      if(h.about2) document.getElementById('aboutP2').textContent = h.about2;
+      if(h.about3) document.getElementById('aboutP3').textContent = h.about3;
+
+      // Auto-fill member stats if not manually set
+      if(!h.stat1num){
+        const members = Object.values(load('nukala_tree_data')||{});
+        const gens = [...new Set(members.map(m=>m.gen).filter(Boolean))];
+        document.getElementById('stat1num').textContent = gens.length||'∞';
+        document.getElementById('stat2num').textContent = members.length||'🌍';
+        const history = loadArr('nukala_history');
+        document.getElementById('stat3num').textContent = history.length||'📖';
+      }
+
+      // Settings
+      const s = load('nukala_settings')||{};
+      if(s.footer) document.getElementById('footerText').textContent = 'The '+s.familyName+' Family';
+
+      // Recent updates from activity log
+      const log = loadArr('nukala_log');
+      if(log.length){
+        const list = document.getElementById('recentUpdatesList');
+        list.innerHTML = log.slice(-4).reverse().map(l=>`
+          <div class="update-item">
+            <div class="update-dot"></div>
+            <div>
+              <div class="update-title">${l.split('—')[1]?.trim()||l}</div>
+              <div class="update-date">${l.split('—')[0]?.trim()||''}</div>
+            </div>
+          </div>`).join('');
+      }
+
+      // Birthday check
+      checkBirthdays();
+    }
+
+    function checkBirthdays(){
+      const members = Object.values(load('nukala_tree_data')||{});
+      const contacts = load('nukala_contacts')||{};
+      const today = new Date();
+      const todayDay = today.getDate();
+      const todayMonth = today.toLocaleString('default',{month:'long'});
+
+      const bdays = [];
+      members.forEach(m=>{
+        const c = contacts[m.id];
+        if(!c||!c.birthday) return;
+        const bday = c.birthday.toLowerCase();
+        if(bday.includes(todayMonth.toLowerCase()) && bday.includes(String(todayDay))){
+          const name = [m.firstName,m.lastName].filter(Boolean).join(' ');
+          bdays.push(name);
+        }
+      });
+
+      if(bdays.length){
+        const banner = document.getElementById('bdayBanner');
+        document.getElementById('bdayText').innerHTML =
+          `<strong>🎉 Happy Birthday!</strong> Today is the birthday of <strong>${bdays.join(', ')}</strong>! Wishing them a wonderful day! 🎂`;
+        banner.style.display='block';
+      }
+    }
+
+    initHome();
+  </script>
 </body>
 </html>
