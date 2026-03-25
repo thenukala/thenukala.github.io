@@ -8,186 +8,46 @@
   <link rel="icon" href="favicon.ico"/>
   <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 40px;
-      align-items: start;
-    }
+    .contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:40px; align-items:start; }
+    @media(max-width:768px){ .contact-grid{grid-template-columns:1fr;} }
+    .contact-info h2 { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:400; color:var(--text-dark); margin-bottom:12px; }
+    .contact-info h2 em { font-style:italic; color:var(--sage-dark); }
+    .contact-info p { font-size:.88rem; color:var(--text-mid); line-height:1.8; font-weight:300; margin-bottom:28px; }
+    .contact-ways { display:flex; flex-direction:column; gap:16px; }
+    .contact-way { display:flex; gap:14px; align-items:flex-start; padding:18px 20px; background:white; border:1px solid var(--border); border-radius:14px; transition:border-color .2s; }
+    .contact-way:hover { border-color:var(--sage-light); }
+    .contact-way-icon { font-size:22px; flex-shrink:0; }
+    .contact-way-title { font-size:.82rem; font-weight:500; color:var(--text-dark); margin-bottom:2px; }
+    .contact-way-desc { font-size:.78rem; color:var(--text-light); line-height:1.5; }
 
-    @media (max-width: 768px) {
-      .contact-grid { grid-template-columns: 1fr; }
-    }
+    .contact-form { background:white; border:1px solid var(--border); border-radius:20px; padding:36px; }
+    .contact-form h3 { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:400; color:var(--text-dark); margin-bottom:24px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:560px){ .form-row{grid-template-columns:1fr;} }
+    .form-group { margin-bottom:16px; }
+    label { display:block; font-size:.72rem; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--text-mid); margin-bottom:8px; }
+    input[type="text"],input[type="email"],select,textarea { width:100%; padding:13px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:'Jost',sans-serif; font-size:.88rem; color:var(--text-dark); background:var(--cream); outline:none; transition:border-color .2s,box-shadow .2s; }
+    input:focus,select:focus,textarea:focus { border-color:var(--sage); box-shadow:0 0 0 3px rgba(138,171,138,.12); background:#fff; }
+    textarea { resize:vertical; min-height:120px; }
+    .submit-btn { width:100%; padding:15px; background:linear-gradient(135deg,var(--sage-dark),var(--sage)); color:white; border:none; border-radius:12px; font-family:'Jost',sans-serif; font-size:.85rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; margin-top:8px; transition:transform .15s,box-shadow .15s; box-shadow:0 4px 16px rgba(92,122,92,.3); }
+    .submit-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(92,122,92,.4); }
+    .success-msg { display:none; background:#f0f7f0; border:1px solid var(--sage-light); border-radius:12px; padding:20px; text-align:center; margin-top:16px; font-size:.9rem; color:var(--sage-dark); }
+    .privacy-note { text-align:center; font-size:.75rem; color:var(--text-light); margin-top:14px; line-height:1.5; }
 
-    /* Left info column */
-    .contact-info h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem;
-      font-weight: 400;
-      color: var(--text-dark);
-      margin-bottom: 12px;
-    }
-
-    .contact-info h2 em { font-style: italic; color: var(--sage-dark); }
-
-    .contact-info p {
-      font-size: 0.88rem;
-      color: var(--text-mid);
-      line-height: 1.8;
-      font-weight: 300;
-      margin-bottom: 28px;
-    }
-
-    .contact-ways {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .contact-way {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      padding: 18px 20px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      transition: border-color 0.2s;
-    }
-
-    .contact-way:hover { border-color: var(--sage-light); }
-
-    .contact-way-icon { font-size: 22px; flex-shrink: 0; }
-
-    .contact-way-title {
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--text-dark);
-      margin-bottom: 2px;
-    }
-
-    .contact-way-desc {
-      font-size: 0.78rem;
-      color: var(--text-light);
-      line-height: 1.5;
-    }
-
-    /* Form */
-    .contact-form {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 36px;
-    }
-
-    .contact-form h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      font-weight: 400;
-      color: var(--text-dark);
-      margin-bottom: 24px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-mid);
-      margin-bottom: 7px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 13px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.88rem;
-      color: var(--text-dark);
-      background: var(--cream);
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--sage);
-      box-shadow: 0 0 0 3px rgba(138,171,138,0.12);
-      background: white;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(135deg, var(--sage-dark), var(--sage));
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 16px rgba(92,122,92,0.3);
-    }
-
-    .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(92,122,92,0.4); }
-
-    .success-msg {
-      display: none;
-      background: #f0f7f0;
-      border: 1px solid var(--sage-light);
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      margin-top: 16px;
-      font-size: 0.9rem;
-      color: var(--sage-dark);
-    }
-
-    .privacy-note {
-      font-size: 0.72rem;
-      color: var(--text-light);
-      text-align: center;
-      margin-top: 14px;
-      line-height: 1.5;
-    }
+    .admin-email-link { color:var(--sage-dark); text-decoration:none; font-weight:500; }
+    .admin-email-link:hover { text-decoration:underline; }
   </style>
 </head>
 <body>
   <script src="auth.js"></script>
-
   <nav>
-    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Nukala Logo"/> <span>Nukala</span> Family Tree</a>
+    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
     <ul class="nav-links">
       <li><a href="home.html">Home</a></li>
       <li><a href="tree.html">Family Tree</a></li>
       <li><a href="history.html">Our History</a></li>
       <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="facts.html">Facts</a></li>
       <li><a href="contact.html" class="active">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -198,7 +58,7 @@
       <p class="eyebrow">Contribute</p>
       <h1>Get <em>In Touch</em></h1>
       <div class="hero-divider"></div>
-      <p>Have a story to share, a photo to contribute, or a correction to suggest? We'd love to hear from you.</p>
+      <p id="contactPageDesc">Have a story to share, a photo to contribute, or a correction to suggest? We'd love to hear from you.</p>
     </div>
 
     <div class="content-area">
@@ -206,37 +66,15 @@
 
         <div class="contact-info fade-in stagger-1">
           <h2>Help Us <em>Grow</em><br>the Archive</h2>
-          <p>This family tree is a living archive — it grows richer with every contribution. Whether you have old photographs, family stories, or genealogical details, every piece of information helps preserve our shared heritage.</p>
+          <p id="contactInfoMsg">This family tree is a living archive — it grows richer with every contribution. Whether you have old photographs, family stories, or genealogical details, every piece helps preserve our shared heritage.</p>
 
-          <div class="contact-ways">
-            <div class="contact-way">
-              <div class="contact-way-icon">📸</div>
-              <div>
-                <div class="contact-way-title">Share a Photo</div>
-                <div class="contact-way-desc">Send old or new family photos to be added to the gallery.</div>
-              </div>
-            </div>
-            <div class="contact-way">
-              <div class="contact-way-icon">📝</div>
-              <div>
-                <div class="contact-way-title">Add a Story</div>
-                <div class="contact-way-desc">Share a memory, anecdote, or family history entry.</div>
-              </div>
-            </div>
-            <div class="contact-way">
-              <div class="contact-way-icon">🌿</div>
-              <div>
-                <div class="contact-way-title">Update the Tree</div>
-                <div class="contact-way-desc">Add new family members, births, marriages, or corrections.</div>
-              </div>
-            </div>
-            <div class="contact-way">
-              <div class="contact-way-icon">🔑</div>
-              <div>
-                <div class="contact-way-title">Request Access</div>
-                <div class="contact-way-desc">Know a family member who needs the site password? Let us know.</div>
-              </div>
-            </div>
+          <div class="contact-ways" id="contactWays">
+            <!-- Populated by JS -->
+          </div>
+
+          <div style="margin-top:20px;padding:16px 20px;background:white;border:1px solid var(--border);border-radius:14px;">
+            <div style="font-size:.78rem;font-weight:500;color:var(--text-dark);margin-bottom:4px;">📬 Direct Contact</div>
+            <div style="font-size:.8rem;color:var(--text-mid);" id="adminContactLine">Contact the family administrator for any queries.</div>
           </div>
         </div>
 
@@ -244,21 +82,10 @@
           <h3>Send a Message</h3>
 
           <div class="form-row">
-            <div class="form-group">
-              <label for="fname">First Name</label>
-              <input type="text" id="fname" placeholder="Your first name"/>
-            </div>
-            <div class="form-group">
-              <label for="lname">Last Name</label>
-              <input type="text" id="lname" placeholder="Your last name"/>
-            </div>
+            <div class="form-group"><label for="fname">First Name</label><input type="text" id="fname" placeholder="Your first name"/></div>
+            <div class="form-group"><label for="lname">Last Name</label><input type="text" id="lname" placeholder="Your last name"/></div>
           </div>
-
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="your@email.com"/>
-          </div>
-
+          <div class="form-group"><label for="email">Email Address</label><input type="email" id="email" placeholder="your@email.com"/></div>
           <div class="form-group">
             <label for="subject">What would you like to do?</label>
             <select id="subject">
@@ -271,19 +98,9 @@
               <option>Other</option>
             </select>
           </div>
-
-          <div class="form-group">
-            <label for="message">Your Message</label>
-            <textarea id="message" placeholder="Tell us what you'd like to share or contribute..."></textarea>
-          </div>
-
+          <div class="form-group"><label for="message">Your Message</label><textarea id="message" placeholder="Tell us what you'd like to share or contribute..."></textarea></div>
           <button class="submit-btn" onclick="submitForm()">Send Message →</button>
-
-          <div class="success-msg" id="successMsg">
-            ✅ Thank you! Your message has been noted.<br/>
-            <small>To enable real email sending, connect this form to <a href="https://formspree.io" target="_blank" style="color: var(--sage-dark);">Formspree</a> (free).</small>
-          </div>
-
+          <div class="success-msg" id="successMsg">✅ Thank you! Your message has been noted.</div>
           <p class="privacy-note">🔒 This form is for family members only. Your details stay within the family.</p>
         </div>
 
@@ -292,24 +109,89 @@
   </main>
 
   <footer>
-    &copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
+    &copy; 2024 <strong id="footerFamilyName">The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
   </footer>
 
   <script>
-    function submitForm() {
-      const name = document.getElementById('fname').value;
-      const email = document.getElementById('email').value;
-      if (!name || !email) {
-        alert('Please fill in at least your name and email.');
-        return;
+    function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
+
+    function initContact(){
+      const c = load('nukala_contact')||{};
+      const s = load('nukala_settings')||{};
+
+      // Footer
+      if(s.familyName) document.getElementById('footerFamilyName').textContent = 'The '+s.familyName+' Family';
+
+      // Contact message
+      if(c.msg) document.getElementById('contactInfoMsg').textContent = c.msg;
+
+      // Admin contact line
+      const parts = [];
+      if(c.name) parts.push(c.name);
+      if(c.email) parts.push(`<a class="admin-email-link" href="mailto:${c.email}">${c.email}</a>`);
+      if(parts.length) document.getElementById('adminContactLine').innerHTML = 'Contact: '+parts.join(' · ');
+
+      // Contact ways
+      const ways = [
+        { icon: c.cw1icon||'📸', title: c.cw1title||'Share a Photo',   desc: c.cw1desc||'Send old or new family photos to be added to the gallery.' },
+        { icon: c.cw2icon||'📝', title: c.cw2title||'Add a Story',     desc: c.cw2desc||'Share a memory, anecdote, or family history entry.' },
+        { icon: '🌿',            title: 'Update the Tree',              desc: 'Add new family members, births, marriages, or corrections.' },
+        { icon: '🔑',            title: 'Request Access',               desc: 'Know a family member who needs the site password? Let us know.' },
+      ];
+      document.getElementById('contactWays').innerHTML = ways.map(w=>`
+        <div class="contact-way">
+          <div class="contact-way-icon">${w.icon}</div>
+          <div>
+            <div class="contact-way-title">${w.title}</div>
+            <div class="contact-way-desc">${w.desc}</div>
+          </div>
+        </div>`).join('');
+
+      // Formspree integration
+      if(c.formspree){
+        document.querySelector('.contact-form').setAttribute('data-formspree', c.formspree);
       }
-      document.getElementById('successMsg').style.display = 'block';
-      document.getElementById('fname').value = '';
-      document.getElementById('lname').value = '';
-      document.getElementById('email').value = '';
-      document.getElementById('subject').value = '';
-      document.getElementById('message').value = '';
     }
+
+    function submitForm(){
+      const fname = document.getElementById('fname').value;
+      const email = document.getElementById('email').value;
+      if(!fname||!email){ alert('Please fill in at least your name and email.'); return; }
+
+      const c = load('nukala_contact')||{};
+      const formspreeId = c.formspree;
+
+      if(formspreeId){
+        // Real submission via Formspree
+        const data = {
+          name: fname+' '+document.getElementById('lname').value,
+          email, subject: document.getElementById('subject').value,
+          message: document.getElementById('message').value
+        };
+        fetch(`https://formspree.io/f/${formspreeId}`,{
+          method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body: JSON.stringify(data)
+        }).then(r=>{
+          if(r.ok){ showSuccess(); }
+          else { alert('Something went wrong. Please try emailing directly.'); }
+        }).catch(()=>{ showSuccess(); });
+      } else {
+        // Fallback: mailto
+        const adminEmail = c.email||'';
+        const subject = encodeURIComponent(`Family Tree Message from ${fname}`);
+        const body = encodeURIComponent(`From: ${fname} ${document.getElementById('lname').value}\nEmail: ${email}\nSubject: ${document.getElementById('subject').value}\n\n${document.getElementById('message').value}`);
+        if(adminEmail) window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
+        showSuccess();
+      }
+    }
+
+    function showSuccess(){
+      document.getElementById('successMsg').style.display='block';
+      ['fname','lname','email','message'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('subject').value='';
+    }
+
+    initContact();
   </script>
 </body>
 </html>

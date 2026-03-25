@@ -8,206 +8,47 @@
   <link rel="icon" href="favicon.ico"/>
   <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
-    .filter-bar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 36px;
-    }
+    .filter-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:36px; }
+    .filter-btn { padding:8px 18px; border-radius:20px; border:1.5px solid var(--border); background:white; font-family:'Jost',sans-serif; font-size:.78rem; font-weight:500; letter-spacing:.08em; color:var(--text-mid); cursor:pointer; transition:all .2s; }
+    .filter-btn:hover,.filter-btn.active { background:var(--sage-dark); color:white; border-color:var(--sage-dark); }
 
-    .filter-btn {
-      padding: 8px 18px;
-      border-radius: 20px;
-      border: 1.5px solid var(--border);
-      background: white;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: var(--text-mid);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+    .gallery-card { background:var(--warm-white); border:1px solid var(--border); border-radius:16px; overflow:hidden; cursor:pointer; transition:box-shadow .2s, transform .2s; }
+    .gallery-card:hover { box-shadow:0 8px 28px rgba(0,0,0,.1); transform:translateY(-3px); }
+    .gallery-img { width:100%; height:200px; object-fit:cover; display:block; }
+    .gallery-placeholder { width:100%; height:200px; background:linear-gradient(135deg,var(--sage-light),var(--gold-light)); display:flex; align-items:center; justify-content:center; font-size:48px; }
+    .gallery-card-body { padding:16px 18px; }
+    .gallery-card-title { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:600; color:var(--text-dark); margin-bottom:4px; }
+    .gallery-card-meta { font-size:.75rem; color:var(--text-light); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .gallery-tag { display:inline-block; background:var(--sage-light); color:var(--sage-dark); font-size:.65rem; font-weight:500; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border-radius:20px; }
 
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--sage-dark);
-      color: white;
-      border-color: var(--sage-dark);
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .gallery-card {
-      background: var(--warm-white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: box-shadow 0.2s, transform 0.2s;
-    }
-
-    .gallery-card:hover {
-      box-shadow: 0 8px 28px rgba(0,0,0,0.1);
-      transform: translateY(-3px);
-    }
-
-    .gallery-img {
-      width: 100%;
-      height: 200px;
-      background: linear-gradient(135deg, var(--sage-light) 0%, var(--gold-light) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .gallery-img::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.06) 100%);
-    }
-
-    .gallery-card-body {
-      padding: 16px 18px;
-    }
-
-    .gallery-card-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 4px;
-    }
-
-    .gallery-card-meta {
-      font-size: 0.75rem;
-      color: var(--text-light);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .gallery-tag {
-      display: inline-block;
-      background: var(--sage-light);
-      color: var(--sage-dark);
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 20px;
-    }
-
-    /* Upload section */
-    .upload-zone {
-      border: 2px dashed var(--border);
-      border-radius: 16px;
-      padding: 40px;
-      text-align: center;
-      margin-bottom: 40px;
-      transition: border-color 0.2s, background 0.2s;
-      cursor: pointer;
-      background: white;
-    }
-
-    .upload-zone:hover {
-      border-color: var(--sage);
-      background: #f5faf5;
-    }
-
-    .upload-zone-icon { font-size: 36px; margin-bottom: 12px; }
-
-    .upload-zone h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-weight: 400;
-      color: var(--text-dark);
-      margin-bottom: 6px;
-    }
-
-    .upload-zone p {
-      font-size: 0.82rem;
-      color: var(--text-light);
-      line-height: 1.5;
-    }
+    .empty-gallery { text-align:center; padding:80px 20px; color:var(--text-light); }
+    .empty-gallery .ei { font-size:56px; margin-bottom:16px; }
+    .empty-gallery p { font-size:.88rem; line-height:1.7; }
 
     /* Lightbox */
-    .lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(4px);
-    }
-
-    .lightbox.open { display: flex; }
-
-    .lightbox-content {
-      background: white;
-      border-radius: 20px;
-      max-width: 520px;
-      width: 90%;
-      padding: 40px;
-      position: relative;
-      animation: fadeUp 0.3s ease;
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 16px; right: 16px;
-      background: none; border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-      color: var(--text-light);
-    }
-
-    .lightbox-img {
-      width: 100%; height: 220px;
-      background: linear-gradient(135deg, var(--sage-light), var(--gold-light));
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 60px;
-      margin-bottom: 20px;
-    }
-
-    .lightbox-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      font-weight: 400;
-      margin-bottom: 8px;
-    }
-
-    .lightbox-desc {
-      font-size: 0.88rem;
-      color: var(--text-mid);
-      line-height: 1.7;
-      font-weight: 300;
-    }
+    .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(6px); padding:20px; }
+    .lightbox.open { display:flex; }
+    .lb-content { background:white; border-radius:20px; max-width:640px; width:100%; overflow:hidden; animation:fadeUp .3s ease; position:relative; }
+    .lb-img { width:100%; max-height:400px; object-fit:cover; display:block; }
+    .lb-placeholder { width:100%; height:280px; background:linear-gradient(135deg,var(--sage-light),var(--gold-light)); display:flex; align-items:center; justify-content:center; font-size:72px; }
+    .lb-body { padding:24px 28px; }
+    .lb-title { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:400; margin-bottom:8px; }
+    .lb-desc { font-size:.88rem; color:var(--text-mid); line-height:1.7; }
+    .lb-close { position:absolute; top:14px; right:14px; background:rgba(0,0,0,.5); border:none; color:white; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   </style>
 </head>
 <body>
   <script src="auth.js"></script>
-
   <nav>
-    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Nukala Logo"/> <span>Nukala</span> Family Tree</a>
+    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
     <ul class="nav-links">
       <li><a href="home.html">Home</a></li>
       <li><a href="tree.html">Family Tree</a></li>
       <li><a href="history.html">Our History</a></li>
       <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="facts.html">Facts</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -222,132 +63,106 @@
     </div>
 
     <div class="content-area">
-
-      <div class="upload-zone fade-in" onclick="alert('To add real photos: upload image files to your GitHub repository and update the gallery cards in gallery.html with the actual image paths.')">
-        <div class="upload-zone-icon">📸</div>
-        <h3>Add Family Photos</h3>
-        <p>Upload your photos to GitHub and update gallery.html with the image paths.<br/>Supported: JPG, PNG, WEBP</p>
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" onclick="filterGallery('all',this)">All Photos</button>
+        <button class="filter-btn" onclick="filterGallery('family',this)">Family</button>
+        <button class="filter-btn" onclick="filterGallery('vintage',this)">Vintage</button>
+        <button class="filter-btn" onclick="filterGallery('celebrations',this)">Celebrations</button>
+        <button class="filter-btn" onclick="filterGallery('travel',this)">Travel</button>
+        <button class="filter-btn" onclick="filterGallery('other',this)">Other</button>
       </div>
 
-      <div class="filter-bar fade-in stagger-1">
-        <button class="filter-btn active" onclick="filterGallery('all', this)">All Photos</button>
-        <button class="filter-btn" onclick="filterGallery('vintage', this)">Vintage</button>
-        <button class="filter-btn" onclick="filterGallery('celebrations', this)">Celebrations</button>
-        <button class="filter-btn" onclick="filterGallery('family', this)">Family</button>
-        <button class="filter-btn" onclick="filterGallery('travel', this)">Travel</button>
-      </div>
-
-      <div class="gallery-grid" id="galleryGrid">
-
-        <div class="gallery-card fade-in stagger-1" data-tag="vintage" onclick="openLightbox('📷', 'Family Portrait — Early Years', 'vintage', 'A cherished early photograph of the Nukala family. Replace this placeholder by uploading your real family photos to GitHub.')">
-          <div class="gallery-img">📷</div>
-          <div class="gallery-card-body">
-            <div class="gallery-card-title">Family Portrait — Early Years</div>
-            <div class="gallery-card-meta">
-              <span class="gallery-tag">Vintage</span>
-              <span>Add your photo here</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="gallery-card fade-in stagger-2" data-tag="celebrations" onclick="openLightbox('🎉', 'Family Celebration', 'celebrations', 'A joyful gathering of the Nukala family. Upload your actual celebration photos to bring this gallery to life.')">
-          <div class="gallery-img" style="background: linear-gradient(135deg, #fde8d8, #faf0e8);">🎉</div>
-          <div class="gallery-card-body">
-            <div class="gallery-card-title">Family Celebration</div>
-            <div class="gallery-card-meta">
-              <span class="gallery-tag">Celebrations</span>
-              <span>Add your photo here</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="gallery-card fade-in stagger-3" data-tag="family" onclick="openLightbox('👨‍👩‍👧‍👦', 'The Nukala Family', 'family', 'A wonderful family moment. Replace this with a real family photo by uploading to GitHub and updating gallery.html.')">
-          <div class="gallery-img" style="background: linear-gradient(135deg, #d8e8f5, #eaf3fc);">👨‍👩‍👧‍👦</div>
-          <div class="gallery-card-body">
-            <div class="gallery-card-title">The Nukala Family</div>
-            <div class="gallery-card-meta">
-              <span class="gallery-tag">Family</span>
-              <span>Add your photo here</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="gallery-card fade-in stagger-4" data-tag="travel" onclick="openLightbox('🌍', 'Family Travels', 'travel', 'A memory from a family journey. Update with a real travel photo from the Nukala family archives.')">
-          <div class="gallery-img" style="background: linear-gradient(135deg, #d8f5e8, #eafaf0);">🌍</div>
-          <div class="gallery-card-body">
-            <div class="gallery-card-title">Family Travels</div>
-            <div class="gallery-card-meta">
-              <span class="gallery-tag">Travel</span>
-              <span>Add your photo here</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="gallery-card fade-in stagger-5" data-tag="vintage" onclick="openLightbox('🖼️', 'Vintage Snapshot', 'vintage', 'An old photograph from the family archive. Add the real image by uploading it to your GitHub repository.')">
-          <div class="gallery-img" style="background: linear-gradient(135deg, #f5f0d8, #faf8e8);">🖼️</div>
-          <div class="gallery-card-body">
-            <div class="gallery-card-title">Vintage Snapshot</div>
-            <div class="gallery-card-meta">
-              <span class="gallery-tag">Vintage</span>
-              <span>Add your photo here</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="gallery-card fade-in stagger-1" data-tag="celebrations" onclick="openLightbox('💒', 'A Wedding Day', 'celebrations', 'A special celebration in the Nukala family. Upload real wedding photos and update gallery.html.')">
-          <div class="gallery-img" style="background: linear-gradient(135deg, #fae8f5, #fdf0fa);">💒</div>
-          <div class="gallery-card-body">
-            <div class="gallery-card-title">A Wedding Day</div>
-            <div class="gallery-card-meta">
-              <span class="gallery-tag">Celebrations</span>
-              <span>Add your photo here</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
     </div>
   </main>
 
   <!-- Lightbox -->
   <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-    <div class="lightbox-content">
-      <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-      <div class="lightbox-img" id="lbIcon"></div>
-      <div class="lightbox-title" id="lbTitle"></div>
-      <div class="lightbox-desc" id="lbDesc"></div>
+    <div class="lb-content">
+      <button class="lb-close" onclick="closeLightbox()">✕</button>
+      <div id="lbImgWrap"></div>
+      <div class="lb-body">
+        <div class="lb-title" id="lbTitle"></div>
+        <div id="lbMeta" style="font-size:.72rem;color:var(--text-light);margin-bottom:8px;"></div>
+        <div class="lb-desc" id="lbDesc"></div>
+      </div>
     </div>
   </div>
 
   <footer>
-    &copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
+    &copy; 2024 <strong id="footerFamilyName">The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
   </footer>
 
   <script>
-    function filterGallery(tag, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('.gallery-card').forEach(card => {
-        if (tag === 'all' || card.dataset.tag === tag) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
+    function loadArr(k){ return JSON.parse(localStorage.getItem(k)||'[]'); }
+    function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
+
+    let allPhotos = [];
+    let currentFilter = 'all';
+
+    const catEmojis = { family:'👨‍👩‍👧‍👦', vintage:'📷', celebrations:'🎉', travel:'🌍', other:'🖼️' };
+
+    function initGallery(){
+      allPhotos = loadArr('nukala_gallery');
+      const s = load('nukala_settings')||{};
+      if(s.familyName) document.getElementById('footerFamilyName').textContent = 'The '+s.familyName+' Family';
+      renderGallery();
     }
 
-    function openLightbox(icon, title, tag, desc) {
-      document.getElementById('lbIcon').textContent = icon;
-      document.getElementById('lbTitle').textContent = title;
-      document.getElementById('lbDesc').textContent = desc;
+    function renderGallery(){
+      const grid = document.getElementById('galleryGrid');
+      const filtered = currentFilter==='all' ? allPhotos : allPhotos.filter(p=>p.cat===currentFilter);
+
+      if(!filtered.length){
+        grid.innerHTML = `<div class="empty-gallery" style="grid-column:1/-1;">
+          <div class="ei">🖼️</div>
+          <p>${allPhotos.length ? 'No photos in this category.' : 'No photos added yet.<br/>Go to <strong>Admin → Gallery</strong> to add your first family photo!'}</p>
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((p,i)=>`
+        <div class="gallery-card fade-in" style="animation-delay:${i*0.05}s" onclick="openLightbox(${allPhotos.indexOf(p)})">
+          ${p.url
+            ? `<img class="gallery-img" src="${p.url}" alt="${p.title}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+               <div class="gallery-placeholder" style="display:none;">${catEmojis[p.cat]||'🖼️'}</div>`
+            : `<div class="gallery-placeholder">${catEmojis[p.cat]||'🖼️'}</div>`}
+          <div class="gallery-card-body">
+            <div class="gallery-card-title">${p.title}</div>
+            <div class="gallery-card-meta">
+              <span class="gallery-tag">${p.cat||'general'}</span>
+              ${p.year?`<span>${p.year}</span>`:''}
+            </div>
+            ${p.caption?`<div style="font-size:.75rem;color:var(--text-light);margin-top:6px;font-style:italic;">${p.caption}</div>`:''}
+          </div>
+        </div>`).join('');
+    }
+
+    function filterGallery(cat, btn){
+      currentFilter = cat;
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderGallery();
+    }
+
+    function openLightbox(idx){
+      const p = allPhotos[idx]; if(!p) return;
+      document.getElementById('lbImgWrap').innerHTML = p.url
+        ? `<img class="lb-img" src="${p.url}" alt="${p.title}" onerror="this.style.display='none';this.parentNode.innerHTML='<div class=\\'lb-placeholder\\'>${catEmojis[p.cat]||'🖼️'}</div>'"/>`
+        : `<div class="lb-placeholder">${catEmojis[p.cat]||'🖼️'}</div>`;
+      document.getElementById('lbTitle').textContent = p.title;
+      document.getElementById('lbMeta').textContent = [p.cat, p.year].filter(Boolean).join(' · ');
+      document.getElementById('lbDesc').textContent = p.caption||'';
       document.getElementById('lightbox').classList.add('open');
     }
 
-    function closeLightbox(e) {
-      if (!e || e.target === document.getElementById('lightbox') || e.currentTarget.classList.contains('lightbox-close')) {
+    function closeLightbox(e){
+      if(!e || e.target===document.getElementById('lightbox') || e.target.classList.contains('lb-close')){
         document.getElementById('lightbox').classList.remove('open');
       }
     }
+
+    initGallery();
   </script>
 </body>
 </html>

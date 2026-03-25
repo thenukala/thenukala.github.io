@@ -8,155 +8,43 @@
   <link rel="icon" href="favicon.ico"/>
   <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
-    .timeline {
-      position: relative;
-      max-width: 760px;
-      margin: 0 auto;
-      padding-left: 32px;
-    }
+    .timeline { position: relative; max-width: 760px; margin: 0 auto; padding-left: 32px; }
+    .timeline::before { content:''; position:absolute; left:0; top:8px; bottom:0; width:2px; background:linear-gradient(to bottom,var(--sage-light),var(--gold-light),var(--sage-light)); border-radius:2px; }
+    .tl-item { position:relative; margin-bottom:48px; padding-left:28px; animation:fadeIn .6s ease forwards; opacity:0; }
+    .tl-item::before { content:''; position:absolute; left:-7px; top:6px; width:14px; height:14px; border-radius:50%; background:var(--warm-white); border:2.5px solid var(--sage); }
+    .tl-item.gold::before { border-color:var(--gold); }
+    .tl-year { font-size:.72rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--sage-dark); margin-bottom:6px; }
+    .tl-item.gold .tl-year { color:var(--gold); }
+    .tl-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:400; color:var(--text-dark); margin-bottom:10px; }
+    .tl-body { font-size:.88rem; color:var(--text-mid); line-height:1.8; font-weight:300; max-width:600px; }
+    .tl-tag { display:inline-block; background:var(--sage-light); color:var(--sage-dark); font-size:.68rem; font-weight:500; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:20px; margin-top:10px; }
+    .tl-item.gold .tl-tag { background:var(--gold-light); color:#8a6a00; }
 
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 8px; bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--sage-light), var(--gold-light), var(--sage-light));
-      border-radius: 2px;
-    }
+    .history-intro { max-width:680px; font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-style:italic; color:var(--text-mid); line-height:1.8; margin-bottom:52px; }
+    .add-story-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid var(--sage-light); border-radius:16px; padding:28px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:48px; flex-wrap:wrap; }
+    .add-story-bar p { font-size:.88rem; color:var(--text-mid); font-weight:300; line-height:1.5; }
+    .add-story-bar strong { color:var(--sage-dark); }
+    .btn-outline-sm { padding:11px 22px; border:1.5px solid var(--sage); color:var(--sage-dark); background:white; border-radius:10px; font-family:'Jost',sans-serif; font-size:.8rem; font-weight:500; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; text-decoration:none; display:inline-block; transition:all .2s; }
+    .btn-outline-sm:hover { background:var(--sage-dark); color:white; }
 
-    .timeline-item {
-      position: relative;
-      margin-bottom: 48px;
-      padding-left: 28px;
-      animation: fadeIn 0.6s ease forwards;
-      opacity: 0;
-    }
+    .empty-history { text-align:center; padding:80px 20px; color:var(--text-light); }
+    .empty-history .ei { font-size:48px; margin-bottom:16px; }
+    .empty-history p { font-size:.88rem; line-height:1.7; }
 
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -7px; top: 6px;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--warm-white);
-      border: 2.5px solid var(--sage);
-    }
-
-    .timeline-item.gold-dot::before { border-color: var(--gold); }
-
-    .timeline-year {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--sage-dark);
-      margin-bottom: 6px;
-    }
-
-    .timeline-item.gold-dot .timeline-year { color: var(--gold); }
-
-    .timeline-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      font-weight: 400;
-      color: var(--text-dark);
-      margin-bottom: 10px;
-    }
-
-    .timeline-body {
-      font-size: 0.88rem;
-      color: var(--text-mid);
-      line-height: 1.8;
-      font-weight: 300;
-      max-width: 600px;
-    }
-
-    .timeline-tag {
-      display: inline-block;
-      background: var(--sage-light);
-      color: var(--sage-dark);
-      font-size: 0.68rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 20px;
-      margin-top: 10px;
-    }
-
-    .timeline-item.gold-dot .timeline-tag {
-      background: var(--gold-light);
-      color: #8a6a00;
-    }
-
-    .history-intro {
-      max-width: 680px;
-      font-size: 0.95rem;
-      color: var(--text-mid);
-      line-height: 1.8;
-      font-weight: 300;
-      margin-bottom: 52px;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
-      font-style: italic;
-    }
-
-    .add-story-bar {
-      background: linear-gradient(135deg, #f0f5f0, #faf8f4);
-      border: 1px solid var(--sage-light);
-      border-radius: 16px;
-      padding: 28px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 48px;
-      flex-wrap: wrap;
-    }
-
-    .add-story-bar p {
-      font-size: 0.88rem;
-      color: var(--text-mid);
-      font-weight: 300;
-      line-height: 1.5;
-    }
-
-    .add-story-bar strong { color: var(--sage-dark); }
-
-    .btn-outline {
-      padding: 11px 22px;
-      border: 1.5px solid var(--sage);
-      color: var(--sage-dark);
-      background: white;
-      border-radius: 10px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-
-    .btn-outline:hover {
-      background: var(--sage-dark);
-      color: white;
-    }
+    @keyframes fadeIn { to { opacity:1; } }
+    .stagger-1{animation-delay:.1s} .stagger-2{animation-delay:.2s} .stagger-3{animation-delay:.3s} .stagger-4{animation-delay:.4s} .stagger-5{animation-delay:.5s}
   </style>
 </head>
 <body>
   <script src="auth.js"></script>
-
   <nav>
-    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Nukala Logo"/> <span>Nukala</span> Family Tree</a>
+    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
     <ul class="nav-links">
       <li><a href="home.html">Home</a></li>
       <li><a href="tree.html">Family Tree</a></li>
       <li><a href="history.html" class="active">Our History</a></li>
       <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="facts.html">Facts</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -176,63 +64,55 @@
       </p>
 
       <div class="add-story-bar fade-in stagger-2">
-        <p><strong>Have a family story to share?</strong><br>Contribute your memories, milestones, or historical details to this archive.</p>
-        <a class="btn-outline" href="contact.html">+ Add a Story</a>
+        <p><strong>Have a family story to share?</strong><br/>Contribute your memories, milestones, or historical details to this archive.</p>
+        <a class="btn-outline-sm" href="contact.html">+ Add a Story</a>
       </div>
 
-      <div class="timeline">
-
-        <div class="timeline-item gold-dot fade-in stagger-1">
-          <div class="timeline-year">Origins</div>
-          <div class="timeline-title">The Nukala Family Roots</div>
-          <div class="timeline-body">
-            The Nukala family traces its origins to India, with a rich heritage spanning multiple generations. Edit this section to add the real story of your ancestors — where they came from, what they did, and what they believed in.
-          </div>
-          <span class="timeline-tag">📍 Origins</span>
+      <div class="timeline" id="timelineContainer">
+        <div class="empty-history">
+          <div class="ei">📜</div>
+          <p>No history events added yet.<br/>Go to <strong>Admin → History</strong> to add your first family milestone!</p>
         </div>
-
-        <div class="timeline-item fade-in stagger-2">
-          <div class="timeline-year">Early Days</div>
-          <div class="timeline-title">Founding the Family</div>
-          <div class="timeline-body">
-            Add the story of how your grandparents or great-grandparents built their lives, their professions, their faith, and the values they passed down. This is your space to record their legacy.
-          </div>
-          <span class="timeline-tag">🏡 Family</span>
-        </div>
-
-        <div class="timeline-item fade-in stagger-3">
-          <div class="timeline-year">A Milestone Year</div>
-          <div class="timeline-title">A Key Moment in the Family</div>
-          <div class="timeline-body">
-            Document a significant event — a migration, a celebration, an achievement, or a challenge that the family overcame together. Every family has defining moments. This is where you record yours.
-          </div>
-          <span class="timeline-tag">⭐ Milestone</span>
-        </div>
-
-        <div class="timeline-item gold-dot fade-in stagger-4">
-          <div class="timeline-year">Next Generation</div>
-          <div class="timeline-title">Growing the Family</div>
-          <div class="timeline-body">
-            Add stories about the next generation — education, marriages, births, moves to new cities or countries. Record the moments that marked the growth and evolution of the Nukala family.
-          </div>
-          <span class="timeline-tag">🌱 Growth</span>
-        </div>
-
-        <div class="timeline-item fade-in stagger-5">
-          <div class="timeline-year">Today</div>
-          <div class="timeline-title">The Nukala Family Today</div>
-          <div class="timeline-body">
-            Write about where the family stands today — the values carried forward, the members spread across the world, and the traditions still held dear. The story continues to be written by each one of us.
-          </div>
-          <span class="timeline-tag">🌍 Present Day</span>
-        </div>
-
       </div>
     </div>
   </main>
 
   <footer>
-    &copy; 2024 <strong>The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
+    &copy; 2024 <strong id="footerFamilyName">The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
   </footer>
+
+  <script>
+    function loadArr(k){ return JSON.parse(localStorage.getItem(k)||'[]'); }
+    function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
+
+    // Tag colour mapping
+    const goldTags = ['📍 Origins','⭐ Milestone','💒 Marriage','🏆 Achievement'];
+
+    function initHistory(){
+      const events = loadArr('nukala_history');
+      const container = document.getElementById('timelineContainer');
+
+      // Settings
+      const s = load('nukala_settings')||{};
+      if(s.familyName) document.getElementById('footerFamilyName').textContent = 'The '+s.familyName+' Family';
+
+      if(!events.length){
+        container.innerHTML = `<div class="empty-history"><div class="ei">📜</div><p>No history events added yet.<br/>Go to <strong>Admin → History</strong> to add your first family milestone!</p></div>`;
+        return;
+      }
+
+      container.innerHTML = events.map((e,i)=>{
+        const isGold = goldTags.includes(e.tag);
+        return `<div class="tl-item ${isGold?'gold':''} fade-in stagger-${(i%5)+1}">
+          <div class="tl-year">${e.year||'–'}</div>
+          <div class="tl-title">${e.title||''}</div>
+          ${e.desc?`<div class="tl-body">${e.desc}</div>`:''}
+          ${e.tag?`<span class="tl-tag">${e.tag}</span>`:''}
+        </div>`;
+      }).join('');
+    }
+
+    initHistory();
+  </script>
 </body>
 </html>
