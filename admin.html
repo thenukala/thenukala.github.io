@@ -420,9 +420,134 @@
           <button class="pe-tab" onclick="showPeTab('gallerypage',this)">🖼️ Gallery Page</button>
           <button class="pe-tab" onclick="showPeTab('heropage',this)">🖼️ Hero Banners</button>
           <button class="pe-tab" onclick="showPeTab('newpages',this)">📄 New Pages</button>
-          <button class="pe-tab" onclick="showPeTab('newpages',this)">📄 New Pages</button>
           <button class="pe-tab" onclick="showPeTab('navmenu',this)">🔗 Nav Menu</button>
           <button class="pe-tab" onclick="showPeTab('typography',this)">✍️ Typography</button>
+        </div>
+
+
+        <!-- STATS PAGE EDITOR -->
+        <div class="pe-section" id="pe-statspage">
+          <div class="panel">
+            <div class="panel-title">📊 Stats Page — Hero Section <span></span></div>
+            <div class="fgrp"><label>Eyebrow Text (small text above title)</label><input type="text" id="pe-statspage-eyebrow" placeholder="e.g. Stats"/></div>
+            <div class="fgrp"><label>Page Title</label><input type="text" id="pe-statspage-title" placeholder="e.g. Family Stats"/></div>
+            <div class="fgrp"><label>Page Description</label><textarea id="pe-statspage-desc" rows="2" placeholder="Short description shown below the title..."></textarea></div>
+          </div>
+          <div class="fgrp"><label>Section 1 Heading (Members grid)</label><input type="text" id="pe-statspage-s1" placeholder="e.g. By The Numbers"/></div>
+          <div class="fgrp"><label>Section 2 Heading (Insights)</label><input type="text" id="pe-statspage-s2" placeholder="e.g. Family Records"/></div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button class="btn btn-green" onclick="saveNewPage('statspage')">💾 Save Stats Page</button>
+            <a href="stats.html" target="_blank" class="btn btn-outline">👁 Preview Page</a>
+          </div>
+        </div>
+        <!-- EVENTS PAGE EDITOR -->
+        <div class="pe-section" id="pe-eventspage">
+          <div class="panel">
+            <div class="panel-title">📆 Events Page — Hero Section <span></span></div>
+            <div class="fgrp"><label>Eyebrow Text (small text above title)</label><input type="text" id="pe-eventspage-eyebrow" placeholder="e.g. Events"/></div>
+            <div class="fgrp"><label>Page Title</label><input type="text" id="pe-eventspage-title" placeholder="e.g. Family Events"/></div>
+            <div class="fgrp"><label>Page Description</label><textarea id="pe-eventspage-desc" rows="2" placeholder="Short description shown below the title..."></textarea></div>
+          </div>
+          <div class="fgrp"><label>Upcoming section heading</label><input type="text" id="pe-eventspage-s1" placeholder="e.g. Upcoming Events"/></div>
+          <div class="fgrp"><label>Birthdays section heading</label><input type="text" id="pe-eventspage-s2" placeholder="e.g. Upcoming Birthdays"/></div>
+          <div class="fgrp"><label>"Add to Admin" button text</label><input type="text" id="pe-eventspage-btn" placeholder="e.g. Manage Events in Admin"/></div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button class="btn btn-green" onclick="saveNewPage('eventspage')">💾 Save Events Page</button>
+            <a href="events.html" target="_blank" class="btn btn-outline">👁 Preview Page</a>
+          </div>
+        </div>
+        <!-- RECIPES PAGE EDITOR -->
+        <div class="pe-section" id="pe-recipespage">
+          <div class="panel">
+            <div class="panel-title">🍛 Recipes Page — Hero Section <span></span></div>
+            <div class="fgrp"><label>Eyebrow Text (small text above title)</label><input type="text" id="pe-recipespage-eyebrow" placeholder="e.g. Recipes"/></div>
+            <div class="fgrp"><label>Page Title</label><input type="text" id="pe-recipespage-title" placeholder="e.g. Family Recipes"/></div>
+            <div class="fgrp"><label>Page Description</label><textarea id="pe-recipespage-desc" rows="2" placeholder="Short description shown below the title..."></textarea></div>
+          </div>
+          <div class="fgrp"><label>"Add Recipes" button text</label><input type="text" id="pe-recipespage-btn" placeholder="e.g. Add Recipes in Admin"/></div>
+          <div class="fgrp"><label>Empty state message</label><input type="text" id="pe-recipespage-empty" placeholder="e.g. No recipes added yet."/></div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button class="btn btn-green" onclick="saveNewPage('recipespage')">💾 Save Recipes Page</button>
+            <a href="recipes.html" target="_blank" class="btn btn-outline">👁 Preview Page</a>
+          </div>
+        </div>
+        <!-- ACHIEVEMENTS PAGE EDITOR -->
+        <div class="pe-section" id="pe-achievementspage">
+          <div class="panel">
+            <div class="panel-title">🏆 Achievements Page — Hero Section <span></span></div>
+            <div class="fgrp"><label>Eyebrow Text (small text above title)</label><input type="text" id="pe-achievementspage-eyebrow" placeholder="e.g. Achievements"/></div>
+            <div class="fgrp"><label>Page Title</label><input type="text" id="pe-achievementspage-title" placeholder="e.g. Family Achievements"/></div>
+            <div class="fgrp"><label>Page Description</label><textarea id="pe-achievementspage-desc" rows="2" placeholder="Short description shown below the title..."></textarea></div>
+          </div>
+          <div class="fgrp"><label>"Add Achievements" button text</label><input type="text" id="pe-achievementspage-btn" placeholder="e.g. Add Achievements in Admin"/></div>
+          <div class="fgrp"><label>Empty state message</label><input type="text" id="pe-achievementspage-empty" placeholder="e.g. No achievements added yet."/></div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button class="btn btn-green" onclick="saveNewPage('achievementspage')">💾 Save Achievements Page</button>
+            <a href="achievements.html" target="_blank" class="btn btn-outline">👁 Preview Page</a>
+          </div>
+        </div>
+        <!-- VIDEOS PAGE EDITOR -->
+        <div class="pe-section" id="pe-videospage">
+          <div class="panel">
+            <div class="panel-title">🎥 Videos Page — Hero Section <span></span></div>
+            <div class="fgrp"><label>Eyebrow Text (small text above title)</label><input type="text" id="pe-videospage-eyebrow" placeholder="e.g. Videos"/></div>
+            <div class="fgrp"><label>Page Title</label><input type="text" id="pe-videospage-title" placeholder="e.g. Family Videos"/></div>
+            <div class="fgrp"><label>Page Description</label><textarea id="pe-videospage-desc" rows="2" placeholder="Short description shown below the title..."></textarea></div>
+          </div>
+          <div class="fgrp"><label>"Add Videos" button text</label><input type="text" id="pe-videospage-btn" placeholder="e.g. Add Videos in Admin"/></div>
+          <div class="fgrp"><label>Empty state message</label><input type="text" id="pe-videospage-empty" placeholder="e.g. No videos added yet."/></div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button class="btn btn-green" onclick="saveNewPage('videospage')">💾 Save Videos Page</button>
+            <a href="videos.html" target="_blank" class="btn btn-outline">👁 Preview Page</a>
+          </div>
+        </div>
+        <!-- POLLS PAGE EDITOR -->
+        <div class="pe-section" id="pe-pollspage">
+          <div class="panel">
+            <div class="panel-title">🗳️ Polls Page — Hero Section <span></span></div>
+            <div class="fgrp"><label>Eyebrow Text (small text above title)</label><input type="text" id="pe-pollspage-eyebrow" placeholder="e.g. Polls"/></div>
+            <div class="fgrp"><label>Page Title</label><input type="text" id="pe-pollspage-title" placeholder="e.g. Family Polls"/></div>
+            <div class="fgrp"><label>Page Description</label><textarea id="pe-pollspage-desc" rows="2" placeholder="Short description shown below the title..."></textarea></div>
+          </div>
+          <div class="fgrp"><label>"Create Poll" button text</label><input type="text" id="pe-pollspage-btn" placeholder="e.g. Create Polls in Admin"/></div>
+          <div class="fgrp"><label>Empty state message</label><input type="text" id="pe-pollspage-empty" placeholder="e.g. No polls yet."/></div>
+          <div class="fgrp"><label>Vote button text</label><input type="text" id="pe-pollspage-vote" placeholder="e.g. Vote"/></div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button class="btn btn-green" onclick="saveNewPage('pollspage')">💾 Save Polls Page</button>
+            <a href="polls.html" target="_blank" class="btn btn-outline">👁 Preview Page</a>
+          </div>
+        </div>
+        <!-- MAP PAGE EDITOR -->
+        <div class="pe-section" id="pe-mappage">
+          <div class="panel">
+            <div class="panel-title">🗺️ Map Page — Hero Section <span></span></div>
+            <div class="fgrp"><label>Eyebrow Text (small text above title)</label><input type="text" id="pe-mappage-eyebrow" placeholder="e.g. Map"/></div>
+            <div class="fgrp"><label>Page Title</label><input type="text" id="pe-mappage-title" placeholder="e.g. Family Map"/></div>
+            <div class="fgrp"><label>Page Description</label><textarea id="pe-mappage-desc" rows="2" placeholder="Short description shown below the title..."></textarea></div>
+          </div>
+          <div class="fgrp"><label>Map notice text</label><input type="text" id="pe-mappage-notice" placeholder="e.g. Add cities in Admin → Contacts to show members on the map."/></div>
+          <div class="fgrp"><label>Members section heading</label><input type="text" id="pe-mappage-s1" placeholder="e.g. Members with Locations"/></div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button class="btn btn-green" onclick="saveNewPage('mappage')">💾 Save Map Page</button>
+            <a href="map.html" target="_blank" class="btn btn-outline">👁 Preview Page</a>
+          </div>
+        </div>
+        <!-- SHARE / QR PAGE EDITOR -->
+        <div class="pe-section" id="pe-qrpage">
+          <div class="panel">
+            <div class="panel-title">📱 Share / QR Page — Hero Section <span></span></div>
+            <div class="fgrp"><label>Eyebrow Text (small text above title)</label><input type="text" id="pe-qrpage-eyebrow" placeholder="e.g. Share / QR"/></div>
+            <div class="fgrp"><label>Page Title</label><input type="text" id="pe-qrpage-title" placeholder="e.g. Family Share / QR"/></div>
+            <div class="fgrp"><label>Page Description</label><textarea id="pe-qrpage-desc" rows="2" placeholder="Short description shown below the title..."></textarea></div>
+          </div>
+          <div class="fgrp"><label>QR description text</label><input type="text" id="pe-qrpage-desc2" placeholder="e.g. Share the family website with relatives."/></div>
+          <div class="fgrp"><label>Download button text</label><input type="text" id="pe-qrpage-dl" placeholder="e.g. Download QR Code"/></div>
+          <div class="fgrp"><label>Copy link button text</label><input type="text" id="pe-qrpage-copy" placeholder="e.g. Copy Link"/></div>
+          <div class="fgrp"><label>WhatsApp share message prefix</label><input type="text" id="pe-qrpage-wa" placeholder="e.g. Join the Nukala Family Tree!"/></div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button class="btn btn-green" onclick="saveNewPage('qrpage')">💾 Save Share / QR Page</button>
+            <a href="qr.html" target="_blank" class="btn btn-outline">👁 Preview Page</a>
+          </div>
         </div>
 
         <!-- THEME & COLOURS -->
@@ -1329,7 +1454,16 @@ function showSec(id,el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   if(el) el.classList.add('active');
-  const loaders={members:renderMembers,gallery:renderGallery,history:renderHistory,facts:renderFacts,home:loadHomeForm,contact:loadContactForm,settings:loadSettings2,contacts:renderContacts,announcements:renderAnn,dashboard:renderDash};
+  const loaders={
+    members:renderMembers, gallery:renderGallery, history:renderHistory,
+    facts:renderFacts, home:loadHomeForm, contact:loadContactForm,
+    settings:loadSettings2, contacts:renderContacts, announcements:renderAnn,
+    dashboard:renderDash,
+    pagevis:renderPageVis, analytics:renderAnalytics,
+    eventsAdmin:renderEvts, recipesAdmin:renderRecipes,
+    achievementsAdmin:renderAchs, videosAdmin:renderVideos, pollsAdmin:renderPolls,
+    pageeditor:()=>showPeTab('theme', document.querySelector('.pe-tab'))
+  };
   if(loaders[id]) loaders[id]();
 }
 
@@ -2485,7 +2619,6 @@ const ALL_PAGES = [
 
 function getPageVis(){
   const saved = JSON.parse(localStorage.getItem('nukala_page_vis')||'{}');
-  // Default: all enabled
   const result = {};
   ALL_PAGES.forEach(p=>{ result[p.id] = saved[p.id]!==undefined ? saved[p.id] : true; });
   return result;
@@ -2494,55 +2627,70 @@ function getPageVis(){
 function renderPageVis(){
   const vis = getPageVis();
   const list = document.getElementById('pageVisList');
-  list.innerHTML = ALL_PAGES.map(p=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <label class="toggle-switch" style="position:relative;display:inline-block;width:44px;height:24px;">
-          <input type="checkbox" id="vis-${p.id}" ${vis[p.id]?'checked':''} ${p.locked?'disabled':''}
-            onchange="updateVisPreview()"
-            style="opacity:0;width:0;height:0;position:absolute;">
-          <span style="position:absolute;cursor:${p.locked?'not-allowed':'pointer'};top:0;left:0;right:0;bottom:0;background:${vis[p.id]?'#5c7a5c':'#ccc'};border-radius:24px;transition:.3s;">
-            <span style="position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s;transform:${vis[p.id]?'translateX(20px)':'translateX(0)'}" id="thumb-${p.id}"></span>
-          </span>
-        </label>
-        <div>
-          <div style="font-size:.88rem;font-weight:500;color:var(--td);">${p.label}</div>
-          <div style="font-size:.7rem;color:var(--tl);">${p.file}${p.locked?' · <span style="color:var(--sage-d);">Core page — always visible</span>':''}</div>
-        </div>
-      </div>
-      <span style="font-size:.7rem;font-weight:600;padding:3px 10px;border-radius:20px;${vis[p.id]?'background:#f0f5f0;color:var(--sage-d);':'background:#faf0f0;color:var(--red);'}" id="vis-badge-${p.id}">${vis[p.id]?'Enabled':'Disabled'}</span>
-    </div>`).join('');
+  if(!list) return;
 
-  // Live toggle updates
-  ALL_PAGES.forEach(p=>{
-    const cb = document.getElementById('vis-'+p.id);
-    if(cb) cb.addEventListener('change', function(){
-      const on = this.checked;
-      const thumb = document.getElementById('thumb-'+p.id);
-      const badge = document.getElementById('vis-badge-'+p.id);
-      const span = this.nextElementSibling;
-      if(span) span.style.background = on?'#5c7a5c':'#ccc';
-      if(thumb) thumb.style.transform = on?'translateX(20px)':'translateX(0)';
-      if(badge){ badge.textContent=on?'Enabled':'Disabled'; badge.style.background=on?'#f0f5f0':'#faf0f0'; badge.style.color=on?'var(--sage-d)':'var(--red)'; }
-      updateVisPreview();
-    });
+  const rows = ALL_PAGES.map(function(p){
+    const isOn = vis[p.id] !== false;
+    const trackBg = isOn ? '#5c7a5c' : '#cccccc';
+    const thumbX  = isOn ? 'translateX(20px)' : 'translateX(0)';
+    const badgeBg = isOn ? '#f0f5f0' : '#faf0f0';
+    const badgeClr= isOn ? '#5c7a5c' : '#c0614a';
+    const badgeTxt= isOn ? 'Enabled' : 'Disabled';
+    const coreNote= p.locked ? ' &nbsp;&middot;&nbsp; <span style="color:#5c7a5c;">Core page</span>' : '';
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);">'
+      + '<div style="display:flex;align-items:center;gap:14px;">'
+      + '<div style="position:relative;width:46px;height:26px;flex-shrink:0;">'
+      + '<input type="checkbox" id="vis-' + p.id + '"'
+      + (isOn ? ' checked' : '')
+      + (p.locked ? ' disabled' : '')
+      + ' onchange="onVisChange('' + p.id + '',this.checked)"'
+      + ' style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:' + (p.locked?'not-allowed':'pointer') + ';z-index:2;margin:0;"/>'
+      + '<div id="vis-track-' + p.id + '" style="position:absolute;inset:0;border-radius:26px;background:' + trackBg + ';transition:background .25s;pointer-events:none;"></div>'
+      + '<div id="vis-thumb-' + p.id + '" style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:transform .25s;transform:' + thumbX + ';pointer-events:none;"></div>'
+      + '</div>'
+      + '<div>'
+      + '<div style="font-size:.88rem;font-weight:500;color:var(--td);">' + p.label + '</div>'
+      + '<div style="font-size:.7rem;color:var(--tl);">' + p.file + coreNote + '</div>'
+      + '</div></div>'
+      + '<span id="vis-badge-' + p.id + '" style="font-size:.7rem;font-weight:600;padding:3px 12px;border-radius:20px;background:' + badgeBg + ';color:' + badgeClr + ';">' + badgeTxt + '</span>'
+      + '</div>';
   });
+  list.innerHTML = rows.join('');
+  updateVisPreview();
+}
+
+function onVisChange(id, on){
+  var track = document.getElementById('vis-track-'+id);
+  var thumb = document.getElementById('vis-thumb-'+id);
+  var badge = document.getElementById('vis-badge-'+id);
+  if(track) track.style.background = on ? '#5c7a5c' : '#cccccc';
+  if(thumb) thumb.style.transform  = on ? 'translateX(20px)' : 'translateX(0)';
+  if(badge){
+    badge.textContent   = on ? 'Enabled' : 'Disabled';
+    badge.style.background = on ? '#f0f5f0' : '#faf0f0';
+    badge.style.color      = on ? '#5c7a5c' : '#c0614a';
+  }
   updateVisPreview();
 }
 
 function updateVisPreview(){
-  const preview = document.getElementById('pageVisPreview');
-  preview.innerHTML = ALL_PAGES.map(p=>{
-    const cb = document.getElementById('vis-'+p.id);
-    const on = cb ? cb.checked : true;
-    return `<span style="padding:5px 12px;border-radius:20px;font-size:.74rem;font-weight:500;${on?'background:var(--sage-l);color:var(--sage-d);':'background:#f0f0f0;color:#aaa;text-decoration:line-through;'}">${p.label}</span>`;
-  }).join('');
+  var preview = document.getElementById('pageVisPreview');
+  if(!preview) return;
+  var chips = ALL_PAGES.map(function(p){
+    var cb = document.getElementById('vis-'+p.id);
+    var on = cb ? cb.checked : true;
+    var style = on
+      ? 'padding:5px 12px;border-radius:20px;font-size:.74rem;font-weight:500;background:#c8ddc8;color:#5c7a5c;display:inline-block;margin:3px;'
+      : 'padding:5px 12px;border-radius:20px;font-size:.74rem;font-weight:500;background:#f0f0f0;color:#aaa;text-decoration:line-through;display:inline-block;margin:3px;';
+    return '<span style="' + style + '">' + p.label + '</span>';
+  });
+  preview.innerHTML = chips.join('');
 }
 
 function savePageVis(){
-  const vis = {};
-  ALL_PAGES.forEach(p=>{
-    const cb = document.getElementById('vis-'+p.id);
+  var vis = {};
+  ALL_PAGES.forEach(function(p){
+    var cb = document.getElementById('vis-'+p.id);
     vis[p.id] = p.locked ? true : (cb ? cb.checked : true);
   });
   localStorage.setItem('nukala_page_vis', JSON.stringify(vis));
@@ -2551,11 +2699,70 @@ function savePageVis(){
 }
 
 function enableAllPages(){
-  ALL_PAGES.forEach(p=>{
-    const cb = document.getElementById('vis-'+p.id);
-    if(cb && !p.locked){ cb.checked=true; cb.dispatchEvent(new Event('change')); }
+  ALL_PAGES.forEach(function(p){
+    var cb = document.getElementById('vis-'+p.id);
+    if(cb && !p.locked){
+      cb.checked = true;
+      onVisChange(p.id, true);
+    }
   });
   toast('✅ All pages enabled!');
+}
+
+// ═══════════════════════════════════════
+// NEW PAGE EDITORS
+// ═══════════════════════════════════════
+
+// All new page IDs and their field keys
+const NEW_PAGE_FIELDS = {
+  statspage:        ['eyebrow','title','desc','s1','s2'],
+  eventspage:       ['eyebrow','title','desc','s1','s2','btn'],
+  recipespage:      ['eyebrow','title','desc','btn','empty'],
+  achievementspage: ['eyebrow','title','desc','btn','empty'],
+  videospage:       ['eyebrow','title','desc','btn','empty'],
+  pollspage:        ['eyebrow','title','desc','btn','empty','vote'],
+  mappage:          ['eyebrow','title','desc','notice','s1'],
+  qrpage:           ['eyebrow','title','desc','desc2','dl','copy','wa'],
+};
+
+function loadNewPage(secId){
+  const saved = JSON.parse(localStorage.getItem('nukala_page_'+secId)||'{}');
+  const fields = NEW_PAGE_FIELDS[secId]||[];
+  fields.forEach(f=>{
+    const el = document.getElementById('pe-'+secId+'-'+f);
+    if(el && saved[f]) el.value = saved[f];
+  });
+}
+
+function saveNewPage(secId){
+  const fields = NEW_PAGE_FIELDS[secId]||[];
+  const data = {};
+  fields.forEach(f=>{
+    const el = document.getElementById('pe-'+secId+'-'+f);
+    if(el) data[f] = el.value.trim();
+  });
+  localStorage.setItem('nukala_page_'+secId, JSON.stringify(data));
+  logAct('Page edited: '+secId);
+  toast('✅ '+ secId.replace('page','') +' page saved!');
+}
+
+// Hook into showPeTab to load data when tab opened
+const _origShowPeTab = showPeTab;
+function showPeTab(id, el){
+  document.querySelectorAll('.pe-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.pe-tab').forEach(t=>t.classList.remove('active'));
+  const sec = document.getElementById('pe-'+id);
+  if(sec) sec.classList.add('active');
+  if(el) el.classList.add('active');
+  // Load data for standard tabs
+  if(id==='theme') loadThemeForm();
+  if(id==='sitewide') loadSiteWideForm();
+  if(id==='homepage') loadHomePageEditor();
+  if(id==='contactpage') loadContactPageEditor();
+  if(id==='gallerypage') loadGalleryPageEditor();
+  if(id==='heropage') loadHeroEditor();
+  // Load data for new page tabs
+  if(NEW_PAGE_FIELDS[id]) loadNewPage(id);
 }
 
 // ═══════════════════════════════════════
