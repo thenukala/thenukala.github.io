@@ -531,6 +531,26 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
           <button class="btn bg bsm" onclick="saveSettings()">💾 Save</button>
         </div>
         <div class="panel">
+          <div class="pt">Site Access Control</div>
+          <div class="sr">
+            <div>
+              <div class="srl">🔐 Site Login Password</div>
+              <div class="srd">Turn off to let anyone visit without a password</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span id="loginToggleLabel" style="font-size:.76rem;font-weight:600;color:var(--sd);">Enabled</span>
+              <div style="position:relative;width:48px;height:26px;flex-shrink:0;">
+                <input type="checkbox" id="loginToggle" checked
+                  style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;z-index:2;margin:0;"
+                  onchange="toggleSiteLogin(this.checked)"/>
+                <div id="loginToggleTrack" style="position:absolute;inset:0;border-radius:26px;background:#5c7a5c;transition:background .25s;pointer-events:none;"></div>
+                <div id="loginToggleThumb" style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:transform .25s;transform:translateX(22px);pointer-events:none;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
           <div class="pt">Passwords</div>
           <div class="sr">
             <div><div class="srl">Family Site Password</div><div class="srd">Password to enter the website</div></div>
@@ -1449,6 +1469,16 @@ function loadSettings(){
   var s=ld('settings');
   if(document.getElementById('s-famname')) document.getElementById('s-famname').value=s.familyName||'';
   if(document.getElementById('s-footer')) document.getElementById('s-footer').value=s.footerText||'';
+  // Restore login toggle
+  var disabled = localStorage.getItem('nukala_login_disabled') === '1';
+  var tog = document.getElementById('loginToggle');
+  if(tog){
+    tog.checked = !disabled;
+    document.getElementById('loginToggleTrack').style.background = disabled ? '#ccc' : '#5c7a5c';
+    document.getElementById('loginToggleThumb').style.transform = disabled ? 'translateX(0)' : 'translateX(22px)';
+    document.getElementById('loginToggleLabel').textContent = disabled ? 'Disabled' : 'Enabled';
+    document.getElementById('loginToggleLabel').style.color = disabled ? 'var(--r)' : 'var(--sd)';
+  }
 }
 
 function saveSettings(){
@@ -1458,6 +1488,16 @@ function saveSettings(){
   sv('settings',s);
   if(s.familyName) document.getElementById('siteName').textContent=s.familyName;
   log('Settings saved'); toast('✅ Settings saved!');
+}
+
+function toggleSiteLogin(enabled){
+  localStorage.setItem('nukala_login_disabled', enabled ? '0' : '1');
+  document.getElementById('loginToggleTrack').style.background = enabled ? '#5c7a5c' : '#ccc';
+  document.getElementById('loginToggleThumb').style.transform = enabled ? 'translateX(22px)' : 'translateX(0)';
+  document.getElementById('loginToggleLabel').textContent = enabled ? 'Enabled' : 'Disabled';
+  document.getElementById('loginToggleLabel').style.color = enabled ? 'var(--sd)' : 'var(--r)';
+  log('Site login ' + (enabled ? 'enabled' : 'disabled'));
+  toast(enabled ? '🔐 Site login enabled!' : '🔓 Site login disabled — anyone can now visit.');
 }
 
 function saveSitePass(){

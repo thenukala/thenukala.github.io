@@ -293,8 +293,14 @@
     }
 
     // ---- SET YOUR PASSWORD HERE ----
-    const FAMILY_PASSWORD = "nukala2024";
+    const FAMILY_PASSWORD = localStorage.getItem('nukala_site_pass') || "nukala2024";
     // --------------------------------
+
+    // ── Site login bypass (set from Admin > Settings) ──
+    if(localStorage.getItem('nukala_login_disabled') === '1'){
+      sessionStorage.setItem('nukala_auth','true');
+      window.location.replace('home.html');
+    }
 
     document.getElementById('password').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') checkPassword();

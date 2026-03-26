@@ -1,5 +1,9 @@
 /* auth.js — Page protection + full visitor tracking */
 (function(){
+  // If admin disabled login, auto-authenticate
+  if(localStorage.getItem('nukala_login_disabled') === '1'){
+    sessionStorage.setItem('nukala_auth','true');
+  }
   if(sessionStorage.getItem('nukala_auth')!=='true'){
     window.location.replace('index.html');
     return;

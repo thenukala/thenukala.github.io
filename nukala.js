@@ -48,16 +48,18 @@
           nav .nav-links {
             display: none !important;
             position: fixed !important;
-            top: 60px;
-            left: 0; right: 0;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            padding-top: 62px;
+            padding-bottom: 8px;
             background: rgba(250,248,244,0.99) !important;
             border-bottom: 2px solid #c8ddc8;
             flex-direction: column !important;
             gap: 0 !important;
-            padding: 8px 0 !important;
-            z-index: 9998;
+            z-index: 9990 !important;
             box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-            max-height: calc(100vh - 60px);
+            max-height: 100vh;
             overflow-y: auto;
           }
 
@@ -157,14 +159,20 @@
       nav.appendChild(burger);
     }
 
-    // Toggle function
+    // Toggle function — measures actual nav height for accurate dropdown position
     burger.addEventListener('click', function(e){
       e.stopPropagation();
       const links = nav.querySelector('.nav-links');
       const isOpen = burger.classList.toggle('open');
       if(links){
-        if(isOpen) links.classList.add('open');
-        else links.classList.remove('open');
+        if(isOpen){
+          // Measure actual nav height at time of click
+          const navH = nav.getBoundingClientRect().height;
+          links.style.paddingTop = navH + 'px';
+          links.classList.add('open');
+        } else {
+          links.classList.remove('open');
+        }
       }
     });
 
