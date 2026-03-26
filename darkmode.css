@@ -1,0 +1,23 @@
+/* Dark mode styles */
+[data-theme="dark"] {
+  --cream: #0d1a0d;
+  --warm-white: #111e11;
+  --sage: #5c8a5c;
+  --sage-light: #1a3a1a;
+  --sage-dark: #7aaa7a;
+  --text-dark: #e8d5a0;
+  --text-mid: #a0c0a0;
+  --text-light: #607060;
+  --gold: #c9a84c;
+  --gold-light: #3a2a0a;
+  --border: #1e341e;
+}
+[data-theme="dark"] body { background: #0a150a; color: #e8d5a0; }
+[data-theme="dark"] nav { background: rgba(10,20,10,0.95); border-color: #1e341e; }
+[data-theme="dark"] .card, [data-theme="dark"] .panel, [data-theme="dark"] .pcard { background: #111e11; border-color: #1e341e; }
+[data-theme="dark"] footer { background: #0a150a; border-color: #1e341e; }
+[data-theme="dark"] .page-hero h1, [data-theme="dark"] .page-hero p { color: #e8d5a0; }
+[data-theme="dark"] input, [data-theme="dark"] textarea, [data-theme="dark"] select { background: #111e11; color: #e8d5a0; border-color: #1e341e; }
+[data-theme="dark"] .tree-viewport { background: #0a150a; }
+[data-theme="dark"] .nav-brand, [data-theme="dark"] .nav-links a { color: #e8d5a0; }
+[data-theme="dark"] .hero-banner { background: linear-gradient(135deg,#0d1a0d,#111e11); }

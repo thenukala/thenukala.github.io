@@ -243,6 +243,13 @@
       <button class="nav-item" onclick="showSec('contacts',this)"><span class="nav-icon">📱</span>Contacts</button>
       <button class="nav-item" onclick="showSec('announcements',this)"><span class="nav-icon">📣</span>Announcements</button>
 
+      <div class="nav-section">New Pages</div>
+      <button class="nav-item" onclick="showSec('eventsAdmin',this)"><span class="nav-icon">📆</span>Events</button>
+      <button class="nav-item" onclick="showSec('recipesAdmin',this)"><span class="nav-icon">🍛</span>Recipes</button>
+      <button class="nav-item" onclick="showSec('achievementsAdmin',this)"><span class="nav-icon">🏆</span>Achievements</button>
+      <button class="nav-item" onclick="showSec('videosAdmin',this)"><span class="nav-icon">🎥</span>Videos</button>
+      <button class="nav-item" onclick="showSec('pollsAdmin',this)"><span class="nav-icon">🗳️</span>Polls</button>
+
       <div class="nav-section">Admin</div>
       <button class="nav-item" onclick="showSec('settings',this)"><span class="nav-icon">⚙️</span>Settings</button>
       <button class="nav-item" onclick="exportAll()"><span class="nav-icon">📥</span>Export Backup</button>
@@ -406,6 +413,10 @@
           <button class="pe-tab" onclick="showPeTab('contactpage',this)">✉️ Contact Page</button>
           <button class="pe-tab" onclick="showPeTab('gallerypage',this)">🖼️ Gallery Page</button>
           <button class="pe-tab" onclick="showPeTab('heropage',this)">🖼️ Hero Banners</button>
+          <button class="pe-tab" onclick="showPeTab('newpages',this)">📄 New Pages</button>
+          <button class="pe-tab" onclick="showPeTab('newpages',this)">📄 New Pages</button>
+          <button class="pe-tab" onclick="showPeTab('navmenu',this)">🔗 Nav Menu</button>
+          <button class="pe-tab" onclick="showPeTab('typography',this)">✍️ Typography</button>
         </div>
 
         <!-- THEME & COLOURS -->
@@ -613,6 +624,225 @@
           <button class="btn btn-green" onclick="saveHeroSettings()">💾 Save Hero Settings</button>
         </div>
 
+
+        <!-- NEW PAGES EDITOR -->
+        <div class="pe-section" id="pe-newpages">
+          <div class="notice">💡 Edit the hero text, titles and descriptions for each new page. Changes apply instantly when saved.</div>
+
+          <!-- Events Page -->
+          <div class="panel">
+            <div class="panel-title">📆 Events Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-events-eye" placeholder="Upcoming"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-events-title" placeholder="Family Events"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-events-em" placeholder="Events"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-events-desc" placeholder="Reunions, birthdays, anniversaries and celebrations..."/></div>
+          </div>
+
+          <!-- Recipes Page -->
+          <div class="panel">
+            <div class="panel-title">🍛 Recipes Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-recipes-eye" placeholder="Traditional"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-recipes-title" placeholder="Family Recipes"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-recipes-em" placeholder="Recipes"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-recipes-desc" placeholder="Cherished recipes passed down through generations..."/></div>
+          </div>
+
+          <!-- Achievements Page -->
+          <div class="panel">
+            <div class="panel-title">🏆 Achievements Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-ach-eye" placeholder="Pride of the Family"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-ach-title" placeholder="Family Achievements"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-ach-em" placeholder="Achievements"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-ach-desc" placeholder="Degrees, awards, milestones and proud moments..."/></div>
+          </div>
+
+          <!-- Videos Page -->
+          <div class="panel">
+            <div class="panel-title">🎥 Videos Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-videos-eye" placeholder="Memories in Motion"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-videos-title" placeholder="Family Videos"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-videos-em" placeholder="Videos"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-videos-desc" placeholder="Family videos, celebrations and memorable moments..."/></div>
+          </div>
+
+          <!-- Polls Page -->
+          <div class="panel">
+            <div class="panel-title">🗳️ Polls Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-polls-eye" placeholder="Have Your Say"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-polls-title" placeholder="Family Polls"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-polls-em" placeholder="Polls"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-polls-desc" placeholder="Vote on family decisions..."/></div>
+          </div>
+
+          <!-- Stats Page -->
+          <div class="panel">
+            <div class="panel-title">📊 Statistics Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-stats-eye" placeholder="By The Numbers"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-stats-title" placeholder="Family Statistics"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-stats-em" placeholder="Statistics"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-stats-desc" placeholder="Fascinating insights and records from across the family..."/></div>
+          </div>
+
+          <!-- Map Page -->
+          <div class="panel">
+            <div class="panel-title">🗺️ Family Map Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-map-eye" placeholder="Where We Are"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-map-title" placeholder="Family Map"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-map-em" placeholder="Map"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-map-desc" placeholder="See where Nukala family members live around the world..."/></div>
+          </div>
+
+          <!-- Facts Page -->
+          <div class="panel">
+            <div class="panel-title">🌟 Facts Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-facts-eye" placeholder="Did You Know?"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-facts-title" placeholder="Interesting Family Facts"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-facts-em" placeholder="Family Facts"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-facts-desc" placeholder="Fascinating milestones and achievements..."/></div>
+          </div>
+
+          <!-- History Page -->
+          <div class="panel">
+            <div class="panel-title">📜 History Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-history-eye" placeholder="Our Story"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-history-title" placeholder="Family History"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-history-em" placeholder="Nukala"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-history-desc" placeholder="A journey through time..."/></div>
+            <div class="fgrp"><label>Opening Quote / Intro Text</label><textarea id="np-history-quote" rows="3" placeholder="A family story is a river..."></textarea></div>
+          </div>
+
+          <!-- Gallery Page -->
+          <div class="panel">
+            <div class="panel-title">🖼️ Gallery Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-gallery-eye" placeholder="Memories"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-gallery-title" placeholder="Photo Gallery"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-gallery-em" placeholder="Nukala"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-gallery-desc" placeholder="A visual archive of cherished moments..."/></div>
+          </div>
+
+          <!-- Contact Page -->
+          <div class="panel">
+            <div class="panel-title">✉️ Contact Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-contact-eye" placeholder="Contribute"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-contact-title" placeholder="Get In Touch"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-contact-em" placeholder="In Touch"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-contact-desc" placeholder="Have a story to share..."/></div>
+            <div class="fgrp"><label>Left Column Heading</label><input type="text" id="np-contact-heading" placeholder="Help Us Grow the Archive"/></div>
+            <div class="fgrp"><label>Left Column Paragraph</label><textarea id="np-contact-para" rows="3" placeholder="This family tree is a living archive..."></textarea></div>
+          </div>
+
+          <!-- Tree Page -->
+          <div class="panel">
+            <div class="panel-title">🌳 Family Tree Page <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="np-tree-eye" placeholder="Our Roots"/></div>
+              <div class="fgrp"><label>Page Title</label><input type="text" id="np-tree-title" placeholder="Family Tree"/></div>
+              <div class="fgrp"><label>Title Italic Word</label><input type="text" id="np-tree-em" placeholder="Nukala"/></div>
+            </div>
+            <div class="fgrp"><label>Description</label><input type="text" id="np-tree-desc" placeholder="Click any leaf to discover the story within..."/></div>
+          </div>
+
+          <!-- Login Page -->
+          <div class="panel">
+            <div class="panel-title">🔐 Login Page <span></span></div>
+            <div class="fgrp"><label>Animated Title (shown during splash)</label><input type="text" id="np-login-splash" placeholder="e.g. NUKALA"/></div>
+            <div class="fgrp"><label>Login Page Title</label><input type="text" id="np-login-title" placeholder="The Nukala Family Tree"/></div>
+            <div class="fgrp"><label>Login Subtitle</label><input type="text" id="np-login-sub" placeholder="A private family archive"/></div>
+            <div class="fgrp"><label>Password Field Label</label><input type="text" id="np-login-label" placeholder="Family Password"/></div>
+            <div class="fgrp"><label>Login Button Text</label><input type="text" id="np-login-btn" placeholder="Enter Family Archive →"/></div>
+            <div class="fgrp"><label>Footer Note on Login</label><input type="text" id="np-login-note" placeholder="This site is exclusively for the Nukala family."/></div>
+            <div class="fgrp"><label>Contact Admin Text</label><input type="text" id="np-login-contact" placeholder="Please contact the family administrator for access."/></div>
+          </div>
+
+          <button class="btn btn-green" onclick="saveNewPages()">💾 Save All Page Content</button>
+        </div>
+
+        <!-- NAV MENU EDITOR -->
+        <div class="pe-section" id="pe-navmenu">
+          <div class="panel">
+            <div class="panel-title">🔗 Navigation Menu Items <span></span></div>
+            <p style="font-size:.76rem;color:var(--tl);margin-bottom:14px;">Control which pages appear in the navigation bar and what they're called. Drag to reorder (coming soon).</p>
+            <div id="navItemsEditor"></div>
+            <button class="btn btn-outline btn-sm" onclick="addNavItem()" style="margin-top:10px;">➕ Add Nav Item</button>
+          </div>
+          <div class="panel">
+            <div class="panel-title">📱 Mobile Nav <span></span></div>
+            <div class="fgrp"><label>Mobile Menu Title</label><input type="text" id="pe-mobiletitle" placeholder="e.g. Menu"/></div>
+            <div class="cbrow">
+              <label class="cbitem"><input type="checkbox" id="pe-showsearch" checked/><span>Show Search button in nav</span></label>
+              <label class="cbitem"><input type="checkbox" id="pe-showdark" checked/><span>Show Dark mode toggle</span></label>
+              <label class="cbitem"><input type="checkbox" id="pe-showlang" checked/><span>Show Language toggle</span></label>
+            </div>
+          </div>
+          <button class="btn btn-green" onclick="saveNavMenu()">💾 Save Nav Menu</button>
+        </div>
+
+        <!-- TYPOGRAPHY EDITOR -->
+        <div class="pe-section" id="pe-typography">
+          <div class="panel">
+            <div class="panel-title">📐 Text Sizes <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Hero Title Size</label>
+                <select id="typo-hero"><option value="clamp(2rem,4vw,3rem)">Small</option><option value="clamp(2.4rem,5vw,3.5rem)" selected>Medium (Default)</option><option value="clamp(3rem,6vw,4.5rem)">Large</option><option value="clamp(3.5rem,7vw,5.5rem)">Extra Large</option></select>
+              </div>
+              <div class="fgrp"><label>Nav Link Size</label>
+                <select id="typo-nav"><option value="0.7rem">Small</option><option value="0.78rem" selected>Medium (Default)</option><option value="0.88rem">Large</option></select>
+              </div>
+              <div class="fgrp"><label>Body Text Size</label>
+                <select id="typo-body"><option value="0.85rem">Small</option><option value="0.95rem" selected>Medium (Default)</option><option value="1.05rem">Large</option></select>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">📏 Spacing & Layout <span></span></div>
+            <div class="frow">
+              <div class="fgrp"><label>Card Border Radius</label>
+                <select id="typo-radius"><option value="8px">Sharp (8px)</option><option value="14px" selected>Default (14px)</option><option value="20px">Rounded (20px)</option><option value="28px">Very Rounded (28px)</option></select>
+              </div>
+              <div class="fgrp"><label>Page Max Width</label>
+                <select id="typo-maxwidth"><option value="900px">Narrow (900px)</option><option value="1100px" selected>Default (1100px)</option><option value="1300px">Wide (1300px)</option><option value="100%">Full Width</option></select>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">🔤 Letter Spacing & Style <span></span></div>
+            <div class="frow3">
+              <div class="fgrp"><label>Heading Letter Spacing</label>
+                <select id="typo-heading-ls"><option value="0em">None</option><option value="0.02em" selected>Default</option><option value="0.05em">Wide</option><option value="0.1em">Very Wide</option></select>
+              </div>
+              <div class="fgrp"><label>Nav Letter Spacing</label>
+                <select id="typo-nav-ls"><option value="0em">None</option><option value="0.08em">Tight</option><option value="0.1em" selected>Default</option><option value="0.16em">Wide</option></select>
+              </div>
+              <div class="fgrp"><label>Button Style</label>
+                <select id="typo-btnstyle"><option value="10px">Pill (10px)</option><option value="8px" selected>Rounded (Default)</option><option value="4px">Slightly Rounded</option><option value="0px">Square</option></select>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-green" onclick="saveTypography()">💾 Save Typography</button>
+        </div>
+
       </div><!-- end page editor -->
 
       <!-- CONTACTS -->
@@ -714,6 +944,52 @@
             <button class="btn btn-red btn-sm" onclick="if(confirm('Delete ALL data?'))resetAll()">🗑️ Reset</button>
           </div>
         </div>
+      </div>
+
+
+      <!-- EVENTS ADMIN -->
+      <div class="page-section" id="sec-eventsAdmin">
+        <div class="sec-title">Family <em>Events</em></div>
+        <p class="sec-sub">Add and manage upcoming family events, reunions and celebrations.</p>
+        <div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openEvtModal()">➕ Add Event</button>
+        <div id="evtList"></div>
+      </div>
+
+      <!-- RECIPES ADMIN -->
+      <div class="page-section" id="sec-recipesAdmin">
+        <div class="sec-title">Family <em>Recipes</em></div>
+        <p class="sec-sub">Add traditional family recipes with ingredients and steps.</p>
+        <div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openRecipeModal()">➕ Add Recipe</button>
+        <div id="recipeList"></div>
+      </div>
+
+      <!-- ACHIEVEMENTS ADMIN -->
+      <div class="page-section" id="sec-achievementsAdmin">
+        <div class="sec-title">Family <em>Achievements</em></div>
+        <p class="sec-sub">Add degrees, awards, firsts and proud family moments.</p>
+        <div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openAchModal()">➕ Add Achievement</button>
+        <div id="achList"></div>
+      </div>
+
+      <!-- VIDEOS ADMIN -->
+      <div class="page-section" id="sec-videosAdmin">
+        <div class="sec-title">Family <em>Videos</em></div>
+        <p class="sec-sub">Add YouTube video links to the family video gallery.</p>
+        <div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openVideoModal()">➕ Add Video</button>
+        <div id="videoList"></div>
+      </div>
+
+      <!-- POLLS ADMIN -->
+      <div class="page-section" id="sec-pollsAdmin">
+        <div class="sec-title">Family <em>Polls</em></div>
+        <p class="sec-sub">Create polls for family votes and decisions.</p>
+        <div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openPollModal()">➕ Create Poll</button>
+        <div id="pollList"></div>
       </div>
 
     </div><!-- end main -->
@@ -1422,6 +1698,10 @@ function showPeTab(id, el){
   if(id==='contactpage') loadContactPageEditor();
   if(id==='gallerypage') loadGalleryPageEditor();
   if(id==='heropage') loadHeroEditor();
+  if(id==='newpages') loadNewPagesForm();
+  if(id==='newpages') loadNewPages();
+  if(id==='navmenu') loadNavMenu();
+  if(id==='typography') loadTypography();
 }
 
 // ── THEME ──
@@ -1700,9 +1980,355 @@ function saveHeroSettings(){
 const _origShowSec = showSec;
 
 // ═══════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════
+function renderEvts(){
+  const list=loadArr('nukala_events');
+  const el=document.getElementById('evtList');
+  if(!el) return;
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No events yet.</div>'; return; }
+  el.innerHTML=list.map((e,i)=>`<div class="tl-item">
+    <div class="tl-year" style="min-width:80px;">${new Date(e.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+    <div class="tl-body">
+      <div class="tl-title-txt">${e.title}</div>
+      ${e.location?`<div class="tl-desc">📍 ${e.location}</div>`:''}
+      ${e.desc?`<div class="tl-desc">${e.desc}</div>`:''}
+      <div style="margin-top:6px;font-size:.62rem;background:rgba(92,122,92,.1);color:var(--sage-d);padding:2px 8px;border-radius:20px;display:inline-block;">${e.type||'Event'}</div>
+      <div class="tl-actions">
+        <button class="btn btn-outline btn-sm" onclick="openEditEvt(${i})">✏️</button>
+        <button class="btn btn-red btn-sm" onclick="delEvt(${i})">🗑️</button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+function openEvtModal(){ document.getElementById('evtId').value=''; document.getElementById('evtModalTitle').textContent='Add Event'; ['evtTitle','evtLocation','evtDesc'].forEach(id=>document.getElementById(id).value=''); document.getElementById('evtDate').value=''; document.getElementById('evtType').value='Reunion'; document.getElementById('evtModal').classList.add('open'); }
+function openEditEvt(i){ const e=loadArr('nukala_events')[i]; if(!e) return; document.getElementById('evtId').value=i; document.getElementById('evtModalTitle').textContent='Edit Event'; document.getElementById('evtTitle').value=e.title||''; document.getElementById('evtDate').value=e.date||''; document.getElementById('evtType').value=e.type||'Reunion'; document.getElementById('evtLocation').value=e.location||''; document.getElementById('evtDesc').value=e.desc||''; document.getElementById('evtModal').classList.add('open'); }
+function closeEvtModal(){ document.getElementById('evtModal').classList.remove('open'); }
+function saveEvt(){ const title=document.getElementById('evtTitle').value.trim(); if(!title){ alert('Enter a title.'); return; } const list=loadArr('nukala_events'),idx=document.getElementById('evtId').value; const item={title,date:document.getElementById('evtDate').value,type:document.getElementById('evtType').value,location:document.getElementById('evtLocation').value.trim(),desc:document.getElementById('evtDesc').value.trim()}; if(idx!=='') list[parseInt(idx)]=item; else list.push(item); save('nukala_events',list); closeEvtModal(); renderEvts(); logAct('Event: '+title); toast('✅ Event saved!'); }
+function delEvt(i){ if(!confirm('Delete?')) return; const list=loadArr('nukala_events'); list.splice(i,1); save('nukala_events',list); renderEvts(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════════════
+// RECIPES
+// ═══════════════════════════════════════
+function renderRecipes(){ const list=loadArr('nukala_recipes'); const el=document.getElementById('recipeList'); if(!el) return; if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No recipes yet.</div>'; return; } el.innerHTML=list.map((r,i)=>`<div class="tl-item"><div class="tl-year">${r.category||'Recipe'}</div><div class="tl-body"><div class="tl-title-txt">${r.title}</div>${r.by?`<div class="tl-desc">By ${r.by}</div>`:''}<div class="tl-actions"><button class="btn btn-outline btn-sm" onclick="openEditRecipe(${i})">✏️</button><button class="btn btn-red btn-sm" onclick="delRecipe(${i})">🗑️</button></div></div></div>`).join(''); }
+function openRecipeModal(){ document.getElementById('recipeId').value=''; document.getElementById('recipeModalTitle').textContent='Add Recipe'; ['recipeTitle','recipeBy','recipeTime','recipeDesc','recipeIngredients','recipeSteps'].forEach(id=>document.getElementById(id).value=''); document.getElementById('recipeModal').classList.add('open'); }
+function openEditRecipe(i){ const r=loadArr('nukala_recipes')[i]; if(!r) return; document.getElementById('recipeId').value=i; document.getElementById('recipeModalTitle').textContent='Edit Recipe'; document.getElementById('recipeTitle').value=r.title||''; document.getElementById('recipeCat').value=r.category||'Curry'; document.getElementById('recipeBy').value=r.by||''; document.getElementById('recipeTime').value=r.time||''; document.getElementById('recipeDesc').value=r.desc||''; document.getElementById('recipeIngredients').value=r.ingredients||''; document.getElementById('recipeSteps').value=r.steps||''; document.getElementById('recipeModal').classList.add('open'); }
+function closeRecipeModal(){ document.getElementById('recipeModal').classList.remove('open'); }
+function saveRecipe(){ const title=document.getElementById('recipeTitle').value.trim(); if(!title){ alert('Enter a name.'); return; } const list=loadArr('nukala_recipes'),idx=document.getElementById('recipeId').value; const item={title,category:document.getElementById('recipeCat').value,by:document.getElementById('recipeBy').value.trim(),time:document.getElementById('recipeTime').value.trim(),desc:document.getElementById('recipeDesc').value.trim(),ingredients:document.getElementById('recipeIngredients').value.trim(),steps:document.getElementById('recipeSteps').value.trim()}; if(idx!=='') list[parseInt(idx)]=item; else list.push(item); save('nukala_recipes',list); closeRecipeModal(); renderRecipes(); logAct('Recipe: '+title); toast('✅ Recipe saved!'); }
+function delRecipe(i){ if(!confirm('Delete?')) return; const list=loadArr('nukala_recipes'); list.splice(i,1); save('nukala_recipes',list); renderRecipes(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════════════
+// ACHIEVEMENTS
+// ═══════════════════════════════════════
+function renderAchs(){ const list=loadArr('nukala_achievements'); const el=document.getElementById('achList'); if(!el) return; if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No achievements yet.</div>'; return; } el.innerHTML=list.map((a,i)=>`<div class="tl-item"><div class="tl-year">${a.icon||'🏆'}</div><div class="tl-body"><div class="tl-title-txt">${a.title}</div>${a.person?`<div class="tl-desc">${a.person} ${a.year?'· '+a.year:''}</div>`:''}<div class="tl-actions"><button class="btn btn-outline btn-sm" onclick="openEditAch(${i})">✏️</button><button class="btn btn-red btn-sm" onclick="delAch(${i})">🗑️</button></div></div></div>`).join(''); }
+function openAchModal(){ document.getElementById('achId').value=''; document.getElementById('achModalTitle').textContent='Add Achievement'; ['achTitle','achPerson','achYear','achIcon','achDesc'].forEach(id=>document.getElementById(id).value=''); document.getElementById('achCat').value='Education'; document.getElementById('achModal').classList.add('open'); }
+function openEditAch(i){ const a=loadArr('nukala_achievements')[i]; if(!a) return; document.getElementById('achId').value=i; document.getElementById('achModalTitle').textContent='Edit Achievement'; document.getElementById('achTitle').value=a.title||''; document.getElementById('achPerson').value=a.person||''; document.getElementById('achYear').value=a.year||''; document.getElementById('achIcon').value=a.icon||''; document.getElementById('achCat').value=a.category||'Education'; document.getElementById('achDesc').value=a.desc||''; document.getElementById('achModal').classList.add('open'); }
+function closeAchModal(){ document.getElementById('achModal').classList.remove('open'); }
+function saveAch(){ const title=document.getElementById('achTitle').value.trim(); if(!title){ alert('Enter a title.'); return; } const list=loadArr('nukala_achievements'),idx=document.getElementById('achId').value; const item={title,person:document.getElementById('achPerson').value.trim(),year:document.getElementById('achYear').value.trim(),icon:document.getElementById('achIcon').value.trim(),category:document.getElementById('achCat').value,desc:document.getElementById('achDesc').value.trim()}; if(idx!=='') list[parseInt(idx)]=item; else list.push(item); save('nukala_achievements',list); closeAchModal(); renderAchs(); logAct('Achievement: '+title); toast('✅ Saved!'); }
+function delAch(i){ if(!confirm('Delete?')) return; const list=loadArr('nukala_achievements'); list.splice(i,1); save('nukala_achievements',list); renderAchs(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════════════
+// VIDEOS
+// ═══════════════════════════════════════
+function renderVideos(){ const list=loadArr('nukala_videos'); const el=document.getElementById('videoList'); if(!el) return; if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No videos yet.</div>'; return; } el.innerHTML=list.map((v,i)=>`<div class="tl-item"><div class="tl-year">🎥</div><div class="tl-body"><div class="tl-title-txt">${v.title}</div>${v.url?`<div class="tl-desc" style="word-break:break-all;">${v.url}</div>`:''}<div class="tl-actions"><button class="btn btn-outline btn-sm" onclick="openEditVideo(${i})">✏️</button><button class="btn btn-red btn-sm" onclick="delVideo(${i})">🗑️</button></div></div></div>`).join(''); }
+function openVideoModal(){ document.getElementById('videoId').value=''; document.getElementById('videoModalTitle').textContent='Add Video'; ['videoTitle','videoUrl','videoDesc'].forEach(id=>document.getElementById(id).value=''); document.getElementById('videoModal').classList.add('open'); }
+function openEditVideo(i){ const v=loadArr('nukala_videos')[i]; if(!v) return; document.getElementById('videoId').value=i; document.getElementById('videoModalTitle').textContent='Edit Video'; document.getElementById('videoTitle').value=v.title||''; document.getElementById('videoUrl').value=v.url||''; document.getElementById('videoDesc').value=v.desc||''; document.getElementById('videoModal').classList.add('open'); }
+function closeVideoModal(){ document.getElementById('videoModal').classList.remove('open'); }
+function saveVideo(){ const title=document.getElementById('videoTitle').value.trim(),url=document.getElementById('videoUrl').value.trim(); if(!title||!url){ alert('Enter title and URL.'); return; } const list=loadArr('nukala_videos'),idx=document.getElementById('videoId').value; const item={title,url,desc:document.getElementById('videoDesc').value.trim()}; if(idx!=='') list[parseInt(idx)]=item; else list.push(item); save('nukala_videos',list); closeVideoModal(); renderVideos(); logAct('Video: '+title); toast('✅ Video saved!'); }
+function delVideo(i){ if(!confirm('Delete?')) return; const list=loadArr('nukala_videos'); list.splice(i,1); save('nukala_videos',list); renderVideos(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════════════
+// POLLS
+// ═══════════════════════════════════════
+function renderPolls(){ const list=loadArr('nukala_polls'); const el=document.getElementById('pollList'); if(!el) return; if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No polls yet.</div>'; return; } el.innerHTML=list.map((p,i)=>`<div class="tl-item"><div class="tl-year">🗳️</div><div class="tl-body"><div class="tl-title-txt">${p.question}</div><div class="tl-desc">${(p.options||[]).join(' · ')} · ${(p.votes||[]).reduce((a,b)=>a+(b||0),0)} votes</div><div class="tl-actions"><button class="btn btn-red btn-sm" onclick="delPoll(${i})">🗑️ Delete</button><button class="btn btn-outline btn-sm" onclick="resetPoll(${i})">↺ Reset Votes</button></div></div></div>`).join(''); }
+function openPollModal(){ document.getElementById('pollId').value=''; document.getElementById('pollModalTitle').textContent='Create Poll'; ['pollQuestion','pollOptions'].forEach(id=>document.getElementById(id).value=''); document.getElementById('pollModal').classList.add('open'); }
+function closePollModal(){ document.getElementById('pollModal').classList.remove('open'); }
+function savePoll(){ const q=document.getElementById('pollQuestion').value.trim(),opts=document.getElementById('pollOptions').value.trim().split('\n').filter(Boolean); if(!q||opts.length<2){ alert('Enter a question and at least 2 options.'); return; } const list=loadArr('nukala_polls'); list.push({question:q,options:opts,votes:new Array(opts.length).fill(0),active:true}); save('nukala_polls',list); closePollModal(); renderPolls(); logAct('Poll: '+q); toast('✅ Poll created!'); }
+function delPoll(i){ if(!confirm('Delete?')) return; const list=loadArr('nukala_polls'); list.splice(i,1); save('nukala_polls',list); renderPolls(); toast('🗑️ Deleted.'); }
+function resetPoll(i){ if(!confirm('Reset all votes for this poll?')) return; const list=loadArr('nukala_polls'); list[i].votes=new Array(list[i].options.length).fill(0); save('nukala_polls',list); const votes=JSON.parse(localStorage.getItem('nukala_votes')||'{}'); delete votes[i]; localStorage.setItem('nukala_votes',JSON.stringify(votes)); renderPolls(); toast('↺ Votes reset!'); }
+
+// Update showSec to handle new sections
+const _origShowSecEvts=showSec;
+
+// ═══════════════════════════════════════
+// NEW PAGES EDITOR
+// ═══════════════════════════════════════
+const NP_KEY = 'nukala_newpages';
+const NP_PAGES = ['events','recipes','ach','videos','polls','stats','map','facts','history','gallery','contact','tree','login'];
+
+function loadNewPages(){
+  const d = JSON.parse(localStorage.getItem(NP_KEY)||'{}');
+  NP_PAGES.forEach(p=>{
+    const pd = d[p]||{};
+    ['eye','title','em','desc','quote','heading','para','splash','sub','label','btn','note','contact'].forEach(f=>{
+      const el = document.getElementById(`np-${p}-${f}`);
+      if(el && pd[f] !== undefined) el.value = pd[f];
+    });
+  });
+}
+
+function saveNewPages(){
+  const d = {};
+  NP_PAGES.forEach(p=>{
+    d[p] = {};
+    ['eye','title','em','desc','quote','heading','para','splash','sub','label','btn','note','contact'].forEach(f=>{
+      const el = document.getElementById(`np-${p}-${f}`);
+      if(el) d[p][f] = el.value.trim();
+    });
+  });
+  localStorage.setItem(NP_KEY, JSON.stringify(d));
+  logAct('New pages content saved');
+  toast('✅ All page content saved!');
+}
+
+// ═══════════════════════════════════════
+// NAV MENU EDITOR
+// ═══════════════════════════════════════
+const NAV_KEY = 'nukala_navmenu';
+let _navItems = [];
+
+function loadNavMenu(){
+  const d = JSON.parse(localStorage.getItem(NAV_KEY)||'null') || {
+    items:[
+      {label:'Home',href:'home.html',active:true},
+      {label:'Family Tree',href:'tree.html',active:true},
+      {label:'History',href:'history.html',active:true},
+      {label:'Gallery',href:'gallery.html',active:true},
+      {label:'Facts',href:'facts.html',active:true},
+      {label:'Stats',href:'stats.html',active:true},
+      {label:'Events',href:'events.html',active:true},
+      {label:'Map',href:'map.html',active:false},
+      {label:'Polls',href:'polls.html',active:false},
+      {label:'Recipes',href:'recipes.html',active:false},
+      {label:'Achievements',href:'achievements.html',active:false},
+      {label:'Videos',href:'videos.html',active:false},
+      {label:'Share',href:'qr.html',active:true},
+      {label:'Contact',href:'contact.html',active:true},
+    ],
+    showSearch:true, showDark:true, showLang:true
+  };
+  _navItems = d.items||[];
+  document.getElementById('pe-showsearch').checked = d.showSearch !== false;
+  document.getElementById('pe-showdark').checked = d.showDark !== false;
+  document.getElementById('pe-showlang').checked = d.showLang !== false;
+  renderNavItems();
+}
+
+function renderNavItems(){
+  document.getElementById('navItemsEditor').innerHTML = _navItems.map((item,i)=>`
+    <div class="repeat-item" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <label class="cbitem" style="margin:0;"><input type="checkbox" ${item.active?'checked':''} onchange="_navItems[${i}].active=this.checked" style="accent-color:var(--sage-d);width:15px;height:15px;"/></label>
+      <input type="text" value="${item.label}" oninput="_navItems[${i}].label=this.value" style="flex:1;padding:8px 11px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;" placeholder="Label"/>
+      <input type="text" value="${item.href}" oninput="_navItems[${i}].href=this.value" style="flex:1;padding:8px 11px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;color:var(--tl);" placeholder="page.html"/>
+      <button class="del-btn" style="position:static;" onclick="_navItems.splice(${i},1);renderNavItems()">✕</button>
+    </div>`).join('');
+}
+
+function addNavItem(){
+  _navItems.push({label:'New Page',href:'home.html',active:false});
+  renderNavItems();
+}
+
+function saveNavMenu(){
+  const d = {
+    items: _navItems,
+    showSearch: document.getElementById('pe-showsearch').checked,
+    showDark: document.getElementById('pe-showdark').checked,
+    showLang: document.getElementById('pe-showlang').checked,
+  };
+  localStorage.setItem(NAV_KEY, JSON.stringify(d));
+  logAct('Nav menu saved');
+  toast('✅ Nav menu saved! Refresh site to see changes.');
+}
+
+// ═══════════════════════════════════════
+// TYPOGRAPHY EDITOR
+// ═══════════════════════════════════════
+const TYPO_KEY = 'nukala_typography';
+
+function loadTypography(){
+  const d = JSON.parse(localStorage.getItem(TYPO_KEY)||'{}');
+  if(d.heroSize) document.getElementById('typo-hero').value = d.heroSize;
+  if(d.navSize) document.getElementById('typo-nav').value = d.navSize;
+  if(d.bodySize) document.getElementById('typo-body').value = d.bodySize;
+  if(d.radius) document.getElementById('typo-radius').value = d.radius;
+  if(d.maxWidth) document.getElementById('typo-maxwidth').value = d.maxWidth;
+  if(d.headingLS) document.getElementById('typo-heading-ls').value = d.headingLS;
+  if(d.navLS) document.getElementById('typo-nav-ls').value = d.navLS;
+  if(d.btnRadius) document.getElementById('typo-btnstyle').value = d.btnRadius;
+}
+
+function saveTypography(){
+  const d = {
+    heroSize: document.getElementById('typo-hero').value,
+    navSize: document.getElementById('typo-nav').value,
+    bodySize: document.getElementById('typo-body').value,
+    radius: document.getElementById('typo-radius').value,
+    maxWidth: document.getElementById('typo-maxwidth').value,
+    headingLS: document.getElementById('typo-heading-ls').value,
+    navLS: document.getElementById('typo-nav-ls').value,
+    btnRadius: document.getElementById('typo-btnstyle').value,
+  };
+  localStorage.setItem(TYPO_KEY, JSON.stringify(d));
+  logAct('Typography saved');
+  toast('✅ Typography saved! Refresh site to see changes.');
+}
+
+// ═══════════════════════════════════════
+// NEW PAGES EDITOR
+// ═══════════════════════════════════════
+function loadNewPagesForm(){
+  const d=JSON.parse(localStorage.getItem('nukala_newpages')||'{}');
+  const fields={
+    'pe-evt-eye':'evtEye','pe-evt-title':'evtTitle','pe-evt-desc':'evtDesc',
+    'pe-evt-bdaytitle':'evtBdayTitle','pe-evt-empty':'evtEmpty',
+    'pe-rec-eye':'recEye','pe-rec-title':'recTitle','pe-rec-desc':'recDesc','pe-rec-empty':'recEmpty',
+    'pe-ach-eye':'achEye','pe-ach-title':'achTitle','pe-ach-desc':'achDesc','pe-ach-empty':'achEmpty',
+    'pe-vid-eye':'vidEye','pe-vid-title':'vidTitle','pe-vid-desc':'vidDesc','pe-vid-empty':'vidEmpty',
+    'pe-pol-eye':'polEye','pe-pol-title':'polTitle','pe-pol-desc':'polDesc','pe-pol-empty':'polEmpty',
+    'pe-sta-eye':'staEye','pe-sta-title':'staTitle','pe-sta-desc':'staDesc',
+    'pe-map-eye':'mapEye','pe-map-title':'mapTitle','pe-map-desc':'mapDesc','pe-map-listtitle':'mapListTitle',
+    'pe-qr-eye':'qrEye','pe-qr-title':'qrTitle','pe-qr-desc':'qrDesc','pe-qr-instructions':'qrInstructions',
+    'pe-fct-eye':'fctEye','pe-fct-title':'fctTitle','pe-fct-desc':'fctDesc',
+    'pe-his-eye':'hisEye','pe-his-title':'hisTitle','pe-his-desc':'hisDesc',
+    'pe-his-quote':'hisQuote','pe-his-btntext':'hisBtnText',
+    'pe-gal-eye':'galEye','pe-gal-title2':'galTitle2','pe-gal-desc2':'galDesc2','pe-gal-hint':'galHint',
+    'pe-con-eye':'conEye','pe-con-title':'conTitle','pe-con-desc':'conDesc',
+    'pe-con-heading':'conHeading','pe-con-para':'conPara',
+    'pe-con-formtitle':'conFormTitle','pe-con-privacy':'conPrivacy',
+  };
+  Object.entries(fields).forEach(([elId,key])=>{
+    const el=document.getElementById(elId);
+    if(el&&d[key]) el.value=d[key];
+  });
+}
+
+function saveNewPages(){
+  const fields={
+    'pe-evt-eye':'evtEye','pe-evt-title':'evtTitle','pe-evt-desc':'evtDesc',
+    'pe-evt-bdaytitle':'evtBdayTitle','pe-evt-empty':'evtEmpty',
+    'pe-rec-eye':'recEye','pe-rec-title':'recTitle','pe-rec-desc':'recDesc','pe-rec-empty':'recEmpty',
+    'pe-ach-eye':'achEye','pe-ach-title':'achTitle','pe-ach-desc':'achDesc','pe-ach-empty':'achEmpty',
+    'pe-vid-eye':'vidEye','pe-vid-title':'vidTitle','pe-vid-desc':'vidDesc','pe-vid-empty':'vidEmpty',
+    'pe-pol-eye':'polEye','pe-pol-title':'polTitle','pe-pol-desc':'polDesc','pe-pol-empty':'polEmpty',
+    'pe-sta-eye':'staEye','pe-sta-title':'staTitle','pe-sta-desc':'staDesc',
+    'pe-map-eye':'mapEye','pe-map-title':'mapTitle','pe-map-desc':'mapDesc','pe-map-listtitle':'mapListTitle',
+    'pe-qr-eye':'qrEye','pe-qr-title':'qrTitle','pe-qr-desc':'qrDesc','pe-qr-instructions':'qrInstructions',
+    'pe-fct-eye':'fctEye','pe-fct-title':'fctTitle','pe-fct-desc':'fctDesc',
+    'pe-his-eye':'hisEye','pe-his-title':'hisTitle','pe-his-desc':'hisDesc',
+    'pe-his-quote':'hisQuote','pe-his-btntext':'hisBtnText',
+    'pe-gal-eye':'galEye','pe-gal-title2':'galTitle2','pe-gal-desc2':'galDesc2','pe-gal-hint':'galHint',
+    'pe-con-eye':'conEye','pe-con-title':'conTitle','pe-con-desc':'conDesc',
+    'pe-con-heading':'conHeading','pe-con-para':'conPara',
+    'pe-con-formtitle':'conFormTitle','pe-con-privacy':'conPrivacy',
+  };
+  const d={};
+  Object.entries(fields).forEach(([elId,key])=>{
+    const el=document.getElementById(elId);
+    if(el) d[key]=el.value.trim();
+  });
+  localStorage.setItem('nukala_newpages',JSON.stringify(d));
+  logAct('New pages editor saved');
+  toast('✅ All new page settings saved!');
+}
+
+// ═══════════════════════════════════════
 // TOAST
 // ═══════════════════════════════════════
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
 </script>
+
+<!-- EVENT MODAL -->
+<div class="modal-bg" id="evtModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeEvtModal()">✕</button>
+    <h2 id="evtModalTitle">Add Event</h2><p class="modal-sub">Add a family event to the calendar.</p>
+    <input type="hidden" id="evtId"/>
+    <div class="fgrp"><label>Event Title *</label><input type="text" id="evtTitle" placeholder="e.g. Family Reunion 2025"/></div>
+    <div class="frow">
+      <div class="fgrp"><label>Date *</label><input type="date" id="evtDate"/></div>
+      <div class="fgrp"><label>Type</label>
+        <select id="evtType"><option>Reunion</option><option>Birthday</option><option>Anniversary</option><option>Wedding</option><option>Festival</option><option>Other</option></select>
+      </div>
+    </div>
+    <div class="fgrp"><label>Location</label><input type="text" id="evtLocation" placeholder="e.g. Hyderabad, India"/></div>
+    <div class="fgrp"><label>Description</label><textarea id="evtDesc" rows="3" placeholder="Event details..."></textarea></div>
+    <div class="modal-footer"><button class="btn btn-green" style="flex:1;" onclick="saveEvt()">💾 Save</button><button class="btn btn-outline" onclick="closeEvtModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- RECIPE MODAL -->
+<div class="modal-bg" id="recipeModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeRecipeModal()">✕</button>
+    <h2 id="recipeModalTitle">Add Recipe</h2><p class="modal-sub">Add a traditional family recipe.</p>
+    <input type="hidden" id="recipeId"/>
+    <div class="frow">
+      <div class="fgrp"><label>Recipe Name *</label><input type="text" id="recipeTitle" placeholder="e.g. Mango Dal"/></div>
+      <div class="fgrp"><label>Category</label>
+        <select id="recipeCat"><option>Curry</option><option>Rice</option><option>Dessert</option><option>Snack</option><option>Drink</option><option>Breakfast</option><option>Other</option></select>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Made by</label><input type="text" id="recipeBy" placeholder="e.g. Grandmother Nukala"/></div>
+      <div class="fgrp"><label>Cook Time</label><input type="text" id="recipeTime" placeholder="e.g. 30 mins"/></div>
+    </div>
+    <div class="fgrp"><label>Short Description</label><input type="text" id="recipeDesc" placeholder="Brief description..."/></div>
+    <div class="fgrp"><label>Ingredients (one per line)</label><textarea id="recipeIngredients" rows="5" placeholder="2 cups rice&#10;1 cup dal&#10;Salt to taste"></textarea></div>
+    <div class="fgrp"><label>Steps (one per line)</label><textarea id="recipeSteps" rows="5" placeholder="Wash and soak rice&#10;Boil water&#10;Cook for 20 minutes"></textarea></div>
+    <div class="modal-footer"><button class="btn btn-green" style="flex:1;" onclick="saveRecipe()">💾 Save</button><button class="btn btn-outline" onclick="closeRecipeModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT MODAL -->
+<div class="modal-bg" id="achModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeAchModal()">✕</button>
+    <h2 id="achModalTitle">Add Achievement</h2><p class="modal-sub">Celebrate a family milestone or achievement.</p>
+    <input type="hidden" id="achId"/>
+    <div class="fgrp"><label>Title *</label><input type="text" id="achTitle" placeholder="e.g. First Doctor in the Family"/></div>
+    <div class="frow">
+      <div class="fgrp"><label>Person</label><input type="text" id="achPerson" placeholder="e.g. Dr. Ramu Nukala"/></div>
+      <div class="fgrp"><label>Year</label><input type="text" id="achYear" placeholder="e.g. 1978"/></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Icon (emoji)</label><input type="text" id="achIcon" placeholder="🏆 🎓 🏅 👨‍⚕️"/></div>
+      <div class="fgrp"><label>Category</label>
+        <select id="achCat"><option>Education</option><option>Career</option><option>Sports</option><option>Arts</option><option>Community</option><option>Family First</option><option>Other</option></select>
+      </div>
+    </div>
+    <div class="fgrp"><label>Description</label><textarea id="achDesc" rows="3" placeholder="Describe this achievement..."></textarea></div>
+    <div class="modal-footer"><button class="btn btn-green" style="flex:1;" onclick="saveAch()">💾 Save</button><button class="btn btn-outline" onclick="closeAchModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal-bg" id="videoModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeVideoModal()">✕</button>
+    <h2 id="videoModalTitle">Add Video</h2><p class="modal-sub">Add a YouTube link to the family video gallery.</p>
+    <input type="hidden" id="videoId"/>
+    <div class="fgrp"><label>Video Title *</label><input type="text" id="videoTitle" placeholder="e.g. Family Reunion 2023"/></div>
+    <div class="fgrp"><label>YouTube URL *</label><input type="text" id="videoUrl" placeholder="https://youtube.com/watch?v=..."/></div>
+    <div class="fgrp"><label>Description</label><textarea id="videoDesc" rows="2" placeholder="Brief description..."></textarea></div>
+    <div class="modal-footer"><button class="btn btn-green" style="flex:1;" onclick="saveVideo()">💾 Save</button><button class="btn btn-outline" onclick="closeVideoModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- POLL MODAL -->
+<div class="modal-bg" id="pollModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closePollModal()">✕</button>
+    <h2 id="pollModalTitle">Create Poll</h2><p class="modal-sub">Create a family vote or decision poll.</p>
+    <input type="hidden" id="pollId"/>
+    <div class="fgrp"><label>Question *</label><input type="text" id="pollQuestion" placeholder="e.g. Where should our next reunion be?"/></div>
+    <div class="fgrp">
+      <label>Options (one per line, min 2) *</label>
+      <textarea id="pollOptions" rows="5" placeholder="Hyderabad&#10;Chennai&#10;Bangalore&#10;Mumbai"></textarea>
+    </div>
+    <div class="modal-footer"><button class="btn btn-green" style="flex:1;" onclick="savePoll()">💾 Create Poll</button><button class="btn btn-outline" onclick="closePollModal()">Cancel</button></div>
+  </div>
+</div>
+
 </body>
 </html>

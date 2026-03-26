@@ -3,192 +3,87 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Family Facts – Nukala Family</title>
+  <title>QR Access – Nukala Family</title>
   <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="darkmode.css"/>
   <link rel="icon" href="favicon.ico"/>
-  <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
-    .filter-bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px; }
-    .filter-btn { padding:7px 16px; border-radius:20px; border:1.5px solid var(--border); background:white; font-family:'Jost',sans-serif; font-size:.76rem; font-weight:500; letter-spacing:.06em; color:var(--text-mid); cursor:pointer; transition:all .2s; }
-    .filter-btn:hover,.filter-btn.active { background:var(--sage-dark); color:white; border-color:var(--sage-dark); }
-
-    .facts-list { display:flex; flex-direction:column; gap:14px; }
-
-    .fact-item {
-      background:white; border:1px solid var(--border); border-radius:14px;
-      padding:20px 22px; display:flex; align-items:flex-start; gap:18px;
-      transition:box-shadow .2s, border-color .2s, transform .2s;
-      animation:fadeIn .5s ease forwards; opacity:0;
-    }
-    .fact-item:hover { box-shadow:0 4px 20px rgba(0,0,0,.06); border-color:var(--sage-light); transform:translateX(4px); }
-
-    .fact-icon {
-      width:48px; height:48px; border-radius:12px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:22px; flex-shrink:0;
-      background:linear-gradient(135deg,var(--sage-light),rgba(138,171,138,.2));
-    }
-    .fact-icon.gold { background:linear-gradient(135deg,var(--gold-light),rgba(201,168,76,.2)); }
-    .fact-icon.purple { background:linear-gradient(135deg,#f0e8f8,#e8d8f0); }
-    .fact-icon.blue { background:linear-gradient(135deg,#e8f0f8,#d8e8f8); }
-    .fact-icon.red { background:linear-gradient(135deg,#fde8e8,#f8d8d8); }
-
-    .fact-body { flex:1; }
-    .fact-title { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:600; color:var(--text-dark); margin-bottom:4px; line-height:1.3; }
-    .fact-desc { font-size:.84rem; color:var(--text-mid); line-height:1.7; font-weight:300; }
-    .fact-meta { display:flex; align-items:center; gap:10px; margin-top:8px; flex-wrap:wrap; }
-    .fact-tag { font-size:.62rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; }
-    .fact-tag-achievement { background:rgba(92,122,92,.1); color:var(--sage-dark); }
-    .fact-tag-milestone { background:var(--gold-light); color:#8a6a00; }
-    .fact-tag-tradition { background:#f0e8f8; color:#7050a0; }
-    .fact-tag-record { background:#e8f0f8; color:#305080; }
-    .fact-tag-fun { background:#fde8e8; color:#a03030; }
-    .fact-tag-other { background:var(--cream); color:var(--text-mid); }
-
-    .fact-person { font-size:.72rem; color:var(--text-light); font-style:italic; }
-    .fact-year { font-size:.72rem; color:var(--text-light); }
-
-    .empty-facts { text-align:center; padding:80px 20px; color:var(--text-light); }
-    .empty-facts .ei { font-size:52px; margin-bottom:16px; }
-    .empty-facts p { font-size:.86rem; line-height:1.7; }
-
-    .facts-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
-    .facts-count { font-size:.78rem; color:var(--text-light); font-weight:500; }
-
-    @keyframes fadeIn { to { opacity:1; } }
-    .stagger-1{animation-delay:.05s} .stagger-2{animation-delay:.1s} .stagger-3{animation-delay:.15s}
-    .stagger-4{animation-delay:.2s}  .stagger-5{animation-delay:.25s} .stagger-6{animation-delay:.3s}
+    .qr-center { text-align:center; max-width:500px; margin:0 auto; }
+    .qr-box { background:white; border:1px solid var(--border); border-radius:20px; padding:40px; margin-bottom:20px; }
+    #qrCode { margin:0 auto 20px; }
+    .qr-url { font-size:.82rem; color:var(--text-mid); word-break:break-all; background:var(--cream); padding:10px 14px; border-radius:10px; margin-bottom:16px; }
+    .btn { display:inline-block; padding:12px 24px; background:var(--sage-dark); color:white; border:none; border-radius:10px; font-family:'Jost',sans-serif; font-size:.82rem; font-weight:500; cursor:pointer; text-decoration:none; margin:4px; transition:all .2s; }
+    .btn-outline { background:white; color:var(--sage-dark); border:1.5px solid var(--sage-light); }
+    .share-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+    .share-card { background:white; border:1px solid var(--border); border-radius:14px; padding:18px; text-align:center; cursor:pointer; transition:transform .2s; }
+    .share-card:hover { transform:translateY(-2px); }
+    .share-icon { font-size:28px; margin-bottom:8px; }
+    .share-label { font-size:.8rem; font-weight:500; color:var(--text-dark); }
+    .share-desc { font-size:.72rem; color:var(--text-light); margin-top:3px; }
   </style>
 </head>
 <body>
   <script src="auth.js"></script>
-  <script src="splash.js"></script>
   <script src="darkmode.js"></script>
-  <script src="search.js"></script>
   <script src="transitions.js"></script>
-  <script src="lang.js"></script>
-  <script src="notifications.js"></script>
   <nav>
-    <a class="nav-brand" href="home.html">
-      <img src="logo.png" alt="Logo"/>
-      <span class="nav-site-name" id="navSiteName">NUKALA</span>
-    </a>
+    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/><span class="nav-site-name" id="navSiteName">NUKALA</span></a>
     <ul class="nav-links">
       <li><a href="home.html">Home</a></li>
-      <li><a href="tree.html">Family Tree</a></li>
-      <li><a href="history.html">Our History</a></li>
-      <li><a href="gallery.html">Gallery</a></li>
-      <li><a href="facts.html" class="active">Facts</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="qr.html" class="active">Share</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
   </nav>
-
   <main>
     <div class="page-hero">
-      <p class="eyebrow">Did You Know?</p>
-      <h1>Interesting <em>Family Facts</em></h1>
+      <p class="eyebrow">Share Access</p>
+      <h1>QR Code <em>Access</em></h1>
       <div class="hero-divider"></div>
-      <p>Fascinating milestones, achievements, traditions and firsts from across the Nukala family.</p>
+      <p>Share the family website with relatives — scan the QR code to open instantly.</p>
     </div>
-
     <div class="content-area">
-      <div class="filter-bar" id="filterBar">
-        <button class="filter-btn active" onclick="filterFacts('all',this)">🌟 All Facts</button>
-        <button class="filter-btn" onclick="filterFacts('Achievement',this)">🏆 Achievements</button>
-        <button class="filter-btn" onclick="filterFacts('Milestone',this)">⭐ Milestones</button>
-        <button class="filter-btn" onclick="filterFacts('Tradition',this)">🎭 Traditions</button>
-        <button class="filter-btn" onclick="filterFacts('Record',this)">📊 Records</button>
-        <button class="filter-btn" onclick="filterFacts('Fun Fact',this)">😄 Fun Facts</button>
-        <button class="filter-btn" onclick="filterFacts('Other',this)">📌 Other</button>
+      <div class="qr-center">
+        <div class="qr-box">
+          <div id="qrCode"></div>
+          <div class="qr-url" id="siteUrl">Loading...</div>
+          <button class="btn" onclick="downloadQR()">📥 Download QR Code</button>
+          <button class="btn btn-outline" onclick="copyUrl()">📋 Copy Link</button>
+        </div>
+        <div class="share-grid">
+          <div class="share-card" onclick="shareWhatsApp()"><div class="share-icon">📱</div><div class="share-label">Share via WhatsApp</div><div class="share-desc">Send link to family group</div></div>
+          <div class="share-card" onclick="shareEmail()"><div class="share-icon">📧</div><div class="share-label">Share via Email</div><div class="share-desc">Email the link with password</div></div>
+          <div class="share-card" onclick="window.print()"><div class="share-icon">🖨️</div><div class="share-label">Print QR Code</div><div class="share-desc">Print and display at events</div></div>
+          <div class="share-card" onclick="copyUrl()"><div class="share-icon">🔗</div><div class="share-label">Copy Link</div><div class="share-desc">Paste anywhere</div></div>
+        </div>
+        <div class="card" style="margin-top:20px;text-align:left;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;margin-bottom:10px;">📋 What to tell family members</div>
+          <div style="font-size:.84rem;color:var(--text-mid);line-height:1.8;">
+            1. Scan the QR code or visit the link<br/>
+            2. Enter the family password: <strong id="sitePwHint" style="color:var(--sage-dark);">••••••</strong> <button onclick="togglePw()" style="font-size:.7rem;background:none;border:none;cursor:pointer;color:var(--sage-dark);">Show</button><br/>
+            3. Install as app: tap Share → "Add to Home Screen" (iPhone) or Menu → "Add to Home Screen" (Android)
+          </div>
+        </div>
       </div>
-
-      <div class="facts-header">
-        <span class="facts-count" id="factsCount"></span>
-      </div>
-
-      <div class="facts-list" id="factsList"></div>
     </div>
   </main>
-
-  <footer>
-    &copy; 2024 <strong id="footerName">The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
-  </footer>
-
+  <footer>&copy; 2024 <strong id="footerName">The Nukala Family</strong> · Private</footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    function loadArr(k){ return JSON.parse(localStorage.getItem(k)||'[]'); }
-    function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
-
-    let allFacts=[], currentFilter='all';
-
-    const tagClasses = {
-      'Achievement':'fact-tag-achievement','Milestone':'fact-tag-milestone',
-      'Tradition':'fact-tag-tradition','Record':'fact-tag-record',
-      'Fun Fact':'fact-tag-fun','Other':'fact-tag-other'
-    };
-    const iconBgs = {
-      'Achievement':'gold','Milestone':'','Tradition':'purple',
-      'Record':'blue','Fun Fact':'red','Other':''
-    };
-    const tagEmojis = {
-      'Achievement':'🏆','Milestone':'⭐','Tradition':'🎭',
-      'Record':'📊','Fun Fact':'😄','Other':'📌'
-    };
-
-    function initFacts(){
-      const s = load('nukala_settings')||{};
-      if(s.familyName){
-        document.getElementById('navSiteName').textContent = s.familyName.toUpperCase();
-        document.getElementById('footerName').textContent = 'The '+s.familyName+' Family';
-      }
-      allFacts = loadArr('nukala_facts');
-      renderFacts();
-    }
-
-    function renderFacts(){
-      const list = document.getElementById('factsList');
-      const filtered = currentFilter==='all' ? allFacts : allFacts.filter(f=>f.category===currentFilter);
-      document.getElementById('factsCount').textContent = filtered.length + ' fact' + (filtered.length!==1?'s':'');
-
-      if(!filtered.length){
-        list.innerHTML=`<div class="empty-facts">
-          <div class="ei">${currentFilter==='all'?'🌟':'🔍'}</div>
-          <p>${allFacts.length?'No facts in this category yet.':'No facts added yet.<br/>Go to <strong>Admin → Facts</strong> to add your first family fact!'}</p>
-        </div>`;
-        return;
-      }
-
-      list.innerHTML = filtered.map((f,i)=>{
-        const iconBg = iconBgs[f.category]||'';
-        const emoji  = f.icon || tagEmojis[f.category]||'📌';
-        const tagCls = tagClasses[f.category]||'fact-tag-other';
-        return `<div class="fact-item stagger-${(i%6)+1}">
-          <div class="fact-icon ${iconBg}">${emoji}</div>
-          <div class="fact-body">
-            <div class="fact-title">${f.title}</div>
-            ${f.desc?`<div class="fact-desc">${f.desc}</div>`:''}
-            <div class="fact-meta">
-              <span class="fact-tag ${tagCls}">${f.category||'Other'}</span>
-              ${f.person?`<span class="fact-person">👤 ${f.person}</span>`:''}
-              ${f.year?`<span class="fact-year">📅 ${f.year}</span>`:''}
-            </div>
-          </div>
-        </div>`;
-      }).join('');
-    }
-
-    function filterFacts(cat, btn){
-      currentFilter=cat;
-      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      renderFacts();
-    }
-
-    initFacts();
+    const load=k=>JSON.parse(localStorage.getItem(k)||'{}');
+    const s=load('nukala_settings'),h=load('nukala_home');
+    document.getElementById('navSiteName').textContent=(h.navName||s.familyName||'NUKALA').toUpperCase();
+    if(s.familyName)document.getElementById('footerName').textContent='The '+s.familyName+' Family';
+    const siteUrl=location.origin+location.pathname.replace('qr.html','');
+    document.getElementById('siteUrl').textContent=siteUrl;
+    new QRCode(document.getElementById('qrCode'),{text:siteUrl,width:200,height:200,colorDark:'#5c7a5c',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+    const sitePw=localStorage.getItem('nukala_site_pass')||'nukala2024';
+    let pwVisible=false;
+    function togglePw(){ pwVisible=!pwVisible; document.getElementById('sitePwHint').textContent=pwVisible?sitePw:'••••••'; }
+    function copyUrl(){ navigator.clipboard.writeText(siteUrl).then(()=>alert('Link copied!')); }
+    function downloadQR(){ const canvas=document.querySelector('#qrCode canvas'); if(!canvas){ alert('QR code loading...'); return; } const a=document.createElement('a'); a.download='nukala-family-qr.png'; a.href=canvas.toDataURL(); a.click(); }
+    function shareWhatsApp(){ window.open(`https://wa.me/?text=${encodeURIComponent('Join the Nukala Family Tree website!\n\n'+siteUrl+'\n\nPassword: '+sitePw)}`, '_blank'); }
+    function shareEmail(){ window.location.href=`mailto:?subject=Nukala Family Tree Website&body=${encodeURIComponent('Hi,\n\nYou are invited to visit the Nukala Family Tree website.\n\nLink: '+siteUrl+'\nPassword: '+sitePw+'\n\nYou can also install it as an app on your phone!\n\nWith love,\nThe Nukala Family')}`; }
   </script>
-
-
-
 
 <script>
 (function(){
@@ -366,9 +261,10 @@
   document.querySelectorAll('.nav-site-name,#navSiteName').forEach(el=>el.textContent=nn);
   if(s.familyName) document.querySelectorAll('#footerName,#footerFamilyName').forEach(el=>el.textContent='The '+s.familyName+' Family');
   // Page text
-    if(d['fctEye']){ document.querySelectorAll('.eyebrow').forEach(el=>el.textContent=d['fctEye']); }
-  if(d['fctTitle']){ document.querySelectorAll('.page-hero h1 em').forEach(el=>el.textContent=d['fctTitle']); }
-  if(d['fctDesc']){ document.querySelectorAll('.page-hero p').forEach(el=>el.textContent=d['fctDesc']); }
+    if(d['qrEye']){ document.querySelectorAll('.eyebrow').forEach(el=>el.textContent=d['qrEye']); }
+  if(d['qrTitle']){ document.querySelectorAll('.page-hero h1 em').forEach(el=>el.textContent=d['qrTitle']); }
+  if(d['qrDesc']){ document.querySelectorAll('.page-hero p').forEach(el=>el.textContent=d['qrDesc']); }
+  if(d['qrInstructions']){ document.querySelectorAll('.card p, #instructionsText').forEach(el=>el.textContent=d['qrInstructions']); }
 })();
 </script>
 </body>

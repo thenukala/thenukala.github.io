@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events – Nukala Family</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="darkmode.css"/>
+  <link rel="icon" href="favicon.ico"/>
+  <style>
+    .events-layout { display:grid; grid-template-columns:1fr 320px; gap:24px; align-items:start; }
+    @media(max-width:768px){ .events-layout{grid-template-columns:1fr;} }
+    .event-item { background:white; border:1px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:12px; display:flex; gap:16px; align-items:flex-start; transition:transform .2s,box-shadow .2s; }
+    .event-item:hover { transform:translateX(4px); box-shadow:0 4px 16px rgba(0,0,0,.06); }
+    .event-date-box { background:linear-gradient(135deg,var(--sage-dark),var(--sage)); color:white; border-radius:12px; padding:10px 14px; text-align:center; min-width:56px; flex-shrink:0; }
+    .event-day { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; line-height:1; }
+    .event-month { font-size:.65rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; opacity:.85; }
+    .event-body { flex:1; }
+    .event-title { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:var(--text-dark); margin-bottom:4px; }
+    .event-desc { font-size:.82rem; color:var(--text-mid); line-height:1.5; margin-bottom:6px; }
+    .event-tag { display:inline-block; font-size:.62rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:3px 9px; border-radius:20px; background:var(--sage-light); color:var(--sage-dark); }
+    .event-upcoming { border-left:3px solid var(--sage); }
+    .event-past { opacity:.65; }
+    .mini-cal { background:white; border:1px solid var(--border); border-radius:14px; padding:20px; position:sticky; top:90px; }
+    .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .cal-month-name { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:400; }
+    .cal-nav { background:none; border:1px solid var(--border); border-radius:8px; padding:4px 10px; cursor:pointer; font-size:.8rem; color:var(--text-mid); }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+    .cal-day-name { font-size:.6rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text-light); text-align:center; padding:4px 0; }
+    .cal-day { font-size:.78rem; text-align:center; padding:6px 2px; border-radius:8px; cursor:default; }
+    .cal-day.has-event { background:var(--sage-light); color:var(--sage-dark); font-weight:600; cursor:pointer; }
+    .cal-day.today { background:var(--sage-dark); color:white; font-weight:600; }
+    .cal-day.other-month { color:var(--text-light); }
+    .bday-section { margin-top:20px; }
+    .bday-title { font-size:.68rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text-light); margin-bottom:10px; }
+    .bday-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
+    .bday-item:last-child { border-bottom:none; }
+    .bday-avatar { width:32px; height:32px; border-radius:50%; background:var(--sage-light); display:flex; align-items:center; justify-content:center; font-size:14px; overflow:hidden; flex-shrink:0; }
+    .bday-avatar img { width:100%; height:100%; object-fit:cover; }
+    .bday-name { font-size:.82rem; font-weight:500; color:var(--text-dark); }
+    .bday-date { font-size:.7rem; color:var(--text-light); }
+    .empty-events { text-align:center; padding:60px 20px; color:var(--text-light); }
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+  <script src="darkmode.js"></script>
+  <script src="search.js"></script>
+  <script src="transitions.js"></script>
+  <nav>
+    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/><span class="nav-site-name" id="navSiteName">NUKALA</span></a>
+    <ul class="nav-links">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="tree.html">Family Tree</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-logout" onclick="logout()">Sign Out</button>
+  </nav>
+  <main>
+    <div class="page-hero">
+      <p class="eyebrow">Upcoming</p>
+      <h1>Family <em>Events</em></h1>
+      <div class="hero-divider"></div>
+      <p>Reunions, birthdays, anniversaries and celebrations. Never miss a family moment.</p>
+    </div>
+    <div class="content-area">
+      <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+        <a href="admin.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:var(--sage-dark);color:white;border-radius:10px;text-decoration:none;font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;">⚙️ Manage Events in Admin</a>
+      </div>
+      <div class="events-layout">
+        <div>
+          <div id="eventsList"></div>
+        </div>
+        <div>
+          <div class="mini-cal">
+            <div class="cal-header">
+              <button class="cal-nav" onclick="changeMonth(-1)">←</button>
+              <div class="cal-month-name" id="calMonthName"></div>
+              <button class="cal-nav" onclick="changeMonth(1)">→</button>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+            <div class="bday-section">
+              <div class="bday-title">🎂 Upcoming Birthdays</div>
+              <div id="bdayList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>&copy; 2024 <strong id="footerName">The Nukala Family</strong> · Private</footer>
+  <script>
+    const load=k=>JSON.parse(localStorage.getItem(k)||'{}');
+    const loadArr=k=>JSON.parse(localStorage.getItem(k)||'[]');
+    const s=load('nukala_settings'),h=load('nukala_home');
+    document.getElementById('navSiteName').textContent=(h.navName||s.familyName||'NUKALA').toUpperCase();
+    if(s.familyName)document.getElementById('footerName').textContent='The '+s.familyName+' Family';
+
+    let currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear();
+    const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    function renderEvents(){
+      const events=loadArr('nukala_events');
+      const today=new Date(); today.setHours(0,0,0,0);
+      const el=document.getElementById('eventsList');
+      if(!events.length){ el.innerHTML='<div class="empty-events"><div style="font-size:48px;margin-bottom:12px;">📆</div><p>No events yet.<br/>Add events in Admin → Events.</p></div>'; return; }
+      const sorted=[...events].sort((a,b)=>new Date(a.date)-new Date(b.date));
+      el.innerHTML=sorted.map(e=>{
+        const d=new Date(e.date);
+        const isPast=d<today;
+        const day=d.getDate(), month=MONTHS[d.getMonth()].substring(0,3).toUpperCase();
+        return `<div class="event-item ${isPast?'event-past':'event-upcoming'}">
+          <div class="event-date-box" style="${isPast?'background:#888':''}">
+            <div class="event-day">${day}</div>
+            <div class="event-month">${month}</div>
+          </div>
+          <div class="event-body">
+            <div class="event-title">${e.title}</div>
+            ${e.desc?`<div class="event-desc">${e.desc}</div>`:''}
+            ${e.location?`<div class="event-desc">📍 ${e.location}</div>`:''}
+            <span class="event-tag">${e.type||'Event'}</span>
+            ${isPast?'<span class="event-tag" style="background:#f0f0f0;color:#888;margin-left:6px;">Past</span>':''}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderCalendar(){
+      document.getElementById('calMonthName').textContent=MONTHS[currentMonth]+' '+currentYear;
+      const events=loadArr('nukala_events');
+      const eventDays=new Set(events.map(e=>{ const d=new Date(e.date); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }));
+      const today=new Date();
+      const firstDay=new Date(currentYear,currentMonth,1).getDay();
+      const daysInMonth=new Date(currentYear,currentMonth+1,0).getDate();
+      const dayNames=['Su','Mo','Tu','We','Th','Fr','Sa'];
+      let html=dayNames.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+      for(let i=0;i<firstDay;i++) html+=`<div class="cal-day other-month"></div>`;
+      for(let d=1;d<=daysInMonth;d++){
+        const key=currentYear+'-'+(currentMonth+1)+'-'+d;
+        const isToday=today.getDate()===d&&today.getMonth()===currentMonth&&today.getFullYear()===currentYear;
+        const hasEv=eventDays.has(key);
+        html+=`<div class="cal-day${isToday?' today':hasEv?' has-event':''}">${d}</div>`;
+      }
+      document.getElementById('calGrid').innerHTML=html;
+    }
+
+    function renderBirthdays(){
+      const members=Object.values(load('nukala_tree_data'));
+      const contacts=load('nukala_contacts');
+      const today=new Date();
+      const bdayList=[];
+      members.forEach(m=>{
+        const c=contacts[m.id]||{};
+        if(!c.birthday) return;
+        const parts=c.birthday.split(' ');
+        if(parts.length<2) return;
+        const dayNum=parseInt(parts[0]);
+        const monthName=parts[1];
+        const monthIdx=MONTHS.findIndex(mn=>mn.toLowerCase().startsWith(monthName.toLowerCase()));
+        if(isNaN(dayNum)||monthIdx<0) return;
+        let bday=new Date(today.getFullYear(),monthIdx,dayNum);
+        if(bday<today) bday=new Date(today.getFullYear()+1,monthIdx,dayNum);
+        const daysUntil=Math.ceil((bday-today)/(1000*60*60*24));
+        bdayList.push({m,daysUntil,dateStr:c.birthday});
+      });
+      bdayList.sort((a,b)=>a.daysUntil-b.daysUntil);
+      const el=document.getElementById('bdayList');
+      if(!bdayList.length){ el.innerHTML='<div style="font-size:.78rem;color:var(--text-light);padding:8px 0;">Add birthdays in Admin → Contacts</div>'; return; }
+      el.innerHTML=bdayList.slice(0,6).map(({m,daysUntil,dateStr})=>{
+        const name=[m.firstName,m.lastName].filter(Boolean).join(' ');
+        const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'👩':'👨');
+        const label=daysUntil===0?'Today! 🎉':daysUntil===1?'Tomorrow!':daysUntil+' days';
+        return `<div class="bday-item"><div class="bday-avatar">${av}</div><div><div class="bday-name">${name}</div><div class="bday-date">${dateStr} · ${label}</div></div></div>`;
+      }).join('');
+    }
+
+    function changeMonth(dir){ currentMonth+=dir; if(currentMonth>11){currentMonth=0;currentYear++;} if(currentMonth<0){currentMonth=11;currentYear--;} renderCalendar(); }
+    renderEvents(); renderCalendar(); renderBirthdays();
+  </script>
+
+<script>
+(function(){
+  function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
+
+  // ── THEME ──
+  const theme = load('nukala_theme');
+  if(theme){
+    const r = document.documentElement;
+    if(theme.primary)   r.style.setProperty('--sage-dark', theme.primary);
+    if(theme.secondary) r.style.setProperty('--sage', theme.secondary);
+    if(theme.highlight) r.style.setProperty('--gold', theme.highlight);
+    if(theme.bg)        r.style.setProperty('--cream', theme.bg);
+    if(theme.text)      r.style.setProperty('--text-dark', theme.text);
+    if(theme.fontBody)  document.body.style.fontFamily = theme.fontBody+', sans-serif';
+  }
+
+  // ── TYPOGRAPHY ──
+  const typo = load('nukala_typography');
+  if(typo){
+    const style = document.createElement('style');
+    let css = '';
+    if(typo.heroSize) css += `.page-hero h1, .hero-title { font-size: ${typo.heroSize} !important; }`;
+    if(typo.navSize)  css += `.nav-links a { font-size: ${typo.navSize} !important; }`;
+    if(typo.bodySize) css += `body { font-size: ${typo.bodySize}; }`;
+    if(typo.radius)   css += `.card, .panel, .pcard { border-radius: ${typo.radius} !important; }`;
+    if(typo.maxWidth) css += `.content-area, .page-hero { max-width: ${typo.maxWidth} !important; }`;
+    if(typo.navLS)    css += `.nav-links a { letter-spacing: ${typo.navLS} !important; }`;
+    if(typo.btnRadius)css += `.btn, button.nav-logout { border-radius: ${typo.btnRadius} !important; }`;
+    if(css){ style.textContent = css; document.head.appendChild(style); }
+  }
+
+  // ── SITE WIDE ──
+  const sw = load('nukala_sitewide');
+  const hd = load('nukala_home');
+  const s  = load('nukala_settings');
+  const navName = (sw&&sw.navName) || (hd&&hd.navName) || (s&&s.familyName ? s.familyName.toUpperCase() : 'NUKALA');
+  document.querySelectorAll('.nav-site-name, #navSiteName').forEach(el=>el.textContent=navName);
+  const footerName = s&&s.familyName ? 'The '+s.familyName+' Family' : 'The Nukala Family';
+  document.querySelectorAll('#footerName,#footerFamilyName,#footerText').forEach(el=>el.textContent=footerName);
+  if(sw&&sw.footer){
+    document.querySelectorAll('footer strong').forEach(el=>el.textContent=sw.footer);
+  }
+
+  // ── NAV MENU ──
+  const navMenu = load('nukala_navmenu');
+  if(navMenu && navMenu.items){
+    const activeItems = navMenu.items.filter(i=>i.active);
+    document.querySelectorAll('nav .nav-links').forEach(ul=>{
+      const currentPage = location.pathname.split('/').pop()||'home.html';
+      ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');
+    });
+  }
+
+  // ── NEW PAGES CONTENT ──
+  const np = load('nukala_newpages');
+  const currentPage = location.pathname.split('/').pop()||'home.html';
+  const pageKey = {
+    'events.html':'events','recipes.html':'recipes','achievements.html':'ach',
+    'videos.html':'videos','polls.html':'polls','stats.html':'stats',
+    'map.html':'map','facts.html':'facts','history.html':'history',
+    'gallery.html':'gallery','contact.html':'contact','tree.html':'tree'
+  }[currentPage];
+
+  if(np && pageKey && np[pageKey]){
+    const pd = np[pageKey];
+    // Eyebrow
+    const eyeEl = document.querySelector('.page-hero .eyebrow');
+    if(eyeEl && pd.eye) eyeEl.textContent = pd.eye;
+    // Title — rebuild with italic
+    const h1El = document.querySelector('.page-hero h1');
+    if(h1El && pd.title){
+      const em = pd.em || '';
+      if(em && pd.title.includes(em)){
+        h1El.innerHTML = pd.title.replace(em, `<em>${em}</em>`);
+      } else {
+        h1El.textContent = pd.title;
+      }
+    }
+    // Description
+    const descEl = document.querySelector('.page-hero p');
+    if(descEl && pd.desc) descEl.textContent = pd.desc;
+    // History quote
+    if(pageKey==='history' && pd.quote){
+      const q = document.querySelector('.history-intro');
+      if(q) q.textContent = pd.quote;
+    }
+    // Contact extras
+    if(pageKey==='contact'){
+      const h = document.querySelector('.contact-info h2');
+      if(h && pd.heading) h.innerHTML = pd.heading;
+      const p = document.querySelector('.contact-info > p');
+      if(p && pd.para) p.textContent = pd.para;
+    }
+    // Gallery title/desc
+    if(pageKey==='gallery'){
+      const gt = document.getElementById('galPageTitle');
+      const gd = document.getElementById('galPageDesc');
+      if(gt && pd.title) gt.textContent = pd.title;
+      if(gd && pd.desc) gd.textContent = pd.desc;
+    }
+  }
+
+  // ── HERO IMAGE ──
+  const hero = load('nukala_heropage');
+  if(hero && hero.homeImgUrl && currentPage==='home.html'){
+    const banner = document.querySelector('.hero-banner');
+    if(banner){
+      banner.style.backgroundImage = `url('${hero.homeImgUrl}')`;
+      banner.style.backgroundSize = 'cover';
+      banner.style.backgroundPosition = 'center';
+    }
+  }
+  // Per-page hero settings
+  if(hero){
+    const heroPageMap={'tree.html':0,'history.html':1,'gallery.html':2,'facts.html':3,'contact.html':4};
+    const heroIdx = heroPageMap[currentPage];
+    if(heroIdx !== undefined && hero['page'+heroIdx]){
+      const hpd = hero['page'+heroIdx];
+      const eyeEl = document.querySelector('.page-hero .eyebrow');
+      const h1El = document.querySelector('.page-hero h1');
+      const descEl = document.querySelector('.page-hero p');
+      // Only override if np didn't already set (np takes priority)
+      if(eyeEl && hpd.eye && !(np&&pageKey&&np[pageKey]&&np[pageKey].eye)) eyeEl.textContent = hpd.eye;
+      if(h1El && hpd.title && !(np&&pageKey&&np[pageKey]&&np[pageKey].title)) h1El.innerHTML = hpd.title;
+      if(descEl && hpd.desc && !(np&&pageKey&&np[pageKey]&&np[pageKey].desc)) descEl.textContent = hpd.desc;
+    }
+  }
+
+  // ── GALLERY FILTER CATEGORIES ──
+  const gp = load('nukala_gallerypage2');
+  if(gp && gp.cats && currentPage==='gallery.html'){
+    const filterBar = document.getElementById('filterBar');
+    if(filterBar){
+      filterBar.innerHTML = '<button class="filter-btn active" onclick="filterGallery(\'all\',this)">All Photos</button>' +
+        gp.cats.map(c=>`<button class="filter-btn" onclick="filterGallery('${c}',this)">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
+    }
+  }
+
+  // ── CONTACT DROPDOWN ──
+  const cp = load('nukala_contactpage2');
+  if(cp && cp.dropdownOpts && currentPage==='contact.html'){
+    const sel = document.getElementById('subject');
+    if(sel) sel.innerHTML = '<option value="">— Select a reason —</option>'+cp.dropdownOpts.map(o=>`<option>${o}</option>`).join('');
+  }
+  if(cp && cp.contactWays && currentPage==='contact.html'){
+    const cw = document.getElementById('contactWays');
+    if(cw) cw.innerHTML = cp.contactWays.map(w=>`<div class="contact-way"><div class="contact-way-icon">${w.icon}</div><div><div class="contact-way-title">${w.title}</div><div class="contact-way-desc">${w.desc}</div></div></div>`).join('');
+  }
+
+  // ── HOME QUICK CARDS ──
+  const hp2 = load('nukala_homepage2');
+  if(hp2 && hp2.quickCards && currentPage==='home.html'){
+    const qn = document.getElementById('quickNavCards');
+    if(qn) qn.innerHTML = hp2.quickCards.map(c=>`<a class="quick-card fade-in" href="${c.link}"><div class="quick-card-icon">${c.icon}</div><div class="quick-card-title">${c.title}</div><div class="quick-card-desc">${c.desc}</div><div class="quick-card-arrow">${c.arrow}</div></a>`).join('');
+  }
+  if(hp2 && hp2.updates && hp2.updates.length && currentPage==='home.html'){
+    const ul = document.getElementById('recentUpdatesList');
+    if(ul) ul.innerHTML = hp2.updates.map(u=>`<div class="update-item"><div class="update-dot"></div><div><div class="update-title">${u.title}</div><div class="update-date">${u.date||''}</div></div></div>`).join('');
+  }
+
+})();
+</script>
+
+
+<script>
+// ── New Pages CMS Reader ──
+(function(){
+  const d=JSON.parse(localStorage.getItem('nukala_newpages')||'{}');
+  const s=JSON.parse(localStorage.getItem('nukala_settings')||'{}');
+  const h=JSON.parse(localStorage.getItem('nukala_home')||'{}');
+  const sw=JSON.parse(localStorage.getItem('nukala_sitewide')||'{}');
+  // Nav & footer
+  const nn=sw.navName||h.navName||(s.familyName?s.familyName.toUpperCase():'NUKALA');
+  document.querySelectorAll('.nav-site-name,#navSiteName').forEach(el=>el.textContent=nn);
+  if(s.familyName) document.querySelectorAll('#footerName,#footerFamilyName').forEach(el=>el.textContent='The '+s.familyName+' Family');
+  // Page text
+    if(d['evtEye']){ document.querySelectorAll('.eyebrow').forEach(el=>el.textContent=d['evtEye']); }
+  if(d['evtTitle']){ document.querySelectorAll('.page-hero h1 em').forEach(el=>el.textContent=d['evtTitle']); }
+  if(d['evtDesc']){ document.querySelectorAll('.page-hero p').forEach(el=>el.textContent=d['evtDesc']); }
+  if(d['evtEmpty']){ document.querySelectorAll('.empty-section p,.empty-state p').forEach(el=>{ if(el.innerHTML.includes('No ')) el.textContent=d['evtEmpty']; }); }
+})();
+</script>
+</body>
+</html>
