@@ -1,209 +1,377 @@
 /**
- * lang.js — Full page English / Telugu translation
- * Uses data-en / data-te attributes on any element
- * Falls back to nav link text translation for unlabelled elements
+ * lang.js — Complete English / Telugu translations
+ * Translates: nav, hero, buttons, filters, cards, labels, footers
  */
 (function(){
+  'use strict';
   const LK = 'nukala_lang';
 
-  // ── Full translations ──
   const T = {
     en: {
-      // Nav
-      home:'Home', tree:'Family Tree', history:'History', gallery:'Gallery',
-      facts:'Facts', stats:'Stats', events:'Events', map:'Map', polls:'Polls',
-      recipes:'Recipes', achievements:'Achievements', videos:'Videos',
-      share:'Share', contact:'Contact',
-      // Common UI
-      signin:'Sign In', signout:'Sign Out', search:'Search',
-      admin:'Admin Panel', viewsite:'View Site',
-      // Home page
-      'welcome-eyebrow':'Welcome to the',
-      'hero-title':'The Nukala Family Archive',
-      'hero-tagline':'A private space to celebrate our roots, preserve our stories, and stay connected across generations.',
-      'stat1-lbl':'Generations', 'stat2-lbl':'Family Members', 'stat3-lbl':'Stories Shared',
-      'about-heading':'Our Roots Run Deep',
-      'about-p1':'Welcome to the Nukala Family Tree — a private, members-only archive.',
-      'about-p2':'This site is a living record of who we are: our ancestors, our stories, our photos.',
-      'recent-updates':'Recent Updates',
-      // Quick nav cards
-      'card-tree-title':'Family Tree', 'card-tree-desc':'Explore our family connections and lineage.',
-      'card-history-title':'Our History', 'card-history-desc':'Read stories and milestones.',
-      'card-gallery-title':'Photo Gallery', 'card-gallery-desc':'Browse cherished photos.',
-      'card-contact-title':'Get in Touch', 'card-contact-desc':'Contribute your stories.',
+      // Nav links
+      nav_home:'Home', nav_tree:'Family Tree', nav_history:'History',
+      nav_gallery:'Gallery', nav_facts:'Facts', nav_stats:'Stats',
+      nav_events:'Events', nav_map:'Map', nav_polls:'Polls',
+      nav_recipes:'Recipes', nav_achievements:'Achievements',
+      nav_videos:'Videos', nav_share:'Share', nav_contact:'Contact',
+      // Sign out
+      signout:'Sign Out',
+      // Login page
+      login_title:'The Nukala Family Tree',
+      login_sub:'A private family archive · Enter your password to continue',
+      login_placeholder:'Enter family password',
+      login_btn:'Enter Family Archive →',
+      login_note:'This site is exclusively for the Nukala family.',
+      // Home hero
+      hero_eyebrow:'Welcome to the',
+      hero_title_1:'The', hero_title_em:'Nukala', hero_title_2:'Family Archive',
+      hero_tagline:'A private space to celebrate our roots, preserve our stories, and stay connected across generations.',
+      stat1_lbl:'Generations', stat2_lbl:'Family Members', stat3_lbl:'Stories Shared',
+      about_title:'Our Roots Run Deep',
+      about_p1:'Welcome to the Nukala Family Tree — a private, members-only archive dedicated to preserving and celebrating our shared heritage.',
+      about_p2:'This site is a living record of who we are: our ancestors, our stories, our photos, and the bonds that tie us together.',
+      about_p3:'We invite every family member to contribute — add your memories, upload old photographs, and help build this archive for generations to come.',
+      recent_updates:'Recent Updates',
+      // Quick cards
+      card_tree_title:'Family Tree', card_tree_desc:'Explore our family connections, branches, and lineage.', card_tree_arrow:'View tree →',
+      card_history_title:'Our History', card_history_desc:'Read stories, milestones, and heritage of the Nukala family.', card_history_arrow:'Read more →',
+      card_gallery_title:'Photo Gallery', card_gallery_desc:'Browse cherished photos and memories across the years.', card_gallery_arrow:'View photos →',
+      card_contact_title:'Get in Touch', card_contact_desc:'Contribute your own stories, photos, or corrections.', card_contact_arrow:'Contact us →',
       // History
-      'history-eyebrow':'Our Story',
-      'history-title':'The Nukala Family History',
-      'history-subtitle':'A journey through time — the milestones, moments and memories.',
-      'add-story':'+ Add a Story',
+      hist_eyebrow:'Our Story', hist_title_em:'Nukala', hist_title:'Family History',
+      hist_sub:'A journey through time — the milestones, moments, and memories that shaped who we are.',
+      hist_quote:'"A family\'s story is a river — it flows through time, carves its own path, and nourishes everything it touches."',
+      add_story:'+ Add a Story',
       // Gallery
-      'gallery-eyebrow':'Memories',
-      'gallery-title':'The Nukala Photo Gallery',
-      'gallery-subtitle':'A visual archive of cherished moments across the years.',
-      'filter-all':'All Photos', 'filter-family':'Family', 'filter-vintage':'Vintage',
-      'filter-celebrations':'Celebrations', 'filter-travel':'Travel', 'filter-other':'Other',
+      gal_eyebrow:'Memories', gal_title_em:'Nukala', gal_title:'Photo Gallery',
+      gal_sub:'A visual archive of cherished moments, celebrations, and faces across the years.',
+      filter_all:'All Photos', filter_family:'Family', filter_vintage:'Vintage',
+      filter_celebrations:'Celebrations', filter_travel:'Travel', filter_other:'Other',
       // Facts
-      'facts-eyebrow':'Did You Know?',
-      'facts-title':'Interesting Family Facts',
-      'facts-subtitle':'Fascinating milestones, achievements and traditions.',
-      'filter-achievements':'Achievements', 'filter-milestones':'Milestones',
-      'filter-traditions':'Traditions', 'filter-records':'Records',
-      'filter-fun':'Fun Facts',
+      facts_eyebrow:'Did You Know?', facts_title:'Interesting Family Facts',
+      facts_sub:'Fascinating milestones, achievements, traditions and firsts from across the Nukala family.',
+      filter_achievements:'Achievements', filter_milestones:'Milestones',
+      filter_traditions:'Traditions', filter_records:'Records', filter_fun:'Fun Facts',
       // Tree
-      'tree-eyebrow':'Explore',
-      'tree-title':'The Nukala Family Tree',
-      'tree-subtitle':'Click any person to view details.',
-      'btn-fit':'Fit to Screen', 'btn-reset':'Reset View',
-      'lines-on':'Lines On', 'lines-off':'Lines Off',
+      tree_eyebrow:'Our Roots', tree_title_em:'Nukala', tree_title:'Family Tree',
+      tree_sub:'Click any leaf to discover the story within. Lines trace the branches of our family across generations.',
+      btn_fit:'Fit to Screen', btn_reset:'Reset View', lines_on:'Lines On', lines_off:'Lines Off',
       // Contact
-      'contact-eyebrow':'Contribute',
-      'contact-title':'Get In Touch',
-      'contact-subtitle':'Have a story to share or a photo to contribute?',
-      'form-firstname':'First Name', 'form-lastname':'Last Name',
-      'form-email':'Email Address', 'form-subject':'What would you like to do?',
-      'form-message':'Your Message', 'form-submit':'Send Message →',
+      cont_eyebrow:'Contribute', cont_title:'Get In Touch',
+      cont_sub:'Have a story to share, a photo to contribute, or a correction to suggest?',
+      form_fn:'First Name', form_ln:'Last Name', form_email:'Email Address',
+      form_subj:'What would you like to do?', form_msg:'Your Message',
+      form_btn:'Send Message →',
+      // Stats
+      stats_eyebrow:'By The Numbers', stats_title:'Family Statistics',
+      stats_sub:'Fascinating insights and records from across the Nukala family.',
+      // Events
+      evts_eyebrow:'Upcoming', evts_title:'Family Events',
+      evts_sub:'Reunions, birthdays, anniversaries and celebrations.',
+      // Recipes
+      rec_eyebrow:'Traditional', rec_title:'Family Recipes',
+      rec_sub:'Cherished recipes passed down through generations of the Nukala family.',
+      // Achievements
+      ach_eyebrow:'Pride of the Family', ach_title:'Family Achievements',
+      ach_sub:'Degrees, awards, milestones and proud moments.',
+      // Videos
+      vid_eyebrow:'Memories in Motion', vid_title:'Family Videos',
+      vid_sub:'Family videos, celebrations and memorable moments captured on film.',
+      // Map
+      map_eyebrow:'Where We Are', map_title:'Family Map',
+      map_sub:'See where Nukala family members live around the world.',
+      // Polls
+      poll_eyebrow:'Have Your Say', poll_title:'Family Polls',
+      poll_sub:'Vote on family decisions — every voice counts!',
+      // QR
+      qr_eyebrow:'Share Access', qr_title:'QR Code Access',
+      qr_sub:'Share the family website with relatives — scan to open instantly.',
       // Footer
-      'footer-text':'Private & Password Protected · Made with 🌳 & love',
+      footer_private:'Private & Password Protected · Made with 🌳 & love',
     },
     te: {
-      // Nav
-      home:'హోమ్', tree:'కుటుంబ వృక్షం', history:'చరిత్ర', gallery:'గ్యాలరీ',
-      facts:'వాస్తవాలు', stats:'గణాంకాలు', events:'కార్యక్రమాలు', map:'మ్యాప్',
-      polls:'పోల్స్', recipes:'వంటకాలు', achievements:'విజయాలు', videos:'వీడియోలు',
-      share:'షేర్', contact:'సంప్రదించండి',
-      // Common UI
-      signin:'లాగిన్', signout:'నిష్క్రమించు', search:'శోధించు',
-      admin:'నిర్వాహకుడు', viewsite:'సైట్ చూడు',
-      // Home page
-      'welcome-eyebrow':'స్వాగతం',
-      'hero-title':'నుకాల కుటుంబ సంగ్రహశాల',
-      'hero-tagline':'మన మూలాలను వేడుక చేసుకోవడానికి, మన కథలను భద్రపరచడానికి ఒక ప్రైవేట్ స్థలం.',
-      'stat1-lbl':'తరాలు', 'stat2-lbl':'కుటుంబ సభ్యులు', 'stat3-lbl':'పంచుకున్న కథలు',
-      'about-heading':'మన వేర్లు లోతుగా ఉన్నాయి',
-      'about-p1':'నుకాల ఫ్యామిలీ ట్రీకి స్వాగతం — ఒక ప్రైవేట్ కుటుంబ సంగ్రహశాల.',
-      'about-p2':'ఈ సైట్ మన పూర్వీకులు, కథలు మరియు ఫోటోల జీవంతమైన రికార్డు.',
-      'recent-updates':'తాజా అప్‌డేట్‌లు',
-      // Quick nav cards
-      'card-tree-title':'కుటుంబ వృక్షం', 'card-tree-desc':'మన కుటుంబ సంబంధాలను అన్వేషించండి.',
-      'card-history-title':'మన చరిత్ర', 'card-history-desc':'కథలు మరియు మైలురాళ్ళు చదవండి.',
-      'card-gallery-title':'ఫోటో గ్యాలరీ', 'card-gallery-desc':'ఫోటోలు చూడండి.',
-      'card-contact-title':'సంప్రదించండి', 'card-contact-desc':'మీ కథలను పంచుకోండి.',
+      // Nav links
+      nav_home:'హోమ్', nav_tree:'కుటుంబ వృక్షం', nav_history:'చరిత్ర',
+      nav_gallery:'గ్యాలరీ', nav_facts:'వాస్తవాలు', nav_stats:'గణాంకాలు',
+      nav_events:'కార్యక్రమాలు', nav_map:'మ్యాప్', nav_polls:'పోల్స్',
+      nav_recipes:'వంటకాలు', nav_achievements:'విజయాలు',
+      nav_videos:'వీడియోలు', nav_share:'షేర్', nav_contact:'సంప్రదించండి',
+      // Sign out
+      signout:'నిష్క్రమించు',
+      // Login page
+      login_title:'నుకాల కుటుంబ వృక్షం',
+      login_sub:'ప్రైవేట్ కుటుంబ సంగ్రహశాల · కొనసాగించడానికి పాస్‌వర్డ్ నమోదు చేయండి',
+      login_placeholder:'కుటుంబ పాస్‌వర్డ్ నమోదు చేయండి',
+      login_btn:'కుటుంబ సంగ్రహశాలలోకి ప్రవేశించండి →',
+      login_note:'ఈ సైట్ ప్రత్యేకంగా నుకాల కుటుంబానికి మాత్రమే.',
+      // Home hero
+      hero_eyebrow:'స్వాగతం',
+      hero_title_1:'', hero_title_em:'నుకాల', hero_title_2:'కుటుంబ సంగ్రహశాల',
+      hero_tagline:'మన మూలాలను వేడుక చేసుకోవడానికి, మన కథలను భద్రపరచడానికి, తరాల అంతటా అనుసంధానంగా ఉండడానికి ఒక ప్రైవేట్ స్థలం.',
+      stat1_lbl:'తరాలు', stat2_lbl:'కుటుంబ సభ్యులు', stat3_lbl:'పంచుకున్న కథలు',
+      about_title:'మన వేర్లు లోతుగా ఉన్నాయి',
+      about_p1:'నుకాల ఫ్యామిలీ ట్రీకి స్వాగతం — మన పూర్వీకులను మరియు వారసత్వాన్ని భద్రపరచడానికి అంకితమైన ప్రైవేట్ సభ్యత్వ సంగ్రహశాల.',
+      about_p2:'ఈ సైట్ మనం ఎవరో అనే దానికి జీవంతమైన రికార్డు: మన పూర్వీకులు, మన కథలు, మన ఫోటోలు మరియు మనల్ని కలిపే బంధాలు.',
+      about_p3:'ప్రతి కుటుంబ సభ్యుడూ సహకరించమని ఆహ్వానిస్తున్నాం — మీ జ్ఞాపకాలు జోడించండి, పాత ఫోటోలు అప్‌లోడ్ చేయండి.',
+      recent_updates:'తాజా అప్‌డేట్‌లు',
+      // Quick cards
+      card_tree_title:'కుటుంబ వృక్షం', card_tree_desc:'మన కుటుంబ సంబంధాలు, శాఖలు మరియు వంశావళిని అన్వేషించండి.', card_tree_arrow:'వృక్షం చూడండి →',
+      card_history_title:'మన చరిత్ర', card_history_desc:'నుకాల కుటుంబ కథలు, మైలురాళ్ళు మరియు వారసత్వాన్ని చదవండి.', card_history_arrow:'మరింత చదవండి →',
+      card_gallery_title:'ఫోటో గ్యాలరీ', card_gallery_desc:'సంవత్సరాల జ్ఞాపకాలు మరియు ఫోటోలు చూడండి.', card_gallery_arrow:'ఫోటోలు చూడండి →',
+      card_contact_title:'సంప్రదించండి', card_contact_desc:'మీ కథలు, ఫోటోలు లేదా సవరణలు అందించండి.', card_contact_arrow:'సంప్రదించండి →',
       // History
-      'history-eyebrow':'మన కథ',
-      'history-title':'నుకాల కుటుంబ చరిత్ర',
-      'history-subtitle':'కాలం గుండా ఒక ప్రయాణం — మైలురాళ్ళు మరియు జ్ఞాపకాలు.',
-      'add-story':'+ కథ జోడించు',
+      hist_eyebrow:'మన కథ', hist_title_em:'నుకాల', hist_title:'కుటుంబ చరిత్ర',
+      hist_sub:'కాలం గుండా ఒక ప్రయాణం — మనం ఎవరో అని రూపొందించిన మైలురాళ్ళు, క్షణాలు మరియు జ్ఞాపకాలు.',
+      hist_quote:'"కుటుంబ కథ ఒక నది — అది కాలంలో ప్రవహిస్తుంది, తన దారిని తానే కోసుకుంటుంది."',
+      add_story:'+ కథ జోడించు',
       // Gallery
-      'gallery-eyebrow':'జ్ఞాపకాలు',
-      'gallery-title':'నుకాల ఫోటో గ్యాలరీ',
-      'gallery-subtitle':'సంవత్సరాల జ్ఞాపకాల దృశ్య సంగ్రహశాల.',
-      'filter-all':'అన్ని ఫోటోలు', 'filter-family':'కుటుంబం', 'filter-vintage':'పాత',
-      'filter-celebrations':'వేడుకలు', 'filter-travel':'ప్రయాణం', 'filter-other':'ఇతరాలు',
+      gal_eyebrow:'జ్ఞాపకాలు', gal_title_em:'నుకాల', gal_title:'ఫోటో గ్యాలరీ',
+      gal_sub:'ప్రియమైన క్షణాలు, వేడుకలు మరియు సంవత్సరాల ముఖాల దృశ్య సంగ్రహశాల.',
+      filter_all:'అన్ని ఫోటోలు', filter_family:'కుటుంబం', filter_vintage:'పాత ఫోటోలు',
+      filter_celebrations:'వేడుకలు', filter_travel:'ప్రయాణం', filter_other:'ఇతరాలు',
       // Facts
-      'facts-eyebrow':'మీకు తెలుసా?',
-      'facts-title':'ఆసక్తికర కుటుంబ వాస్తవాలు',
-      'facts-subtitle':'ఆసక్తికర మైలురాళ్ళు, విజయాలు మరియు సంప్రదాయాలు.',
-      'filter-achievements':'విజయాలు', 'filter-milestones':'మైలురాళ్ళు',
-      'filter-traditions':'సంప్రదాయాలు', 'filter-records':'రికార్డులు',
-      'filter-fun':'సరదా విషయాలు',
+      facts_eyebrow:'మీకు తెలుసా?', facts_title:'ఆసక్తికర కుటుంబ వాస్తవాలు',
+      facts_sub:'నుకాల కుటుంబం అంతటా ఆసక్తికర మైలురాళ్ళు, విజయాలు మరియు సంప్రదాయాలు.',
+      filter_achievements:'విజయాలు', filter_milestones:'మైలురాళ్ళు',
+      filter_traditions:'సంప్రదాయాలు', filter_records:'రికార్డులు', filter_fun:'సరదా విషయాలు',
       // Tree
-      'tree-eyebrow':'అన్వేషించండి',
-      'tree-title':'నుకాల కుటుంబ వృక్షం',
-      'tree-subtitle':'వివరాలు చూడటానికి ఏదైనా వ్యక్తిని క్లిక్ చేయండి.',
-      'btn-fit':'స్క్రీన్‌కు అమర్చు', 'btn-reset':'రీసెట్',
-      'lines-on':'రేఖలు ఆన్', 'lines-off':'రేఖలు ఆఫ్',
+      tree_eyebrow:'మన మూలాలు', tree_title_em:'నుకాల', tree_title:'కుటుంబ వృక్షం',
+      tree_sub:'లోపలి కథను కనుగొనడానికి ఏదైనా ఆకును క్లిక్ చేయండి.',
+      btn_fit:'స్క్రీన్‌కు అమర్చు', btn_reset:'రీసెట్ చేయి', lines_on:'రేఖలు ఆన్', lines_off:'రేఖలు ఆఫ్',
       // Contact
-      'contact-eyebrow':'సహకరించండి',
-      'contact-title':'సంప్రదించండి',
-      'contact-subtitle':'పంచుకోవడానికి కథ లేదా ఫోటో ఉందా?',
-      'form-firstname':'మొదటి పేరు', 'form-lastname':'చివరి పేరు',
-      'form-email':'ఇమెయిల్ చిరునామా', 'form-subject':'మీరు ఏమి చేయాలనుకుంటున్నారు?',
-      'form-message':'మీ సందేశం', 'form-submit':'సందేశం పంపండి →',
+      cont_eyebrow:'సహకరించండి', cont_title:'సంప్రదించండి',
+      cont_sub:'పంచుకోవడానికి కథ, ఫోటో లేదా సవరణ ఉందా?',
+      form_fn:'మొదటి పేరు', form_ln:'చివరి పేరు', form_email:'ఇమెయిల్ చిరునామా',
+      form_subj:'మీరు ఏమి చేయాలనుకుంటున్నారు?', form_msg:'మీ సందేశం',
+      form_btn:'సందేశం పంపండి →',
+      // Stats
+      stats_eyebrow:'సంఖ్యల ప్రకారం', stats_title:'కుటుంబ గణాంకాలు',
+      stats_sub:'నుకాల కుటుంబం అంతటా ఆసక్తికర అంతర్దృష్టులు మరియు రికార్డులు.',
+      // Events
+      evts_eyebrow:'రానున్నవి', evts_title:'కుటుంబ కార్యక్రమాలు',
+      evts_sub:'పునర్మిలనాలు, పుట్టినరోజులు, వార్షికోత్సవాలు మరియు వేడుకలు.',
+      // Recipes
+      rec_eyebrow:'సాంప్రదాయ', rec_title:'కుటుంబ వంటకాలు',
+      rec_sub:'నుకాల కుటుంబంలో తరాల నుండి తరాలకు అందజేయబడిన ప్రియమైన వంటకాలు.',
+      // Achievements
+      ach_eyebrow:'కుటుంబ గర్వం', ach_title:'కుటుంబ విజయాలు',
+      ach_sub:'పట్టాలు, అవార్డులు, మైలురాళ్ళు మరియు గర్వంగా చెప్పుకోగలిగే క్షణాలు.',
+      // Videos
+      vid_eyebrow:'చలనంలో జ్ఞాపకాలు', vid_title:'కుటుంబ వీడియోలు',
+      vid_sub:'కుటుంబ వీడియోలు, వేడుకలు మరియు చిత్రీకరించిన అద్భుతమైన క్షణాలు.',
+      // Map
+      map_eyebrow:'మనం ఎక్కడ ఉన్నాం', map_title:'కుటుంబ మ్యాప్',
+      map_sub:'నుకాల కుటుంబ సభ్యులు ప్రపంచంలో ఎక్కడ నివసిస్తున్నారో చూడండి.',
+      // Polls
+      poll_eyebrow:'మీ అభిప్రాయం చెప్పండి', poll_title:'కుటుంబ పోల్స్',
+      poll_sub:'కుటుంబ నిర్ణయాలపై ఓటు వేయండి — ప్రతి గొంతూ ముఖ్యమే!',
+      // QR
+      qr_eyebrow:'యాక్సెస్ షేర్ చేయండి', qr_title:'QR కోడ్ యాక్సెస్',
+      qr_sub:'బంధువులతో కుటుంబ వెబ్‌సైట్‌ను షేర్ చేయండి.',
       // Footer
-      'footer-text':'ప్రైవేట్ & పాస్‌వర్డ్ రక్షిత · 🌳 & ప్రేమతో చేయబడింది',
+      footer_private:'ప్రైవేట్ & పాస్‌వర్డ్ రక్షిత · 🌳 & ప్రేమతో చేయబడింది',
     }
   };
 
-  // Nav href → key mapping
-  const HREF_MAP = {
-    'home.html':'home','tree.html':'tree','history.html':'history',
-    'gallery.html':'gallery','facts.html':'facts','stats.html':'stats',
-    'events.html':'events','map.html':'map','polls.html':'polls',
-    'recipes.html':'recipes','achievements.html':'achievements',
-    'videos.html':'videos','qr.html':'share','contact.html':'contact'
+  const NAV_MAP = {
+    'home.html':'nav_home','tree.html':'nav_tree','history.html':'nav_history',
+    'gallery.html':'nav_gallery','facts.html':'nav_facts','stats.html':'nav_stats',
+    'events.html':'nav_events','map.html':'nav_map','polls.html':'nav_polls',
+    'recipes.html':'nav_recipes','achievements.html':'nav_achievements',
+    'videos.html':'nav_videos','qr.html':'nav_share','contact.html':'nav_contact'
   };
+
+  // Page → translation key prefix
+  const PAGE_KEYS = {
+    'home.html':    { eyebrow:'hero_eyebrow', p:'hero_tagline', extra:'home' },
+    'history.html': { eyebrow:'hist_eyebrow', p:'hist_sub', extra:'history' },
+    'gallery.html': { eyebrow:'gal_eyebrow',  p:'gal_sub',  extra:'gallery' },
+    'facts.html':   { eyebrow:'facts_eyebrow',p:'facts_sub', extra:'facts' },
+    'tree.html':    { eyebrow:'tree_eyebrow', p:'tree_sub',  extra:'tree' },
+    'contact.html': { eyebrow:'cont_eyebrow', p:'cont_sub',  extra:'contact' },
+    'stats.html':   { eyebrow:'stats_eyebrow',p:'stats_sub', extra:'stats' },
+    'events.html':  { eyebrow:'evts_eyebrow', p:'evts_sub',  extra:'events' },
+    'recipes.html': { eyebrow:'rec_eyebrow',  p:'rec_sub',   extra:'recipes' },
+    'achievements.html':{ eyebrow:'ach_eyebrow',p:'ach_sub', extra:'achievements' },
+    'videos.html':  { eyebrow:'vid_eyebrow',  p:'vid_sub',   extra:'videos' },
+    'map.html':     { eyebrow:'map_eyebrow',  p:'map_sub',   extra:'map' },
+    'polls.html':   { eyebrow:'poll_eyebrow', p:'poll_sub',  extra:'polls' },
+    'qr.html':      { eyebrow:'qr_eyebrow',   p:'qr_sub',    extra:'qr' },
+  };
+
+  function setText(sel, val, root){
+    const el = (root||document).querySelector(sel);
+    if(el && val) el.textContent = val;
+  }
 
   function applyLang(lang){
     localStorage.setItem(LK, lang);
     const t = T[lang] || T.en;
+    const page = location.pathname.split('/').pop() || 'home.html';
 
     // 1. Nav links
-    document.querySelectorAll('nav .nav-links a').forEach(a=>{
-      const key = HREF_MAP[a.getAttribute('href')];
+    document.querySelectorAll('nav .nav-links a').forEach(a => {
+      const key = NAV_MAP[a.getAttribute('href')];
       if(key && t[key]) a.textContent = t[key];
     });
 
-    // 2. Elements with data-lang attribute
-    document.querySelectorAll('[data-lang]').forEach(el=>{
-      const key = el.getAttribute('data-lang');
-      if(t[key]) el.textContent = t[key];
+    // 2. Sign out buttons
+    document.querySelectorAll('.nav-logout').forEach(b => {
+      if(b.classList.contains('nk-dm') || b.classList.contains('nk-lang') ||
+         b.classList.contains('nk-search-btn') || b.classList.contains('nk-burger')) return;
+      if(b.textContent.trim().length > 0) b.textContent = t.signout;
     });
 
-    // 3. Sign out button
-    document.querySelectorAll('.nav-logout:not(.nk-dm):not(.nk-lang):not(.nk-search-btn)').forEach(b=>{
-      if(b.textContent.includes('Sign') || b.textContent.includes('నిష్క్రమించు'))
-        b.textContent = t.signout;
-    });
+    // 3. Language toggle button text
+    document.querySelectorAll('.nk-lang').forEach(b => b.textContent = lang==='te' ? 'EN' : 'తె');
 
-    // 4. Page hero sections — translate eyebrow, h1, p
-    const page = location.pathname.split('/').pop() || 'home.html';
-    const pageMap = {
-      'home.html':    { eyebrow:'welcome-eyebrow', h1:'hero-title', p:'hero-tagline' },
-      'history.html': { eyebrow:'history-eyebrow', h1:'history-title', p:'history-subtitle' },
-      'gallery.html': { eyebrow:'gallery-eyebrow', h1:'gallery-title', p:'gallery-subtitle' },
-      'facts.html':   { eyebrow:'facts-eyebrow', h1:'facts-title', p:'facts-subtitle' },
-      'tree.html':    { eyebrow:'tree-eyebrow', h1:'tree-title', p:'tree-subtitle' },
-      'contact.html': { eyebrow:'contact-eyebrow', h1:'contact-title', p:'contact-subtitle' },
-    };
-    const pm = pageMap[page];
-    if(pm){
+    // 4. Page hero
+    const pk = PAGE_KEYS[page];
+    if(pk){
       const hero = document.querySelector('.page-hero, .hero-banner');
       if(hero){
         const eyebrow = hero.querySelector('.eyebrow');
-        const h1 = hero.querySelector('h1, .hero-title');
+        if(eyebrow && t[pk.eyebrow]) eyebrow.textContent = t[pk.eyebrow];
         const p = hero.querySelector('p, .hero-tagline');
-        if(eyebrow && t[pm.eyebrow]) eyebrow.textContent = t[pm.eyebrow];
-        if(h1 && t[pm.h1]){
-          // Keep italic em tag structure
-          const em = h1.querySelector('em');
-          if(em){ h1.childNodes[0].textContent = t[pm.h1].split(' ')[0]+' '; em.textContent = t[pm.h1].split(' ').slice(1).join(' '); }
-          else h1.textContent = t[pm.h1];
+        if(p && t[pk.p]) p.textContent = t[pk.p];
+        // H1 — handle em tag
+        const h1 = hero.querySelector('h1, .hero-title');
+        if(h1){
+          const titleKey = pk.extra + '_title';
+          const emKey    = pk.extra + '_title_em';
+          if(t[emKey]){
+            const em = h1.querySelector('em');
+            if(em){
+              // Set text around the em
+              const t1 = t[pk.extra+'_title_1'] || '';
+              const t2 = t[pk.extra+'_title_2'] || (t[titleKey]||'');
+              h1.innerHTML = (t1 ? t1+' ' : '') + `<em>${t[emKey]}</em>` + (t2 ? '<br>'+t2 : '');
+            } else {
+              if(t[titleKey]) h1.textContent = t[titleKey];
+            }
+          } else if(t[titleKey]){
+            h1.textContent = t[titleKey];
+          }
         }
-        if(p && t[pm.p]) p.textContent = t[pm.p];
       }
     }
 
-    // 5. Filter buttons
-    document.querySelectorAll('.filter-btn').forEach(btn=>{
-      const key = btn.getAttribute('data-filter-key');
-      if(key && t[key]) btn.textContent = t[key];
+    // 5. Home page specific
+    if(page === 'home.html'){
+      setText('#stat1lbl', t.stat1_lbl);
+      setText('#stat2lbl', t.stat2_lbl);
+      setText('#stat3lbl', t.stat3_lbl);
+      setText('#aboutTitle', t.about_title);
+      setText('#aboutP1', t.about_p1);
+      setText('#aboutP2', t.about_p2);
+      setText('#aboutP3', t.about_p3);
+      // Recent updates heading
+      document.querySelectorAll('.recent-updates h2').forEach(el => el.textContent = t.recent_updates);
+      // Quick nav cards
+      const cards = document.querySelectorAll('.quick-card');
+      const cardKeys = [
+        {title:'card_tree_title', desc:'card_tree_desc', arrow:'card_tree_arrow'},
+        {title:'card_history_title', desc:'card_history_desc', arrow:'card_history_arrow'},
+        {title:'card_gallery_title', desc:'card_gallery_desc', arrow:'card_gallery_arrow'},
+        {title:'card_contact_title', desc:'card_contact_desc', arrow:'card_contact_arrow'},
+      ];
+      cards.forEach((card, i) => {
+        if(!cardKeys[i]) return;
+        const ck = cardKeys[i];
+        const titleEl = card.querySelector('.quick-card-title');
+        const descEl  = card.querySelector('.quick-card-desc');
+        const arrEl   = card.querySelector('.quick-card-arrow');
+        if(titleEl && t[ck.title]) titleEl.textContent = t[ck.title];
+        if(descEl  && t[ck.desc])  descEl.textContent  = t[ck.desc];
+        if(arrEl   && t[ck.arrow]) arrEl.textContent   = t[ck.arrow];
+      });
+    }
+
+    // 6. History page
+    if(page === 'history.html'){
+      const addStoryBtn = document.querySelector('.add-story-bar a, .btn-outline-sm');
+      if(addStoryBtn && addStoryBtn.textContent.includes('Story')) addStoryBtn.textContent = t.add_story;
+      const quote = document.querySelector('.history-intro');
+      if(quote) quote.textContent = t.hist_quote;
+    }
+
+    // 7. Gallery filter buttons
+    if(page === 'gallery.html'){
+      const filterMap = { 'all':'filter_all','family':'filter_family','vintage':'filter_vintage','celebrations':'filter_celebrations','travel':'filter_travel','other':'filter_other' };
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        const key = btn.getAttribute('data-filter-key');
+        if(key && t[filterMap[key]||key]) btn.textContent = t[filterMap[key]||key];
+      });
+    }
+
+    // 8. Facts filter buttons
+    if(page === 'facts.html'){
+      const filterMap = { 'all':'filter_all','Achievement':'filter_achievements','Milestone':'filter_milestones','Tradition':'filter_traditions','Record':'filter_records','Fun Fact':'filter_fun' };
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        const key = btn.getAttribute('data-filter-key');
+        if(key && t[filterMap[key]||key]) btn.textContent = t[filterMap[key]||key];
+      });
+    }
+
+    // 9. Tree page buttons
+    if(page === 'tree.html'){
+      document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if(t[key]) el.textContent = t[key];
+      });
+    }
+
+    // 10. Contact form labels
+    if(page === 'contact.html'){
+      document.querySelectorAll('label[for="fname"]').forEach(l => l.textContent = t.form_fn);
+      document.querySelectorAll('label[for="lname"]').forEach(l => l.textContent = t.form_ln);
+      document.querySelectorAll('label[for="email"]').forEach(l => l.textContent = t.form_email);
+      document.querySelectorAll('label[for="subject"]').forEach(l => l.textContent = t.form_subj);
+      document.querySelectorAll('label[for="message"]').forEach(l => l.textContent = t.form_msg);
+      const submitBtn = document.querySelector('.submit-btn');
+      if(submitBtn) submitBtn.textContent = t.form_btn;
+    }
+
+    // 11. Footer
+    document.querySelectorAll('footer').forEach(f => {
+      const txt = f.querySelector('strong');
+      // Don't touch family name inside strong, but translate the rest
+      const nodes = [...f.childNodes];
+      nodes.forEach(n => {
+        if(n.nodeType === 3 && n.textContent.includes('Private')){
+          n.textContent = ' · ' + t.footer_private;
+        }
+      });
     });
 
-    // 6. Tree toolbar buttons
-    document.querySelectorAll('[data-translate]').forEach(el=>{
-      const key = el.getAttribute('data-translate');
-      if(t[key]) el.textContent = t[key];
-    });
-
-    // 7. Update toggle button
-    document.querySelectorAll('.nk-lang').forEach(b => b.textContent = lang==='te'?'EN':'తె');
+    // 12. Login page
+    if(page === 'index.html'){
+      const title = document.querySelector('.ltitle, h1');
+      const sub   = document.querySelector('.lsub');
+      const inp   = document.querySelector('input[type="password"]');
+      const btn   = document.querySelector('.btnp');
+      const note  = document.querySelector('.login-note, p[style*="color"]');
+      if(title) title.textContent  = t.login_title;
+      if(sub)   sub.textContent    = t.login_sub;
+      if(inp)   inp.placeholder    = t.login_placeholder;
+      if(btn)   btn.textContent    = t.login_btn;
+    }
   }
 
-  window.toggleLang = function(){ applyLang(localStorage.getItem(LK)==='te'?'en':'te'); };
+  window.toggleLang = function(){
+    applyLang(localStorage.getItem(LK) === 'te' ? 'en' : 'te');
+  };
 
-  // Apply on load
-  document.addEventListener('DOMContentLoaded', function(){
-    const saved = localStorage.getItem(LK)||'en';
+  // Apply on DOM ready
+  function init(){
+    const saved = localStorage.getItem(LK) || 'en';
     if(saved === 'te') applyLang('te');
-  });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
 })();
