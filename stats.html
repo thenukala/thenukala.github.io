@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Statistics – Nukala Family</title>
   <link rel="stylesheet" href="shared.css"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Nukala"/>
+  <link rel="apple-touch-icon" href="icons/icon-152x152.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#5c7a5c"/>
   <link rel="stylesheet" href="darkmode.css"/>
   <link rel="icon" href="favicon.ico"/>
   <style>
@@ -44,9 +50,6 @@
 <body>
   <div class="logo-watermark"></div>
   <script src="auth.js"></script>
-  <script src="darkmode.js"></script>
-  <script src="search.js"></script>
-  <script src="transitions.js"></script>
   <nav>
     <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/><span class="nav-site-name" id="navSiteName">NUKALA</span></a>
         <ul class="nav-links">
@@ -72,12 +75,15 @@
       <p class="eyebrow">By The Numbers</p>
       <h1>Family <em>Statistics</em></h1>
       <div class="hero-divider"></div>
-      <p>Fascinating insights and records from across the Nukala family.</p>
+      <p>Fascinating insights, records and milestones from across the Nukala family.</p>
     </div>
     <div class="content-area">
       <div id="statsContent"><div class="no-data"><div class="ei">📊</div><p>Add family members in the admin panel to see statistics.</p></div></div>
     </div>
   </main>
+  <div style="max-width:1100px;margin:0 auto;padding:0 40px 40px;text-align:center;">
+    <a href="admin.html" style="font-size:.75rem;color:var(--text-light);text-decoration:none;border:1px solid var(--border);padding:7px 16px;border-radius:20px;background:white;">⚙️ Admin Analytics (Login Tracking & Page Views)</a>
+  </div>
   <footer>&copy; 2024 <strong id="footerName">The Nukala Family</strong> · Private</footer>
   <script>
     const load=k=>JSON.parse(localStorage.getItem(k)||'{}');
@@ -346,5 +352,6 @@
   if(d['staDesc']){ document.querySelectorAll('.page-hero p').forEach(el=>el.textContent=d['staDesc']); }
 })();
 </script>
+  <script src="nukala.js"></script>
 </body>
 </html>

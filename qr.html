@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QR Access – Nukala Family</title>
   <link rel="stylesheet" href="shared.css"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Nukala"/>
+  <link rel="apple-touch-icon" href="icons/icon-152x152.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#5c7a5c"/>
   <link rel="stylesheet" href="darkmode.css"/>
   <link rel="icon" href="favicon.ico"/>
   <style>
@@ -31,8 +37,6 @@
 <body>
   <div class="logo-watermark"></div>
   <script src="auth.js"></script>
-  <script src="darkmode.js"></script>
-  <script src="transitions.js"></script>
   <nav>
     <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/><span class="nav-site-name" id="navSiteName">NUKALA</span></a>
         <ul class="nav-links">
@@ -286,5 +290,6 @@
   if(d['qrInstructions']){ document.querySelectorAll('.card p, #instructionsText').forEach(el=>el.textContent=d['qrInstructions']); }
 })();
 </script>
+  <script src="nukala.js"></script>
 </body>
 </html>

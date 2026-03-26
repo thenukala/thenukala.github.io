@@ -6,14 +6,25 @@
   <title>Nukala Family Tree</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="shared.css"/>
-  <!-- PWA -->
+  <!-- PWA — Full iOS & Android Support -->
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#5c7a5c"/>
-  <meta name="mobile-web-app-capable" content="yes"/>
+
+  <!-- iOS PWA (Safari requires these) -->
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="Nukala"/>
-  <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
+  <link rel="apple-touch-icon" href="icons/icon-152x152.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png"/>
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png"/>
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512x512.png"/>
+
+  <!-- iOS Splash Screens -->
+  <meta name="apple-touch-fullscreen" content="yes"/>
+
+  <!-- Android -->
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <link rel="shortcut icon" href="favicon.ico"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -272,8 +283,11 @@
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(() => console.log('Nukala PWA: Service Worker registered'))
+        navigator.serviceWorker.register('/sw.js', {scope: '/'})
+          .then(reg => {
+            console.log('Nukala PWA: Service Worker registered');
+            reg.update(); // Force update check
+          })
           .catch(err => console.log('SW error:', err));
       });
     }
@@ -305,5 +319,6 @@
       }
     }
   </script>
+  <script src="nukala.js"></script>
 </body>
 </html>
