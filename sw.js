@@ -1,66 +1,44 @@
-// Nukala Family Tree - Service Worker
-const CACHE_NAME = 'nukala-family-tree-v1';
-
-const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/home.html',
-  '/tree.html',
-  '/history.html',
-  '/gallery.html',
-  '/contact.html',
-  '/shared.css',
-  '/auth.js',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap'
+// Nukala Family Tree - Service Worker v3
+const CACHE_NAME = 'nukala-v3';
+const ASSETS = [
+  '/', '/index.html', '/home.html', '/tree.html', '/history.html',
+  '/gallery.html', '/contact.html', '/facts.html', '/stats.html',
+  '/events.html', '/qr.html', '/shared.css', '/darkmode.css',
+  '/auth.js', '/darkmode.js', '/search.js', '/transitions.js',
+  '/lang.js', '/notifications.js', '/splash.js',
+  '/manifest.json', '/logo.png', '/favicon.ico',
+  '/icons/icon-192x192.png', '/icons/icon-512x512.png'
 ];
 
-// Install — cache all assets
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      console.log('Nukala PWA: Caching app assets');
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(c => c.addAll(ASSETS).catch(()=>{}))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
-// Activate — clean up old caches
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames =>
-      Promise.all(
-        cacheNames
-          .filter(name => name !== CACHE_NAME)
-          .map(name => caches.delete(name))
-      )
-    )
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k))))
+      .then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Fetch — serve from cache, fall back to network
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then(networkResponse => {
-        // Cache new responses dynamically
-        if (networkResponse && networkResponse.status === 200) {
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
-          });
+self.addEventListener('fetch', e => {
+  if(e.request.method !== 'GET') return;
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      if(cached) return cached;
+      return fetch(e.request).then(res => {
+        if(res && res.status === 200 && res.type !== 'opaque'){
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
         }
-        return networkResponse;
+        return res;
       }).catch(() => {
-        // Offline fallback
-        if (event.request.destination === 'document') {
-          return caches.match('/index.html');
-        }
+        if(e.request.destination === 'document') return caches.match('/index.html');
       });
     })
   );

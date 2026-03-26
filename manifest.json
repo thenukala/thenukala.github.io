@@ -1,12 +1,12 @@
 {
-  "name": "Nukala Family Tree",
+  "name": "Nukala Family",
   "short_name": "Nukala",
-  "description": "A private family archive for the Nukala family",
+  "description": "The Nukala Family private archive",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#faf8f4",
   "theme_color": "#5c7a5c",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "scope": "/",
   "lang": "en",
   "icons": [
@@ -59,22 +59,36 @@
       "purpose": "maskable any"
     }
   ],
-  "categories": ["lifestyle", "social"],
-  "screenshots": [],
   "shortcuts": [
     {
       "name": "Family Tree",
-      "short_name": "Tree",
-      "description": "View the family tree",
       "url": "/tree.html",
-      "icons": [{ "src": "icons/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
-      "name": "Photo Gallery",
-      "short_name": "Gallery",
-      "description": "Browse family photos",
+      "name": "Gallery",
       "url": "/gallery.html",
-      "icons": [{ "src": "icons/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "url": "/events.html",
+      "icons": [
+        {
+          "src": "icons/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ]
 }
