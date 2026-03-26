@@ -385,19 +385,23 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
       <!-- PAGE EDITOR -->
       <div class="sec" id="sec-editor">
         <div class="sh">Full <em>Page Editor</em></div>
-        <p class="ss">Edit colours, fonts and site-wide settings.</p>
+        <p class="ss">Edit colours, fonts, text and content on every page. Changes apply instantly when visitors load the site.</p>
         <div class="div"></div>
         <div class="pt-tabs">
           <button class="ptb on" onclick="peTab('theme',this)">🎨 Theme</button>
           <button class="ptb" onclick="peTab('sitewide',this)">🌐 Site Wide</button>
-          <button class="ptb" onclick="peTab('homepage',this)">🏠 Home Page</button>
+          <button class="ptb" onclick="peTab('home',this)">🏠 Home</button>
+          <button class="ptb" onclick="peTab('pages',this)">📄 Page Texts</button>
           <button class="ptb" onclick="peTab('contact',this)">✉️ Contact</button>
+          <button class="ptb" onclick="peTab('gallery',this)">🖼️ Gallery</button>
           <button class="ptb" onclick="peTab('fonts',this)">✍️ Typography</button>
         </div>
+
+        <!-- THEME -->
         <div class="pts on" id="pe-theme">
           <div class="panel">
             <div class="pt">Quick Colour Presets</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
               <button onclick="applyTheme('sage')" style="background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🌿 Sage Green</button>
               <button onclick="applyTheme('navy')" style="background:linear-gradient(135deg,#1a3a5c,#2e6090);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🌊 Navy Blue</button>
               <button onclick="applyTheme('gold')" style="background:linear-gradient(135deg,#8a6a00,#c9a84c);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">✨ Royal Gold</button>
@@ -406,72 +410,174 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
               <button onclick="applyTheme('teal')" style="background:linear-gradient(135deg,#0d6e6e,#1aab9b);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🦋 Teal</button>
             </div>
             <div class="fr">
-              <div class="fg"><label>Primary Colour</label><input type="text" id="clrPrimary" placeholder="#5c7a5c" value="#5c7a5c"/></div>
-              <div class="fg"><label>Background Colour</label><input type="text" id="clrBg" placeholder="#faf8f4" value="#faf8f4"/></div>
+              <div class="fg"><label>Primary Colour (buttons, links, headings)</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrPrimary" value="#5c7a5c" oninput="document.getElementById('clrPrimaryHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrPrimaryHex" value="#5c7a5c" placeholder="#5c7a5c" oninput="document.getElementById('clrPrimary').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                </div>
+              </div>
+              <div class="fg"><label>Secondary Colour (accents)</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrSecondary" value="#8aab8a" oninput="document.getElementById('clrSecondaryHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrSecondaryHex" value="#8aab8a" placeholder="#8aab8a" oninput="document.getElementById('clrSecondary').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                </div>
+              </div>
             </div>
-            <button class="btn bg bsm" onclick="saveTheme()">💾 Save Theme</button>
+            <div class="fr">
+              <div class="fg"><label>Highlight / Gold Colour</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrHighlight" value="#c9a84c" oninput="document.getElementById('clrHighlightHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrHighlightHex" value="#c9a84c" placeholder="#c9a84c" oninput="document.getElementById('clrHighlight').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                </div>
+              </div>
+              <div class="fg"><label>Background Colour</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrBg" value="#faf8f4" oninput="document.getElementById('clrBgHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrBgHex" value="#faf8f4" placeholder="#faf8f4" oninput="document.getElementById('clrBg').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                </div>
+              </div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>Text Colour</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrText" value="#2c2c2c" oninput="document.getElementById('clrTextHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrTextHex" value="#2c2c2c" placeholder="#2c2c2c" oninput="document.getElementById('clrText').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                </div>
+              </div>
+              <div class="fg"><label>Nav Bar Background</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrNav" value="#ffffff" oninput="document.getElementById('clrNavHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrNavHex" value="#ffffff" placeholder="#ffffff" oninput="document.getElementById('clrNav').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:4px;">
+              <button class="btn bg bsm" onclick="saveTheme()">💾 Save Theme</button>
+              <button class="btn bo bsm" onclick="resetTheme()">↺ Reset to Default</button>
+            </div>
           </div>
         </div>
+
+        <!-- SITE WIDE -->
         <div class="pts" id="pe-sitewide">
           <div class="panel">
-            <div class="pt">Navigation & Branding</div>
+            <div class="pt">Navigation Bar</div>
             <div class="fr">
-              <div class="fg"><label>Site Name (Nav Bar)</label><input type="text" id="pe-sitename" placeholder="NUKALA"/></div>
-              <div class="fg"><label>Footer Text</label><input type="text" id="pe-footer" placeholder="The Nukala Family"/></div>
+              <div class="fg"><label>Site Name (shown in nav)</label><input type="text" id="pe-sitename" placeholder="NUKALA FAMILY"/></div>
+              <div class="fg"><label>Nav Bar Logo URL (optional)</label><input type="text" id="pe-logourl" placeholder="logo.png or https://..."/></div>
             </div>
-            <button class="btn bg bsm" onclick="saveSiteWide()">💾 Save</button>
+            <button class="btn bg bsm" onclick="saveSiteWide()">💾 Save Nav</button>
           </div>
           <div class="panel">
-            <div class="pt">Toggle Features</div>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showsearch" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Search Button</label>
-              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showdark" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Dark Mode Button</label>
-              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showlang" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Language Button</label>
+            <div class="pt">Footer</div>
+            <div class="fg"><label>Footer Family Name</label><input type="text" id="pe-footer" placeholder="The Nukala Family"/></div>
+            <div class="fg"><label>Footer Tagline</label><input type="text" id="pe-footersub" placeholder="Private & Password Protected · Made with 🌳 & love"/></div>
+            <button class="btn bg bsm" onclick="saveSiteWide()">💾 Save Footer</button>
+          </div>
+          <div class="panel">
+            <div class="pt">Feature Toggles</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);">
+                <input type="checkbox" id="pe-showsearch" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show 🔍 Search Button in Nav
+              </label>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);">
+                <input type="checkbox" id="pe-showdark" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show 🌙 Dark Mode Button in Nav
+              </label>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);">
+                <input type="checkbox" id="pe-showlang" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show 🌐 Language Button in Nav
+              </label>
             </div>
-            <button class="btn bg bsm" style="margin-top:12px;" onclick="saveFeatureToggles()">💾 Save</button>
+            <button class="btn bg bsm" style="margin-top:12px;" onclick="saveSiteWide()">💾 Save Toggles</button>
           </div>
         </div>
-        <div class="pts" id="pe-homepage">
+
+        <!-- HOME PAGE -->
+        <div class="pts" id="pe-home">
           <div class="panel">
             <div class="pt">Hero Section</div>
-            <div class="fg"><label>Page Title</label><input type="text" id="pe-htitle" placeholder="The Nukala Family Archive"/></div>
-            <div class="fg"><label>Tagline</label><input type="text" id="pe-htagline" placeholder="A private space to celebrate our roots..."/></div>
-            <div class="fr">
-              <div class="fg"><label>Stat 1</label><input type="text" id="pe-s1" placeholder="6 · Generations"/></div>
-              <div class="fg"><label>Stat 2</label><input type="text" id="pe-s2" placeholder="45 · Members"/></div>
-            </div>
-            <button class="btn bg bsm" onclick="saveHomePage()">💾 Save</button>
+            <div class="fg"><label>Hero Title</label><input type="text" id="pe-htitle" placeholder="The Nukala Family Archive"/></div>
+            <div class="fg"><label>Hero Tagline</label><input type="text" id="pe-htagline" placeholder="A private space to celebrate our roots..."/></div>
+            <div class="fg"><label>Hero Background Image URL (optional)</label><input type="text" id="pe-herobg" placeholder="https://... leave blank for gradient"/></div>
           </div>
+          <div class="panel">
+            <div class="pt">Stats Bar</div>
+            <div class="fr">
+              <div class="fg"><label>Stat 1 — Number</label><input type="text" id="pe-s1num" placeholder="6"/></div>
+              <div class="fg"><label>Stat 1 — Label</label><input type="text" id="pe-s1lbl" placeholder="Generations"/></div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>Stat 2 — Number</label><input type="text" id="pe-s2num" placeholder="45"/></div>
+              <div class="fg"><label>Stat 2 — Label</label><input type="text" id="pe-s2lbl" placeholder="Family Members"/></div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>Stat 3 — Number</label><input type="text" id="pe-s3num" placeholder="20"/></div>
+              <div class="fg"><label>Stat 3 — Label</label><input type="text" id="pe-s3lbl" placeholder="Stories Shared"/></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="pt">About Section</div>
+            <div class="fg"><label>About Title</label><input type="text" id="pe-abouttitle" placeholder="Our Roots Run Deep"/></div>
+            <div class="fg"><label>About Paragraph 1</label><textarea id="pe-about1" rows="3"></textarea></div>
+            <div class="fg"><label>About Paragraph 2</label><textarea id="pe-about2" rows="3"></textarea></div>
+            <div class="fg"><label>About Paragraph 3</label><textarea id="pe-about3" rows="3"></textarea></div>
+          </div>
+          <button class="btn bg" onclick="saveHomePage()">💾 Save Home Page</button>
         </div>
+
+        <!-- PAGE TEXTS -->
+        <div class="pts" id="pe-pages">
+          <div class="notice">✏️ Edit the hero title, eyebrow text and description for each page.</div>
+          <div id="pageTextsEditor"></div>
+          <button class="btn bg" onclick="savePageTexts()">💾 Save All Page Texts</button>
+        </div>
+
+        <!-- CONTACT PAGE -->
         <div class="pts" id="pe-contact">
           <div class="panel">
-            <div class="pt">Contact Page</div>
+            <div class="pt">Contact Details</div>
             <div class="fr">
-              <div class="fg"><label>Admin Name</label><input type="text" id="pe-cname" placeholder="Ramu Nukala"/></div>
+              <div class="fg"><label>Contact Person Name</label><input type="text" id="pe-cname" placeholder="Ramu Nukala"/></div>
               <div class="fg"><label>Contact Email</label><input type="text" id="pe-cemail" placeholder="family@email.com"/></div>
             </div>
-            <div class="fg"><label>Formspree ID (optional)</label><input type="text" id="pe-formspree" placeholder="e.g. xyzabc12"/></div>
-            <button class="btn bg bsm" onclick="saveContactPage()">💾 Save</button>
+            <div class="fg"><label>Formspree Form ID (for receiving emails)</label><input type="text" id="pe-formspree" placeholder="e.g. xyzabc12 — sign up free at formspree.io"/></div>
+          </div>
+          <div class="panel">
+            <div class="pt">Form Subject Dropdown Options (one per line)</div>
+            <div class="fg"><textarea id="pe-droptions" rows="8" placeholder="Add a family member&#10;Submit a photo&#10;Share a story&#10;Report an error&#10;Other"></textarea></div>
+          </div>
+          <button class="btn bg" onclick="saveContactPage()">💾 Save Contact Page</button>
+        </div>
+
+        <!-- GALLERY PAGE -->
+        <div class="pts" id="pe-gallery">
+          <div class="panel">
+            <div class="pt">Gallery Filter Categories (one per line)</div>
+            <div class="fg"><textarea id="pe-galcats" rows="8" placeholder="All Photos&#10;Family&#10;Vintage&#10;Celebrations&#10;Travel&#10;Other"></textarea></div>
+            <button class="btn bg bsm" onclick="saveGalleryPage()">💾 Save Categories</button>
           </div>
         </div>
+
+        <!-- TYPOGRAPHY -->
         <div class="pts" id="pe-fonts">
           <div class="panel">
-            <div class="pt">Typography</div>
+            <div class="pt">Fonts</div>
             <div class="fr">
-              <div class="fg"><label>Heading Font</label>
-                <select id="pe-fonthead">
-                  <option value="Cormorant Garamond">Cormorant Garamond (Default)</option>
-                  <option value="Playfair Display">Playfair Display</option>
-                  <option value="Lora">Lora</option>
-                  <option value="Merriweather">Merriweather</option>
+              <div class="fg"><label>Heading / Title Font</label>
+                <select id="pe-fonthead" style="width:100%;padding:10px 13px;border:1.5px solid var(--b);border-radius:9px;font-family:'Jost',sans-serif;font-size:.85rem;color:var(--td);background:var(--c);outline:none;">
+                  <option value="Cormorant Garamond">Cormorant Garamond (Default — Elegant)</option>
+                  <option value="Playfair Display">Playfair Display (Classic)</option>
+                  <option value="Lora">Lora (Refined)</option>
+                  <option value="Merriweather">Merriweather (Traditional)</option>
+                  <option value="EB Garamond">EB Garamond (Historical)</option>
                 </select>
               </div>
-              <div class="fg"><label>Body Font</label>
-                <select id="pe-fontbody">
-                  <option value="Jost">Jost (Default)</option>
-                  <option value="Lato">Lato</option>
-                  <option value="Open Sans">Open Sans</option>
-                  <option value="Poppins">Poppins</option>
+              <div class="fg"><label>Body / Paragraph Font</label>
+                <select id="pe-fontbody" style="width:100%;padding:10px 13px;border:1.5px solid var(--b);border-radius:9px;font-family:'Jost',sans-serif;font-size:.85rem;color:var(--td);background:var(--c);outline:none;">
+                  <option value="Jost">Jost (Default — Clean)</option>
+                  <option value="Lato">Lato (Friendly)</option>
+                  <option value="Open Sans">Open Sans (Readable)</option>
+                  <option value="Poppins">Poppins (Modern)</option>
+                  <option value="Nunito">Nunito (Soft)</option>
                 </select>
               </div>
             </div>
@@ -1328,45 +1434,251 @@ function visEnableAll(){
   toast('✅ All enabled!');
 }
 
-// ═══════════════════════════════
-// PAGE EDITOR
-// ═══════════════════════════════
-function peTab(id,el){
+// ═══════════════════════════════════════════════════
+// PAGE EDITOR — saves to the exact keys pages read
+// ═══════════════════════════════════════════════════
+var PAGE_TEXTS_CONFIG = [
+  {key:'history', page:'History', file:'history.html', defaultEye:'Our Story', defaultTitle:'Nukala Family History', defaultDesc:'A journey through time — the milestones, moments and memories.'},
+  {key:'gallery', page:'Gallery', file:'gallery.html', defaultEye:'Memories', defaultTitle:'Photo Gallery', defaultDesc:'A visual archive of cherished moments across the years.'},
+  {key:'facts',   page:'Facts',   file:'facts.html',   defaultEye:'Did You Know?', defaultTitle:'Interesting Family Facts', defaultDesc:'Fascinating milestones, achievements and traditions.'},
+  {key:'tree',    page:'Family Tree', file:'tree.html', defaultEye:'Our Roots', defaultTitle:'Nukala Family Tree', defaultDesc:'Click any leaf to discover the story within.'},
+  {key:'events',  page:'Events',  file:'events.html',  defaultEye:'Upcoming', defaultTitle:'Family Events', defaultDesc:'Reunions, birthdays, anniversaries and celebrations.'},
+  {key:'recipes', page:'Recipes', file:'recipes.html', defaultEye:'Traditional', defaultTitle:'Family Recipes', defaultDesc:'Cherished recipes passed down through generations.'},
+  {key:'achievements',page:'Achievements',file:'achievements.html',defaultEye:'Pride of the Family',defaultTitle:'Family Achievements',defaultDesc:'Degrees, awards, milestones and proud moments.'},
+  {key:'videos',  page:'Videos',  file:'videos.html',  defaultEye:'Memories in Motion', defaultTitle:'Family Videos', defaultDesc:'Family videos and memorable moments captured on film.'},
+  {key:'polls',   page:'Polls',   file:'polls.html',   defaultEye:'Have Your Say', defaultTitle:'Family Polls', defaultDesc:'Vote on family decisions — every voice counts!'},
+  {key:'stats',   page:'Stats',   file:'stats.html',   defaultEye:'By The Numbers', defaultTitle:'Family Statistics', defaultDesc:'Fascinating insights from across the family.'},
+  {key:'map',     page:'Map',     file:'map.html',     defaultEye:'Where We Are', defaultTitle:'Family Map', defaultDesc:'See where Nukala family members live around the world.'},
+  {key:'contact', page:'Contact', file:'contact.html', defaultEye:'Contribute', defaultTitle:'Get In Touch', defaultDesc:'Have a story to share or a photo to contribute?'},
+];
+
+function peTab(id, el){
   document.querySelectorAll('.pts').forEach(function(s){ s.classList.remove('on'); });
   document.querySelectorAll('.ptb').forEach(function(b){ b.classList.remove('on'); });
-  document.getElementById('pe-'+id).classList.add('on');
+  var sec = document.getElementById('pe-'+id);
+  if(sec) sec.classList.add('on');
   if(el) el.classList.add('on');
+  if(id==='theme')    loadThemeEditor();
+  if(id==='sitewide') loadSiteWideEditor();
+  if(id==='home')     loadHomeEditor();
+  if(id==='pages')    loadPageTextsEditor();
+  if(id==='contact')  loadContactEditor();
+  if(id==='gallery')  loadGalleryEditor();
+  if(id==='fonts')    loadFontsEditor();
+}
+
+function loadThemeEditor(){
+  var t = ld('nukala_theme') || {};
+  if(t.primary){ document.getElementById('clrPrimary').value=t.primary; document.getElementById('clrPrimaryHex').value=t.primary; }
+  if(t.secondary){ document.getElementById('clrSecondary').value=t.secondary; document.getElementById('clrSecondaryHex').value=t.secondary; }
+  if(t.highlight){ document.getElementById('clrHighlight').value=t.highlight; document.getElementById('clrHighlightHex').value=t.highlight; }
+  if(t.bg){ document.getElementById('clrBg').value=t.bg; document.getElementById('clrBgHex').value=t.bg; }
+  if(t.text){ document.getElementById('clrText').value=t.text; document.getElementById('clrTextHex').value=t.text; }
+  if(t.nav){ document.getElementById('clrNav').value=t.nav; document.getElementById('clrNavHex').value=t.nav; }
 }
 
 function applyTheme(t){
-  var themes={sage:{primary:'#5c7a5c',bg:'#faf8f4'},navy:{primary:'#1a3a5c',bg:'#f4f6fa'},gold:{primary:'#8a6a00',bg:'#faf8f0'},maroon:{primary:'#6b1a1a',bg:'#faf4f4'},purple:{primary:'#4a2060',bg:'#f8f4fa'},teal:{primary:'#0d6e6e',bg:'#f4fafa'}};
-  var c=themes[t];
-  if(c){ document.getElementById('clrPrimary').value=c.primary; document.getElementById('clrBg').value=c.bg; }
+  var themes = {
+    sage:    {primary:'#5c7a5c', secondary:'#8aab8a', highlight:'#c9a84c', bg:'#faf8f4', text:'#2c2c2c', nav:'#ffffff'},
+    navy:    {primary:'#1a3a5c', secondary:'#2e6090', highlight:'#c9a84c', bg:'#f4f6fa', text:'#1a2a3a', nav:'#ffffff'},
+    gold:    {primary:'#8a6a00', secondary:'#c9a84c', highlight:'#8aab8a', bg:'#faf8f0', text:'#2c2a1a', nav:'#ffffff'},
+    maroon:  {primary:'#6b1a1a', secondary:'#a03030', highlight:'#c9a84c', bg:'#faf4f4', text:'#2c1a1a', nav:'#ffffff'},
+    purple:  {primary:'#4a2060', secondary:'#7050a0', highlight:'#c9a84c', bg:'#f8f4fa', text:'#2a1a2c', nav:'#ffffff'},
+    teal:    {primary:'#0d6e6e', secondary:'#1aab9b', highlight:'#c9a84c', bg:'#f4fafa', text:'#1a2c2c', nav:'#ffffff'},
+  };
+  var c = themes[t]; if(!c) return;
+  document.getElementById('clrPrimary').value=c.primary; document.getElementById('clrPrimaryHex').value=c.primary;
+  document.getElementById('clrSecondary').value=c.secondary; document.getElementById('clrSecondaryHex').value=c.secondary;
+  document.getElementById('clrHighlight').value=c.highlight; document.getElementById('clrHighlightHex').value=c.highlight;
+  document.getElementById('clrBg').value=c.bg; document.getElementById('clrBgHex').value=c.bg;
+  document.getElementById('clrText').value=c.text; document.getElementById('clrTextHex').value=c.text;
+  document.getElementById('clrNav').value=c.nav; document.getElementById('clrNavHex').value=c.nav;
 }
 
 function saveTheme(){
-  var s=ld('settings');
-  s.primaryColor=document.getElementById('clrPrimary').value;
-  s.bgColor=document.getElementById('clrBg').value;
-  sv('settings',s); log('Theme saved'); toast('✅ Theme saved! Update shared.css to apply site-wide.');
+  // Save to nukala_theme — what the pages actually read
+  var theme = {
+    primary:   document.getElementById('clrPrimaryHex').value || document.getElementById('clrPrimary').value,
+    secondary: document.getElementById('clrSecondaryHex').value || document.getElementById('clrSecondary').value,
+    highlight: document.getElementById('clrHighlightHex').value || document.getElementById('clrHighlight').value,
+    bg:        document.getElementById('clrBgHex').value || document.getElementById('clrBg').value,
+    text:      document.getElementById('clrTextHex').value || document.getElementById('clrText').value,
+    nav:       document.getElementById('clrNavHex').value || document.getElementById('clrNav').value,
+  };
+  localStorage.setItem('nukala_theme', JSON.stringify(theme));
+  log('Theme saved'); toast('✅ Theme saved! Visible on the site immediately.');
+}
+
+function resetTheme(){
+  localStorage.removeItem('nukala_theme');
+  applyTheme('sage');
+  toast('↺ Theme reset to Sage Green default.');
+}
+
+function loadSiteWideEditor(){
+  var sw = ld('nukala_sitewide') || {};
+  var s = ld('nukala_settings') || {};
+  document.getElementById('pe-sitename').value = sw.navName || s.familyName || '';
+  document.getElementById('pe-footer').value = sw.footerName || '';
+  document.getElementById('pe-footersub').value = sw.footerSub || '';
+  document.getElementById('pe-logourl').value = sw.logoUrl || '';
+  document.getElementById('pe-showsearch').checked = sw.showSearch !== false;
+  document.getElementById('pe-showdark').checked = sw.showDark !== false;
+  document.getElementById('pe-showlang').checked = sw.showLang !== false;
 }
 
 function saveSiteWide(){
-  var s=ld('settings');
-  s.siteName=document.getElementById('pe-sitename').value.trim();
-  s.footerText=document.getElementById('pe-footer').value.trim();
-  s.showSearch=document.getElementById('pe-showsearch').checked;
-  s.showDark=document.getElementById('pe-showdark').checked;
-  s.showLang=document.getElementById('pe-showlang').checked;
-  sv('settings',s);
-  if(s.siteName) document.getElementById('siteName').textContent=s.siteName;
-  log('Site wide settings saved'); toast('✅ Saved!');
+  var sw = ld('nukala_sitewide') || {};
+  sw.navName     = document.getElementById('pe-sitename').value.trim();
+  sw.footerName  = document.getElementById('pe-footer').value.trim();
+  sw.footerSub   = document.getElementById('pe-footersub').value.trim();
+  sw.logoUrl     = document.getElementById('pe-logourl').value.trim();
+  sw.showSearch  = document.getElementById('pe-showsearch').checked;
+  sw.showDark    = document.getElementById('pe-showdark').checked;
+  sw.showLang    = document.getElementById('pe-showlang').checked;
+  localStorage.setItem('nukala_sitewide', JSON.stringify(sw));
+  // Also update settings.familyName for compatibility
+  var s = ld('settings') || {};
+  if(sw.navName){ s.familyName = sw.navName; sv('settings',s); }
+  if(sw.navName) document.getElementById('siteName').textContent = sw.navName;
+  log('Site wide settings saved'); toast('✅ Site-wide changes saved!');
+}
+
+function loadHomeEditor(){
+  var sw = ld('nukala_sitewide') || {};
+  var hd = ld('nukala_home') || {};
+  document.getElementById('pe-htitle').value    = hd.heroTitle || '';
+  document.getElementById('pe-htagline').value  = hd.heroTagline || '';
+  document.getElementById('pe-herobg').value    = (ld('nukala_heropage')||{}).homeImgUrl || '';
+  document.getElementById('pe-s1num').value     = hd.stat1num || '';
+  document.getElementById('pe-s1lbl').value     = hd.stat1lbl || '';
+  document.getElementById('pe-s2num').value     = hd.stat2num || '';
+  document.getElementById('pe-s2lbl').value     = hd.stat2lbl || '';
+  document.getElementById('pe-s3num').value     = hd.stat3num || '';
+  document.getElementById('pe-s3lbl').value     = hd.stat3lbl || '';
+  document.getElementById('pe-abouttitle').value = hd.aboutTitle || '';
+  document.getElementById('pe-about1').value    = hd.about1 || '';
+  document.getElementById('pe-about2').value    = hd.about2 || '';
+  document.getElementById('pe-about3').value    = hd.about3 || '';
+}
+
+function saveHomePage(){
+  var hd = ld('nukala_home') || {};
+  hd.heroTitle   = document.getElementById('pe-htitle').value.trim();
+  hd.heroTagline = document.getElementById('pe-htagline').value.trim();
+  hd.stat1num    = document.getElementById('pe-s1num').value.trim();
+  hd.stat1lbl    = document.getElementById('pe-s1lbl').value.trim();
+  hd.stat2num    = document.getElementById('pe-s2num').value.trim();
+  hd.stat2lbl    = document.getElementById('pe-s2lbl').value.trim();
+  hd.stat3num    = document.getElementById('pe-s3num').value.trim();
+  hd.stat3lbl    = document.getElementById('pe-s3lbl').value.trim();
+  hd.aboutTitle  = document.getElementById('pe-abouttitle').value.trim();
+  hd.about1      = document.getElementById('pe-about1').value.trim();
+  hd.about2      = document.getElementById('pe-about2').value.trim();
+  hd.about3      = document.getElementById('pe-about3').value.trim();
+  localStorage.setItem('nukala_home', JSON.stringify(hd));
+  // Also save hero image
+  var hp = ld('nukala_heropage') || {};
+  hp.homeImgUrl = document.getElementById('pe-herobg').value.trim();
+  localStorage.setItem('nukala_heropage', JSON.stringify(hp));
+  log('Home page saved'); toast('✅ Home page saved!');
+}
+
+function loadPageTextsEditor(){
+  var np = ld('nukala_newpages') || {};
+  var el = document.getElementById('pageTextsEditor');
+  el.innerHTML = PAGE_TEXTS_CONFIG.map(function(pg){
+    var d = np[pg.key] || {};
+    return '<div class="panel" style="margin-bottom:14px;">'
+      +'<div class="pt">📄 '+pg.page+' Page <span style="font-weight:300;color:var(--tl);font-size:.68rem;">('+pg.file+')</span></div>'
+      +'<div class="fr">'
+      +'<div class="fg"><label>Eyebrow Text (small top line)</label><input type="text" id="np-'+pg.key+'-eye" placeholder="'+pg.defaultEye+'" value="'+(d.eye||'').replace(/"/g,'&quot;')+'"/></div>'
+      +'<div class="fg"><label>Page Title</label><input type="text" id="np-'+pg.key+'-title" placeholder="'+pg.defaultTitle+'" value="'+(d.title||'').replace(/"/g,'&quot;')+'"/></div>'
+      +'</div>'
+      +'<div class="fg"><label>Description / Subtitle</label><input type="text" id="np-'+pg.key+'-desc" placeholder="'+pg.defaultDesc+'" value="'+(d.desc||'').replace(/"/g,'&quot;')+'"/></div>'
+      +'</div>';
+  }).join('');
+}
+
+function savePageTexts(){
+  var np = ld('nukala_newpages') || {};
+  PAGE_TEXTS_CONFIG.forEach(function(pg){
+    np[pg.key] = {
+      eye:   document.getElementById('np-'+pg.key+'-eye').value.trim(),
+      title: document.getElementById('np-'+pg.key+'-title').value.trim(),
+      desc:  document.getElementById('np-'+pg.key+'-desc').value.trim(),
+    };
+  });
+  localStorage.setItem('nukala_newpages', JSON.stringify(np));
+  log('Page texts saved'); toast('✅ All page texts saved!');
+}
+
+function loadContactEditor(){
+  var cp = ld('nukala_contactpage2') || {};
+  var s  = ld('nukala_settings') || {};
+  document.getElementById('pe-cname').value      = cp.contactName || s.contactName || '';
+  document.getElementById('pe-cemail').value     = cp.contactEmail || s.contactEmail || '';
+  document.getElementById('pe-formspree').value  = cp.formspree || s.formspree || '';
+  document.getElementById('pe-droptions').value  = (cp.dropdownOptions || ['Add a family member','Submit a photo','Share a story','Report an error','Other']).join('
+');
+}
+
+function saveContactPage(){
+  var cp = ld('nukala_contactpage2') || {};
+  cp.contactName     = document.getElementById('pe-cname').value.trim();
+  cp.contactEmail    = document.getElementById('pe-cemail').value.trim();
+  cp.formspree       = document.getElementById('pe-formspree').value.trim();
+  cp.dropdownOptions = document.getElementById('pe-droptions').value.split('
+').map(function(o){ return o.trim(); }).filter(Boolean);
+  localStorage.setItem('nukala_contactpage2', JSON.stringify(cp));
+  // Also update settings for compatibility
+  var s = ld('settings') || {};
+  s.contactName = cp.contactName; s.contactEmail = cp.contactEmail; s.formspree = cp.formspree;
+  sv('settings', s);
+  log('Contact page saved'); toast('✅ Contact page saved!');
+}
+
+function loadGalleryEditor(){
+  var gp = ld('nukala_gallerypage2') || {};
+  var defaultCats = 'All Photos
+Family
+Vintage
+Celebrations
+Travel
+Other';
+  document.getElementById('pe-galcats').value = (gp.categories || defaultCats.split('
+')).join('
+');
+}
+
+function saveGalleryPage(){
+  var gp = ld('nukala_gallerypage2') || {};
+  gp.categories = document.getElementById('pe-galcats').value.split('
+').map(function(c){ return c.trim(); }).filter(Boolean);
+  localStorage.setItem('nukala_gallerypage2', JSON.stringify(gp));
+  log('Gallery categories saved'); toast('✅ Gallery categories saved!');
+}
+
+function loadFontsEditor(){
+  var t = ld('nukala_typography') || {};
+  var s = ld('nukala_settings') || {};
+  document.getElementById('pe-fonthead').value = t.headFont || s.headFont || 'Cormorant Garamond';
+  document.getElementById('pe-fontbody').value = t.bodyFont || s.bodyFont || 'Jost';
+}
+
+function saveFonts(){
+  var typo = ld('nukala_typography') || {};
+  typo.headFont = document.getElementById('pe-fonthead').value;
+  typo.bodyFont = document.getElementById('pe-fontbody').value;
+  localStorage.setItem('nukala_typography', JSON.stringify(typo));
+  // Also save to settings for compatibility
+  var s = ld('settings') || {};
+  s.headFont = typo.headFont; s.bodyFont = typo.bodyFont;
+  sv('settings', s);
+  log('Fonts saved'); toast('✅ Fonts saved! Reload the site to see the new font.');
 }
 
 function saveFeatureToggles(){ saveSiteWide(); }
-function saveHomePage(){ var s=ld('settings'); s.heroTitle=document.getElementById('pe-htitle').value.trim(); s.heroTagline=document.getElementById('pe-htagline').value.trim(); sv('settings',s); toast('✅ Saved!'); }
-function saveContactPage(){ var s=ld('settings'); s.contactName=document.getElementById('pe-cname').value.trim(); s.contactEmail=document.getElementById('pe-cemail').value.trim(); s.formspree=document.getElementById('pe-formspree').value.trim(); sv('settings',s); toast('✅ Saved!'); }
-function saveFonts(){ var s=ld('settings'); s.headFont=document.getElementById('pe-fonthead').value; s.bodyFont=document.getElementById('pe-fontbody').value; sv('settings',s); toast('✅ Fonts saved!'); }
 
 // ═══════════════════════════════
 // ANALYTICS
