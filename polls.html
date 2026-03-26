@@ -3,36 +3,24 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Statistics – Nukala Family</title>
+  <title>Family Polls – Nukala Family</title>
   <link rel="stylesheet" href="shared.css"/>
   <link rel="stylesheet" href="darkmode.css"/>
   <link rel="icon" href="favicon.ico"/>
   <style>
-    .stats-hero { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin-bottom:32px; }
-    .stat-card { background:white; border:1px solid var(--border); border-radius:16px; padding:24px; text-align:center; transition:transform .2s,box-shadow .2s; }
-    .stat-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.08); }
-    .stat-num { font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:300; color:var(--sage-dark); display:block; line-height:1; margin-bottom:6px; }
-    .stat-lbl { font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--text-light); }
-    .stat-icon { font-size:1.5rem; margin-bottom:8px; }
-
-    .insight-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; margin-bottom:28px; }
-    .insight-card { background:white; border:1px solid var(--border); border-radius:14px; padding:20px; }
-    .insight-title { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; margin-bottom:14px; color:var(--text-dark); }
-    .insight-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--border); }
-    .insight-row:last-child { border-bottom:none; }
-    .insight-rank { font-size:.72rem; font-weight:600; color:var(--text-light); min-width:20px; }
-    .insight-avatar { width:36px; height:36px; border-radius:50%; background:var(--sage-light); display:flex; align-items:center; justify-content:center; font-size:16px; overflow:hidden; flex-shrink:0; }
-    .insight-avatar img { width:100%; height:100%; object-fit:cover; }
-    .insight-name { font-size:.88rem; font-weight:500; color:var(--text-dark); }
-    .insight-meta { font-size:.72rem; color:var(--text-light); }
-
-    .gen-bar-wrap { margin-bottom:8px; }
-    .gen-bar-label { display:flex; justify-content:space-between; font-size:.75rem; color:var(--text-mid); margin-bottom:4px; }
-    .gen-bar-bg { background:var(--sage-light); border-radius:20px; height:10px; overflow:hidden; }
-    .gen-bar-fill { background:linear-gradient(to right,var(--sage-dark),var(--sage)); border-radius:20px; height:100%; transition:width .8s ease; }
-
-    .no-data { text-align:center; padding:60px 20px; color:var(--text-light); }
-    .no-data .ei { font-size:48px; margin-bottom:12px; }
+    .poll-card { background:white; border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:16px; }
+    .poll-question { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:400; color:var(--text-dark); margin-bottom:6px; }
+    .poll-meta { font-size:.72rem; color:var(--text-light); margin-bottom:20px; }
+    .poll-option { margin-bottom:10px; }
+    .poll-opt-btn { width:100%; padding:12px 16px; background:var(--cream); border:1.5px solid var(--border); border-radius:10px; text-align:left; cursor:pointer; font-family:'Jost',sans-serif; font-size:.88rem; color:var(--text-dark); transition:all .2s; position:relative; overflow:hidden; }
+    .poll-opt-btn:hover { border-color:var(--sage); background:rgba(138,171,138,.06); }
+    .poll-opt-btn.voted { border-color:var(--sage-dark); }
+    .poll-bar { position:absolute; left:0; top:0; bottom:0; background:rgba(92,122,92,.12); transition:width .6s ease; border-radius:8px; }
+    .poll-opt-text { position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; }
+    .poll-pct { font-size:.75rem; font-weight:600; color:var(--sage-dark); }
+    .poll-total { font-size:.72rem; color:var(--text-light); margin-top:12px; }
+    .empty-section { text-align:center; padding:60px 20px; color:var(--text-light); }
+    .voted-badge { display:inline-block; font-size:.62rem; font-weight:600; padding:2px 8px; border-radius:20px; background:var(--sage-light); color:var(--sage-dark); margin-left:8px; }
   </style>
 
     <style>
@@ -42,7 +30,6 @@
     </style>
 </head>
 <body>
-  <div class="logo-watermark"></div>
   <script src="auth.js"></script>
   <script src="darkmode.js"></script>
   <script src="search.js"></script>
@@ -55,10 +42,10 @@
       <li><a href="history.html">History</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="facts.html">Facts</a></li>
-      <li><a href="stats.html" class="active">Stats</a></li>
+      <li><a href="stats.html">Stats</a></li>
       <li><a href="events.html">Events</a></li>
       <li><a href="map.html">Map</a></li>
-      <li><a href="polls.html">Polls</a></li>
+      <li><a href="polls.html" class="active">Polls</a></li>
       <li><a href="recipes.html">Recipes</a></li>
       <li><a href="achievements.html">Achievements</a></li>
       <li><a href="videos.html">Videos</a></li>
@@ -69,100 +56,69 @@
   </nav>
   <main>
     <div class="page-hero">
-      <p class="eyebrow">By The Numbers</p>
-      <h1>Family <em>Statistics</em></h1>
+      <p class="eyebrow">Have Your Say</p>
+      <h1>Family <em>Polls</em></h1>
       <div class="hero-divider"></div>
-      <p>Fascinating insights and records from across the Nukala family.</p>
+      <p>Vote on family decisions — reunion locations, dates, and more. Every voice counts!</p>
     </div>
     <div class="content-area">
-      <div id="statsContent"><div class="no-data"><div class="ei">📊</div><p>Add family members in the admin panel to see statistics.</p></div></div>
+      <div style="margin-bottom:20px;"><a href="admin.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:var(--sage-dark);color:white;border-radius:10px;text-decoration:none;font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;">⚙️ Create Polls in Admin</a></div>
+      <div id="pollsList"></div>
     </div>
   </main>
   <footer>&copy; 2024 <strong id="footerName">The Nukala Family</strong> · Private</footer>
   <script>
     const load=k=>JSON.parse(localStorage.getItem(k)||'{}');
+    const loadArr=k=>JSON.parse(localStorage.getItem(k)||'[]');
+    const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
     const s=load('nukala_settings'),h=load('nukala_home');
-    const nn=(h.navName||s.familyName||'NUKALA').toUpperCase();
-    document.getElementById('navSiteName').textContent=nn;
+    document.getElementById('navSiteName').textContent=(h.navName||s.familyName||'NUKALA').toUpperCase();
     if(s.familyName)document.getElementById('footerName').textContent='The '+s.familyName+' Family';
 
-    function initStats(){
-      const members=Object.values(load('nukala_tree_data'));
-      if(!members.length) return;
-      const gens=[...new Set(members.map(m=>m.gen).filter(Boolean))];
-      const living=members.filter(m=>!m.died&&!m.deceased);
-      const deceased=members.filter(m=>m.died||m.deceased);
-      const female=members.filter(m=>m.female);
-      const withPhoto=members.filter(m=>m.photo);
-      const inlaws=members.filter(m=>m.inlaw);
-
-      // Count children per person
-      const childCount={};
-      members.forEach(m=>{ [m.fatherId,m.motherId].filter(Boolean).forEach(pid=>{ childCount[pid]=(childCount[pid]||0)+1; }); });
-
-      // Most children
-      const mostKids=members.filter(m=>childCount[m.id]).sort((a,b)=>(childCount[b.id]||0)-(childCount[a.id]||0)).slice(0,5);
-
-      // Oldest (lowest birth year)
-      const withBirth=members.filter(m=>m.born&&!isNaN(parseInt(m.born))).sort((a,b)=>parseInt(a.born)-parseInt(b.born));
-      const oldest=withBirth.slice(0,5);
-      const youngest=withBirth.slice(-5).reverse();
-
-      // By generation
-      const byGen={};
-      members.forEach(m=>{ const g=m.gen||'?'; byGen[g]=(byGen[g]||0)+1; });
-      const maxInGen=Math.max(...Object.values(byGen));
-
-      document.getElementById('statsContent').innerHTML=`
-        <div class="stats-hero">
-          <div class="stat-card"><div class="stat-icon">🌳</div><span class="stat-num">${members.length}</span><span class="stat-lbl">Total Members</span></div>
-          <div class="stat-card"><div class="stat-icon">🏛️</div><span class="stat-num">${gens.length}</span><span class="stat-lbl">Generations</span></div>
-          <div class="stat-card"><div class="stat-icon">💚</div><span class="stat-num">${living.length}</span><span class="stat-lbl">Living Members</span></div>
-          <div class="stat-card"><div class="stat-icon">🕊️</div><span class="stat-num">${deceased.length}</span><span class="stat-lbl">Passed Away</span></div>
-          <div class="stat-card"><div class="stat-icon">👩</div><span class="stat-num">${female.length}</span><span class="stat-lbl">Female Members</span></div>
-          <div class="stat-card"><div class="stat-icon">👨</div><span class="stat-num">${members.length-female.length}</span><span class="stat-lbl">Male Members</span></div>
-          <div class="stat-card"><div class="stat-icon">💜</div><span class="stat-num">${inlaws.length}</span><span class="stat-lbl">In-laws</span></div>
-          <div class="stat-card"><div class="stat-icon">📸</div><span class="stat-num">${withPhoto.length}</span><span class="stat-lbl">Have Photos</span></div>
-        </div>
-
-        <div class="insight-grid">
-          ${mostKids.length?`<div class="insight-card">
-            <div class="insight-title">👶 Most Children</div>
-            ${mostKids.map((m,i)=>{
-              const name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-              const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'👩':'👨');
-              return `<div class="insight-row"><div class="insight-rank">#${i+1}</div><div class="insight-avatar">${av}</div><div><div class="insight-name">${name}</div><div class="insight-meta">${childCount[m.id]} children</div></div></div>`;
-            }).join('')}
-          </div>`:''}
-          ${oldest.length?`<div class="insight-card">
-            <div class="insight-title">👴 Oldest Members (by birth year)</div>
-            ${oldest.map((m,i)=>{
-              const name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-              const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'👩':'👴');
-              return `<div class="insight-row"><div class="insight-rank">#${i+1}</div><div class="insight-avatar">${av}</div><div><div class="insight-name">${name}</div><div class="insight-meta">Born ${m.born}</div></div></div>`;
-            }).join('')}
-          </div>`:''}
-          ${youngest.length?`<div class="insight-card">
-            <div class="insight-title">👶 Youngest Members</div>
-            ${youngest.map((m,i)=>{
-              const name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-              const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'👧':'👦');
-              return `<div class="insight-row"><div class="insight-rank">#${i+1}</div><div class="insight-avatar">${av}</div><div><div class="insight-name">${name}</div><div class="insight-meta">Born ${m.born}</div></div></div>`;
-            }).join('')}
-          </div>`:''}
-        </div>
-
-        <div class="card" style="margin-bottom:24px;">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;margin-bottom:20px;">📊 Members per Generation</div>
-          ${Object.keys(byGen).sort((a,b)=>parseInt(a)-parseInt(b)).map(g=>`
-            <div class="gen-bar-wrap">
-              <div class="gen-bar-label"><span>Generation ${g}</span><span>${byGen[g]} member${byGen[g]>1?'s':''}</span></div>
-              <div class="gen-bar-bg"><div class="gen-bar-fill" style="width:${Math.round((byGen[g]/maxInGen)*100)}%"></div></div>
-            </div>`).join('')}
-        </div>
-      `;
+    function renderPolls(){
+      const polls=loadArr('nukala_polls');
+      const voted=load('nukala_votes');
+      const el=document.getElementById('pollsList');
+      if(!polls.length){ el.innerHTML='<div class="empty-section"><div style="font-size:48px;margin-bottom:12px;">🗳️</div><p>No polls yet.<br/>Create polls in the Admin panel.</p></div>'; return; }
+      el.innerHTML=polls.map((p,pi)=>{
+        const myVote=voted[pi];
+        const totalVotes=(p.votes||[]).reduce((a,b)=>a+(b||0),0);
+        const opts=(p.options||[]).map((opt,oi)=>{
+          const votes=(p.votes||[])[oi]||0;
+          const pct=totalVotes?Math.round((votes/totalVotes)*100):0;
+          const isMyVote=myVote===oi;
+          return `<div class="poll-option">
+            <button class="poll-opt-btn${isMyVote?' voted':''}" onclick="vote(${pi},${oi})">
+              <div class="poll-bar" style="width:${myVote!==undefined?pct:0}%"></div>
+              <div class="poll-opt-text">
+                <span>${opt}${isMyVote?' ✓':''}</span>
+                ${myVote!==undefined?`<span class="poll-pct">${pct}%</span>`:''}
+              </div>
+            </button>
+          </div>`;
+        }).join('');
+        return `<div class="poll-card">
+          <div class="poll-question">${p.question}${myVote!==undefined?'<span class="voted-badge">Voted</span>':''}</div>
+          <div class="poll-meta">${totalVotes} vote${totalVotes!==1?'s':''} · ${p.active!==false?'Active':'Closed'}</div>
+          ${opts}
+          ${myVote!==undefined?`<div class="poll-total">${totalVotes} total vote${totalVotes!==1?'s':''}</div>`:'<div class="poll-total" style="font-style:italic;">Click an option to vote</div>'}
+        </div>`;
+      }).join('');
     }
-    initStats();
+
+    function vote(pollIdx,optIdx){
+      const polls=loadArr('nukala_polls');
+      const voted=load('nukala_votes');
+      if(voted[pollIdx]!==undefined) return; // already voted
+      if(!polls[pollIdx]) return;
+      if(!polls[pollIdx].votes) polls[pollIdx].votes=new Array(polls[pollIdx].options.length).fill(0);
+      polls[pollIdx].votes[optIdx]=(polls[pollIdx].votes[optIdx]||0)+1;
+      save('nukala_polls',polls);
+      voted[pollIdx]=optIdx;
+      save('nukala_votes',voted);
+      renderPolls();
+    }
+    renderPolls();
   </script>
 
 <script>
@@ -341,9 +297,10 @@
   document.querySelectorAll('.nav-site-name,#navSiteName').forEach(el=>el.textContent=nn);
   if(s.familyName) document.querySelectorAll('#footerName,#footerFamilyName').forEach(el=>el.textContent='The '+s.familyName+' Family');
   // Page text
-    if(d['staEye']){ document.querySelectorAll('.eyebrow').forEach(el=>el.textContent=d['staEye']); }
-  if(d['staTitle']){ document.querySelectorAll('.page-hero h1 em').forEach(el=>el.textContent=d['staTitle']); }
-  if(d['staDesc']){ document.querySelectorAll('.page-hero p').forEach(el=>el.textContent=d['staDesc']); }
+    if(d['polEye']){ document.querySelectorAll('.eyebrow').forEach(el=>el.textContent=d['polEye']); }
+  if(d['polTitle']){ document.querySelectorAll('.page-hero h1 em').forEach(el=>el.textContent=d['polTitle']); }
+  if(d['polDesc']){ document.querySelectorAll('.page-hero p').forEach(el=>el.textContent=d['polDesc']); }
+  if(d['polEmpty']){ document.querySelectorAll('.empty-section p,.empty-state p').forEach(el=>{ if(el.innerHTML.includes('No ')) el.textContent=d['polEmpty']; }); }
 })();
 </script>
 </body>

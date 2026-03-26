@@ -62,23 +62,32 @@
     .bday-banner-inner { display: flex; align-items: center; gap: 12px; }
     .bday-banner p { font-size: .88rem; color: var(--text-dark); line-height: 1.5; }
   </style>
+
+    <style>
+      nav .nav-links { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+      nav .nav-links::-webkit-scrollbar { display: none; }
+      nav .nav-links a { font-size: 0.7rem; white-space: nowrap; }
+    </style>
 </head>
 <body>
+  <div class="logo-watermark"></div>
   <script src="auth.js"></script>
-  <script src="splash.js"></script>
-  <script src="darkmode.js"></script>
-  <script src="search.js"></script>
-  <script src="transitions.js"></script>
-  <script src="lang.js"></script>
-  <script src="notifications.js"></script>
   <nav>
     <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
-    <ul class="nav-links">
+        <ul class="nav-links">
       <li><a href="home.html" class="active">Home</a></li>
       <li><a href="tree.html">Family Tree</a></li>
-      <li><a href="history.html">Our History</a></li>
+      <li><a href="history.html">History</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="facts.html">Facts</a></li>
+      <li><a href="stats.html">Stats</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="map.html">Map</a></li>
+      <li><a href="polls.html">Polls</a></li>
+      <li><a href="recipes.html">Recipes</a></li>
+      <li><a href="achievements.html">Achievements</a></li>
+      <li><a href="videos.html">Videos</a></li>
+      <li><a href="qr.html">Share</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -415,5 +424,11 @@
 })();
 </script>
 
+
+  <script src="darkmode.js"></script>
+  <script src="search.js"></script>
+  <script src="transitions.js"></script>
+  <script src="lang.js"></script>
+  <script src="notifications.js"></script>
 </body>
 </html>

@@ -38,23 +38,32 @@
     .lb-close { position:absolute; top:14px; right:14px; background:rgba(0,0,0,.5); border:none; color:white; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
     @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   </style>
+
+    <style>
+      nav .nav-links { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+      nav .nav-links::-webkit-scrollbar { display: none; }
+      nav .nav-links a { font-size: 0.7rem; white-space: nowrap; }
+    </style>
 </head>
 <body>
+  <div class="logo-watermark"></div>
   <script src="auth.js"></script>
-  <script src="splash.js"></script>
-  <script src="darkmode.js"></script>
-  <script src="search.js"></script>
-  <script src="transitions.js"></script>
-  <script src="lang.js"></script>
-  <script src="notifications.js"></script>
   <nav>
     <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
-    <ul class="nav-links">
+        <ul class="nav-links">
       <li><a href="home.html">Home</a></li>
       <li><a href="tree.html">Family Tree</a></li>
-      <li><a href="history.html">Our History</a></li>
+      <li><a href="history.html">History</a></li>
       <li><a href="gallery.html" class="active">Gallery</a></li>
       <li><a href="facts.html">Facts</a></li>
+      <li><a href="stats.html">Stats</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="map.html">Map</a></li>
+      <li><a href="polls.html">Polls</a></li>
+      <li><a href="recipes.html">Recipes</a></li>
+      <li><a href="achievements.html">Achievements</a></li>
+      <li><a href="videos.html">Videos</a></li>
+      <li><a href="qr.html">Share</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -355,5 +364,11 @@
   if(d['galDesc2']){ document.querySelectorAll('.page-hero p').forEach(el=>el.textContent=d['galDesc2']); }
 })();
 </script>
+
+  <script src="darkmode.js"></script>
+  <script src="search.js"></script>
+  <script src="transitions.js"></script>
+  <script src="lang.js"></script>
+  <script src="notifications.js"></script>
 </body>
 </html>
