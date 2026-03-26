@@ -75,24 +75,11 @@
   document.addEventListener('keydown',e=>{if(e.key==='Escape')nkCloseSearch();if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();nkOpenSearch();}});
 
   // ══════════════════════════════════════
-  // 3. LANGUAGE (English / Telugu)
+  // 3. LANGUAGE — handled by lang.js
   // ══════════════════════════════════════
   const LK='nukala_lang';
-  const T={
-    en:{home:'Home',tree:'Family Tree',history:'History',gallery:'Gallery',facts:'Facts',stats:'Stats',events:'Events',map:'Map',polls:'Polls',recipes:'Recipes',achievements:'Achievements',videos:'Videos',share:'Share',contact:'Contact'},
-    te:{home:'హోమ్',tree:'కుటుంబ వృక్షం',history:'చరిత్ర',gallery:'గ్యాలరీ',facts:'వాస్తవాలు',stats:'గణాంకాలు',events:'కార్యక్రమాలు',map:'మ్యాప్',polls:'పోల్స్',recipes:'వంటకాలు',achievements:'విజయాలు',videos:'వీడియోలు',share:'షేర్',contact:'సంప్రదించండి'}
-  };
-  const HREF_TO_KEY={'home.html':'home','tree.html':'tree','history.html':'history','gallery.html':'gallery','facts.html':'facts','stats.html':'stats','events.html':'events','map.html':'map','polls.html':'polls','recipes.html':'recipes','achievements.html':'achievements','videos.html':'videos','qr.html':'share','contact.html':'contact'};
-  function applyLang(lang){
-    localStorage.setItem(LK,lang);
-    const t=T[lang]||T.en;
-    document.querySelectorAll('nav .nav-links a').forEach(a=>{
-      const key=HREF_TO_KEY[a.getAttribute('href')];
-      if(key&&t[key]) a.textContent=t[key];
-    });
-    document.querySelectorAll('.nk-lang').forEach(b=>b.textContent=lang==='te'?'EN':'తె');
-  }
-  window.toggleLang=function(){applyLang(localStorage.getItem(LK)==='te'?'en':'te');};
+  // toggleLang is defined in lang.js which loads separately
+  // We just wire the button here
 
   // ══════════════════════════════════════
   // 4. MOBILE HAMBURGER
@@ -174,9 +161,10 @@
   ready(function(){
     buildNavButtons();
     buildMobile();
-    // Apply saved language
-    const savedLang=localStorage.getItem(LK)||'en';
-    if(savedLang==='te') applyLang('te');
+    // Language handled by lang.js
+
+    // Apply page visibility — hide disabled pages from nav
+    applyPageVisibility();
   });
 
   // ══════════════════════════════════════
@@ -202,5 +190,47 @@
       alert('✅ Birthday notifications enabled!');
     } else alert('Notifications blocked. Allow them in your browser settings.');
   };
+
+  // ══════════════════════════════════════
+  // 8. PAGE VISIBILITY
+  // ══════════════════════════════════════
+  const PAGE_FILE_MAP = {
+    'home.html':'home','tree.html':'tree','history.html':'history',
+    'gallery.html':'gallery','facts.html':'facts','stats.html':'stats',
+    'events.html':'events','map.html':'map','polls.html':'polls',
+    'recipes.html':'recipes','achievements.html':'achievements',
+    'videos.html':'videos','qr.html':'qr','contact.html':'contact'
+  };
+
+  function applyPageVisibility(){
+    const vis = JSON.parse(localStorage.getItem('nukala_page_vis')||'{}');
+    if(!Object.keys(vis).length) return; // nothing saved yet — show all
+
+    // Current page — if disabled, show coming soon banner
+    const currentPage = location.pathname.split('/').pop() || 'home.html';
+    const currentId = PAGE_FILE_MAP[currentPage];
+    if(currentId && vis[currentId]===false){
+      // Show coming soon overlay
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:8000;background:rgba(250,248,244,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;backdrop-filter:blur(8px);';
+      overlay.innerHTML = `
+        <div style="font-size:56px;margin-bottom:16px;">🚧</div>
+        <h2 style="font-family:Cormorant Garamond,serif;font-size:2rem;font-weight:300;color:#2c2c2c;margin-bottom:8px;">Coming Soon</h2>
+        <p style="font-size:.9rem;color:#6b6b6b;margin-bottom:24px;">This page is not available yet.<br/>Check back soon!</p>
+        <a href="home.html" style="padding:12px 28px;background:#5c7a5c;color:white;border-radius:12px;text-decoration:none;font-size:.82rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;">← Back to Home</a>`;
+      document.body.appendChild(overlay);
+    }
+
+    // Hide disabled pages from nav
+    document.querySelectorAll('nav .nav-links a').forEach(a=>{
+      const href = a.getAttribute('href');
+      const id = PAGE_FILE_MAP[href];
+      if(id && vis[id]===false){
+        a.parentElement.style.display='none';
+      } else {
+        a.parentElement.style.display='';
+      }
+    });
+  }
 
 })();

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Family Facts – Nukala Family</title>
   <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="darkmode.css"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="Nukala"/>
@@ -109,12 +110,12 @@
 
     <div class="content-area">
       <div class="filter-bar" id="filterBar">
-        <button class="filter-btn active" onclick="filterFacts('all',this)">🌟 All Facts</button>
-        <button class="filter-btn" onclick="filterFacts('Achievement',this)">🏆 Achievements</button>
-        <button class="filter-btn" onclick="filterFacts('Milestone',this)">⭐ Milestones</button>
-        <button class="filter-btn" onclick="filterFacts('Tradition',this)">🎭 Traditions</button>
-        <button class="filter-btn" onclick="filterFacts('Record',this)">📊 Records</button>
-        <button class="filter-btn" onclick="filterFacts('Fun Fact',this)">😄 Fun Facts</button>
+        <button class="filter-btn active" onclick="filterFacts('all',this)" data-filter-key="filter-all">🌟 All Facts</button>
+        <button class="filter-btn" onclick="filterFacts('Achievement',this)" data-filter-key="filter-achievements">🏆 Achievements</button>
+        <button class="filter-btn" onclick="filterFacts('Milestone',this)" data-filter-key="filter-milestones">⭐ Milestones</button>
+        <button class="filter-btn" onclick="filterFacts('Tradition',this)" data-filter-key="filter-traditions">🎭 Traditions</button>
+        <button class="filter-btn" onclick="filterFacts('Record',this)" data-filter-key="filter-records">📊 Records</button>
+        <button class="filter-btn" onclick="filterFacts('Fun Fact',this)" data-filter-key="filter-fun">😄 Fun Facts</button>
         <button class="filter-btn" onclick="filterFacts('Other',this)">📌 Other</button>
       </div>
 
@@ -387,5 +388,6 @@
 })();
 </script>
   <script src="nukala.js"></script>
+  <script src="lang.js"></script>
 </body>
 </html>
