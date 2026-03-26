@@ -24,7 +24,103 @@
     .lcard .login-btn:hover{opacity:.9;}
     .lcard a{display:block;text-align:center;margin-top:14px;font-size:.74rem;color:var(--sage-d);text-decoration:none;}
     #adminUI{display:none;}
-  </style>
+  
+    .pe-tab{padding:8px 16px;border-radius:9px;border:1.5px solid var(--border);background:var(--white);font-family:'Jost',sans-serif;font-size:.76rem;font-weight:500;color:var(--tm);cursor:pointer;transition:all .2s;}
+    .pe-tab:hover,.pe-tab.active{background:var(--sage-d);color:var(--white);border-color:var(--sage-d);}
+    .pe-section{display:none;} .pe-section.active{display:block;}
+    .repeat-item{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;position:relative;}
+    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .tb-brand{display:flex;align-items:center;gap:10px;}
+    .tb-brand img{width:30px;height:30px;object-fit:contain;border-radius:6px;}
+    .tb-brand h1{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;}
+    .tb-badge{background:var(--red);color:var(--white);font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;}
+    .tb-right{display:flex;align-items:center;gap:10px;}
+    .tb-btn{font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:9px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .2s;text-decoration:none;display:inline-block;}
+    .tb-view{color:var(--sage-d);border:1.5px solid var(--sage-l);background:var(--white);}
+    .tb-view:hover{background:var(--sage-d);color:var(--white);}
+    .tb-out{color:var(--tm);background:none;border:1.5px solid var(--border);}
+    .tb-out:hover{border-color:var(--red);color:var(--red);}
+    .shell{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 62px);}
+    .sidebar{background:var(--white);border-right:1px solid var(--border);padding:20px 14px;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;}
+    .nav-section{font-size:.64rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tl);padding:0 10px;margin:18px 0 8px;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .2s;border:none;width:100%;background:none;font-family:'Jost',sans-serif;font-size:.82rem;font-weight:500;color:var(--tm);text-align:left;}
+    .nav-item:hover{background:var(--cream);}
+    .nav-item.active{background:rgba(92,122,92,.1);color:var(--sage-d);}
+    .nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
+    .main{padding:28px 32px;overflow-y:auto;}
+    .page-section{display:none;} .page-section.active{display:block;}
+    .sec-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:4px;color:var(--td);}
+    .sec-title em{font-style:italic;color:var(--sage-d);}
+    .sec-sub{font-size:.82rem;color:var(--tm);margin-bottom:20px;font-weight:300;}
+    .sec-div{height:2px;width:50px;background:linear-gradient(to right,var(--sage),var(--gold));border-radius:2px;margin-bottom:24px;}
+    .panel{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px;}
+    .panel-title{font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:16px;}
+    .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
+    .stat-box{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+    .stat-box .num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--sage-d);display:block;}
+    .stat-box .lbl{font-size:.62rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);}
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+    .mcard{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:14px;transition:box-shadow .2s,border-color .2s;}
+    .mcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.06);border-color:var(--sage-l);}
+    .mcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+    .mavatar{width:44px;height:44px;border-radius:50%;background:var(--sage-l);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden;border:2px solid var(--border);}
+    .mavatar img{width:100%;height:100%;object-fit:cover;}
+    .mname{font-family:'Cormorant Garamond',serif;font-size:.98rem;font-weight:600;color:var(--td);}
+    .mrole{font-size:.62rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--sage-d);}
+    .mtags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+    .tag{font-size:.58rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:20px;}
+    .tag-g{background:rgba(92,122,92,.1);color:var(--sage-d);}
+    .tag-f{background:#f0e8f8;color:#9060b0;}
+    .tag-a{background:var(--gold-l);color:#8a6a00;}
+    .tag-il{background:#e8e0f0;color:#7050a0;}
+    .mactions{display:flex;gap:5px;}
+    .mbtn{padding:6px 10px;background:var(--cream);color:var(--sage-d);border:1.5px solid var(--sage-l);border-radius:7px;font-family:'Jost',sans-serif;font-size:.66rem;font-weight:500;cursor:pointer;transition:all .2s;}
+    .mbtn:hover{background:var(--sage-d);color:var(--white);border-color:var(--sage-d);}
+    .mbtn-red{background:var(--white);color:var(--red);border-color:#f0d0c8;}
+    .mbtn-red:hover{background:var(--red);color:var(--white);}
+    .fgrp{margin-bottom:14px;}
+    .fgrp label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:6px;}
+    .fgrp input,.fgrp textarea,.fgrp select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--td);background:var(--cream);outline:none;transition:border-color .2s;}
+    .fgrp input:focus,.fgrp textarea:focus,.fgrp select:focus{border-color:var(--sage);background:var(--white);}
+    .fgrp textarea{resize:vertical;min-height:80px;}
+    .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .btn{padding:10px 20px;border-radius:10px;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border:none;}
+    .btn-green{background:linear-gradient(135deg,var(--sage-d),var(--sage));color:var(--white);box-shadow:0 3px 10px rgba(92,122,92,.25);}
+    .btn-green:hover{transform:translateY(-1px);}
+    .btn-outline{background:var(--white);color:var(--tm);border:1.5px solid var(--border);}
+    .btn-outline:hover{border-color:var(--sage);color:var(--sage-d);}
+    .btn-red{background:var(--red);color:var(--white);}
+    .btn-sm{padding:7px 14px;font-size:.7rem;}
+    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:16px;}
+    .modal-bg.open{display:flex;}
+    .modal{background:var(--white);border-radius:20px;padding:28px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;position:relative;}
+    .modal h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:3px;}
+    .modal-sub{font-size:.74rem;color:var(--tl);margin-bottom:18px;}
+    .modal-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:1rem;cursor:pointer;color:var(--tl);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
+    .modal-close:hover{background:var(--border);}
+    .search-bar{display:flex;align-items:center;gap:10px;background:var(--white);border:1.5px solid var(--border);border-radius:11px;padding:8px 13px;margin-bottom:14px;}
+    .search-bar input{flex:1;border:none;outline:none;font-family:'Jost',sans-serif;font-size:.84rem;color:var(--td);background:transparent;}
+    .tl-item{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;}
+    .tl-year{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--sage-d);min-width:60px;flex-shrink:0;}
+    .tl-body{flex:1;}
+    .tl-title-txt{font-weight:500;color:var(--td);margin-bottom:4px;font-size:.9rem;}
+    .tl-desc{font-size:.78rem;color:var(--tm);line-height:1.6;}
+    .tl-actions{display:flex;gap:6px;margin-top:8px;}
+    .gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;}
+    .gal-item{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+    .gal-img{width:100%;height:130px;object-fit:cover;display:block;}
+    .gal-placeholder{width:100%;height:130px;background:linear-gradient(135deg,var(--sage-l),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:32px;}
+    .gal-info{padding:8px 10px;}
+    .gal-title{font-size:.8rem;font-weight:500;color:var(--td);}
+    .gal-actions{display:flex;gap:5px;padding:6px 10px;border-top:1px solid var(--border);}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--sage-d);color:var(--white);padding:11px 22px;border-radius:28px;font-size:.82rem;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.15);white-space:nowrap;}
+    .notice{background:#f0f5f0;border:1px solid var(--sage-l);border-radius:10px;padding:11px 15px;font-size:.76rem;color:var(--sage-d);margin-bottom:14px;line-height:1.6;}
+    .setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+    .setting-row:last-child{border-bottom:none;}
+    .setting-lbl{font-size:.85rem;font-weight:500;color:var(--td);}
+    .setting-desc{font-size:.73rem;color:var(--tl);margin-top:2px;}
+    @media(max-width:768px){.shell{grid-template-columns:1fr;}.sidebar{position:static;height:auto;}.stats-row{grid-template-columns:1fr 1fr;}.frow{grid-template-columns:1fr;}.cards-grid{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
 
@@ -42,62 +138,553 @@
 </div>
 
 <div id="adminUI">
-  <p style="padding:40px;text-align:center;font-size:1rem;color:var(--tm);">Loading admin panel... <br/><br/><a href="home.html" style="color:var(--sage-d);">← Back to Website</a></p>
+  <div class="topbar">
+    <div class="tb-brand">
+      <img src="logo.png" alt="Logo"/>
+      <h1 id="tbSiteName">Nukala</h1>
+      <span class="tb-badge">CMS</span>
+    </div>
+    <div class="tb-right">
+      <a href="home.html" class="tb-btn tb-view" target="_blank">👁 View Site</a>
+      <button class="tb-btn tb-out" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+  <div class="shell">
+    <div class="sidebar">
+      <div class="nav-section">Dashboard</div>
+      <button class="nav-item active" onclick="showSec('dashboard',this)"><span class="nav-icon">📊</span>Overview</button>
+      <div class="nav-section">Family Tree</div>
+      <button class="nav-item" onclick="showSec('members',this)"><span class="nav-icon">👥</span>Members</button>
+      <div class="nav-section">Website Pages</div>
+      <button class="nav-item" onclick="showSec('home',this)"><span class="nav-icon">🏠</span>Home Page</button>
+      <button class="nav-item" onclick="showSec('history',this)"><span class="nav-icon">📜</span>History</button>
+      <button class="nav-item" onclick="showSec('gallery',this)"><span class="nav-icon">🖼️</span>Gallery</button>
+      <button class="nav-item" onclick="showSec('facts',this)"><span class="nav-icon">🌟</span>Facts</button>
+      <button class="nav-item" onclick="showSec('contact',this)"><span class="nav-icon">✉️</span>Contact</button>
+      <div class="nav-section">New Pages</div>
+      <button class="nav-item" onclick="showSec('events',this)"><span class="nav-icon">📆</span>Events</button>
+      <button class="nav-item" onclick="showSec('recipes',this)"><span class="nav-icon">🍛</span>Recipes</button>
+      <button class="nav-item" onclick="showSec('achievements',this)"><span class="nav-icon">🏆</span>Achievements</button>
+      <button class="nav-item" onclick="showSec('videos',this)"><span class="nav-icon">🎥</span>Videos</button>
+      <button class="nav-item" onclick="showSec('polls',this)"><span class="nav-icon">🗳️</span>Polls</button>
+      <div class="nav-section">Communication</div>
+      <button class="nav-item" onclick="showSec('contacts',this)"><span class="nav-icon">📱</span>Contacts</button>
+      <button class="nav-item" onclick="showSec('announcements',this)"><span class="nav-icon">📣</span>Announcements</button>
+      <div class="nav-section">Site Control</div>
+      <button class="nav-item" onclick="showSec('pagevis',this)"><span class="nav-icon">👁️</span>Page Visibility</button>
+      <button class="nav-item" onclick="showSec('pageeditor',this)"><span class="nav-icon">🎨</span>Page Editor</button>
+      <button class="nav-item" onclick="showSec('analytics',this)"><span class="nav-icon">📈</span>Analytics</button>
+      <div class="nav-section">Admin</div>
+      <button class="nav-item" onclick="showSec('settings',this)"><span class="nav-icon">⚙️</span>Settings</button>
+      <button class="nav-item" onclick="exportAll()"><span class="nav-icon">📥</span>Export Backup</button>
+      <button class="nav-item" onclick="openImport()"><span class="nav-icon">📤</span>Import Backup</button>
+    </div>
+    <div class="main" id="mainContent">
+      <div class="page-section active" id="sec-dashboard">
+        <div class="sec-title">Welcome, <em>Admin</em></div>
+        <p class="sec-sub">Manage your entire Nukala Family website from here.</p>
+        <div class="sec-div"></div>
+        <div class="stats-row" id="dashStats">
+          <div class="stat-box"><span class="num" id="d-members">0</span><span class="lbl">Members</span></div>
+          <div class="stat-box"><span class="num" id="d-photos">0</span><span class="lbl">Photos</span></div>
+          <div class="stat-box"><span class="num" id="d-history">0</span><span class="lbl">History</span></div>
+          <div class="stat-box"><span class="num" id="d-facts">0</span><span class="lbl">Facts</span></div>
+          <div class="stat-box"><span class="num" id="d-gens">0</span><span class="lbl">Generations</span></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Quick Actions</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-green" onclick="showSec('members',null);openMemberModal()">➕ Add Member</button>
+            <button class="btn btn-outline" onclick="showSec('gallery',null);openGalModal()">📸 Add Photo</button>
+            <button class="btn btn-outline" onclick="showSec('history',null);openHistModal()">📜 Add History</button>
+            <button class="btn btn-outline" onclick="showSec('facts',null);openFactModal()">🌟 Add Fact</button>
+            <button class="btn btn-outline" onclick="showSec('settings',null)">⚙️ Settings</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Recent Activity</div>
+          <div id="recentAct" style="font-size:.82rem;color:var(--tm);line-height:2;">No activity yet.</div>
+        </div>
+      </div>
+      <div class="page-section" id="sec-members">
+        <div class="sec-title"><em>Family</em> Members</div>
+        <p class="sec-sub">Add members with photos. Set Father/Mother/Spouse IDs to link on the tree.</p>
+        <div class="sec-div"></div>
+        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn-green" onclick="openMemberModal()">➕ Add Member</button>
+          <select onchange="filterMGen(this.value)" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.76rem;color:var(--tm);background:var(--white);outline:none;margin-left:auto;">
+            <option value="">All Generations</option>
+            <option value="1">Gen 1</option><option value="2">Gen 2</option><option value="3">Gen 3</option>
+            <option value="4">Gen 4</option><option value="5">Gen 5</option><option value="6">Gen 6</option>
+            <option value="7">Gen 7</option><option value="8">Gen 8</option>
+          </select>
+        </div>
+        <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search members..." oninput="searchM(this.value)"/></div>
+        <div class="cards-grid" id="membersGrid"></div>
+      </div>
+      <div class="page-section" id="sec-home">
+        <div class="sec-title">Edit <em>Home Page</em></div><p class="sec-sub">Update content shown on the home page.</p><div class="sec-div"></div>
+        <div class="panel"><div class="panel-title">Navigation & Branding</div>
+          <div class="frow"><div class="fgrp"><label>Nav Bar Name</label><input type="text" id="homeNavName" placeholder="e.g. NUKALA"/></div><div class="fgrp"><label>Site Subtitle</label><input type="text" id="homeSiteSubtitle" placeholder="Family Tree"/></div></div>
+        </div>
+        <div class="panel"><div class="panel-title">Hero Section</div>
+          <div class="fgrp"><label>Title</label><input type="text" id="homeTitle" placeholder="The Nukala Family Archive"/></div>
+          <div class="fgrp"><label>Tagline</label><input type="text" id="homeTagline" placeholder="A private family archive"/></div>
+          <div class="fgrp"><label>Welcome Message</label><textarea id="homeWelcome"></textarea></div>
+        </div>
+        <button class="btn btn-green" onclick="saveHome()">💾 Save Home Page</button>
+      </div>
+      <div class="page-section" id="sec-history">
+        <div class="sec-title">Family <em>History</em></div><p class="sec-sub">Add timeline events.</p><div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openHistModal()">➕ Add Event</button>
+        <div id="historyList"></div>
+      </div>
+      <div class="page-section" id="sec-gallery">
+        <div class="sec-title">Photo <em>Gallery</em></div><p class="sec-sub">Add photos by URL.</p><div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openGalModal()">➕ Add Photo</button>
+        <div class="gal-grid" id="galleryGrid"></div>
+      </div>
+      <div class="page-section" id="sec-facts">
+        <div class="sec-title">Interesting <em>Facts</em></div><p class="sec-sub">Add fascinating firsts, achievements and traditions.</p><div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openFactModal()">➕ Add Fact</button>
+        <div id="factsList"></div>
+      </div>
+      <div class="page-section" id="sec-contact">
+        <div class="sec-title">Contact <em>Page</em></div><p class="sec-sub">Update contact details.</p><div class="sec-div"></div>
+        <div class="panel"><div class="panel-title">Contact Details</div>
+          <div class="frow"><div class="fgrp"><label>Admin Name</label><input type="text" id="cName" placeholder="e.g. Ramu Nukala"/></div><div class="fgrp"><label>Contact Email</label><input type="text" id="cEmail" placeholder="family@email.com"/></div></div>
+          <div class="fgrp"><label>Contact Message</label><textarea id="cMsg"></textarea></div>
+          <div class="fgrp"><label>Formspree Form ID (optional)</label><input type="text" id="cFormspree" placeholder="e.g. xyzabc12"/></div>
+        </div>
+        <button class="btn btn-green" onclick="saveContact()">💾 Save Contact Page</button>
+      </div>
+      <div class="page-section" id="sec-events">
+        <div class="sec-title">Family <em>Events</em></div><p class="sec-sub">Manage upcoming events.</p><div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openEvtModal()">➕ Add Event</button>
+        <div id="evtList"></div>
+      </div>
+      <div class="page-section" id="sec-recipes">
+        <div class="sec-title">Family <em>Recipes</em></div><p class="sec-sub">Add traditional recipes.</p><div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openRecipeModal()">➕ Add Recipe</button>
+        <div id="recipeList"></div>
+      </div>
+      <div class="page-section" id="sec-achievements">
+        <div class="sec-title">Family <em>Achievements</em></div><p class="sec-sub">Add milestones and awards.</p><div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openAchModal()">➕ Add Achievement</button>
+        <div id="achList"></div>
+      </div>
+      <div class="page-section" id="sec-videos">
+        <div class="sec-title">Family <em>Videos</em></div><p class="sec-sub">Add YouTube links.</p><div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openVideoModal()">➕ Add Video</button>
+        <div id="videoList"></div>
+      </div>
+      <div class="page-section" id="sec-polls">
+        <div class="sec-title">Family <em>Polls</em></div><p class="sec-sub">Create family polls.</p><div class="sec-div"></div>
+        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openPollModal()">➕ Create Poll</button>
+        <div id="pollList"></div>
+      </div>
+      <div class="page-section" id="sec-contacts">
+        <div class="sec-title">Family <em>Contacts</em></div><p class="sec-sub">Private contact details per member.</p><div class="sec-div"></div>
+        <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search contacts..." oninput="searchContacts(this.value)" id="cSearch"/></div>
+        <div class="cards-grid" id="contactsGrid"></div>
+      </div>
+      <div class="page-section" id="sec-announcements">
+        <div class="sec-title">Send <em>Announcement</em></div><p class="sec-sub">Send messages via Email or WhatsApp.</p><div class="sec-div"></div>
+        <div class="panel"><div class="panel-title">📣 Compose</div>
+          <div class="fgrp"><label>Subject</label><input type="text" id="annTitle" placeholder="e.g. Family Reunion 2025!"/></div>
+          <div class="fgrp"><label>Message</label><textarea id="annMsg" rows="5" placeholder="Dear Nukala Family..."></textarea></div>
+          <div class="fgrp"><label>Recipients</label><div style="display:flex;gap:8px;margin-bottom:8px;"><button class="btn btn-outline btn-sm" onclick="selAll()">✅ All</button><button class="btn btn-outline btn-sm" onclick="selNone()">⬜ None</button><span id="recCount" style="font-size:.76rem;color:var(--sage-d);padding:8px 0;"></span></div>
+            <div id="recipientsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;max-height:200px;overflow-y:auto;border:1.5px solid var(--border);border-radius:10px;padding:10px;background:var(--cream);"></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:8px;">
+            <button class="btn btn-green" onclick="sendEmail()">📧 Send Email</button>
+            <button class="btn btn-green" style="background:linear-gradient(135deg,#128c7e,#25d366);" onclick="sendWA()">📱 WhatsApp</button>
+          </div>
+        </div>
+        <div class="panel"><div class="panel-title">📋 History</div><div id="annHistory"></div></div>
+      </div>
+      <div class="page-section" id="sec-pagevis">
+        <div class="sec-title">Page <em>Visibility</em></div><p class="sec-sub">Enable or disable pages on the website.</p><div class="sec-div"></div>
+        <div class="notice">💡 Home, Family Tree, Contact cannot be disabled — they are core pages.</div>
+        <div class="panel"><div class="panel-title">Website Pages</div>
+          <div id="pageVisList"></div>
+          <div style="margin-top:16px;display:flex;gap:10px;">
+            <button class="btn btn-green btn-sm" onclick="enableAllPages()">✅ Enable All</button>
+            <button class="btn btn-outline btn-sm" onclick="savePageVis()">💾 Save Changes</button>
+          </div>
+        </div>
+        <div class="panel"><div class="panel-title">Preview — What Visitors See</div><div id="pageVisPreview" style="display:flex;flex-wrap:wrap;gap:8px;padding-top:4px;"></div></div>
+      </div>
+      <div class="page-section" id="sec-pageeditor">
+        <div class="sec-title">Full <em>Page Editor</em></div><p class="sec-sub">Edit colours, fonts, hero text and more.</p><div class="sec-div"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:12px;" id="peTabBar">
+          <button class="pe-tab active" onclick="showPeTab('theme',this)">🎨 Theme & Colours</button>
+          <button class="pe-tab" onclick="showPeTab('sitewide',this)">🌐 Site Wide</button>
+          <button class="pe-tab" onclick="showPeTab('homepage',this)">🏠 Home Page</button>
+          <button class="pe-tab" onclick="showPeTab('contactpage',this)">✉️ Contact Page</button>
+          <button class="pe-tab" onclick="showPeTab('gallerypage',this)">🖼️ Gallery Page</button>
+          <button class="pe-tab" onclick="showPeTab('heropage',this)">🖼️ Hero Banners</button>
+          <button class="pe-tab" onclick="showPeTab('newpages',this)">📄 New Pages</button>
+          <button class="pe-tab" onclick="showPeTab('typography',this)">✍️ Typography</button>
+        </div>
+        <div class="pe-section active" id="pe-theme">
+          <div class="panel"><div class="panel-title">🎨 Site Colour Theme</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+              <button onclick="applyTheme('sage')" style="background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">🌿 Sage Green</button>
+              <button onclick="applyTheme('navy')" style="background:linear-gradient(135deg,#1a3a5c,#2e6090);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">🌊 Navy Blue</button>
+              <button onclick="applyTheme('gold')" style="background:linear-gradient(135deg,#8a6a00,#c9a84c);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">✨ Royal Gold</button>
+              <button onclick="applyTheme('maroon')" style="background:linear-gradient(135deg,#6b1a1a,#a03030);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">🍷 Maroon</button>
+              <button onclick="applyTheme('purple')" style="background:linear-gradient(135deg,#4a2060,#7050a0);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">💜 Purple</button>
+              <button onclick="applyTheme('teal')" style="background:linear-gradient(135deg,#0d6e6e,#1aab9b);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">🦋 Teal</button>
+            </div>
+            <div class="frow">
+              <div class="fgrp"><label>Primary Colour</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="clrPrimary" value="#5c7a5c" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/><input type="text" id="clrPrimaryHex" value="#5c7a5c" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Primary')"/></div></div>
+              <div class="fgrp"><label>Secondary Colour</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="clrSecondary" value="#8aab8a" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/><input type="text" id="clrSecondaryHex" value="#8aab8a" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Secondary')"/></div></div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:8px;"><button class="btn btn-green" onclick="saveTheme()">💾 Save Theme</button><button class="btn btn-outline" onclick="applyTheme('sage')">↺ Reset</button></div>
+          </div>
+        </div>
+        <div class="pe-section" id="pe-sitewide">
+          <div class="panel"><div class="panel-title">🌐 Navigation Bar</div>
+            <div class="frow"><div class="fgrp"><label>Site Name</label><input type="text" id="pe-navname" placeholder="NUKALA"/></div><div class="fgrp"><label>Nav Links (comma separated)</label><input type="text" id="pe-navlinks" placeholder="Home,Family Tree,History..."/></div></div>
+            <div class="fgrp"><label>Footer Text</label><input type="text" id="pe-footer" placeholder="© 2024 The Nukala Family..."/></div>
+            <button class="btn btn-green" onclick="saveSiteWide()">💾 Save Site Wide</button>
+          </div>
+        </div>
+        <div class="pe-section" id="pe-homepage">
+          <div class="panel"><div class="panel-title">🏠 Quick Nav Cards</div><div id="quickCardsEditor"></div><button class="btn btn-outline btn-sm" onclick="addQuickCard()">➕ Add Card</button><button class="btn btn-green" style="margin-left:8px;" onclick="saveHomePage2()">💾 Save</button></div>
+        </div>
+        <div class="pe-section" id="pe-contactpage">
+          <div class="panel"><div class="panel-title">📝 Contact Form Dropdown</div><div id="dropdownEditor"></div><button class="btn btn-outline btn-sm" onclick="addDropdownOption()">➕ Add Option</button><button class="btn btn-green" style="margin-left:8px;" onclick="saveContactPage2()">💾 Save</button></div>
+          <div class="panel"><div class="panel-title">📬 Contact Ways</div><div id="contactWaysEditor"></div><button class="btn btn-outline btn-sm" onclick="addContactWay()">➕ Add Way</button></div>
+        </div>
+        <div class="pe-section" id="pe-gallerypage">
+          <div class="panel"><div class="panel-title">🗂️ Gallery Filter Categories</div><div id="galCatsEditor"></div><button class="btn btn-outline btn-sm" onclick="addGalCat()">➕ Add Category</button><button class="btn btn-green" style="margin-left:8px;" onclick="saveGalleryPage2()">💾 Save</button></div>
+        </div>
+        <div class="pe-section" id="pe-heropage">
+          <div class="panel"><div class="panel-title">🖼️ Home Hero Banner</div>
+            <div class="fgrp"><label>Background Image URL</label><input type="text" id="pe-heroimgurl" placeholder="https://..." oninput="previewHeroImg(this.value)"/></div>
+            <div id="heroImgPreview" style="display:none;margin-bottom:10px;"><img id="heroImgPreviewImg" style="width:100%;height:140px;object-fit:cover;border-radius:10px;" alt=""/></div>
+            <button class="btn btn-green" onclick="saveHeroSettings()">💾 Save Hero</button>
+          </div>
+          <div class="panel"><div class="panel-title">📄 Page Hero Texts</div><div id="pageHeroEditor"></div></div>
+        </div>
+        <div class="pe-section" id="pe-newpages">
+          <div class="panel"><div class="panel-title">📄 New Pages Editor</div><p style="font-size:.82rem;color:var(--tm);">Use the sidebar to manage Events, Recipes, Achievements, Videos and Polls content directly.</p></div>
+        </div>
+        <div class="pe-section" id="pe-typography">
+          <div class="panel"><div class="panel-title">✍️ Typography</div>
+            <div class="frow">
+              <div class="fgrp"><label>Heading Font</label><select id="fontHeading"><option value="Cormorant Garamond">Cormorant Garamond (Default)</option><option value="Playfair Display">Playfair Display</option><option value="Lora">Lora</option><option value="Merriweather">Merriweather</option></select></div>
+              <div class="fgrp"><label>Body Font</label><select id="fontBody"><option value="Jost">Jost (Default)</option><option value="Lato">Lato</option><option value="Open Sans">Open Sans</option><option value="Poppins">Poppins</option></select></div>
+            </div>
+            <button class="btn btn-green btn-sm" onclick="saveFonts()">💾 Save Fonts</button>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="sec-analytics">
+        <div class="sec-title">Site <em>Analytics</em></div><p class="sec-sub">Visitor IPs, locations, devices and page views — admin only.</p><div class="sec-div"></div>
+        <div class="stats-row">
+          <div class="stat-box"><span class="num" id="an-logins">0</span><span class="lbl">Total Logins</span></div>
+          <div class="stat-box"><span class="num" id="an-visits">0</span><span class="lbl">Page Views</span></div>
+          <div class="stat-box"><span class="num" id="an-sessions">0</span><span class="lbl">Sessions</span></div>
+          <div class="stat-box"><span class="num" id="an-unique">0</span><span class="lbl">Unique IPs</span></div>
+          <div class="stat-box"><span class="num" id="an-today">0</span><span class="lbl">Today</span></div>
+        </div>
+        <div class="panel" style="margin-bottom:20px;overflow-x:auto;">
+          <div class="panel-title">🌐 Unique Visitors <button class="btn btn-outline btn-sm" onclick="exportVisitors()" style="float:right;">📥 Export</button></div>
+          <table style="width:100%;border-collapse:collapse;font-size:.76rem;"><thead><tr style="border-bottom:1.5px solid var(--border);text-align:left;"><th style="padding:8px 10px;">IP</th><th style="padding:8px 10px;">Location</th><th style="padding:8px 10px;">ISP</th><th style="padding:8px 10px;">Device</th><th style="padding:8px 10px;">Browser</th><th style="padding:8px 10px;">Visits</th><th style="padding:8px 10px;">Pages</th><th style="padding:8px 10px;">First Seen</th><th style="padding:8px 10px;">Last Seen</th></tr></thead><tbody id="an-visitorsBody"><tr><td colspan="9" style="padding:24px;text-align:center;color:var(--tl);">No visitors yet.</td></tr></tbody></table>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+          <div class="panel"><div class="panel-title">📄 Most Visited Pages</div><div id="an-topPages"></div></div>
+          <div class="panel"><div class="panel-title">🔐 Recent Logins</div><div id="an-recentLogins"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">📋 Full Visit Log</div>
+          <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+            <select id="an-filter" onchange="renderAnalytics()" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.76rem;color:var(--tm);background:var(--white);outline:none;"><option value="all">All Pages</option><option value="home.html">Home</option><option value="tree.html">Family Tree</option><option value="gallery.html">Gallery</option><option value="history.html">History</option></select>
+            <button class="btn btn-outline btn-sm" onclick="exportAnalytics()">📥 Export CSV</button>
+            <button class="btn btn-red btn-sm" onclick="if(confirm('Clear ALL analytics?')){['nukala_visits','nukala_logins','nukala_sessions','nukala_page_counts','nukala_login_count','nukala_visitors'].forEach(k=>localStorage.removeItem(k));renderAnalytics();}">🗑️ Clear</button>
+          </div>
+          <div id="an-visitLog" style="max-height:400px;overflow-y:auto;"></div>
+        </div>
+      </div>
+      <div class="page-section" id="sec-settings">
+        <div class="sec-title">Site <em>Settings</em></div><p class="sec-sub">Manage passwords and preferences.</p><div class="sec-div"></div>
+        <div class="panel"><div class="panel-title">Passwords</div>
+          <div class="setting-row"><div><div class="setting-lbl">Family Site Password</div><div class="setting-desc">Password to enter the website</div></div><div style="display:flex;gap:8px;"><input type="text" id="newSitePass" placeholder="New password" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.8rem;width:150px;outline:none;"/><button class="btn btn-outline btn-sm" onclick="saveSitePass()">Update</button></div></div>
+          <div class="setting-row"><div><div class="setting-lbl">Admin Password</div><div class="setting-desc">Password for this admin panel</div></div><div style="display:flex;gap:8px;"><input type="text" id="newAdminPass" placeholder="New password" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.8rem;width:150px;outline:none;"/><button class="btn btn-outline btn-sm" onclick="saveAdminPass()">Update</button></div></div>
+        </div>
+        <div class="panel"><div class="panel-title">Data Management</div>
+          <div class="setting-row"><div><div class="setting-lbl">Export Full Backup</div></div><button class="btn btn-outline btn-sm" onclick="exportAll()">📥 Export</button></div>
+          <div class="setting-row"><div><div class="setting-lbl">Import Backup</div></div><button class="btn btn-outline btn-sm" onclick="openImport()">📤 Import</button></div>
+          <div class="setting-row"><div><div class="setting-lbl" style="color:var(--red);">Reset All Data</div><div class="setting-desc">⚠️ Permanently delete everything</div></div><button class="btn btn-red btn-sm" onclick="if(confirm('Delete ALL data?'))resetAll()">🗑️ Reset</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MEMBER MODAL -->
+<div class="modal-bg" id="memberModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeMemberModal()">✕</button>
+    <h2 id="mmTitle">Add Family Member</h2>
+    <p class="modal-sub">Fill in details. Use Photo to show a picture on the tree.</p>
+    <input type="hidden" id="mmId"/>
+    <div class="photo-upload" id="photoUploadArea" onclick="document.getElementById('mmPhotoFile').click()" style="border:2px dashed var(--sage-l);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:var(--white);margin-bottom:10px;">
+      <img id="mmPhotoPreview" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--border);margin-bottom:8px;display:none;" alt="Preview"/>
+      <div id="mmPhotoPlaceholder"><div style="font-size:28px;margin-bottom:6px;">📷</div><div style="font-size:.78rem;color:var(--tm);">Click to upload photo<br/><span style="color:var(--tl);font-size:.7rem;">or paste URL below</span></div></div>
+      <input type="file" id="mmPhotoFile" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)"/>
+    </div>
+    <input type="text" id="mmPhotoUrl" placeholder="Or paste photo URL: https://..." style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;margin-bottom:14px;" oninput="previewPhotoUrl(this.value)"/>
+    <div class="frow">
+      <div class="fgrp"><label>First Name *</label><input type="text" id="mmFirst" placeholder="e.g. Ramu"/></div>
+      <div class="fgrp"><label>Last Name</label><input type="text" id="mmLast" placeholder="e.g. Nukala"/></div>
+    </div>
+    <div class="fgrp"><label>Relationship *</label>
+      <select id="mmRole">
+        <option value="">— Select —</option>
+        <optgroup label="Ancestors"><option>Great-Great-Grandfather</option><option>Great-Great-Grandmother</option><option>Great-Grandfather</option><option>Great-Grandmother</option></optgroup>
+        <optgroup label="Grandparents"><option>Grandfather</option><option>Grandmother</option></optgroup>
+        <optgroup label="Parents"><option>Father</option><option>Mother</option><option>Uncle</option><option>Aunt</option></optgroup>
+        <optgroup label="Your Generation"><option>You</option><option>Spouse</option><option>Wife</option><option>Husband</option><option>Brother</option><option>Sister</option><option>Cousin</option><option>Brother-in-law</option><option>Sister-in-law</option></optgroup>
+        <optgroup label="In-laws"><option>Father-in-law</option><option>Mother-in-law</option><option>Grandfather-in-law</option><option>Grandmother-in-law</option></optgroup>
+        <optgroup label="Children"><option>Son</option><option>Daughter</option><option>Nephew</option><option>Niece</option><option>Son-in-law</option><option>Daughter-in-law</option></optgroup>
+        <optgroup label="Grandchildren"><option>Grandson</option><option>Granddaughter</option></optgroup>
+        <option value="other">Other...</option>
+      </select>
+    </div>
+    <div class="fgrp" id="mmCustomRoleGrp" style="display:none;"><label>Custom Role</label><input type="text" id="mmCustomRole" placeholder="Type role..."/></div>
+    <div class="fgrp"><label>Generation</label>
+      <select id="mmGen">
+        <option value="">— Select —</option>
+        <option value="1">Gen 1 — Great-Great-Grandparents</option><option value="2">Gen 2 — Great-Grandparents</option>
+        <option value="3">Gen 3 — Grandparents</option><option value="4">Gen 4 — Parents / Aunts / Uncles</option>
+        <option value="5">Gen 5 — You / Siblings / Cousins</option><option value="6">Gen 6 — Children / In-laws</option>
+        <option value="7">Gen 7 — Grandchildren</option><option value="8">Gen 8 — Great-Grandchildren</option>
+      </select>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Year Born</label><input type="text" id="mmBorn" placeholder="e.g. 1942"/></div>
+      <div class="fgrp"><label>Year Passed</label><input type="text" id="mmDied" placeholder="Leave blank if living"/></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Birthplace</label><input type="text" id="mmPlace" placeholder="e.g. Hyderabad, India"/></div>
+      <div class="fgrp"><label>Occupation</label><input type="text" id="mmOcc" placeholder="e.g. Farmer"/></div>
+    </div>
+    <div class="fgrp"><label>Notes / Biography</label><textarea id="mmNotes" placeholder="Any stories or biography..."></textarea></div>
+    <div style="font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:6px;margin-top:4px;">🔗 Family Links</div>
+    <p style="font-size:.72rem;color:var(--tl);margin-bottom:10px;">Copy IDs from member cards (📋 button) and paste below to draw connecting lines on the tree.</p>
+    <div class="frow">
+      <div class="fgrp"><label>Father's Member ID</label><input type="text" id="mmFather" placeholder="Paste father's ID"/></div>
+      <div class="fgrp"><label>Mother's Member ID</label><input type="text" id="mmMother" placeholder="Paste mother's ID"/></div>
+    </div>
+    <div class="fgrp"><label>Spouse's Member ID</label><input type="text" id="mmSpouse" placeholder="Paste spouse's ID — creates a 💛 connection"/></div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;margin-top:8px;">
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmFemale" style="width:15px;height:15px;accent-color:var(--sage-d);cursor:pointer;"/><span>👩 Female</span></label>
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmAncestor" style="width:15px;height:15px;accent-color:var(--sage-d);cursor:pointer;"/><span>🏛️ Ancestor</span></label>
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmDeceased" style="width:15px;height:15px;accent-color:var(--sage-d);cursor:pointer;"/><span>✝️ Deceased</span></label>
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmInlaw" style="width:15px;height:15px;accent-color:var(--sage-d);cursor:pointer;"/><span>💜 In-law</span></label>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn btn-green" style="flex:1;" onclick="saveMember()">💾 Save Member</button>
+      <button class="btn btn-outline" onclick="closeMemberModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div class="modal-bg" id="historyModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeHistModal()">✕</button>
+    <h2 id="hmTitle">Add History Event</h2><p class="modal-sub">Add a milestone to the timeline.</p>
+    <input type="hidden" id="hmId"/>
+    <div class="frow">
+      <div class="fgrp"><label>Year *</label><input type="text" id="hmYear" placeholder="e.g. 1952"/></div>
+      <div class="fgrp"><label>Category</label><select id="hmTag"><option>📍 Origins</option><option>🏡 Family</option><option>⭐ Milestone</option><option>💒 Marriage</option><option>🎓 Education</option><option>✈️ Migration</option><option>🏆 Achievement</option></select></div>
+    </div>
+    <div class="fgrp"><label>Title *</label><input type="text" id="hmTitle2" placeholder="e.g. Family moves to Hyderabad"/></div>
+    <div class="fgrp"><label>Description</label><textarea id="hmDesc"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn btn-green" style="flex:1;" onclick="saveHist()">💾 Save</button>
+      <button class="btn btn-outline" onclick="closeHistModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY MODAL -->
+<div class="modal-bg" id="galleryModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeGalModal()">✕</button>
+    <h2 id="gmTitle">Add Photo</h2><p class="modal-sub">Add a photo by URL. Use imgbb.com to host for free.</p>
+    <input type="hidden" id="gmId"/>
+    <div class="fgrp"><label>Photo Title *</label><input type="text" id="gmTitle2" placeholder="e.g. Family Reunion 1995"/></div>
+    <div class="fgrp"><label>Image URL</label><input type="text" id="gmUrl" placeholder="https://..." oninput="previewGal(this.value)"/></div>
+    <div id="gmPreview" style="display:none;margin-bottom:12px;"><img id="gmPreviewImg" style="width:100%;height:150px;object-fit:cover;border-radius:10px;" alt=""/></div>
+    <div class="frow">
+      <div class="fgrp"><label>Category</label><select id="gmCat"><option value="family">Family</option><option value="vintage">Vintage</option><option value="celebrations">Celebrations</option><option value="travel">Travel</option><option value="other">Other</option></select></div>
+      <div class="fgrp"><label>Year</label><input type="text" id="gmYear" placeholder="e.g. 1995"/></div>
+    </div>
+    <div class="fgrp"><label>Caption</label><textarea id="gmCaption" rows="2"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn btn-green" style="flex:1;" onclick="saveGal()">💾 Save</button>
+      <button class="btn btn-outline" onclick="closeGalModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- FACTS MODAL -->
+<div class="modal-bg" id="factModal">
+  <div class="modal" style="max-width:500px;">
+    <button class="modal-close" onclick="closeFactModal()">✕</button>
+    <h2 id="fmTitle">Add Interesting Fact</h2><p class="modal-sub">Share a family first, achievement or tradition.</p>
+    <input type="hidden" id="fmId"/>
+    <div class="fgrp"><label>Title *</label><input type="text" id="fmTitle2" placeholder="e.g. First Doctor in the Family"/></div>
+    <div class="fgrp"><label>Description</label><textarea id="fmDesc"></textarea></div>
+    <div class="frow">
+      <div class="fgrp"><label>Category</label><select id="fmCat"><option value="Achievement">🏆 Achievement</option><option value="Milestone">⭐ Milestone</option><option value="Tradition">🎭 Tradition</option><option value="Record">📊 Record</option><option value="Fun Fact">😄 Fun Fact</option><option value="Other">📌 Other</option></select></div>
+      <div class="fgrp"><label>Icon (emoji)</label><input type="text" id="fmIcon" placeholder="e.g. 🏥 🎓"/></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Person Involved</label><input type="text" id="fmPerson"/></div>
+      <div class="fgrp"><label>Year</label><input type="text" id="fmYear"/></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn btn-green" style="flex:1;" onclick="saveFact()">💾 Save Fact</button>
+      <button class="btn btn-outline" onclick="closeFactModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EVENTS MODAL -->
+<div class="modal-bg" id="evtModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeEvtModal()">✕</button>
+    <h2 id="evtModalTitle">Add Event</h2>
+    <input type="hidden" id="evtId"/>
+    <div class="fgrp"><label>Title *</label><input type="text" id="evtTitle"/></div>
+    <div class="frow">
+      <div class="fgrp"><label>Date</label><input type="date" id="evtDate"/></div>
+      <div class="fgrp"><label>Type</label><select id="evtType"><option>Reunion</option><option>Birthday</option><option>Anniversary</option><option>Wedding</option><option>Festival</option><option>Other</option></select></div>
+    </div>
+    <div class="fgrp"><label>Location</label><input type="text" id="evtLocation"/></div>
+    <div class="fgrp"><label>Description</label><textarea id="evtDesc" rows="3"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="saveEvt()">💾 Save</button><button class="btn btn-outline" onclick="closeEvtModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- RECIPE MODAL -->
+<div class="modal-bg" id="recipeModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeRecipeModal()">✕</button>
+    <h2 id="recipeModalTitle">Add Recipe</h2>
+    <input type="hidden" id="recipeId"/>
+    <div class="frow">
+      <div class="fgrp"><label>Name *</label><input type="text" id="recipeTitle"/></div>
+      <div class="fgrp"><label>Category</label><select id="recipeCat"><option>Curry</option><option>Rice</option><option>Dessert</option><option>Snack</option><option>Drink</option><option>Breakfast</option><option>Other</option></select></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Made by</label><input type="text" id="recipeBy"/></div>
+      <div class="fgrp"><label>Cook Time</label><input type="text" id="recipeTime"/></div>
+    </div>
+    <div class="fgrp"><label>Ingredients (one per line)</label><textarea id="recipeIngredients" rows="5"></textarea></div>
+    <div class="fgrp"><label>Steps (one per line)</label><textarea id="recipeSteps" rows="5"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="saveRecipe()">💾 Save</button><button class="btn btn-outline" onclick="closeRecipeModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT MODAL -->
+<div class="modal-bg" id="achModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeAchModal()">✕</button>
+    <h2 id="achModalTitle">Add Achievement</h2>
+    <input type="hidden" id="achId"/>
+    <div class="fgrp"><label>Title *</label><input type="text" id="achTitle"/></div>
+    <div class="frow">
+      <div class="fgrp"><label>Person</label><input type="text" id="achPerson"/></div>
+      <div class="fgrp"><label>Year</label><input type="text" id="achYear"/></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Icon</label><input type="text" id="achIcon" placeholder="🏆 🎓 🏅"/></div>
+      <div class="fgrp"><label>Category</label><select id="achCat"><option>Education</option><option>Career</option><option>Sports</option><option>Arts</option><option>Community</option><option>Family First</option><option>Other</option></select></div>
+    </div>
+    <div class="fgrp"><label>Description</label><textarea id="achDesc" rows="3"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="saveAch()">💾 Save</button><button class="btn btn-outline" onclick="closeAchModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal-bg" id="videoModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeVideoModal()">✕</button>
+    <h2 id="videoModalTitle">Add Video</h2>
+    <input type="hidden" id="videoId"/>
+    <div class="fgrp"><label>Title *</label><input type="text" id="videoTitle"/></div>
+    <div class="fgrp"><label>YouTube URL *</label><input type="text" id="videoUrl" placeholder="https://youtube.com/watch?v=..."/></div>
+    <div class="fgrp"><label>Description</label><textarea id="videoDesc" rows="2"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="saveVideo()">💾 Save</button><button class="btn btn-outline" onclick="closeVideoModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- POLL MODAL -->
+<div class="modal-bg" id="pollModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closePollModal()">✕</button>
+    <h2 id="pollModalTitle">Create Poll</h2>
+    <div class="fgrp"><label>Question *</label><input type="text" id="pollQuestion" placeholder="e.g. Where should our next reunion be?"/></div>
+    <div class="fgrp"><label>Options (one per line, min 2)</label><textarea id="pollOptions" rows="5" placeholder="Hyderabad&#10;Chennai&#10;Bangalore"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="savePoll()">💾 Create Poll</button><button class="btn btn-outline" onclick="closePollModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="modal-bg" id="importModal">
+  <div class="modal" style="max-width:440px;">
+    <button class="modal-close" onclick="document.getElementById('importModal').classList.remove('open')">✕</button>
+    <h2>Import Backup</h2><p class="modal-sub">Paste exported JSON to restore all data.</p>
+    <div class="fgrp"><label>JSON Data</label><textarea id="importData" rows="8" placeholder="Paste JSON here..."></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="doImport()">📤 Import</button><button class="btn btn-outline" onclick="document.getElementById('importModal').classList.remove('open')">Cancel</button></div>
+  </div>
 </div>
 
 <script>
-  // ── PASSWORDS ──
-  var DEFAULT_PASS = 'nukala_admin_2024';
-  function getAdminPass(){ return localStorage.getItem('nukala_admin_pass') || DEFAULT_PASS; }
-  function getSitePass(){ return localStorage.getItem('nukala_site_pass') || 'nukala2024'; }
+  // Passwords
+  function getAdminPass(){ return localStorage.getItem('nukala_admin_pass')||'nukala_admin_2024'; }
 
-  // ── LOGIN ──
+  // Login
   function doLogin(){
     var pw = document.getElementById('pwInput').value;
-    var err = document.getElementById('pwErr');
     if(pw === getAdminPass()){
       sessionStorage.setItem('nukala_admin','true');
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminUI').style.display = 'block';
-      loadAdminPanel();
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('adminUI').style.display='block';
+      if(typeof init==='function') init();
     } else {
-      err.style.display = 'block';
-      document.getElementById('pwInput').value = '';
+      var err = document.getElementById('pwErr');
+      err.style.display='block';
+      document.getElementById('pwInput').value='';
       document.getElementById('pwInput').focus();
     }
   }
 
-  function doLogout(){
-    sessionStorage.removeItem('nukala_admin');
-    window.location.href = 'home.html';
-  }
+  function doLogout(){ sessionStorage.removeItem('nukala_admin'); window.location.href='home.html'; }
 
-  // Attach events
   document.getElementById('loginBtn').addEventListener('click', doLogin);
-  document.getElementById('pwInput').addEventListener('keydown', function(e){
-    if(e.key === 'Enter') doLogin();
-  });
+  document.getElementById('pwInput').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
   document.getElementById('pwInput').focus();
 
   // Auto-login if session active
-  if(sessionStorage.getItem('nukala_admin') === 'true'){
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminUI').style.display = 'block';
+  if(sessionStorage.getItem('nukala_admin')==='true'){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminUI').style.display='block';
   }
-
-  // ── LOAD ADMIN PANEL ──
-  function loadAdminPanel(){
-    var script = document.createElement('script');
-    script.src = 'admin.js';
-    script.onload = function(){ if(typeof initAdmin === 'function') initAdmin(); };
-    script.onerror = function(){ document.getElementById('adminUI').innerHTML = '<p style="padding:40px;text-align:center;color:red;">⚠️ Could not load admin.js — make sure it is uploaded to GitHub!</p>'; };
-    document.head.appendChild(script);
-  }
-
-  // Load admin panel JS if already logged in
-  if(sessionStorage.getItem('nukala_admin') === 'true'){
-    loadAdminPanel();
-  }
+</script>
+<script src="admin.js"></script>
+<script>
+  // Call init after admin.js loads
+  if(sessionStorage.getItem('nukala_admin')==='true' && typeof init==='function') init();
 </script>
 </body>
 </html>
