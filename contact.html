@@ -193,5 +193,138 @@
 
     initContact();
   </script>
+
+<script>
+// ── CMS Reader — reads all admin settings and applies to page ──
+(function(){
+  function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
+
+  // Apply theme colours
+  const theme = load('nukala_theme');
+  if(theme){
+    const root = document.documentElement;
+    if(theme.primary)   root.style.setProperty('--sage-dark', theme.primary);
+    if(theme.secondary) root.style.setProperty('--sage', theme.secondary);
+    if(theme.highlight) root.style.setProperty('--gold', theme.highlight);
+    if(theme.bg)        root.style.setProperty('--cream', theme.bg);
+    if(theme.text)      root.style.setProperty('--text-dark', theme.text);
+    // Load custom fonts
+    if(theme.fontHeading || theme.fontBody){
+      const fonts = [theme.fontHeading, theme.fontBody].filter(Boolean).join('|').replace(/ /g,'+');
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `https://fonts.googleapis.com/css2?family=${fonts.replace('|','&family=')}&display=swap`;
+      document.head.appendChild(link);
+      if(theme.fontHeading){
+        document.querySelectorAll('.page-hero h1, h1, h2, .hero-title, .sec-title').forEach(el=>{
+          el.style.fontFamily = theme.fontHeading+', serif';
+        });
+      }
+      if(theme.fontBody){
+        document.body.style.fontFamily = theme.fontBody+', sans-serif';
+      }
+    }
+  }
+
+  // Apply site wide settings
+  const sw = load('nukala_sitewide');
+  if(sw){
+    // Nav site name
+    document.querySelectorAll('.nav-site-name, #navSiteName').forEach(el=>{ if(sw.navName) el.textContent=sw.navName; });
+    // Footer
+    document.querySelectorAll('footer strong, #footerName, #footerFamilyName, #footerText').forEach(el=>{ if(sw.footer) el.textContent=sw.footer; });
+    // Nav background
+    const nav = document.querySelector('nav');
+    if(nav && theme && theme.nav) nav.style.background = theme.nav;
+  } else {
+    // Fallback to home data for nav name
+    const hd = load('nukala_home');
+    if(hd && hd.navName){
+      document.querySelectorAll('.nav-site-name, #navSiteName').forEach(el=>el.textContent=hd.navName);
+    }
+    const s = load('nukala_settings');
+    if(s && s.familyName){
+      document.querySelectorAll('#footerName,#footerFamilyName,#footerText').forEach(el=>el.textContent='The '+s.familyName+' Family');
+    }
+  }
+
+  // Apply hero page settings
+  const hero = load('nukala_heropage');
+  if(hero && hero.homeImgUrl){
+    const banner = document.querySelector('.hero-banner');
+    if(banner){
+      banner.style.backgroundImage = `url('${hero.homeImgUrl}')`;
+      banner.style.backgroundSize = 'cover';
+      banner.style.backgroundPosition = 'center';
+      if(hero.homeTextClr) banner.style.color = hero.homeTextClr;
+    }
+  }
+
+  // Apply gallery page settings
+  const gp = load('nukala_gallerypage2');
+  if(gp){
+    const gtEl = document.getElementById('galPageTitle');
+    const gdEl = document.getElementById('galPageDesc');
+    if(gtEl && gp.title) gtEl.textContent = gp.title;
+    if(gdEl && gp.desc) gdEl.textContent = gp.desc;
+    // Dynamic filter buttons
+    if(gp.cats && gp.cats.length){
+      const filterBar = document.getElementById('filterBar');
+      if(filterBar){
+        filterBar.innerHTML = '<button class="filter-btn active" onclick="filterGallery(\'all\',this)">All Photos</button>' +
+          gp.cats.map(c=>`<button class="filter-btn" onclick="filterGallery('${c}',this)">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
+      }
+    }
+  }
+
+  // Apply contact page dropdown options
+  const cp = load('nukala_contactpage2');
+  if(cp && cp.dropdownOpts){
+    const sel = document.getElementById('subject');
+    if(sel){
+      sel.innerHTML = '<option value="">— Select a reason —</option>' +
+        cp.dropdownOpts.map(o=>`<option>${o}</option>`).join('');
+    }
+  }
+  if(cp && cp.contactWays){
+    const cw = document.getElementById('contactWays');
+    if(cw){
+      cw.innerHTML = cp.contactWays.map(w=>`
+        <div class="contact-way">
+          <div class="contact-way-icon">${w.icon}</div>
+          <div><div class="contact-way-title">${w.title}</div><div class="contact-way-desc">${w.desc}</div></div>
+        </div>`).join('');
+    }
+  }
+
+  // Apply home page quick cards
+  const hp2 = load('nukala_homepage2');
+  if(hp2 && hp2.quickCards){
+    const qn = document.getElementById('quickNavCards');
+    if(qn){
+      qn.innerHTML = hp2.quickCards.map(c=>`
+        <a class="quick-card fade-in" href="${c.link}">
+          <div class="quick-card-icon">${c.icon}</div>
+          <div class="quick-card-title">${c.title}</div>
+          <div class="quick-card-desc">${c.desc}</div>
+          <div class="quick-card-arrow">${c.arrow}</div>
+        </a>`).join('');
+    }
+  }
+
+  // Apply updates section
+  if(hp2 && hp2.updates && hp2.updates.length){
+    const ul = document.getElementById('recentUpdatesList');
+    if(ul && hp2.updates.length){
+      ul.innerHTML = hp2.updates.map(u=>`
+        <div class="update-item">
+          <div class="update-dot"></div>
+          <div><div class="update-title">${u.title}</div><div class="update-date">${u.date||''}</div></div>
+        </div>`).join('');
+    }
+  }
+})();
+</script>
+
 </body>
 </html>

@@ -218,3 +218,35 @@ footer strong { color: var(--sage-dark); font-weight: 500; }
   .nav-links a { font-size: 0.7rem; }
   .page-hero, .content-area { padding-left: 20px; padding-right: 20px; }
 }
+
+/* ── LOGO WATERMARK (appears on all pages) ── */
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -60px;
+  right: -60px;
+  width: 380px;
+  height: 380px;
+  background: url('logo.png') center/contain no-repeat;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -80px;
+  left: -80px;
+  width: 300px;
+  height: 300px;
+  background: url('logo.png') center/contain no-repeat;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+main, nav, footer {
+  position: relative;
+  z-index: 1;
+}

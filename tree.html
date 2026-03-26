@@ -8,127 +8,325 @@
   <link rel="icon" href="favicon.ico"/>
   <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
+    /* ── PAGE BACKGROUND ── */
+    .tree-page-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 40% at 10% 90%, rgba(92,122,92,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 90% 10%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 80% at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 100%);
+    }
+
+    /* Decorative floating leaves */
+    .leaf-decor {
+      position: fixed; pointer-events: none; z-index: 0; opacity: 0.04;
+      font-size: 120px; animation: leafFloat 8s ease-in-out infinite;
+    }
+    .leaf-decor:nth-child(1){ top: 5%; right: 3%; animation-delay: 0s; font-size: 80px; }
+    .leaf-decor:nth-child(2){ bottom: 8%; left: 2%; animation-delay: 3s; font-size: 100px; }
+    .leaf-decor:nth-child(3){ top: 40%; right: 1%; animation-delay: 5s; font-size: 60px; }
+    @keyframes leafFloat { 0%,100%{ transform:rotate(-5deg) scale(1); } 50%{ transform:rotate(5deg) scale(1.05); } }
+
+    /* ── TOOLBAR ── */
     .tree-toolbar {
       display: flex; align-items: center; gap: 8px;
-      flex-wrap: wrap; margin-bottom: 16px;
+      flex-wrap: wrap; margin-bottom: 14px;
+      position: relative; z-index: 2;
     }
     .tb-btn {
-      padding: 8px 14px; border-radius: 9px;
-      border: 1.5px solid var(--border); background: white;
-      font-family: 'Jost', sans-serif; font-size: 0.74rem;
-      font-weight: 500; letter-spacing: 0.06em;
+      padding: 8px 14px; border-radius: 20px;
+      border: 1.5px solid var(--border); background: rgba(255,255,255,0.9);
+      font-family: 'Jost', sans-serif; font-size: 0.73rem; font-weight: 500;
       color: var(--text-mid); cursor: pointer; transition: all 0.2s;
+      backdrop-filter: blur(8px);
     }
-    .tb-btn:hover, .tb-btn.active { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
-    .tb-sep { width: 1px; height: 26px; background: var(--border); margin: 0 4px; }
+    .tb-btn:hover, .tb-btn.active {
+      background: var(--sage-dark); color: white; border-color: var(--sage-dark);
+      box-shadow: 0 4px 12px rgba(92,122,92,0.3);
+    }
     .zoom-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-    .z-btn { width: 30px; height: 30px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-mid); transition: all 0.2s; }
+    .z-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid var(--border); background: rgba(255,255,255,0.9);
+      font-size: 1rem; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; color: var(--text-mid); transition: all 0.2s;
+    }
     .z-btn:hover { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
-    .z-label { font-size: 0.74rem; color: var(--text-mid); min-width: 38px; text-align: center; }
+    .z-label { font-size: 0.73rem; color: var(--text-mid); min-width: 38px; text-align: center; }
 
-    /* Viewport */
+    /* ── TREE VIEWPORT ── */
     .tree-viewport {
       width: 100%; overflow: auto;
-      border: 1px solid var(--border); border-radius: 16px;
-      background: radial-gradient(circle at 20% 20%, rgba(138,171,138,0.06) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 50%), #faf8f4;
-      min-height: 520px; position: relative; cursor: grab; user-select: none;
+      border-radius: 24px; min-height: 560px;
+      position: relative; cursor: grab; user-select: none;
+      background:
+        linear-gradient(160deg, #f0f5f0 0%, #faf8f4 40%, #fdf9f0 100%);
+      border: 1px solid rgba(138,171,138,0.3);
+      box-shadow:
+        inset 0 2px 20px rgba(138,171,138,0.06),
+        0 8px 40px rgba(0,0,0,0.06);
     }
     .tree-viewport:active { cursor: grabbing; }
-    .tree-canvas { position: relative; display: inline-block; transform-origin: top left; transition: transform 0.15s; padding: 60px; }
-
-    /* SVG lines */
-    #connSvg { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
-    .line-parent { stroke: #c8ddc8; stroke-width: 2.5; fill: none; }
-    .line-spouse  { stroke: #e8d5a0; stroke-width: 2; fill: none; stroke-dasharray: 6,3; }
-    .line-inlaw   { stroke: #d0c0e0; stroke-width: 2; fill: none; stroke-dasharray: 4,4; }
-
-    /* Person card */
-    .pcard {
-      position: absolute; width: 150px;
-      background: white; border: 1.5px solid var(--border);
-      border-radius: 14px; padding: 10px 10px 12px;
-      text-align: center; cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    .tree-canvas {
+      position: relative; display: inline-block;
+      transform-origin: top left; transition: transform 0.15s;
+      padding: 80px 80px 100px;
     }
-    .pcard:hover { border-color: var(--sage); box-shadow: 0 6px 20px rgba(138,171,138,0.2); transform: translateY(-2px); z-index: 10; }
-    .pcard.female { border-color: #e0d0f0; }
-    .pcard.female:hover { border-color: #b090d0; }
-    .pcard.ancestor { border-color: var(--gold-light); background: #fffdf7; }
-    .pcard.ancestor:hover { border-color: var(--gold); }
-    .pcard.deceased { opacity: 0.72; background: #f8f8f8; border-style: dashed; }
-    .pcard.inlaw { border-color: #d0c0e0; background: #fdf8ff; }
-    .pcard.selected { border-color: var(--sage-dark) !important; box-shadow: 0 0 0 3px rgba(92,122,92,0.2) !important; }
 
-    /* Photo avatar */
+    /* SVG organic branches */
+    #branchSvg {
+      position: absolute; top: 0; left: 0;
+      pointer-events: none; overflow: visible;
+    }
+
+    /* Branch styles — organic curved paths */
+    .branch-main {
+      stroke: #8aab8a; stroke-width: 3; fill: none;
+      stroke-linecap: round; filter: drop-shadow(0 2px 4px rgba(92,122,92,0.15));
+    }
+    .branch-spouse {
+      stroke: #c9a84c; stroke-width: 2; fill: none;
+      stroke-dasharray: 8,4; stroke-linecap: round; opacity: 0.8;
+    }
+    .branch-inlaw {
+      stroke: #b090d0; stroke-width: 1.5; fill: none;
+      stroke-dasharray: 4,4; stroke-linecap: round; opacity: 0.7;
+    }
+
+    /* Animated branch drawing */
+    .branch-animated {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: drawBranch 1.5s ease forwards;
+    }
+    @keyframes drawBranch {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Branch node dot */
+    .branch-node {
+      fill: white; stroke: #8aab8a; stroke-width: 2;
+    }
+
+    /* ── GENERATION LABELS ── */
+    .gen-ribbon {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, rgba(92,122,92,0.9), rgba(138,171,138,0.9));
+      color: white; font-size: 0.64rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(92,122,92,0.25);
+      position: absolute; left: 0; white-space: nowrap;
+    }
+
+    /* ── PERSON CARD — Redesigned ── */
+    .pcard {
+      position: absolute; width: 148px;
+      background: rgba(255,255,255,0.95);
+      border: 1.5px solid rgba(232,226,216,0.8);
+      border-radius: 20px; padding: 14px 12px 12px;
+      text-align: center; cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow:
+        0 4px 16px rgba(0,0,0,0.06),
+        0 1px 4px rgba(0,0,0,0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .pcard::before {
+      content: '';
+      position: absolute;
+      inset: 0; border-radius: 20px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 100%);
+      pointer-events: none;
+    }
+
+    .pcard:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow:
+        0 16px 40px rgba(92,122,92,0.2),
+        0 4px 12px rgba(92,122,92,0.1);
+      border-color: rgba(138,171,138,0.6);
+      z-index: 10;
+    }
+
+    /* Card type variants */
+    .pcard.ancestor {
+      background: rgba(255,253,247,0.97);
+      border-color: rgba(201,168,76,0.4);
+      box-shadow: 0 4px 16px rgba(201,168,76,0.1), 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .pcard.ancestor:hover {
+      box-shadow: 0 16px 40px rgba(201,168,76,0.25), 0 4px 12px rgba(201,168,76,0.15);
+      border-color: rgba(201,168,76,0.7);
+    }
+    .pcard.female { border-color: rgba(208,192,240,0.5); }
+    .pcard.female:hover { border-color: rgba(176,144,208,0.7); box-shadow: 0 16px 40px rgba(176,144,208,0.2); }
+    .pcard.deceased { opacity: 0.65; }
+    .pcard.inlaw { border-color: rgba(208,192,240,0.4); background: rgba(253,248,255,0.97); }
+    .pcard.selected {
+      border-color: var(--sage-dark) !important;
+      box-shadow: 0 0 0 3px rgba(92,122,92,0.2), 0 16px 40px rgba(92,122,92,0.2) !important;
+    }
+
+    /* Photo ring */
+    .pc-ring {
+      width: 60px; height: 60px; border-radius: 50%;
+      margin: 0 auto 8px; position: relative;
+    }
+    .pc-ring::before {
+      content: '';
+      position: absolute; inset: -3px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage), var(--gold));
+      z-index: 0;
+    }
+    .pcard.female .pc-ring::before { background: linear-gradient(135deg, #d0a0e0, #9060b0); }
+    .pcard.ancestor .pc-ring::before { background: linear-gradient(135deg, var(--gold), #a07020); }
+    .pcard.inlaw .pc-ring::before { background: linear-gradient(135deg, #c0a0e0, #7050a0); }
+    .pcard.deceased .pc-ring::before { background: linear-gradient(135deg, #aaa, #888); }
+
     .pc-photo {
-      width: 56px; height: 56px; border-radius: 50%;
-      margin: 0 auto 8px; overflow: hidden;
-      border: 2px solid var(--border);
+      width: 100%; height: 100%; border-radius: 50%;
+      position: relative; z-index: 1;
       background: var(--sage-light);
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; position: relative; flex-shrink: 0;
+      font-size: 22px; overflow: hidden;
+      border: 2px solid white;
     }
+    .pcard.female .pc-photo { background: #f0e8f8; }
+    .pcard.ancestor .pc-photo { background: var(--gold-light); }
+    .pcard.inlaw .pc-photo { background: #f0e8f8; }
+    .pcard.deceased .pc-photo { filter: grayscale(0.5); background: #e8e8e8; }
+
     .pc-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .pcard.female .pc-photo { background: #f0e8f8; border-color: #e0d0f0; }
-    .pcard.ancestor .pc-photo { background: var(--gold-light); border-color: var(--gold-light); }
-    .pcard.deceased .pc-photo { background: #e8e8e8; filter: grayscale(0.4); }
-    .pcard.inlaw .pc-photo { background: #f0e8f8; border-color: #d0c0e0; }
 
-    .pc-deceased-dot {
-      position: absolute; bottom: -1px; right: -1px;
-      width: 14px; height: 14px; background: #999;
+    .pc-deceased-badge {
+      position: absolute; bottom: -1px; right: -1px; z-index: 2;
+      width: 16px; height: 16px; background: #888;
       border-radius: 50%; border: 2px solid white;
-      font-size: 7px; display: flex; align-items: center; justify-content: center; color: white;
+      font-size: 8px; display: flex; align-items: center; justify-content: center; color: white;
     }
 
-    .pc-name { font-family: 'Cormorant Garamond', serif; font-size: 0.86rem; font-weight: 600; color: var(--text-dark); line-height: 1.2; margin-bottom: 2px; }
-    .pc-role { font-size: 0.58rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 1px; }
+    .pc-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.88rem; font-weight: 600;
+      color: var(--text-dark); line-height: 1.2; margin-bottom: 2px;
+    }
+    .pc-role {
+      font-size: 0.58rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--sage-dark); margin-bottom: 1px;
+    }
     .pcard.female .pc-role { color: #9060b0; }
     .pcard.ancestor .pc-role { color: #a07020; }
-    .pcard.inlaw .pc-role { color: #7060a0; }
+    .pcard.inlaw .pc-role { color: #7050a0; }
     .pc-dates { font-size: 0.58rem; color: var(--text-light); }
 
-    /* Legend */
-    .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; padding: 10px 16px; background: white; border: 1px solid var(--border); border-radius: 11px; align-items: center; }
-    .lg-title { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); }
-    .lg-item { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: var(--text-mid); }
-    .lg-box { width: 11px; height: 11px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
-    .lg-line { width: 22px; height: 2px; flex-shrink: 0; }
-    .lg-line-dashed { width: 22px; height: 0; border-top: 2px dashed; flex-shrink: 0; }
+    /* Spouse heart badge */
+    .spouse-heart {
+      position: absolute; z-index: 5;
+      font-size: 14px; pointer-events: none;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+      animation: heartBeat 2s ease-in-out infinite;
+    }
+    @keyframes heartBeat {
+      0%,100%{ transform: scale(1); }
+      50%{ transform: scale(1.2); }
+    }
 
-    /* Side panel */
-    .side-panel { position: fixed; right: -400px; top: var(--nav-height); width: 370px; height: calc(100vh - var(--nav-height)); background: white; border-left: 1px solid var(--border); padding: 24px; z-index: 50; overflow-y: auto; transition: right 0.3s cubic-bezier(0.16,1,0.3,1); }
+    /* ── LEGEND ── */
+    .tree-legend {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      margin-bottom: 14px; padding: 10px 16px;
+      background: rgba(255,255,255,0.85); border: 1px solid var(--border);
+      border-radius: 40px; align-items: center;
+      backdrop-filter: blur(12px); position: relative; z-index: 2;
+    }
+    .lg-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); }
+    .lg-item { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: var(--text-mid); }
+    .lg-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid; flex-shrink: 0; }
+    .lg-line { width: 20px; height: 2.5px; border-radius: 2px; flex-shrink: 0; }
+    .lg-dashed { width: 20px; height: 0; border-top: 2px dashed; flex-shrink: 0; }
+
+    /* ── SIDE PANEL ── */
+    .side-panel {
+      position: fixed; right: -400px; top: var(--nav-height);
+      width: 370px; height: calc(100vh - var(--nav-height));
+      background: rgba(255,255,255,0.97); border-left: 1px solid var(--border);
+      padding: 0; z-index: 50; overflow: hidden;
+      transition: right 0.35s cubic-bezier(0.16,1,0.3,1);
+      backdrop-filter: blur(20px);
+      box-shadow: -8px 0 40px rgba(0,0,0,0.08);
+    }
     .side-panel.open { right: 0; }
-    .sp-close { position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--text-light); width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-    .sp-close:hover { background: var(--border); }
 
-    .sp-photo { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 14px; overflow: hidden; border: 3px solid var(--border); background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 32px; }
-    .sp-photo img { width: 100%; height: 100%; object-fit: cover; }
-    .sp-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 2px; text-align: center; line-height: 1.2; }
-    .sp-role { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 18px; text-align: center; }
-    .sp-div { height: 1px; background: var(--border); margin: 12px 0; }
+    .sp-header {
+      padding: 28px 24px 20px;
+      background: linear-gradient(135deg, #f0f5f0, #fdfaf4);
+      border-bottom: 1px solid var(--border);
+      position: relative; text-align: center;
+    }
+    .sp-close {
+      position: absolute; top: 14px; right: 14px;
+      background: white; border: 1px solid var(--border); font-size: 0.9rem;
+      cursor: pointer; color: var(--text-light); width: 28px; height: 28px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .sp-close:hover { background: var(--red); color: white; border-color: var(--red); }
+
+    .sp-photo-wrap {
+      width: 80px; height: 80px; border-radius: 50%;
+      margin: 0 auto 12px; position: relative;
+    }
+    .sp-photo-wrap::before {
+      content: ''; position: absolute; inset: -3px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage), var(--gold));
+    }
+    .sp-photo-inner {
+      width: 100%; height: 100%; border-radius: 50%;
+      position: relative; z-index: 1;
+      background: var(--sage-light); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 32px; overflow: hidden; border: 3px solid white;
+    }
+    .sp-photo-inner img { width: 100%; height: 100%; object-fit: cover; }
+
+    .sp-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 2px; }
+    .sp-role { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage-dark); }
+
+    .sp-body { padding: 20px 24px; overflow-y: auto; height: calc(100% - 200px); }
     .sp-row { display: flex; gap: 10px; margin-bottom: 9px; }
-    .sp-lbl { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); min-width: 82px; padding-top: 2px; flex-shrink: 0; }
+    .sp-lbl { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); min-width: 80px; padding-top: 2px; flex-shrink: 0; }
     .sp-val { font-size: 0.84rem; color: var(--text-dark); line-height: 1.5; }
-    .sp-notes { background: var(--cream); border-radius: 10px; padding: 11px 13px; font-size: 0.8rem; color: var(--text-mid); line-height: 1.7; font-style: italic; margin-top: 10px; }
-    .sp-rel-title { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); margin-bottom: 7px; margin-top: 14px; }
-    .sp-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--cream); border: 1px solid var(--border); border-radius: 20px; padding: 4px 11px; margin: 3px 3px 0 0; font-size: 0.72rem; color: var(--text-dark); cursor: pointer; transition: all 0.2s; }
-    .sp-chip:hover { background: var(--sage-light); border-color: var(--sage); }
-    .sp-edit-btn { width: 100%; padding: 10px; background: linear-gradient(135deg,var(--sage-dark),var(--sage)); color: white; border: none; border-radius: 10px; font-family: 'Jost',sans-serif; font-size: 0.76rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; margin-top: 16px; }
+    .sp-div { height: 1px; background: var(--border); margin: 12px 0; }
+    .sp-notes { background: var(--cream); border-radius: 12px; padding: 12px 14px; font-size: 0.8rem; color: var(--text-mid); line-height: 1.7; font-style: italic; border-left: 3px solid var(--sage-light); }
+    .sp-rel-title { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); margin: 14px 0 8px; }
+    .sp-chip { display: inline-flex; align-items: center; gap: 5px; background: white; border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; margin: 3px 3px 0 0; font-size: 0.72rem; color: var(--text-dark); cursor: pointer; transition: all 0.2s; }
+    .sp-chip:hover { background: var(--sage-light); border-color: var(--sage); transform: translateY(-1px); }
+    .sp-edit-btn { display: block; width: 100%; padding: 11px; background: linear-gradient(135deg,var(--sage-dark),var(--sage)); color: white; border: none; border-radius: 12px; font-family: 'Jost',sans-serif; font-size: 0.76rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; margin-top: 16px; transition: all 0.2s; }
+    .sp-edit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(92,122,92,0.3); }
 
     /* Empty state */
-    .empty-tree { text-align: center; padding: 80px 40px; color: var(--text-light); }
-    .empty-tree .ei { font-size: 52px; margin-bottom: 16px; }
-    .empty-tree h3 { font-family: 'Cormorant Garamond',serif; font-size: 1.3rem; font-weight: 400; color: var(--text-dark); margin-bottom: 8px; }
-    .empty-tree p { font-size: 0.84rem; line-height: 1.7; margin-bottom: 20px; }
-    .empty-tree a { display: inline-block; padding: 11px 22px; background: var(--sage-dark); color: white; border-radius: 10px; text-decoration: none; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+    .empty-tree { text-align: center; padding: 80px 40px; }
+    .empty-tree .tree-svg { margin: 0 auto 24px; display: block; }
+    .empty-tree h3 { font-family: 'Cormorant Garamond',serif; font-size: 1.5rem; font-weight: 300; color: var(--text-dark); margin-bottom: 10px; }
+    .empty-tree p { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; margin-bottom: 24px; }
+    .empty-tree a { display: inline-block; padding: 12px 24px; background: var(--sage-dark); color: white; border-radius: 12px; text-decoration: none; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s; }
+    .empty-tree a:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(92,122,92,0.3); }
 
-    .notice { background: #f0f5f0; border: 1px solid var(--sage-light); border-radius: 11px; padding: 12px 16px; font-size: 0.78rem; color: var(--sage-dark); margin-bottom: 14px; line-height: 1.6; }
+    .notice { background: rgba(240,245,240,0.9); border: 1px solid var(--sage-light); border-radius: 14px; padding: 12px 18px; font-size: 0.77rem; color: var(--sage-dark); margin-bottom: 14px; line-height: 1.6; position: relative; z-index: 2; backdrop-filter: blur(8px); }
   </style>
 </head>
 <body>
+  <!-- Decorative background -->
+  <div class="tree-page-bg"></div>
+  <div class="leaf-decor">🍃</div>
+  <div class="leaf-decor">🌿</div>
+  <div class="leaf-decor">🍂</div>
+
   <script src="auth.js"></script>
   <nav>
     <a class="nav-brand" href="home.html">
@@ -146,40 +344,35 @@
     <button class="nav-logout" onclick="logout()">Sign Out</button>
   </nav>
 
-  <main>
+  <main style="position:relative;z-index:1;">
     <div class="page-hero">
-      <p class="eyebrow">Explore</p>
+      <p class="eyebrow">Our Roots</p>
       <h1>The <em>Nukala</em> Family Tree</h1>
       <div class="hero-divider"></div>
-      <p>Click any person to view details. Lines show parent-child, spouse and in-law connections.</p>
+      <p>Click any leaf to discover the story within. Lines trace the branches of our family across generations.</p>
     </div>
 
     <div class="content-area">
-      <!-- Legend -->
-      <div class="legend">
+
+      <!-- Legend pill -->
+      <div class="tree-legend">
         <span class="lg-title">Key</span>
-        <div class="lg-item"><div class="lg-box" style="background:#fffdf7;border-color:#e8d5a0;"></div>Ancestor</div>
-        <div class="lg-item"><div class="lg-box" style="background:white;border-color:#e8e2d8;"></div>Male</div>
-        <div class="lg-item"><div class="lg-box" style="background:white;border-color:#e0d0f0;"></div>Female</div>
-        <div class="lg-item"><div class="lg-box" style="background:#fdf8ff;border-color:#d0c0e0;"></div>In-law</div>
-        <div class="lg-item"><div class="lg-box" style="background:#f8f8f8;border-color:#ccc;border-style:dashed;"></div>Deceased</div>
-        <div class="lg-item"><div class="lg-line" style="background:#c8ddc8;height:2.5px;"></div>Parent–Child</div>
-        <div class="lg-item"><div class="lg-line-dashed" style="border-color:#e8d5a0;"></div>Spouse</div>
-        <div class="lg-item"><div class="lg-line-dashed" style="border-color:#d0c0e0;"></div>In-law link</div>
-        <div style="margin-left:auto;">
-          <a href="admin.html" style="font-size:0.72rem;color:var(--sage-dark);text-decoration:none;font-weight:500;">⚙️ Manage →</a>
+        <div class="lg-item"><div class="lg-dot" style="background:#fffdf7;border-color:#c9a84c;"></div>Ancestor</div>
+        <div class="lg-item"><div class="lg-dot" style="background:white;border-color:#8aab8a;"></div>Male</div>
+        <div class="lg-item"><div class="lg-dot" style="background:white;border-color:#d0c0f0;"></div>Female</div>
+        <div class="lg-item"><div class="lg-dot" style="background:#fdf8ff;border-color:#b090d0;"></div>In-law</div>
+        <div class="lg-item"><div class="lg-line" style="background:#8aab8a;"></div>Parent–Child</div>
+        <div class="lg-item"><div class="lg-dashed" style="border-color:#c9a84c;"></div>Spouse 💛</div>
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+          <button class="tb-btn" onclick="toggleLines()" id="btnLines" style="padding:6px 12px;border-radius:20px;">🌿 Lines On</button>
+          <a href="admin.html" style="font-size:0.72rem;color:var(--sage-dark);text-decoration:none;font-weight:500;padding:6px 12px;border:1.5px solid var(--sage-light);border-radius:20px;background:white;">⚙️ Manage</a>
         </div>
       </div>
 
       <!-- Toolbar -->
       <div class="tree-toolbar">
-        <button class="tb-btn" onclick="fitToScreen()">⊡ Fit</button>
-        <button class="tb-btn" onclick="resetView()">↺ Reset</button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn active" id="btnSpouse" onclick="toggleLine('spouse')">💛 Spouse Lines</button>
-        <button class="tb-btn active" id="btnParent" onclick="toggleLine('parent')">🌿 Parent Lines</button>
-        <button class="tb-btn active" id="btnInlaw" onclick="toggleLine('inlaw')">💜 In-law Lines</button>
-        <div class="tb-sep"></div>
+        <button class="tb-btn" onclick="fitToScreen()">⊡ Fit to Screen</button>
+        <button class="tb-btn" onclick="resetView()">↺ Reset View</button>
         <div class="zoom-wrap">
           <button class="z-btn" onclick="zoomOut()">−</button>
           <span class="z-label" id="zoomLbl">100%</span>
@@ -187,120 +380,111 @@
         </div>
       </div>
 
-      <!-- Tree -->
+      <!-- Tree viewport -->
       <div class="tree-viewport" id="treeVp">
         <div class="tree-canvas" id="treeCanvas">
-          <svg id="connSvg" width="1" height="1"></svg>
+          <svg id="branchSvg" width="1" height="1"></svg>
           <div id="cardsLayer"></div>
         </div>
       </div>
 
       <div class="notice" style="margin-top:14px;">
-        💡 <strong>Adding wives/husbands & their families:</strong> In Admin → Members, add the spouse as a new member. Set their <strong>Spouse ID</strong> to link them. To show their parents, add the parents as members and set the spouse's <strong>Father ID / Mother ID</strong>. Mark in-laws with the <strong>"In-law"</strong> checkbox.
+        💡 <strong>Linking family members:</strong> In <a href="admin.html" style="color:var(--sage-dark);">Admin → Members</a>, copy a member's <strong>📋 ID</strong> and paste it into another member's Father/Mother/Spouse ID field to draw connecting branches.
       </div>
+
     </div>
   </main>
 
   <!-- Side Panel -->
   <div class="side-panel" id="sidePanel">
-    <button class="sp-close" onclick="closePanel()">✕</button>
-    <div id="spContent"></div>
+    <div class="sp-header">
+      <button class="sp-close" onclick="closePanel()">✕</button>
+      <div id="spPhotoWrap"></div>
+      <div id="spName" class="sp-name"></div>
+      <div id="spRole" class="sp-role"></div>
+    </div>
+    <div class="sp-body" id="spBody"></div>
   </div>
 
-  <footer>
+  <footer style="position:relative;z-index:1;">
     &copy; 2024 <strong id="footerName">The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
   </footer>
 
   <script>
-    // ═══════════════════════════════════════
+    // ═══════════════════════════════════
     // DATA
-    // ═══════════════════════════════════════
-    function loadData(k){ return JSON.parse(localStorage.getItem(k)||'{}'); }
-    function loadSettings(){ return JSON.parse(localStorage.getItem('nukala_settings')||'{}'); }
+    // ═══════════════════════════════════
+    const load = k => JSON.parse(localStorage.getItem(k)||'{}');
+    const loadArr = k => JSON.parse(localStorage.getItem(k)||'[]');
 
-    // Apply site name
-    const settings = loadSettings();
-    if(settings.familyName){
-      document.getElementById('navSiteName').textContent = settings.familyName.toUpperCase();
-      document.getElementById('footerName').textContent = 'The '+settings.familyName+' Family';
-    }
+    // Apply settings
+    const _s = load('nukala_settings');
+    const _h = load('nukala_home');
+    const _sw = load('nukala_sitewide');
+    const navName = _sw.navName || _h.navName || (_s.familyName ? _s.familyName.toUpperCase() : 'NUKALA');
+    document.getElementById('navSiteName').textContent = navName;
+    if(_s.familyName) document.getElementById('footerName').textContent = 'The '+_s.familyName+' Family';
 
-    // ═══════════════════════════════════════
-    // LAYOUT — positions cards by generation
-    // ═══════════════════════════════════════
-    const CARD_W = 150, CARD_H = 118, H_GAP = 40, V_GAP = 90;
+    // ═══════════════════════════════════
+    // LAYOUT ENGINE
+    // ═══════════════════════════════════
+    const CW=148, CH=130, HG=44, VG=100;
 
     function layoutTree(members){
       const list = Object.values(members);
       if(!list.length) return {};
-
-      // Group by generation
       const byGen = {};
-      list.forEach(m=>{
-        const g = parseInt(m.gen)||9;
-        if(!byGen[g]) byGen[g]=[];
-        byGen[g].push(m);
-      });
-
+      list.forEach(m=>{ const g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
       const positions = {};
       const gens = Object.keys(byGen).map(Number).sort((a,b)=>a-b);
-
       gens.forEach((gen,gi)=>{
-        const row = byGen[gen];
-        // Sort: spouses together (spouse goes right of their partner)
-        const sorted = smartSort(row, members, positions);
-        const totalW = sorted.length * CARD_W + (sorted.length-1) * H_GAP;
-        const startX = Math.max(60, 600 - totalW/2);
-        const y = 60 + gi*(CARD_H + V_GAP);
-        sorted.forEach((m,i)=>{
-          positions[m.id] = { x: startX + i*(CARD_W+H_GAP), y };
-        });
+        const row = sortRow(byGen[gen], members);
+        const totalW = row.length*CW + (row.length-1)*HG;
+        const startX = Math.max(100, 700 - totalW/2);
+        const y = 60 + gi*(CH+VG);
+        row.forEach((m,i)=>{ positions[m.id]={x:startX+i*(CW+HG),y}; });
       });
-
       return positions;
     }
 
-    function smartSort(row, members, positions){
-      // Put spouses adjacent: find spouse pairs
-      const placed = new Set();
-      const result = [];
+    function sortRow(row, members){
+      const placed = new Set(), result = [];
       row.forEach(m=>{
         if(placed.has(m.id)) return;
-        result.push(m);
-        placed.add(m.id);
-        // If this person has a spouse in the same row, place spouse immediately after
-        if(m.spouseId){
-          const sp = members[m.spouseId];
-          if(sp && row.find(r=>r.id===m.spouseId) && !placed.has(m.spouseId)){
-            result.push(sp);
-            placed.add(m.spouseId);
-          }
+        result.push(m); placed.add(m.id);
+        if(m.spouseId && members[m.spouseId] && row.find(r=>r.id===m.spouseId) && !placed.has(m.spouseId)){
+          result.push(members[m.spouseId]); placed.add(m.spouseId);
         }
       });
       return result;
     }
 
-    // ═══════════════════════════════════════
+    // ═══════════════════════════════════
     // RENDER
-    // ═══════════════════════════════════════
-    let showSpouse = true, showParent = true, showInlaw = true;
-    let zoom = 1, selectedId = null;
+    // ═══════════════════════════════════
+    let showLines=true, zoom=1, selectedId=null;
 
     function renderTree(){
-      const members = loadData('nukala_tree_data');
+      const members = load('nukala_tree_data');
       const list = Object.values(members);
       const cardsLayer = document.getElementById('cardsLayer');
-      const svg = document.getElementById('connSvg');
+      const svg = document.getElementById('branchSvg');
       cardsLayer.innerHTML=''; svg.innerHTML='';
 
       if(!list.length){
         cardsLayer.innerHTML=`<div class="empty-tree">
-          <div class="ei">🌳</div>
-          <h3>Your Family Tree is Empty</h3>
-          <p>Start by adding family members in the admin panel.<br/>Set parent/spouse IDs to draw connecting lines.</p>
-          <a href="admin.html">⚙️ Go to Admin Panel</a>
+          <svg class="tree-svg" width="120" height="140" viewBox="0 0 120 140">
+            <ellipse cx="60" cy="60" rx="50" ry="55" fill="rgba(138,171,138,0.15)" stroke="rgba(138,171,138,0.3)" stroke-width="2"/>
+            <ellipse cx="38" cy="75" rx="28" ry="32" fill="rgba(138,171,138,0.12)" stroke="rgba(138,171,138,0.25)" stroke-width="1.5"/>
+            <ellipse cx="82" cy="72" rx="30" ry="34" fill="rgba(138,171,138,0.12)" stroke="rgba(138,171,138,0.25)" stroke-width="1.5"/>
+            <rect x="55" y="108" width="10" height="30" rx="5" fill="rgba(139,90,43,0.3)"/>
+            <text x="60" y="70" text-anchor="middle" font-size="28" opacity="0.3">🌳</text>
+          </svg>
+          <h3>Your Family Tree Awaits</h3>
+          <p>Start adding family members in the admin panel.<br/>Set parent and spouse IDs to grow your tree.</p>
+          <a href="admin.html">🌱 Start Growing the Tree</a>
         </div>`;
-        svg.setAttribute('width','800'); svg.setAttribute('height','400');
+        svg.setAttribute('width','800'); svg.setAttribute('height','500');
         return;
       }
 
@@ -308,80 +492,98 @@
 
       // Canvas size
       let maxX=0, maxY=0;
-      Object.values(positions).forEach(p=>{ maxX=Math.max(maxX,p.x+CARD_W+80); maxY=Math.max(maxY,p.y+CARD_H+80); });
+      Object.values(positions).forEach(p=>{ maxX=Math.max(maxX,p.x+CW+100); maxY=Math.max(maxY,p.y+CH+100); });
       svg.setAttribute('width',maxX); svg.setAttribute('height',maxY);
       document.getElementById('treeCanvas').style.width=maxX+'px';
       document.getElementById('treeCanvas').style.height=maxY+'px';
 
-      // Draw lines first
-      const drawnSpouses = new Set();
-      list.forEach(m=>{
-        const pos = positions[m.id]; if(!pos) return;
-        const cx = pos.x+CARD_W/2, cy = pos.y+CARD_H/2;
-
-        // Parent → Child
-        if(showParent){
-          ['fatherId','motherId'].forEach(rel=>{
-            if(m[rel] && positions[m[rel]]){
-              const pp = positions[m[rel]];
-              const pcx=pp.x+CARD_W/2, pcy=pp.y+CARD_H;
-              const midY = pcy+(pos.y-pcy)/2;
-              const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-              path.setAttribute('d',`M${pcx},${pcy} C${pcx},${midY} ${cx},${midY} ${cx},${pos.y}`);
-              path.setAttribute('class','line-parent'); svg.appendChild(path);
-            }
-          });
-        }
-
-        // Spouse line (draw once per pair)
-        if(showSpouse && m.spouseId && positions[m.spouseId]){
-          const key = [m.id,m.spouseId].sort().join('-');
-          if(!drawnSpouses.has(key)){
-            drawnSpouses.add(key);
-            const sp=positions[m.spouseId];
-            const spcx=sp.x+CARD_W/2, spcy=sp.y+CARD_H/2;
-            // Horizontal line between them
-            const x1=Math.min(pos.x+CARD_W, sp.x);
-            const x2=Math.max(pos.x, sp.x+CARD_W);
-            const midY2=(cy+spcy)/2;
-            const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-            line.setAttribute('x1',pos.x+CARD_W); line.setAttribute('y1',cy);
-            line.setAttribute('x2',sp.x); line.setAttribute('y2',spcy);
-            line.setAttribute('class','line-spouse'); svg.appendChild(line);
-            // Heart symbol
-            const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
-            txt.setAttribute('x',(pos.x+CARD_W+sp.x)/2);
-            txt.setAttribute('y',cy+5);
-            txt.setAttribute('text-anchor','middle'); txt.setAttribute('font-size','13');
-            txt.textContent='💛'; svg.appendChild(txt);
-          }
-        }
-
-        // In-law line (dashed purple — connects inlaw to their child's spouse)
-        if(showInlaw && m.inlaw && m.spouseId && positions[m.spouseId]){
-          const sp=positions[m.spouseId];
-          const spcx=sp.x+CARD_W/2;
-          // Draw line from this person down to their child (the spouse of a Nukala member)
-          if(m.fatherId && positions[m.fatherId]){
-            const fp=positions[m.fatherId];
-            const fpcx=fp.x+CARD_W/2, fpcy=fp.y+CARD_H;
-            const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-            const midY=fpcy+(pos.y-fpcy)/2;
-            path.setAttribute('d',`M${fpcx},${fpcy} C${fpcx},${midY} ${cx},${midY} ${cx},${pos.y}`);
-            path.setAttribute('class','line-inlaw'); svg.appendChild(path);
-          }
-          if(m.motherId && positions[m.motherId]){
-            const mp=positions[m.motherId];
-            const mpcx=mp.x+CARD_W/2, mpcy=mp.y+CARD_H;
-            const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-            const midY=mpcy+(pos.y-mpcy)/2;
-            path.setAttribute('d',`M${mpcx},${mpcy} C${mpcx},${midY} ${cx},${midY} ${cx},${pos.y}`);
-            path.setAttribute('class','line-inlaw'); svg.appendChild(path);
-          }
-        }
+      // Generation ribbons
+      const byGen={};
+      list.forEach(m=>{ const g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
+      const genNames={1:'Great-Great-Grandparents',2:'Great-Grandparents',3:'Grandparents',4:'Parents & Aunts/Uncles',5:'Your Generation',6:'Children',7:'Grandchildren',8:'Great-Grandchildren'};
+      const gens=Object.keys(byGen).map(Number).sort((a,b)=>a-b);
+      gens.forEach((gen,gi)=>{
+        const y = 60 + gi*(CH+VG);
+        const ribbon = document.createElement('div');
+        ribbon.className = 'gen-ribbon';
+        ribbon.style.top = (y+CH/2-12)+'px';
+        ribbon.style.left = '0px';
+        ribbon.innerHTML = `Gen ${gen}${genNames[gen]?' · '+genNames[gen]:''}`;
+        cardsLayer.appendChild(ribbon);
       });
 
-      // Render cards
+      if(showLines){
+        // Draw organic branch lines
+        const drawnSpouses = new Set();
+        let delay = 0;
+        list.forEach(m=>{
+          const pos=positions[m.id]; if(!pos) return;
+          const cx=pos.x+CW/2;
+
+          // Parent-child branches (organic curves)
+          ['fatherId','motherId'].forEach(rel=>{
+            if(m[rel] && positions[m[rel]]){
+              const pp=positions[m[rel]];
+              const pcx=pp.x+CW/2, pcy=pp.y+CH;
+              const midY=pcy+(pos.y-pcy)/2;
+              // Organic S-curve
+              const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+              const wobble=(Math.random()-0.5)*20;
+              path.setAttribute('d',`M${pcx},${pcy} C${pcx+wobble},${midY-20} ${cx-wobble},${midY+20} ${cx},${pos.y}`);
+              path.setAttribute('class','branch-main branch-animated');
+              path.style.animationDelay = (delay*0.1)+'s';
+              svg.appendChild(path);
+              // Node dot at junction
+              const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+              dot.setAttribute('cx',cx); dot.setAttribute('cy',pos.y);
+              dot.setAttribute('r','4'); dot.setAttribute('class','branch-node');
+              svg.appendChild(dot);
+              delay++;
+            }
+          });
+
+          // Spouse lines
+          if(m.spouseId && positions[m.spouseId]){
+            const key=[m.id,m.spouseId].sort().join('-');
+            if(!drawnSpouses.has(key)){
+              drawnSpouses.add(key);
+              const sp=positions[m.spouseId];
+              const spcx=sp.x+CW/2, spcy=sp.y+CH/2;
+              const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+              const x1=pos.x+CW, y1=pos.y+CH/2;
+              const x2=sp.x, y2=spcy;
+              line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+              line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+              line.setAttribute('class','branch-spouse');
+              svg.appendChild(line);
+              // Floating heart
+              const heartX=(x1+x2)/2, heartY=(y1+y2)/2;
+              const heart=document.createElement('div');
+              heart.className='spouse-heart';
+              heart.style.left=(heartX-10)+'px'; heart.style.top=(heartY-10)+'px';
+              heart.textContent='💛';
+              cardsLayer.appendChild(heart);
+            }
+          }
+
+          // In-law lines
+          if(m.inlaw){
+            ['fatherId','motherId'].forEach(rel=>{
+              if(m[rel] && positions[m[rel]]){
+                const pp=positions[m[rel]];
+                const pcx=pp.x+CW/2, pcy=pp.y+CH;
+                const midY=pcy+(pos.y-pcy)/2;
+                const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+                path.setAttribute('d',`M${pcx},${pcy} Q${(pcx+cx)/2},${midY} ${cx},${pos.y}`);
+                path.setAttribute('class','branch-inlaw');
+                svg.appendChild(path);
+              }
+            });
+          }
+        });
+      }
+
+      // Render person cards
       list.forEach(m=>{
         const pos=positions[m.id]; if(!pos) return;
         const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
@@ -392,27 +594,34 @@
         const card=document.createElement('div');
         card.className=classes;
         card.style.left=pos.x+'px'; card.style.top=pos.y+'px';
-        card.setAttribute('data-id',m.id);
+        card.style.animationDelay=(Math.random()*0.3)+'s';
 
-        // Photo
-        let photoHtml='';
+        // Photo with gradient ring
+        let photoInner='';
         if(m.photo){
-          photoHtml=`<div class="pc-photo"><img src="${m.photo}" alt="${name}" onerror="this.parentNode.innerHTML='${m.female?'👩':'👨'}'"/>${m.deceased?'<div class="pc-deceased-dot">✝</div>':''}</div>`;
+          photoInner=`<img src="${m.photo}" alt="${name}" onerror="this.parentNode.innerHTML='${m.female?'👩':m.ancestor?'👴':'👨'}'"/>`;
         } else {
-          photoHtml=`<div class="pc-photo">${m.female?'👩':m.ancestor?'👴':'👨'}${m.deceased?'<div class="pc-deceased-dot">✝</div>':''}</div>`;
+          photoInner=m.female?'👩':m.ancestor?'👴':'👨';
         }
 
-        card.innerHTML=`${photoHtml}<div class="pc-name">${shortName}</div><div class="pc-role">${m.role||'–'}</div><div class="pc-dates">${dates}</div>`;
+        card.innerHTML=`
+          <div class="pc-ring">
+            <div class="pc-photo">${photoInner}${m.deceased?'<div class="pc-deceased-badge">✝</div>':''}</div>
+          </div>
+          <div class="pc-name">${shortName}</div>
+          <div class="pc-role">${m.role||'–'}</div>
+          <div class="pc-dates">${dates}</div>
+        `;
         card.addEventListener('click',()=>showPanel(m.id));
         cardsLayer.appendChild(card);
       });
     }
 
-    // ═══════════════════════════════════════
+    // ═══════════════════════════════════
     // SIDE PANEL
-    // ═══════════════════════════════════════
+    // ═══════════════════════════════════
     function showPanel(id){
-      const members=loadData('nukala_tree_data');
+      const members=load('nukala_tree_data');
       const m=members[id]; if(!m) return;
       selectedId=id; renderTree();
 
@@ -424,38 +633,35 @@
       const children=all.filter(x=>x.fatherId===id||x.motherId===id);
       const siblings=all.filter(x=>x.id!==id&&((m.fatherId&&x.fatherId===m.fatherId)||(m.motherId&&x.motherId===m.motherId)));
 
+      // Photo
+      const photoEmoji=m.female?'👩':m.ancestor?'👴':'👨';
+      const photoBg=m.female?'background:#f0e8f8':m.ancestor?'background:var(--gold-light)':m.inlaw?'background:#f0e8f8':'';
+      const ringStyle=m.female?'background:linear-gradient(135deg,#d0a0e0,#9060b0)':m.ancestor?'background:linear-gradient(135deg,var(--gold),#a07020)':m.inlaw?'background:linear-gradient(135deg,#c0a0e0,#7050a0)':'';
+
+      document.getElementById('spPhotoWrap').innerHTML=`
+        <div class="sp-photo-wrap" style="${ringStyle?'--ring:'+ringStyle:''}">
+          <style>.sp-photo-wrap::before{${ringStyle||'background:linear-gradient(135deg,var(--sage),var(--gold))'}}</style>
+          <div class="sp-photo-inner" style="${photoBg}">
+            ${m.photo?`<img src="${m.photo}" alt="${name}" onerror="this.parentNode.innerHTML='${photoEmoji}'"/>`:`<span style="font-size:32px;">${photoEmoji}</span>`}
+          </div>
+        </div>`;
+      document.getElementById('spName').textContent=name;
+      document.getElementById('spRole').textContent=(m.role||'–')+(m.gen?' · Gen '+m.gen:'');
+
       const chip=(p,lbl)=>{
         if(!p) return '';
         const n=[p.firstName,p.lastName].filter(Boolean).join(' ');
         return `<span class="sp-chip" onclick="showPanel('${p.id}')">${lbl}: ${n}</span>`;
       };
+      const rels=[father?chip(father,'Father'):'',mother?chip(mother,'Mother'):'',spouse?chip(spouse,'Spouse'):'',
+        ...children.map(c=>chip(c,'Child')),...siblings.map(s=>chip(s,'Sibling'))].filter(Boolean).join('');
 
-      const rels=[
-        father?chip(father,'Father'):'',
-        mother?chip(mother,'Mother'):'',
-        spouse?chip(spouse,'Spouse'):'',
-        ...children.map(c=>chip(c,'Child')),
-        ...siblings.map(s=>chip(s,'Sibling')),
-      ].filter(Boolean).join('');
-
-      // Photo
-      let photoHtml='';
-      if(m.photo){
-        photoHtml=`<div class="sp-photo"><img src="${m.photo}" alt="${name}"/></div>`;
-      } else {
-        photoHtml=`<div class="sp-photo" style="${m.female?'background:#f0e8f8':m.ancestor?'background:var(--gold-light)':m.inlaw?'background:#f0e8f8':''}">${m.female?'👩':m.ancestor?'👴':'👨'}</div>`;
-      }
-
-      document.getElementById('spContent').innerHTML=`
-        ${photoHtml}
-        <div class="sp-name">${name}</div>
-        <div class="sp-role">${m.role||'–'}${m.gen?' · Gen '+m.gen:''}</div>
-        <div class="sp-div"></div>
+      document.getElementById('spBody').innerHTML=`
         ${m.born?`<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">${m.born}</div></div>`:''}
         ${m.died?`<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">${m.died}</div></div>`:''}
         ${m.place?`<div class="sp-row"><div class="sp-lbl">Birthplace</div><div class="sp-val">${m.place}</div></div>`:''}
         ${m.occupation?`<div class="sp-row"><div class="sp-lbl">Occupation</div><div class="sp-val">${m.occupation}</div></div>`:''}
-        ${m.notes?`<div class="sp-notes">${m.notes}</div>`:''}
+        ${m.notes?`<div class="sp-div"></div><div class="sp-notes">${m.notes}</div>`:''}
         ${rels?`<div class="sp-div"></div><div class="sp-rel-title">Family Connections</div>${rels}`:''}
         <button class="sp-edit-btn" onclick="window.location.href='admin.html'">⚙️ Edit in Admin Panel</button>
       `;
@@ -464,42 +670,38 @@
 
     function closePanel(){ selectedId=null; document.getElementById('sidePanel').classList.remove('open'); renderTree(); }
 
-    // ═══════════════════════════════════════
-    // LINE TOGGLES
-    // ═══════════════════════════════════════
-    function toggleLine(type){
-      if(type==='spouse'){ showSpouse=!showSpouse; document.getElementById('btnSpouse').classList.toggle('active',showSpouse); }
-      if(type==='parent'){ showParent=!showParent; document.getElementById('btnParent').classList.toggle('active',showParent); }
-      if(type==='inlaw'){  showInlaw=!showInlaw;  document.getElementById('btnInlaw').classList.toggle('active',showInlaw); }
+    // ═══════════════════════════════════
+    // CONTROLS
+    // ═══════════════════════════════════
+    function toggleLines(){
+      showLines=!showLines;
+      document.getElementById('btnLines').textContent=showLines?'🌿 Lines On':'🌿 Lines Off';
+      document.getElementById('btnLines').classList.toggle('active',showLines);
       renderTree();
     }
 
-    // ═══════════════════════════════════════
-    // ZOOM & PAN
-    // ═══════════════════════════════════════
     function zoomIn()   { zoom=Math.min(zoom+0.1,2.5); applyZoom(); }
     function zoomOut()  { zoom=Math.max(zoom-0.1,0.3); applyZoom(); }
     function applyZoom(){ document.getElementById('treeCanvas').style.transform=`scale(${zoom})`; document.getElementById('zoomLbl').textContent=Math.round(zoom*100)+'%'; }
     function resetView(){ zoom=1; applyZoom(); document.getElementById('treeVp').scrollTo(0,0); }
     function fitToScreen(){
-      const vp=document.getElementById('treeVp');
-      const canvas=document.getElementById('treeCanvas');
+      const vp=document.getElementById('treeVp'), canvas=document.getElementById('treeCanvas');
       zoom=Math.min(vp.clientWidth/canvas.scrollWidth, vp.clientHeight/canvas.scrollHeight,1)*0.88;
       applyZoom();
     }
 
-    // Drag to pan
-    let drag=false, dx,dy,sx,sy;
+    // Drag pan
+    let drag=false,dx,dy,sx,sy;
     const vp=document.getElementById('treeVp');
-    vp.addEventListener('mousedown',e=>{ if(e.target.closest('.pcard')) return; drag=true; dx=e.clientX; dy=e.clientY; sx=vp.scrollLeft; sy=vp.scrollTop; });
+    vp.addEventListener('mousedown',e=>{ if(e.target.closest('.pcard,.gen-ribbon,.spouse-heart')) return; drag=true; dx=e.clientX; dy=e.clientY; sx=vp.scrollLeft; sy=vp.scrollTop; });
     window.addEventListener('mousemove',e=>{ if(!drag) return; vp.scrollLeft=sx-(e.clientX-dx); vp.scrollTop=sy-(e.clientY-dy); });
     window.addEventListener('mouseup',()=>drag=false);
     vp.addEventListener('wheel',e=>{ e.preventDefault(); e.deltaY<0?zoomIn():zoomOut(); },{passive:false});
 
-    // Touch zoom
-    let lastTouchDist=0;
-    vp.addEventListener('touchstart',e=>{ if(e.touches.length===2){ lastTouchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); }});
-    vp.addEventListener('touchmove',e=>{ if(e.touches.length===2){ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); if(d>lastTouchDist+5) zoomIn(); else if(d<lastTouchDist-5) zoomOut(); lastTouchDist=d; }});
+    // Touch
+    let lastTD=0;
+    vp.addEventListener('touchstart',e=>{ if(e.touches.length===2) lastTD=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); });
+    vp.addEventListener('touchmove',e=>{ if(e.touches.length===2){ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); if(d>lastTD+5) zoomIn(); else if(d<lastTD-5) zoomOut(); lastTD=d; }});
 
     renderTree();
   </script>

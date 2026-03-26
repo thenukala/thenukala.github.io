@@ -180,6 +180,13 @@
     .notice{background:#f0f5f0;border:1px solid var(--sage-l);border-radius:10px;padding:11px 15px;font-size:.76rem;color:var(--sage-d);margin-bottom:14px;line-height:1.6;}
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--sage-d);color:var(--white);padding:11px 22px;border-radius:28px;font-size:.82rem;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.15);animation:fadeUp .3s ease;white-space:nowrap;}
 
+    /* Page Editor */
+    .pe-tab{padding:8px 16px;border-radius:9px;border:1.5px solid var(--border);background:var(--white);font-family:'Jost',sans-serif;font-size:.76rem;font-weight:500;color:var(--tm);cursor:pointer;transition:all .2s;}
+    .pe-tab:hover,.pe-tab.active{background:var(--sage-d);color:var(--white);border-color:var(--sage-d);}
+    .pe-section{display:none;} .pe-section.active{display:block;}
+    .repeat-item{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;position:relative;}
+    .repeat-item .del-btn{position:absolute;top:10px;right:10px;background:var(--red);color:white;border:none;border-radius:6px;padding:4px 8px;font-size:.7rem;cursor:pointer;}
+
     @media(max-width:768px){.shell{grid-template-columns:1fr;}.sidebar{position:static;height:auto;}.stats-row{grid-template-columns:1fr 1fr 1fr;}.frow,.frow3{grid-template-columns:1fr;}}
   </style>
 </head>
@@ -230,6 +237,7 @@
       <button class="nav-item" onclick="showSec('gallery',this)"><span class="nav-icon">🖼️</span>Gallery</button>
       <button class="nav-item" onclick="showSec('facts',this)"><span class="nav-icon">🌟</span>Facts</button>
       <button class="nav-item" onclick="showSec('contact',this)"><span class="nav-icon">✉️</span>Contact</button>
+      <button class="nav-item" onclick="showSec('pageeditor',this)"><span class="nav-icon">🎨</span>Page Editor</button>
 
       <div class="nav-section">Communication</div>
       <button class="nav-item" onclick="showSec('contacts',this)"><span class="nav-icon">📱</span>Contacts</button>
@@ -383,6 +391,229 @@
         </div>
         <button class="btn btn-green" onclick="saveContact()">💾 Save Contact Page</button>
       </div>
+
+      <!-- PAGE EDITOR -->
+      <div class="page-section" id="sec-pageeditor">
+        <div class="sec-title">Full <em>Page Editor</em></div>
+        <p class="sec-sub">Edit every element on every page — colours, images, text, cards, dropdowns and more.</p>
+        <div class="sec-div"></div>
+
+        <!-- Tab navigation -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:12px;">
+          <button class="pe-tab active" onclick="showPeTab('theme',this)">🎨 Theme & Colours</button>
+          <button class="pe-tab" onclick="showPeTab('sitewide',this)">🌐 Site Wide</button>
+          <button class="pe-tab" onclick="showPeTab('homepage',this)">🏠 Home Page</button>
+          <button class="pe-tab" onclick="showPeTab('contactpage',this)">✉️ Contact Page</button>
+          <button class="pe-tab" onclick="showPeTab('gallerypage',this)">🖼️ Gallery Page</button>
+          <button class="pe-tab" onclick="showPeTab('heropage',this)">🖼️ Hero Banners</button>
+        </div>
+
+        <!-- THEME & COLOURS -->
+        <div class="pe-section active" id="pe-theme">
+          <div class="panel">
+            <div class="panel-title">🎨 Site Colour Theme <span></span></div>
+            <p style="font-size:.78rem;color:var(--tl);margin-bottom:16px;">Choose a preset theme or customise individual colours. Changes apply across the entire website instantly.</p>
+
+            <!-- Preset themes -->
+            <div style="margin-bottom:20px;">
+              <div class="fgrp"><label>Quick Theme Presets</label></div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="theme-preset" onclick="applyTheme('sage')" style="background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;padding:10px 18px;border:none;border-radius:10px;font-family:Jost,sans-serif;font-size:.76rem;cursor:pointer;">🌿 Sage Green (Default)</button>
+                <button class="theme-preset" onclick="applyTheme('navy')" style="background:linear-gradient(135deg,#1a3a5c,#2e6090);color:white;padding:10px 18px;border:none;border-radius:10px;font-family:Jost,sans-serif;font-size:.76rem;cursor:pointer;">🌊 Navy Blue</button>
+                <button class="theme-preset" onclick="applyTheme('gold')" style="background:linear-gradient(135deg,#8a6a00,#c9a84c);color:white;padding:10px 18px;border:none;border-radius:10px;font-family:Jost,sans-serif;font-size:.76rem;cursor:pointer;">✨ Royal Gold</button>
+                <button class="theme-preset" onclick="applyTheme('maroon')" style="background:linear-gradient(135deg,#6b1a1a,#a03030);color:white;padding:10px 18px;border:none;border-radius:10px;font-family:Jost,sans-serif;font-size:.76rem;cursor:pointer;">🍷 Deep Maroon</button>
+                <button class="theme-preset" onclick="applyTheme('purple')" style="background:linear-gradient(135deg,#4a2060,#7050a0);color:white;padding:10px 18px;border:none;border-radius:10px;font-family:Jost,sans-serif;font-size:.76rem;cursor:pointer;">💜 Royal Purple</button>
+                <button class="theme-preset" onclick="applyTheme('teal')" style="background:linear-gradient(135deg,#0d6e6e,#1aab9b);color:white;padding:10px 18px;border:none;border-radius:10px;font-family:Jost,sans-serif;font-size:.76rem;cursor:pointer;">🦋 Teal</button>
+              </div>
+            </div>
+
+            <div class="frow3">
+              <div class="fgrp">
+                <label>Primary Colour (buttons, links)</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrPrimary" value="#5c7a5c" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrPrimaryHex" value="#5c7a5c" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Primary')"/>
+                </div>
+              </div>
+              <div class="fgrp">
+                <label>Secondary Colour (accents)</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrSecondary" value="#8aab8a" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrSecondaryHex" value="#8aab8a" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Secondary')"/>
+                </div>
+              </div>
+              <div class="fgrp">
+                <label>Highlight Colour (gold/accent)</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrHighlight" value="#c9a84c" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrHighlightHex" value="#c9a84c" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Highlight')"/>
+                </div>
+              </div>
+              <div class="fgrp">
+                <label>Background Colour</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrBg" value="#faf8f4" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrBgHex" value="#faf8f4" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Bg')"/>
+                </div>
+              </div>
+              <div class="fgrp">
+                <label>Text Colour</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrText" value="#2c2c2c" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrTextHex" value="#2c2c2c" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Text')"/>
+                </div>
+              </div>
+              <div class="fgrp">
+                <label>Nav Bar Background</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="clrNav" value="#faf8f4" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrNavHex" value="#faf8f4" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Nav')"/>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:8px;">
+              <button class="btn btn-green" onclick="saveTheme()">💾 Save Theme</button>
+              <button class="btn btn-outline" onclick="applyTheme('sage')">↺ Reset to Default</button>
+            </div>
+          </div>
+
+          <!-- Font selector -->
+          <div class="panel">
+            <div class="panel-title">✍️ Typography <span></span></div>
+            <div class="frow">
+              <div class="fgrp">
+                <label>Heading Font (titles)</label>
+                <select id="fontHeading">
+                  <option value="Cormorant Garamond">Cormorant Garamond (Default — Elegant)</option>
+                  <option value="Playfair Display">Playfair Display (Classic)</option>
+                  <option value="Libre Baskerville">Libre Baskerville (Traditional)</option>
+                  <option value="Merriweather">Merriweather (Readable)</option>
+                  <option value="Lora">Lora (Modern Serif)</option>
+                  <option value="EB Garamond">EB Garamond (Historical)</option>
+                </select>
+              </div>
+              <div class="fgrp">
+                <label>Body Font (paragraphs)</label>
+                <select id="fontBody">
+                  <option value="Jost">Jost (Default — Clean)</option>
+                  <option value="Lato">Lato (Friendly)</option>
+                  <option value="Nunito">Nunito (Rounded)</option>
+                  <option value="Open Sans">Open Sans (Neutral)</option>
+                  <option value="Raleway">Raleway (Stylish)</option>
+                  <option value="Poppins">Poppins (Modern)</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-green btn-sm" onclick="saveFonts()">💾 Save Fonts</button>
+          </div>
+        </div>
+
+        <!-- SITE WIDE -->
+        <div class="pe-section" id="pe-sitewide">
+          <div class="panel">
+            <div class="panel-title">🌐 Navigation Bar <span></span></div>
+            <div class="frow">
+              <div class="fgrp"><label>Site Name (next to logo)</label><input type="text" id="pe-navname" placeholder="e.g. NUKALA"/></div>
+              <div class="fgrp"><label>Nav Links (comma separated)</label><input type="text" id="pe-navlinks" placeholder="Home,Family Tree,History,Gallery,Facts,Contact"/></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">💬 Footer <span></span></div>
+            <div class="fgrp"><label>Footer Text</label><input type="text" id="pe-footer" placeholder="© 2024 The Nukala Family · Private · Made with 🌳 & love"/></div>
+            <div class="fgrp"><label>Footer Subtext</label><input type="text" id="pe-footersub" placeholder="e.g. All Rights Reserved"/></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">🔐 Login Page <span></span></div>
+            <div class="fgrp"><label>Login Page Title</label><input type="text" id="pe-logintitle" placeholder="The Nukala Family Tree"/></div>
+            <div class="fgrp"><label>Login Page Subtitle</label><input type="text" id="pe-loginsub" placeholder="A private family archive"/></div>
+            <div class="fgrp"><label>Login Button Text</label><input type="text" id="pe-loginbtn" placeholder="Enter Family Archive →"/></div>
+            <div class="fgrp"><label>Login Footer Note</label><input type="text" id="pe-loginnote" placeholder="This site is exclusively for the Nukala family."/></div>
+          </div>
+          <button class="btn btn-green" onclick="saveSiteWide()">💾 Save Site Wide Settings</button>
+        </div>
+
+        <!-- HOME PAGE -->
+        <div class="pe-section" id="pe-homepage">
+          <div class="panel">
+            <div class="panel-title">🏠 Quick Nav Cards (4 cards on home page) <span></span></div>
+            <p style="font-size:.76rem;color:var(--tl);margin-bottom:14px;">These are the 4 cards shown below the hero banner on the home page.</p>
+            <div id="quickCardsEditor"></div>
+            <button class="btn btn-outline btn-sm" onclick="addQuickCard()" style="margin-top:8px;">➕ Add Card</button>
+          </div>
+          <div class="panel">
+            <div class="panel-title">📣 Recent Updates Section <span></span></div>
+            <div class="fgrp"><label>Section Title</label><input type="text" id="pe-updatestitle" placeholder="Recent Updates"/></div>
+            <div id="updatesEditor"></div>
+            <button class="btn btn-outline btn-sm" onclick="addUpdateItem()" style="margin-top:8px;">➕ Add Update</button>
+          </div>
+          <button class="btn btn-green" onclick="saveHomePage2()">💾 Save Home Page</button>
+        </div>
+
+        <!-- CONTACT PAGE -->
+        <div class="pe-section" id="pe-contactpage">
+          <div class="panel">
+            <div class="panel-title">📝 Contact Form Dropdown Options <span></span></div>
+            <p style="font-size:.76rem;color:var(--tl);margin-bottom:14px;">Edit the options shown in the "What would you like to do?" dropdown on the contact form.</p>
+            <div id="dropdownEditor"></div>
+            <button class="btn btn-outline btn-sm" onclick="addDropdownOption()" style="margin-top:8px;">➕ Add Option</button>
+          </div>
+          <div class="panel">
+            <div class="panel-title">📬 Contact Ways (all 4 cards) <span></span></div>
+            <div id="contactWaysEditor"></div>
+            <button class="btn btn-outline btn-sm" onclick="addContactWay()" style="margin-top:8px;">➕ Add Way</button>
+          </div>
+          <button class="btn btn-green" onclick="saveContactPage2()">💾 Save Contact Page</button>
+        </div>
+
+        <!-- GALLERY PAGE -->
+        <div class="pe-section" id="pe-gallerypage">
+          <div class="panel">
+            <div class="panel-title">🗂️ Gallery Filter Categories <span></span></div>
+            <p style="font-size:.76rem;color:var(--tl);margin-bottom:14px;">Edit the filter buttons shown at the top of the gallery page.</p>
+            <div id="galCatsEditor"></div>
+            <button class="btn btn-outline btn-sm" onclick="addGalCat()" style="margin-top:8px;">➕ Add Category</button>
+          </div>
+          <div class="panel">
+            <div class="panel-title">📄 Gallery Page Text <span></span></div>
+            <div class="fgrp"><label>Page Title</label><input type="text" id="pe-galtitle" placeholder="The Nukala Photo Gallery"/></div>
+            <div class="fgrp"><label>Page Description</label><input type="text" id="pe-galdesc" placeholder="A visual archive of cherished moments..."/></div>
+          </div>
+          <button class="btn btn-green" onclick="saveGalleryPage2()">💾 Save Gallery Page</button>
+        </div>
+
+        <!-- HERO BANNERS -->
+        <div class="pe-section" id="pe-heropage">
+          <div class="panel">
+            <div class="panel-title">🖼️ Home Page Hero Banner <span></span></div>
+            <div class="notice">💡 You can set a background image URL for the hero banner, or leave blank to use the default gradient.</div>
+            <div class="fgrp"><label>Background Image URL</label><input type="text" id="pe-heroimgurl" placeholder="https://... paste image URL" oninput="previewHeroImg(this.value)"/></div>
+            <div id="heroImgPreview" style="display:none;margin-bottom:10px;"><img id="heroImgPreviewImg" style="width:100%;height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--border);"/></div>
+            <div class="frow">
+              <div class="fgrp"><label>Banner Background Colour (if no image)</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="pe-herobg" value="#f0f5f0" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="pe-herobghex" value="#f0f5f0" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;"/>
+                </div>
+              </div>
+              <div class="fgrp"><label>Text Colour on Banner</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="pe-herotextclr" value="#2c2c2c" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="pe-herotextclrhex" value="#2c2c2c" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;"/>
+                </div>
+              </div>
+            </div>
+            <div class="fgrp"><label>Banner Overlay Opacity (0 = none, 0.5 = medium, 1 = full)</label><input type="range" id="pe-heroopacity" min="0" max="1" step="0.05" value="0" style="width:100%;" oninput="document.getElementById('pe-heroopacityval').textContent=this.value"/><span id="pe-heroopacityval" style="font-size:.76rem;color:var(--tl);">0</span></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">🖼️ Other Page Hero Banners <span></span></div>
+            <p style="font-size:.76rem;color:var(--tl);margin-bottom:14px;">Set the eyebrow text, title and description for each page's hero section.</p>
+            <div id="pageHeroEditor"></div>
+          </div>
+          <button class="btn btn-green" onclick="saveHeroSettings()">💾 Save Hero Settings</button>
+        </div>
+
+      </div><!-- end page editor -->
 
       <!-- CONTACTS -->
       <div class="page-section" id="sec-contacts">
@@ -1176,6 +1407,297 @@ function dl(data,filename){ const blob=new Blob([JSON.stringify(data,null,2)],{t
 function exportAll(){ dl({members:load('members'),contacts:load('contacts'),gallery:loadArr('gallery'),history:loadArr('history'),facts:loadArr('facts'),home:load('home'),contact:load('contact'),settings:load('settings')},'nukala-backup-'+new Date().toISOString().split('T')[0]+'.json'); toast('📥 Full backup exported!'); }
 function doImport(){ try{ const p=JSON.parse(document.getElementById('importData').value.trim()); if(p.members)save('members',p.members); if(p.contacts)save('contacts',p.contacts); if(p.gallery)save('gallery',p.gallery); if(p.history)save('history',p.history); if(p.facts)save('facts',p.facts); if(p.home)save('home',p.home); if(p.contact)save('contact',p.contact); if(p.settings)save('settings',p.settings); document.getElementById('importModal').classList.remove('open'); renderDash(); toast('📤 Imported!'); } catch(e){ alert('Invalid JSON.'); } }
 function resetAll(){ Object.values(LS).forEach(k=>localStorage.removeItem(k)); renderDash(); toast('🗑️ Reset.'); }
+
+// ═══════════════════════════════════════
+// PAGE EDITOR
+// ═══════════════════════════════════════
+function showPeTab(id, el){
+  document.querySelectorAll('.pe-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.pe-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pe-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  if(id==='theme') loadThemeForm();
+  if(id==='sitewide') loadSiteWideForm();
+  if(id==='homepage') loadHomePageEditor();
+  if(id==='contactpage') loadContactPageEditor();
+  if(id==='gallerypage') loadGalleryPageEditor();
+  if(id==='heropage') loadHeroEditor();
+}
+
+// ── THEME ──
+const themes={
+  sage:{primary:'#5c7a5c',secondary:'#8aab8a',highlight:'#c9a84c',bg:'#faf8f4',text:'#2c2c2c',nav:'#faf8f4'},
+  navy:{primary:'#1a3a5c',secondary:'#2e6090',highlight:'#c9a84c',bg:'#f4f6fa',text:'#1a2a3a',nav:'#f4f6fa'},
+  gold:{primary:'#8a6a00',secondary:'#c9a84c',highlight:'#e8d5a0',bg:'#fdfaf4',text:'#2c2a1a',nav:'#fdfaf4'},
+  maroon:{primary:'#6b1a1a',secondary:'#a03030',highlight:'#c9a84c',bg:'#faf8f4',text:'#2c1a1a',nav:'#faf8f4'},
+  purple:{primary:'#4a2060',secondary:'#7050a0',highlight:'#c9a84c',bg:'#faf8ff',text:'#1a0a2c',nav:'#faf8ff'},
+  teal:{primary:'#0d6e6e',secondary:'#1aab9b',highlight:'#c9a84c',bg:'#f4fafa',text:'#0a2020',nav:'#f4fafa'},
+};
+
+function applyTheme(name){
+  const t=themes[name]; if(!t) return;
+  document.getElementById('clrPrimary').value=t.primary; document.getElementById('clrPrimaryHex').value=t.primary;
+  document.getElementById('clrSecondary').value=t.secondary; document.getElementById('clrSecondaryHex').value=t.secondary;
+  document.getElementById('clrHighlight').value=t.highlight; document.getElementById('clrHighlightHex').value=t.highlight;
+  document.getElementById('clrBg').value=t.bg; document.getElementById('clrBgHex').value=t.bg;
+  document.getElementById('clrText').value=t.text; document.getElementById('clrTextHex').value=t.text;
+  document.getElementById('clrNav').value=t.nav; document.getElementById('clrNavHex').value=t.nav;
+}
+
+function syncColour(name){ const hex=document.getElementById('clrHex'+name).value; if(/^#[0-9A-Fa-f]{6}$/.test(hex)) document.getElementById('clr'+name).value=hex; }
+
+function loadThemeForm(){
+  const t=load('nukala_theme')||{};
+  if(t.primary){ document.getElementById('clrPrimary').value=t.primary; document.getElementById('clrPrimaryHex').value=t.primary; }
+  if(t.secondary){ document.getElementById('clrSecondary').value=t.secondary; document.getElementById('clrSecondaryHex').value=t.secondary; }
+  if(t.highlight){ document.getElementById('clrHighlight').value=t.highlight; document.getElementById('clrHighlightHex').value=t.highlight; }
+  if(t.bg){ document.getElementById('clrBg').value=t.bg; document.getElementById('clrBgHex').value=t.bg; }
+  if(t.text){ document.getElementById('clrText').value=t.text; document.getElementById('clrTextHex').value=t.text; }
+  if(t.nav){ document.getElementById('clrNav').value=t.nav; document.getElementById('clrNavHex').value=t.nav; }
+  if(t.fontHeading) document.getElementById('fontHeading').value=t.fontHeading;
+  if(t.fontBody) document.getElementById('fontBody').value=t.fontBody;
+}
+
+function saveTheme(){
+  const t={
+    primary:document.getElementById('clrPrimary').value,
+    secondary:document.getElementById('clrSecondary').value,
+    highlight:document.getElementById('clrHighlight').value,
+    bg:document.getElementById('clrBg').value,
+    text:document.getElementById('clrText').value,
+    nav:document.getElementById('clrNav').value,
+    fontHeading:document.getElementById('fontHeading').value,
+    fontBody:document.getElementById('fontBody').value,
+  };
+  localStorage.setItem('nukala_theme',JSON.stringify(t));
+  logAct('Theme updated'); toast('✅ Theme saved! Refresh the website to see changes.');
+}
+
+function saveFonts(){
+  const t=JSON.parse(localStorage.getItem('nukala_theme')||'{}');
+  t.fontHeading=document.getElementById('fontHeading').value;
+  t.fontBody=document.getElementById('fontBody').value;
+  localStorage.setItem('nukala_theme',JSON.stringify(t));
+  logAct('Fonts updated'); toast('✅ Fonts saved!');
+}
+
+// ── SITE WIDE ──
+function loadSiteWideForm(){
+  const d=load('nukala_sitewide')||{};
+  document.getElementById('pe-navname').value=d.navName||(load('nukala_home')||{}).navName||'NUKALA';
+  document.getElementById('pe-navlinks').value=d.navLinks||'Home,Family Tree,History,Gallery,Facts,Contact';
+  document.getElementById('pe-footer').value=d.footer||'© 2024 The Nukala Family · Private & Password Protected · Made with 🌳 & love';
+  document.getElementById('pe-footersub').value=d.footerSub||'';
+  document.getElementById('pe-logintitle').value=d.loginTitle||'The Nukala Family Tree';
+  document.getElementById('pe-loginsub').value=d.loginSub||'A private family archive';
+  document.getElementById('pe-loginbtn').value=d.loginBtn||'Enter Family Archive →';
+  document.getElementById('pe-loginnote').value=d.loginNote||'This site is exclusively for the Nukala family.';
+}
+
+function saveSiteWide(){
+  const d={
+    navName:document.getElementById('pe-navname').value.trim(),
+    navLinks:document.getElementById('pe-navlinks').value.trim(),
+    footer:document.getElementById('pe-footer').value.trim(),
+    footerSub:document.getElementById('pe-footersub').value.trim(),
+    loginTitle:document.getElementById('pe-logintitle').value.trim(),
+    loginSub:document.getElementById('pe-loginsub').value.trim(),
+    loginBtn:document.getElementById('pe-loginbtn').value.trim(),
+    loginNote:document.getElementById('pe-loginnote').value.trim(),
+  };
+  localStorage.setItem('nukala_sitewide',JSON.stringify(d));
+  // Also update home navName
+  const h=load('nukala_home')||{}; h.navName=d.navName; save('home',h);
+  const s=load('nukala_settings')||{}; s.familyName=d.navName; save('settings',s);
+  document.getElementById('tbSiteName').textContent=d.navName;
+  logAct('Site wide settings updated'); toast('✅ Site wide settings saved!');
+}
+
+// ── HOME PAGE EDITOR ──
+function loadHomePageEditor(){
+  const d=JSON.parse(localStorage.getItem('nukala_homepage2')||'{}');
+  // Quick cards
+  const cards=d.quickCards||[
+    {icon:'🌿',title:'Family Tree',desc:'Explore our family connections.',link:'tree.html',arrow:'View tree →'},
+    {icon:'📜',title:'Our History',desc:'Read stories and milestones.',link:'history.html',arrow:'Read more →'},
+    {icon:'🖼️',title:'Photo Gallery',desc:'Browse cherished photos.',link:'gallery.html',arrow:'View photos →'},
+    {icon:'✉️',title:'Get in Touch',desc:'Contribute your stories.',link:'contact.html',arrow:'Contact us →'},
+  ];
+  renderQuickCards(cards);
+  // Updates
+  const updates=d.updates||[];
+  renderUpdateItems(updates);
+  document.getElementById('pe-updatestitle').value=d.updatesTitle||'Recent Updates';
+}
+
+function renderQuickCards(cards){
+  document.getElementById('quickCardsEditor').innerHTML=cards.map((c,i)=>`
+    <div class="repeat-item">
+      <button class="del-btn" onclick="delQuickCard(${i})">✕</button>
+      <div class="frow">
+        <div class="fgrp"><label>Icon (emoji)</label><input type="text" value="${c.icon||''}" oninput="updateQC(${i},'icon',this.value)" placeholder="🌿"/></div>
+        <div class="fgrp"><label>Title</label><input type="text" value="${c.title||''}" oninput="updateQC(${i},'title',this.value)" placeholder="Family Tree"/></div>
+      </div>
+      <div class="fgrp"><label>Description</label><input type="text" value="${c.desc||''}" oninput="updateQC(${i},'desc',this.value)" placeholder="Short description..."/></div>
+      <div class="frow">
+        <div class="fgrp"><label>Link (page)</label><input type="text" value="${c.link||''}" oninput="updateQC(${i},'link',this.value)" placeholder="tree.html"/></div>
+        <div class="fgrp"><label>Arrow Text</label><input type="text" value="${c.arrow||''}" oninput="updateQC(${i},'arrow',this.value)" placeholder="View →"/></div>
+      </div>
+    </div>`).join('');
+}
+
+let _quickCards=[];
+function updateQC(i,field,val){ _quickCards[i][field]=val; }
+function delQuickCard(i){ _quickCards.splice(i,1); renderQuickCards(_quickCards); }
+function addQuickCard(){ _quickCards.push({icon:'⭐',title:'New Card',desc:'Description',link:'home.html',arrow:'Go →'}); renderQuickCards(_quickCards); }
+
+function renderUpdateItems(items){
+  _updateItems=[...items];
+  document.getElementById('updatesEditor').innerHTML=items.map((u,i)=>`
+    <div class="repeat-item">
+      <button class="del-btn" onclick="delUpdateItem(${i})">✕</button>
+      <div class="frow">
+        <div class="fgrp"><label>Title</label><input type="text" value="${u.title||''}" oninput="updateUI(${i},'title',this.value)" placeholder="Update title"/></div>
+        <div class="fgrp"><label>Date / Subtitle</label><input type="text" value="${u.date||''}" oninput="updateUI(${i},'date',this.value)" placeholder="e.g. January 2024"/></div>
+      </div>
+    </div>`).join('');
+}
+
+let _updateItems=[];
+function updateUI(i,field,val){ _updateItems[i][field]=val; }
+function delUpdateItem(i){ _updateItems.splice(i,1); renderUpdateItems(_updateItems); }
+function addUpdateItem(){ _updateItems.push({title:'New Update',date:''}); renderUpdateItems(_updateItems); }
+
+function saveHomePage2(){
+  const d={quickCards:_quickCards,updates:_updateItems,updatesTitle:document.getElementById('pe-updatestitle').value.trim()};
+  localStorage.setItem('nukala_homepage2',JSON.stringify(d));
+  logAct('Home page editor saved'); toast('✅ Home page saved!');
+}
+
+// ── CONTACT PAGE EDITOR ──
+let _dropdownOpts=[], _contactWays=[];
+
+function loadContactPageEditor(){
+  const d=JSON.parse(localStorage.getItem('nukala_contactpage2')||'{}');
+  _dropdownOpts=d.dropdownOpts||['Share a family photo','Add a family story or memory','Suggest a correction to the tree','Add a new family member','Request site access for someone','Other'];
+  _contactWays=d.contactWays||[
+    {icon:'📸',title:'Share a Photo',desc:'Send old or new family photos.'},
+    {icon:'📝',title:'Add a Story',desc:'Share a memory or anecdote.'},
+    {icon:'🌿',title:'Update the Tree',desc:'Add new family members or corrections.'},
+    {icon:'🔑',title:'Request Access',desc:'Need the site password? Let us know.'},
+  ];
+  renderDropdownOpts(); renderContactWays();
+}
+
+function renderDropdownOpts(){
+  document.getElementById('dropdownEditor').innerHTML=_dropdownOpts.map((o,i)=>`
+    <div class="repeat-item" style="display:flex;align-items:center;gap:10px;">
+      <input type="text" value="${o}" oninput="_dropdownOpts[${i}]=this.value" style="flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:Jost,sans-serif;font-size:.84rem;outline:none;"/>
+      <button class="del-btn" style="position:static;" onclick="_dropdownOpts.splice(${i},1);renderDropdownOpts()">✕</button>
+    </div>`).join('');
+}
+
+function addDropdownOption(){ _dropdownOpts.push('New Option'); renderDropdownOpts(); }
+
+function renderContactWays(){
+  document.getElementById('contactWaysEditor').innerHTML=_contactWays.map((w,i)=>`
+    <div class="repeat-item">
+      <button class="del-btn" onclick="_contactWays.splice(${i},1);renderContactWays()">✕</button>
+      <div class="frow">
+        <div class="fgrp"><label>Icon</label><input type="text" value="${w.icon||''}" oninput="_contactWays[${i}].icon=this.value" placeholder="📸"/></div>
+        <div class="fgrp"><label>Title</label><input type="text" value="${w.title||''}" oninput="_contactWays[${i}].title=this.value" placeholder="Share a Photo"/></div>
+      </div>
+      <div class="fgrp"><label>Description</label><input type="text" value="${w.desc||''}" oninput="_contactWays[${i}].desc=this.value" placeholder="Description..."/></div>
+    </div>`).join('');
+}
+
+function addContactWay(){ _contactWays.push({icon:'⭐',title:'New Way',desc:'Description'}); renderContactWays(); }
+
+function saveContactPage2(){
+  localStorage.setItem('nukala_contactpage2',JSON.stringify({dropdownOpts:_dropdownOpts,contactWays:_contactWays}));
+  logAct('Contact page editor saved'); toast('✅ Contact page saved!');
+}
+
+// ── GALLERY PAGE EDITOR ──
+let _galCats=[];
+
+function loadGalleryPageEditor(){
+  const d=JSON.parse(localStorage.getItem('nukala_gallerypage2')||'{}');
+  _galCats=d.cats||['family','vintage','celebrations','travel','other'];
+  document.getElementById('pe-galtitle').value=d.title||'The Nukala Photo Gallery';
+  document.getElementById('pe-galdesc').value=d.desc||'A visual archive of cherished moments, celebrations, and faces across the years.';
+  renderGalCats();
+}
+
+function renderGalCats(){
+  document.getElementById('galCatsEditor').innerHTML=_galCats.map((c,i)=>`
+    <div class="repeat-item" style="display:flex;align-items:center;gap:10px;">
+      <input type="text" value="${c}" oninput="_galCats[${i}]=this.value" style="flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:Jost,sans-serif;font-size:.84rem;outline:none;" placeholder="Category name"/>
+      <button class="del-btn" style="position:static;" onclick="_galCats.splice(${i},1);renderGalCats()">✕</button>
+    </div>`).join('');
+}
+
+function addGalCat(){ _galCats.push('new category'); renderGalCats(); }
+
+function saveGalleryPage2(){
+  localStorage.setItem('nukala_gallerypage2',JSON.stringify({cats:_galCats,title:document.getElementById('pe-galtitle').value.trim(),desc:document.getElementById('pe-galdesc').value.trim()}));
+  logAct('Gallery page editor saved'); toast('✅ Gallery page saved!');
+}
+
+// ── HERO EDITOR ──
+const heroPages=['Family Tree','History','Gallery','Facts','Contact'];
+
+function loadHeroEditor(){
+  const d=JSON.parse(localStorage.getItem('nukala_heropage')||'{}');
+  document.getElementById('pe-heroimgurl').value=d.homeImgUrl||'';
+  document.getElementById('pe-herobg').value=d.homeBg||'#f0f5f0';
+  document.getElementById('pe-herobghex').value=d.homeBg||'#f0f5f0';
+  document.getElementById('pe-herotextclr').value=d.homeTextClr||'#2c2c2c';
+  document.getElementById('pe-herotextclrhex').value=d.homeTextClr||'#2c2c2c';
+  document.getElementById('pe-heroopacity').value=d.homeOverlay||0;
+  document.getElementById('pe-heroopacityval').textContent=d.homeOverlay||0;
+  if(d.homeImgUrl){ document.getElementById('pe-heroimgurl').value=d.homeImgUrl; previewHeroImg(d.homeImgUrl); }
+
+  // Page heroes
+  document.getElementById('pageHeroEditor').innerHTML=heroPages.map((p,i)=>{
+    const key='page'+i;
+    const pd=d[key]||{};
+    return `<div class="panel" style="margin-bottom:12px;">
+      <div class="panel-title">${p} Page <span></span></div>
+      <div class="frow3">
+        <div class="fgrp"><label>Eyebrow Text</label><input type="text" id="hero-${i}-eye" value="${pd.eye||''}" placeholder="e.g. Explore"/></div>
+        <div class="fgrp"><label>Title</label><input type="text" id="hero-${i}-title" value="${pd.title||''}" placeholder="e.g. The Nukala Family Tree"/></div>
+        <div class="fgrp"><label>Description</label><input type="text" id="hero-${i}-desc" value="${pd.desc||''}" placeholder="Short description..."/></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function previewHeroImg(url){
+  const p=document.getElementById('heroImgPreview'),img=document.getElementById('heroImgPreviewImg');
+  if(url){ img.src=url; p.style.display='block'; } else p.style.display='none';
+}
+
+function saveHeroSettings(){
+  const d={
+    homeImgUrl:document.getElementById('pe-heroimgurl').value.trim(),
+    homeBg:document.getElementById('pe-herobg').value,
+    homeTextClr:document.getElementById('pe-herotextclr').value,
+    homeOverlay:document.getElementById('pe-heroopacity').value,
+  };
+  heroPages.forEach((p,i)=>{
+    d['page'+i]={
+      eye:document.getElementById(`hero-${i}-eye`).value.trim(),
+      title:document.getElementById(`hero-${i}-title`).value.trim(),
+      desc:document.getElementById(`hero-${i}-desc`).value.trim(),
+    };
+  });
+  localStorage.setItem('nukala_heropage',JSON.stringify(d));
+  logAct('Hero settings saved'); toast('✅ Hero settings saved!');
+}
+
+// ── UPDATE showSec to load page editor ──
+const _origShowSec = showSec;
 
 // ═══════════════════════════════════════
 // TOAST
