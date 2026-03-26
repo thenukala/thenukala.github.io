@@ -1374,3 +1374,11 @@ function showPeTab(id, el){
 // TOAST
 // ═══════════════════════════════════════
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
+
+
+// Called by admin.html after login
+function initAdmin(){
+  // init() sets up the topbar site name and renders dashboard
+  if(typeof init === 'function') init();
+  else renderDash();
+}
