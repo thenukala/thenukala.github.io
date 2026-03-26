@@ -1414,6 +1414,13 @@
 </div>
 
 <script>
+
+// ── Data helpers (must be first) ──
+const LS={members:'nukala_tree_data',contacts:'nukala_contacts',gallery:'nukala_gallery',history:'nukala_history',facts:'nukala_facts',home:'nukala_home',contact:'nukala_contact',settings:'nukala_settings',log:'nukala_log',annLog:'nukala_ann_log'};
+const load=k=>JSON.parse(localStorage.getItem(LS[k]||k)||'{}');
+const loadArr=k=>JSON.parse(localStorage.getItem(LS[k]||k)||'[]');
+const save=(k,v)=>localStorage.setItem(LS[k]||k,JSON.stringify(v));
+
 // ═══════════════════════════════════════
 // PASSWORDS & AUTH
 // ═══════════════════════════════════════
@@ -1458,10 +1465,6 @@ document.addEventListener('DOMContentLoaded', function(){
 // ═══════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════
-const LS={members:'nukala_tree_data',contacts:'nukala_contacts',gallery:'nukala_gallery',history:'nukala_history',facts:'nukala_facts',home:'nukala_home',contact:'nukala_contact',settings:'nukala_settings',log:'nukala_log',annLog:'nukala_ann_log'};
-const load=k=>JSON.parse(localStorage.getItem(LS[k]||k)||'{}');
-const loadArr=k=>JSON.parse(localStorage.getItem(LS[k]||k)||'[]');
-const save=(k,v)=>localStorage.setItem(LS[k]||k,JSON.stringify(v));
 
 // ═══════════════════════════════════════
 // NAV
