@@ -385,7 +385,7 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
       <!-- PAGE EDITOR -->
       <div class="sec" id="sec-editor">
         <div class="sh">Full <em>Page Editor</em></div>
-        <p class="ss">Edit colours, fonts, text and content on every page. Changes apply instantly when visitors load the site.</p>
+        <p class="ss">Edit colours, fonts and content. Changes apply instantly when visitors load the site.</p>
         <div class="div"></div>
         <div class="pt-tabs">
           <button class="ptb on" onclick="peTab('theme',this)">🎨 Theme</button>
@@ -394,110 +394,85 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
           <button class="ptb" onclick="peTab('pages',this)">📄 Page Texts</button>
           <button class="ptb" onclick="peTab('contact',this)">✉️ Contact</button>
           <button class="ptb" onclick="peTab('gallery',this)">🖼️ Gallery</button>
-          <button class="ptb" onclick="peTab('fonts',this)">✍️ Typography</button>
+          <button class="ptb" onclick="peTab('fonts',this)">✍️ Fonts</button>
         </div>
-
-        <!-- THEME -->
         <div class="pts on" id="pe-theme">
           <div class="panel">
-            <div class="pt">Quick Colour Presets</div>
+            <div class="pt">Quick Presets</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
-              <button onclick="applyTheme('sage')" style="background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🌿 Sage Green</button>
-              <button onclick="applyTheme('navy')" style="background:linear-gradient(135deg,#1a3a5c,#2e6090);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🌊 Navy Blue</button>
-              <button onclick="applyTheme('gold')" style="background:linear-gradient(135deg,#8a6a00,#c9a84c);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">✨ Royal Gold</button>
-              <button onclick="applyTheme('maroon')" style="background:linear-gradient(135deg,#6b1a1a,#a03030);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🍷 Maroon</button>
-              <button onclick="applyTheme('purple')" style="background:linear-gradient(135deg,#4a2060,#7050a0);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">💜 Purple</button>
-              <button onclick="applyTheme('teal')" style="background:linear-gradient(135deg,#0d6e6e,#1aab9b);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🦋 Teal</button>
+              <button onclick="applyTheme('sage')" style="background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:Jost,sans-serif;font-size:.72rem;cursor:pointer;">🌿 Sage Green</button>
+              <button onclick="applyTheme('navy')" style="background:linear-gradient(135deg,#1a3a5c,#2e6090);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:Jost,sans-serif;font-size:.72rem;cursor:pointer;">🌊 Navy Blue</button>
+              <button onclick="applyTheme('gold')" style="background:linear-gradient(135deg,#8a6a00,#c9a84c);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:Jost,sans-serif;font-size:.72rem;cursor:pointer;">✨ Royal Gold</button>
+              <button onclick="applyTheme('maroon')" style="background:linear-gradient(135deg,#6b1a1a,#a03030);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:Jost,sans-serif;font-size:.72rem;cursor:pointer;">🍷 Maroon</button>
+              <button onclick="applyTheme('purple')" style="background:linear-gradient(135deg,#4a2060,#7050a0);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:Jost,sans-serif;font-size:.72rem;cursor:pointer;">💜 Purple</button>
+              <button onclick="applyTheme('teal')" style="background:linear-gradient(135deg,#0d6e6e,#1aab9b);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:Jost,sans-serif;font-size:.72rem;cursor:pointer;">🦋 Teal</button>
             </div>
             <div class="fr">
-              <div class="fg"><label>Primary Colour (buttons, links, headings)</label>
+              <div class="fg">
+                <label>Primary Colour</label>
                 <div style="display:flex;gap:8px;align-items:center;">
-                  <input type="color" id="clrPrimary" value="#5c7a5c" oninput="document.getElementById('clrPrimaryHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
-                  <input type="text" id="clrPrimaryHex" value="#5c7a5c" placeholder="#5c7a5c" oninput="document.getElementById('clrPrimary').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                  <input type="color" id="clrPrimary" value="#5c7a5c" oninput="syncClr('Primary',this.value)" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrPrimaryHex" value="#5c7a5c" oninput="syncClrHex('Primary',this.value)" style="flex:1;padding:8px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;"/>
                 </div>
               </div>
-              <div class="fg"><label>Secondary Colour (accents)</label>
+              <div class="fg">
+                <label>Secondary Colour</label>
                 <div style="display:flex;gap:8px;align-items:center;">
-                  <input type="color" id="clrSecondary" value="#8aab8a" oninput="document.getElementById('clrSecondaryHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
-                  <input type="text" id="clrSecondaryHex" value="#8aab8a" placeholder="#8aab8a" oninput="document.getElementById('clrSecondary').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
-                </div>
-              </div>
-            </div>
-            <div class="fr">
-              <div class="fg"><label>Highlight / Gold Colour</label>
-                <div style="display:flex;gap:8px;align-items:center;">
-                  <input type="color" id="clrHighlight" value="#c9a84c" oninput="document.getElementById('clrHighlightHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
-                  <input type="text" id="clrHighlightHex" value="#c9a84c" placeholder="#c9a84c" oninput="document.getElementById('clrHighlight').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
-                </div>
-              </div>
-              <div class="fg"><label>Background Colour</label>
-                <div style="display:flex;gap:8px;align-items:center;">
-                  <input type="color" id="clrBg" value="#faf8f4" oninput="document.getElementById('clrBgHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
-                  <input type="text" id="clrBgHex" value="#faf8f4" placeholder="#faf8f4" oninput="document.getElementById('clrBg').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                  <input type="color" id="clrSecondary" value="#8aab8a" oninput="syncClr('Secondary',this.value)" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrSecondaryHex" value="#8aab8a" oninput="syncClrHex('Secondary',this.value)" style="flex:1;padding:8px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;"/>
                 </div>
               </div>
             </div>
             <div class="fr">
-              <div class="fg"><label>Text Colour</label>
+              <div class="fg">
+                <label>Background Colour</label>
                 <div style="display:flex;gap:8px;align-items:center;">
-                  <input type="color" id="clrText" value="#2c2c2c" oninput="document.getElementById('clrTextHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
-                  <input type="text" id="clrTextHex" value="#2c2c2c" placeholder="#2c2c2c" oninput="document.getElementById('clrText').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                  <input type="color" id="clrBg" value="#faf8f4" oninput="syncClr('Bg',this.value)" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrBgHex" value="#faf8f4" oninput="syncClrHex('Bg',this.value)" style="flex:1;padding:8px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;"/>
                 </div>
               </div>
-              <div class="fg"><label>Nav Bar Background</label>
+              <div class="fg">
+                <label>Text Colour</label>
                 <div style="display:flex;gap:8px;align-items:center;">
-                  <input type="color" id="clrNav" value="#ffffff" oninput="document.getElementById('clrNavHex').value=this.value" style="width:44px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
-                  <input type="text" id="clrNavHex" value="#ffffff" placeholder="#ffffff" oninput="document.getElementById('clrNav').value=this.value" style="flex:1;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;"/>
+                  <input type="color" id="clrText" value="#2c2c2c" oninput="syncClr('Text',this.value)" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/>
+                  <input type="text" id="clrTextHex" value="#2c2c2c" oninput="syncClrHex('Text',this.value)" style="flex:1;padding:8px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;"/>
                 </div>
               </div>
             </div>
             <div style="display:flex;gap:8px;margin-top:4px;">
               <button class="btn bg bsm" onclick="saveTheme()">💾 Save Theme</button>
-              <button class="btn bo bsm" onclick="resetTheme()">↺ Reset to Default</button>
+              <button class="btn bo bsm" onclick="resetTheme()">↺ Reset Default</button>
             </div>
           </div>
         </div>
-
-        <!-- SITE WIDE -->
         <div class="pts" id="pe-sitewide">
           <div class="panel">
             <div class="pt">Navigation Bar</div>
             <div class="fr">
               <div class="fg"><label>Site Name (shown in nav)</label><input type="text" id="pe-sitename" placeholder="NUKALA FAMILY"/></div>
-              <div class="fg"><label>Nav Bar Logo URL (optional)</label><input type="text" id="pe-logourl" placeholder="logo.png or https://..."/></div>
+              <div class="fg"><label>Footer Family Name</label><input type="text" id="pe-footer" placeholder="The Nukala Family"/></div>
             </div>
-            <button class="btn bg bsm" onclick="saveSiteWide()">💾 Save Nav</button>
-          </div>
-          <div class="panel">
-            <div class="pt">Footer</div>
-            <div class="fg"><label>Footer Family Name</label><input type="text" id="pe-footer" placeholder="The Nukala Family"/></div>
-            <div class="fg"><label>Footer Tagline</label><input type="text" id="pe-footersub" placeholder="Private & Password Protected · Made with 🌳 & love"/></div>
-            <button class="btn bg bsm" onclick="saveSiteWide()">💾 Save Footer</button>
+            <div class="fr">
+              <div class="fg"><label>Footer Tagline</label><input type="text" id="pe-footersub" placeholder="Private &amp; Password Protected"/></div>
+              <div class="fg"><label>Logo URL (optional)</label><input type="text" id="pe-logourl" placeholder="logo.png"/></div>
+            </div>
           </div>
           <div class="panel">
             <div class="pt">Feature Toggles</div>
             <div style="display:flex;flex-direction:column;gap:12px;">
-              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);">
-                <input type="checkbox" id="pe-showsearch" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show 🔍 Search Button in Nav
-              </label>
-              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);">
-                <input type="checkbox" id="pe-showdark" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show 🌙 Dark Mode Button in Nav
-              </label>
-              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);">
-                <input type="checkbox" id="pe-showlang" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show 🌐 Language Button in Nav
-              </label>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showsearch" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Search Button</label>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showdark" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Dark Mode Button</label>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showlang" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Language Button</label>
             </div>
-            <button class="btn bg bsm" style="margin-top:12px;" onclick="saveSiteWide()">💾 Save Toggles</button>
+            <button class="btn bg bsm" style="margin-top:12px;" onclick="saveSiteWide()">💾 Save Site Wide</button>
           </div>
         </div>
-
-        <!-- HOME PAGE -->
         <div class="pts" id="pe-home">
           <div class="panel">
             <div class="pt">Hero Section</div>
             <div class="fg"><label>Hero Title</label><input type="text" id="pe-htitle" placeholder="The Nukala Family Archive"/></div>
             <div class="fg"><label>Hero Tagline</label><input type="text" id="pe-htagline" placeholder="A private space to celebrate our roots..."/></div>
-            <div class="fg"><label>Hero Background Image URL (optional)</label><input type="text" id="pe-herobg" placeholder="https://... leave blank for gradient"/></div>
+            <div class="fg"><label>Hero Background Image URL (optional)</label><input type="text" id="pe-herobg" placeholder="https://... or leave blank for gradient"/></div>
           </div>
           <div class="panel">
             <div class="pt">Stats Bar</div>
@@ -517,21 +492,17 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
           <div class="panel">
             <div class="pt">About Section</div>
             <div class="fg"><label>About Title</label><input type="text" id="pe-abouttitle" placeholder="Our Roots Run Deep"/></div>
-            <div class="fg"><label>About Paragraph 1</label><textarea id="pe-about1" rows="3"></textarea></div>
-            <div class="fg"><label>About Paragraph 2</label><textarea id="pe-about2" rows="3"></textarea></div>
-            <div class="fg"><label>About Paragraph 3</label><textarea id="pe-about3" rows="3"></textarea></div>
+            <div class="fg"><label>Paragraph 1</label><textarea id="pe-about1" rows="3"></textarea></div>
+            <div class="fg"><label>Paragraph 2</label><textarea id="pe-about2" rows="3"></textarea></div>
+            <div class="fg"><label>Paragraph 3</label><textarea id="pe-about3" rows="3"></textarea></div>
           </div>
           <button class="btn bg" onclick="saveHomePage()">💾 Save Home Page</button>
         </div>
-
-        <!-- PAGE TEXTS -->
         <div class="pts" id="pe-pages">
-          <div class="notice">✏️ Edit the hero title, eyebrow text and description for each page.</div>
+          <div class="notice">Edit the eyebrow text, title and description for each page of the website.</div>
           <div id="pageTextsEditor"></div>
-          <button class="btn bg" onclick="savePageTexts()">💾 Save All Page Texts</button>
+          <button class="btn bg" style="margin-top:8px;" onclick="savePageTexts()">💾 Save All Page Texts</button>
         </div>
-
-        <!-- CONTACT PAGE -->
         <div class="pts" id="pe-contact">
           <div class="panel">
             <div class="pt">Contact Details</div>
@@ -539,45 +510,41 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
               <div class="fg"><label>Contact Person Name</label><input type="text" id="pe-cname" placeholder="Ramu Nukala"/></div>
               <div class="fg"><label>Contact Email</label><input type="text" id="pe-cemail" placeholder="family@email.com"/></div>
             </div>
-            <div class="fg"><label>Formspree Form ID (for receiving emails)</label><input type="text" id="pe-formspree" placeholder="e.g. xyzabc12 — sign up free at formspree.io"/></div>
+            <div class="fg"><label>Formspree Form ID (free at formspree.io)</label><input type="text" id="pe-formspree" placeholder="e.g. xyzabc12"/></div>
           </div>
           <div class="panel">
-            <div class="pt">Form Subject Dropdown Options (one per line)</div>
-            <div class="fg"><textarea id="pe-droptions" rows="8" placeholder="Add a family member&#10;Submit a photo&#10;Share a story&#10;Report an error&#10;Other"></textarea></div>
+            <div class="pt">Form Dropdown Options (one per line)</div>
+            <div class="fg"><textarea id="pe-droptions" rows="7" placeholder="Add a family member&#10;Submit a photo&#10;Share a story&#10;Other"></textarea></div>
           </div>
           <button class="btn bg" onclick="saveContactPage()">💾 Save Contact Page</button>
         </div>
-
-        <!-- GALLERY PAGE -->
         <div class="pts" id="pe-gallery">
           <div class="panel">
             <div class="pt">Gallery Filter Categories (one per line)</div>
             <div class="fg"><textarea id="pe-galcats" rows="8" placeholder="All Photos&#10;Family&#10;Vintage&#10;Celebrations&#10;Travel&#10;Other"></textarea></div>
-            <button class="btn bg bsm" onclick="saveGalleryPage()">💾 Save Categories</button>
+            <button class="btn bg bsm" onclick="saveGalleryPage()">💾 Save</button>
           </div>
         </div>
-
-        <!-- TYPOGRAPHY -->
         <div class="pts" id="pe-fonts">
           <div class="panel">
-            <div class="pt">Fonts</div>
+            <div class="pt">Typography</div>
             <div class="fr">
-              <div class="fg"><label>Heading / Title Font</label>
-                <select id="pe-fonthead" style="width:100%;padding:10px 13px;border:1.5px solid var(--b);border-radius:9px;font-family:'Jost',sans-serif;font-size:.85rem;color:var(--td);background:var(--c);outline:none;">
-                  <option value="Cormorant Garamond">Cormorant Garamond (Default — Elegant)</option>
-                  <option value="Playfair Display">Playfair Display (Classic)</option>
-                  <option value="Lora">Lora (Refined)</option>
-                  <option value="Merriweather">Merriweather (Traditional)</option>
-                  <option value="EB Garamond">EB Garamond (Historical)</option>
+              <div class="fg">
+                <label>Heading Font</label>
+                <select id="pe-fonthead" class="fg" style="padding:10px 13px;border:1.5px solid var(--b);border-radius:9px;font-family:Jost,sans-serif;font-size:.85rem;background:var(--c);outline:none;width:100%;">
+                  <option value="Cormorant Garamond">Cormorant Garamond (Default)</option>
+                  <option value="Playfair Display">Playfair Display</option>
+                  <option value="Lora">Lora</option>
+                  <option value="Merriweather">Merriweather</option>
                 </select>
               </div>
-              <div class="fg"><label>Body / Paragraph Font</label>
-                <select id="pe-fontbody" style="width:100%;padding:10px 13px;border:1.5px solid var(--b);border-radius:9px;font-family:'Jost',sans-serif;font-size:.85rem;color:var(--td);background:var(--c);outline:none;">
-                  <option value="Jost">Jost (Default — Clean)</option>
-                  <option value="Lato">Lato (Friendly)</option>
-                  <option value="Open Sans">Open Sans (Readable)</option>
-                  <option value="Poppins">Poppins (Modern)</option>
-                  <option value="Nunito">Nunito (Soft)</option>
+              <div class="fg">
+                <label>Body Font</label>
+                <select id="pe-fontbody" style="padding:10px 13px;border:1.5px solid var(--b);border-radius:9px;font-family:Jost,sans-serif;font-size:.85rem;background:var(--c);outline:none;width:100%;">
+                  <option value="Jost">Jost (Default)</option>
+                  <option value="Lato">Lato</option>
+                  <option value="Open Sans">Open Sans</option>
+                  <option value="Poppins">Poppins</option>
                 </select>
               </div>
             </div>
@@ -1495,6 +1462,14 @@ function applyTheme(t){
   document.getElementById('clrNav').value=c.nav; document.getElementById('clrNavHex').value=c.nav;
 }
 
+function syncClr(name, val){
+  var hex = document.getElementById('clr'+name+'Hex');
+  if(hex) hex.value = val;
+}
+function syncClrHex(name, val){
+  var picker = document.getElementById('clr'+name);
+  if(picker && /^#[0-9a-fA-F]{6}$/.test(val)) picker.value = val;
+}
 function saveTheme(){
   // Save to nukala_theme — what the pages actually read
   var theme = {
