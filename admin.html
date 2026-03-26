@@ -1,475 +1,595 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin – Nukala Family</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="icon" href="favicon.ico"/>
-  <link rel="stylesheet" href="darkmode.css"/>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{--cream:#faf8f4;--white:#fff;--sage:#8aab8a;--sage-l:#c8ddc8;--sage-d:#5c7a5c;--gold:#c9a84c;--gold-l:#e8d5a0;--td:#2c2c2c;--tm:#6b6b6b;--tl:#a0a0a0;--border:#e8e2d8;--red:#c0614a;}
-    body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--td);min-height:100vh;}
-    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(138,171,138,.12) 0%,transparent 60%),var(--cream);}
-    .lcard{background:var(--white);border:1px solid var(--border);border-radius:24px;padding:48px 44px;width:100%;max-width:420px;box-shadow:0 4px 40px rgba(0,0,0,.06);}
-    .lcard img{width:72px;height:72px;object-fit:contain;border-radius:12px;display:block;margin:0 auto 10px;}
-    .lcard h1{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;text-align:center;margin-bottom:4px;color:var(--td);}
-    .lcard p{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tl);text-align:center;margin-bottom:32px;}
-    .lcard label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:7px;}
-    .lcard input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Jost',sans-serif;font-size:.9rem;color:var(--td);background:var(--cream);outline:none;transition:border-color .2s;margin-bottom:6px;}
-    .lcard input:focus{border-color:var(--sage);background:var(--white);}
-    .lcard .err{color:var(--red);font-size:.78rem;margin-bottom:8px;display:none;text-align:center;padding:8px;background:#fdf0f0;border-radius:8px;}
-    .lcard .login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--sage-d),var(--sage));color:var(--white);border:none;border-radius:12px;font-family:'Jost',sans-serif;font-size:.85rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;margin-top:8px;box-shadow:0 4px 16px rgba(92,122,92,.3);}
-    .lcard .login-btn:hover{opacity:.9;}
-    .lcard a{display:block;text-align:center;margin-top:14px;font-size:.74rem;color:var(--sage-d);text-decoration:none;}
-    #adminUI{display:none;}
-  
-    .pe-tab{padding:8px 16px;border-radius:9px;border:1.5px solid var(--border);background:var(--white);font-family:'Jost',sans-serif;font-size:.76rem;font-weight:500;color:var(--tm);cursor:pointer;transition:all .2s;}
-    .pe-tab:hover,.pe-tab.active{background:var(--sage-d);color:var(--white);border-color:var(--sage-d);}
-    .pe-section{display:none;} .pe-section.active{display:block;}
-    .repeat-item{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;position:relative;}
-    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-    .tb-brand{display:flex;align-items:center;gap:10px;}
-    .tb-brand img{width:30px;height:30px;object-fit:contain;border-radius:6px;}
-    .tb-brand h1{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;}
-    .tb-badge{background:var(--red);color:var(--white);font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;}
-    .tb-right{display:flex;align-items:center;gap:10px;}
-    .tb-btn{font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:9px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .2s;text-decoration:none;display:inline-block;}
-    .tb-view{color:var(--sage-d);border:1.5px solid var(--sage-l);background:var(--white);}
-    .tb-view:hover{background:var(--sage-d);color:var(--white);}
-    .tb-out{color:var(--tm);background:none;border:1.5px solid var(--border);}
-    .tb-out:hover{border-color:var(--red);color:var(--red);}
-    .shell{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 62px);}
-    .sidebar{background:var(--white);border-right:1px solid var(--border);padding:20px 14px;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;}
-    .nav-section{font-size:.64rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tl);padding:0 10px;margin:18px 0 8px;}
-    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .2s;border:none;width:100%;background:none;font-family:'Jost',sans-serif;font-size:.82rem;font-weight:500;color:var(--tm);text-align:left;}
-    .nav-item:hover{background:var(--cream);}
-    .nav-item.active{background:rgba(92,122,92,.1);color:var(--sage-d);}
-    .nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
-    .main{padding:28px 32px;overflow-y:auto;}
-    .page-section{display:none;} .page-section.active{display:block;}
-    .sec-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:4px;color:var(--td);}
-    .sec-title em{font-style:italic;color:var(--sage-d);}
-    .sec-sub{font-size:.82rem;color:var(--tm);margin-bottom:20px;font-weight:300;}
-    .sec-div{height:2px;width:50px;background:linear-gradient(to right,var(--sage),var(--gold));border-radius:2px;margin-bottom:24px;}
-    .panel{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px;}
-    .panel-title{font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:16px;}
-    .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
-    .stat-box{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
-    .stat-box .num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--sage-d);display:block;}
-    .stat-box .lbl{font-size:.62rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);}
-    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
-    .mcard{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:14px;transition:box-shadow .2s,border-color .2s;}
-    .mcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.06);border-color:var(--sage-l);}
-    .mcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-    .mavatar{width:44px;height:44px;border-radius:50%;background:var(--sage-l);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden;border:2px solid var(--border);}
-    .mavatar img{width:100%;height:100%;object-fit:cover;}
-    .mname{font-family:'Cormorant Garamond',serif;font-size:.98rem;font-weight:600;color:var(--td);}
-    .mrole{font-size:.62rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--sage-d);}
-    .mtags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
-    .tag{font-size:.58rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:20px;}
-    .tag-g{background:rgba(92,122,92,.1);color:var(--sage-d);}
-    .tag-f{background:#f0e8f8;color:#9060b0;}
-    .tag-a{background:var(--gold-l);color:#8a6a00;}
-    .tag-il{background:#e8e0f0;color:#7050a0;}
-    .mactions{display:flex;gap:5px;}
-    .mbtn{padding:6px 10px;background:var(--cream);color:var(--sage-d);border:1.5px solid var(--sage-l);border-radius:7px;font-family:'Jost',sans-serif;font-size:.66rem;font-weight:500;cursor:pointer;transition:all .2s;}
-    .mbtn:hover{background:var(--sage-d);color:var(--white);border-color:var(--sage-d);}
-    .mbtn-red{background:var(--white);color:var(--red);border-color:#f0d0c8;}
-    .mbtn-red:hover{background:var(--red);color:var(--white);}
-    .fgrp{margin-bottom:14px;}
-    .fgrp label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:6px;}
-    .fgrp input,.fgrp textarea,.fgrp select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--td);background:var(--cream);outline:none;transition:border-color .2s;}
-    .fgrp input:focus,.fgrp textarea:focus,.fgrp select:focus{border-color:var(--sage);background:var(--white);}
-    .fgrp textarea{resize:vertical;min-height:80px;}
-    .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-    .btn{padding:10px 20px;border-radius:10px;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border:none;}
-    .btn-green{background:linear-gradient(135deg,var(--sage-d),var(--sage));color:var(--white);box-shadow:0 3px 10px rgba(92,122,92,.25);}
-    .btn-green:hover{transform:translateY(-1px);}
-    .btn-outline{background:var(--white);color:var(--tm);border:1.5px solid var(--border);}
-    .btn-outline:hover{border-color:var(--sage);color:var(--sage-d);}
-    .btn-red{background:var(--red);color:var(--white);}
-    .btn-sm{padding:7px 14px;font-size:.7rem;}
-    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:16px;}
-    .modal-bg.open{display:flex;}
-    .modal{background:var(--white);border-radius:20px;padding:28px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;position:relative;}
-    .modal h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:3px;}
-    .modal-sub{font-size:.74rem;color:var(--tl);margin-bottom:18px;}
-    .modal-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:1rem;cursor:pointer;color:var(--tl);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
-    .modal-close:hover{background:var(--border);}
-    .search-bar{display:flex;align-items:center;gap:10px;background:var(--white);border:1.5px solid var(--border);border-radius:11px;padding:8px 13px;margin-bottom:14px;}
-    .search-bar input{flex:1;border:none;outline:none;font-family:'Jost',sans-serif;font-size:.84rem;color:var(--td);background:transparent;}
-    .tl-item{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;}
-    .tl-year{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--sage-d);min-width:60px;flex-shrink:0;}
-    .tl-body{flex:1;}
-    .tl-title-txt{font-weight:500;color:var(--td);margin-bottom:4px;font-size:.9rem;}
-    .tl-desc{font-size:.78rem;color:var(--tm);line-height:1.6;}
-    .tl-actions{display:flex;gap:6px;margin-top:8px;}
-    .gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;}
-    .gal-item{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-    .gal-img{width:100%;height:130px;object-fit:cover;display:block;}
-    .gal-placeholder{width:100%;height:130px;background:linear-gradient(135deg,var(--sage-l),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:32px;}
-    .gal-info{padding:8px 10px;}
-    .gal-title{font-size:.8rem;font-weight:500;color:var(--td);}
-    .gal-actions{display:flex;gap:5px;padding:6px 10px;border-top:1px solid var(--border);}
-    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--sage-d);color:var(--white);padding:11px 22px;border-radius:28px;font-size:.82rem;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.15);white-space:nowrap;}
-    .notice{background:#f0f5f0;border:1px solid var(--sage-l);border-radius:10px;padding:11px 15px;font-size:.76rem;color:var(--sage-d);margin-bottom:14px;line-height:1.6;}
-    .setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
-    .setting-row:last-child{border-bottom:none;}
-    .setting-lbl{font-size:.85rem;font-weight:500;color:var(--td);}
-    .setting-desc{font-size:.73rem;color:var(--tl);margin-top:2px;}
-    @media(max-width:768px){.shell{grid-template-columns:1fr;}.sidebar{position:static;height:auto;}.stats-row{grid-template-columns:1fr 1fr;}.frow{grid-template-columns:1fr;}.cards-grid{grid-template-columns:1fr;}}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin – Nukala Family</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="icon" href="favicon.ico"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--c:#faf8f4;--w:#fff;--s:#8aab8a;--sl:#c8ddc8;--sd:#5c7a5c;--g:#c9a84c;--gl:#e8d5a0;--td:#2c2c2c;--tm:#6b6b6b;--tl:#a0a0a0;--b:#e8e2d8;--r:#c0614a;}
+body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-height:100vh;}
+/* LOGIN */
+#L{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.lbox{background:var(--w);border:1px solid var(--b);border-radius:20px;padding:44px;width:100%;max-width:400px;box-shadow:0 4px 32px rgba(0,0,0,.07);}
+.lbox img{width:64px;height:64px;display:block;margin:0 auto 8px;border-radius:10px;object-fit:contain;}
+.lbox h1{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;text-align:center;margin-bottom:4px;}
+.lbox p{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tl);text-align:center;margin-bottom:28px;}
+.lbox label{display:block;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:6px;}
+.lbox input{width:100%;padding:12px 14px;border:1.5px solid var(--b);border-radius:9px;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--td);background:var(--c);outline:none;margin-bottom:6px;}
+.lbox input:focus{border-color:var(--s);background:var(--w);}
+.lbox .err{color:var(--r);font-size:.76rem;text-align:center;padding:7px;background:#fdf0f0;border-radius:7px;margin-bottom:8px;display:none;}
+.lbox button{width:100%;padding:13px;background:linear-gradient(135deg,var(--sd),var(--s));color:var(--w);border:none;border-radius:11px;font-family:'Jost',sans-serif;font-size:.82rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;}
+.lbox a{display:block;text-align:center;margin-top:12px;font-size:.72rem;color:var(--sd);text-decoration:none;}
+/* ADMIN UI */
+#A{display:none;}
+.bar{background:var(--w);border-bottom:1px solid var(--b);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.bar-brand{display:flex;align-items:center;gap:9px;}
+.bar-brand img{width:28px;height:28px;border-radius:6px;object-fit:contain;}
+.bar-brand span{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;}
+.badge{background:var(--r);color:var(--w);font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:20px;}
+.bar-right{display:flex;gap:8px;}
+.xbtn{font-size:.72rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;}
+.xbtn-view{color:var(--sd);border:1.5px solid var(--sl);background:var(--w);}
+.xbtn-view:hover{background:var(--sd);color:var(--w);}
+.xbtn-out{color:var(--tm);border:1.5px solid var(--b);background:none;}
+.xbtn-out:hover{border-color:var(--r);color:var(--r);}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 58px);}
+/* SIDEBAR */
+.side{background:var(--w);border-right:1px solid var(--b);padding:16px 12px;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;}
+.ns{font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tl);padding:0 9px;margin:16px 0 6px;}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;cursor:pointer;border:none;width:100%;background:none;font-family:'Jost',sans-serif;font-size:.8rem;font-weight:500;color:var(--tm);text-align:left;transition:background .15s;}
+.ni:hover{background:var(--c);}
+.ni.on{background:rgba(92,122,92,.1);color:var(--sd);}
+/* MAIN */
+.main{padding:26px 28px;overflow-y:auto;}
+.sec{display:none;}.sec.on{display:block;}
+.sh{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;margin-bottom:3px;}
+.sh em{font-style:italic;color:var(--sd);}
+.ss{font-size:.8rem;color:var(--tm);margin-bottom:18px;}
+.div{height:2px;width:44px;background:linear-gradient(to right,var(--sd),var(--g));border-radius:2px;margin-bottom:20px;}
+/* PANELS */
+.panel{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:20px;margin-bottom:16px;}
+.pt{font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:14px;}
+/* STAT ROW */
+.srow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px;}
+.sbox{background:var(--w);border:1px solid var(--b);border-radius:10px;padding:14px;text-align:center;}
+.sbox .n{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--sd);display:block;}
+.sbox .l{font-size:.6rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);}
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;}
+.card{background:var(--w);border:1.5px solid var(--b);border-radius:11px;padding:13px;transition:box-shadow .2s;}
+.card:hover{box-shadow:0 3px 14px rgba(0,0,0,.07);border-color:var(--sl);}
+.ctop{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.av{width:40px;height:40px;border-radius:50%;background:var(--sl);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden;border:2px solid var(--b);}
+.av img{width:100%;height:100%;object-fit:cover;}
+.cn{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;color:var(--td);}
+.cr{font-size:.6rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--sd);}
+.cd{font-size:.68rem;color:var(--tl);}
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
+.tag{font-size:.56rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:20px;}
+.tg{background:rgba(92,122,92,.1);color:var(--sd);}
+.tf{background:#f0e8f8;color:#9060b0;}
+.ta{background:var(--gl);color:#8a6a00;}
+.ti{background:#e8e0f0;color:#7050a0;}
+.td2{background:#f0f0f0;color:#888;}
+.acts{display:flex;gap:5px;}
+.ab{padding:5px 9px;background:var(--c);color:var(--sd);border:1.5px solid var(--sl);border-radius:6px;font-family:'Jost',sans-serif;font-size:.62rem;font-weight:500;cursor:pointer;transition:all .2s;}
+.ab:hover{background:var(--sd);color:var(--w);border-color:var(--sd);}
+.ab-r{background:var(--w);color:var(--r);border-color:#f0d0c8;}
+.ab-r:hover{background:var(--r);color:var(--w);}
+/* FORMS */
+.fg{margin-bottom:12px;}
+.fg label{display:block;font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:5px;}
+.fg input,.fg textarea,.fg select{width:100%;padding:10px 13px;border:1.5px solid var(--b);border-radius:9px;font-family:'Jost',sans-serif;font-size:.85rem;color:var(--td);background:var(--c);outline:none;transition:border-color .2s;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--s);background:var(--w);}
+.fg textarea{resize:vertical;min-height:76px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:9px;font-family:'Jost',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border:none;display:inline-flex;align-items:center;gap:5px;}
+.bg{background:linear-gradient(135deg,var(--sd),var(--s));color:var(--w);box-shadow:0 2px 8px rgba(92,122,92,.25);}
+.bg:hover{transform:translateY(-1px);}
+.bo{background:var(--w);color:var(--tm);border:1.5px solid var(--b);}
+.bo:hover{border-color:var(--s);color:var(--sd);}
+.br{background:var(--r);color:var(--w);}
+.bsm{padding:6px 12px;font-size:.68rem;}
+/* MODAL */
+.mb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:14px;}
+.mb.open{display:flex;}
+.mo{background:var(--w);border-radius:18px;padding:24px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;position:relative;}
+.mo h2{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;margin-bottom:2px;}
+.mo p{font-size:.72rem;color:var(--tl);margin-bottom:16px;}
+.mc{position:absolute;top:12px;right:12px;background:none;border:none;font-size:.95rem;cursor:pointer;color:var(--tl);width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.mc:hover{background:var(--b);}
+.mf{display:flex;gap:9px;margin-top:16px;}
+/* SEARCH */
+.sb{display:flex;align-items:center;gap:9px;background:var(--w);border:1.5px solid var(--b);border-radius:10px;padding:8px 12px;margin-bottom:12px;}
+.sb input{flex:1;border:none;outline:none;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--td);background:transparent;}
+/* TL ITEMS */
+.tl{background:var(--w);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:9px;display:flex;gap:12px;}
+.ty{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--sd);min-width:54px;flex-shrink:0;}
+.tb2{flex:1;}
+.tt{font-weight:500;color:var(--td);font-size:.86rem;margin-bottom:3px;}
+.td3{font-size:.75rem;color:var(--tm);line-height:1.5;}
+.ta2{display:flex;gap:5px;margin-top:7px;}
+/* GALLERY */
+.gg{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.gi{background:var(--w);border:1px solid var(--b);border-radius:10px;overflow:hidden;}
+.gi img{width:100%;height:120px;object-fit:cover;display:block;}
+.gip{width:100%;height:120px;background:linear-gradient(135deg,var(--sl),var(--gl));display:flex;align-items:center;justify-content:center;font-size:28px;}
+.git{padding:7px 9px;font-size:.76rem;font-weight:500;color:var(--td);}
+.gia{display:flex;gap:5px;padding:5px 9px;border-top:1px solid var(--b);}
+/* VIS TOGGLE */
+.vr{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--b);}
+.vr:last-child{border-bottom:none;}
+.vt{position:relative;width:44px;height:24px;flex-shrink:0;}
+.vt input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;z-index:2;margin:0;}
+.vtr{position:absolute;inset:0;border-radius:24px;transition:background .25s;pointer-events:none;}
+.vth{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .25s;pointer-events:none;}
+/* NOTICE */
+.notice{background:#f0f5f0;border:1px solid var(--sl);border-radius:9px;padding:10px 14px;font-size:.74rem;color:var(--sd);margin-bottom:12px;line-height:1.6;}
+/* ANALYTICS TABLE */
+.at{width:100%;border-collapse:collapse;font-size:.74rem;}
+.at th{padding:8px 9px;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);font-weight:600;text-align:left;border-bottom:1.5px solid var(--b);}
+.at td{padding:8px 9px;border-bottom:1px solid var(--b);}
+/* SETTING ROW */
+.sr{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--b);}
+.sr:last-child{border-bottom:none;}
+.srl{font-size:.83rem;font-weight:500;color:var(--td);}
+.srd{font-size:.7rem;color:var(--tl);margin-top:2px;}
+/* TOAST */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--sd);color:var(--w);padding:10px 20px;border-radius:26px;font-size:.8rem;z-index:999;box-shadow:0 4px 18px rgba(0,0,0,.15);white-space:nowrap;}
+/* PAGE EDITOR TABS */
+.pt-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--b);}
+.ptb{padding:7px 14px;border-radius:8px;border:1.5px solid var(--b);background:var(--w);font-family:'Jost',sans-serif;font-size:.72rem;font-weight:500;color:var(--tm);cursor:pointer;transition:all .2s;}
+.ptb:hover,.ptb.on{background:var(--sd);color:var(--w);border-color:var(--sd);}
+.pts{display:none;}.pts.on{display:block;}
+/* PHOTO UPLOAD */
+.pu{border:2px dashed var(--sl);border-radius:10px;padding:18px;text-align:center;cursor:pointer;transition:all .2s;background:var(--w);margin-bottom:10px;}
+.pu:hover{border-color:var(--s);background:#f5faf5;}
+/* RESPONSIVE */
+@media(max-width:768px){.layout{grid-template-columns:1fr;}.side{position:static;height:auto;}.srow{grid-template-columns:1fr 1fr;}.fr{grid-template-columns:1fr;}.grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<div id="loginScreen">
-  <div class="lcard">
+<!-- LOGIN -->
+<div id="L">
+  <div class="lbox">
     <img src="logo.png" alt="Nukala"/>
     <h1>Admin Panel</h1>
     <p>Nukala Family · Full CMS</p>
-    <label for="pwInput">Admin Password</label>
-    <input type="password" id="pwInput" placeholder="Enter admin password" autocomplete="current-password"/>
-    <div class="err" id="pwErr">❌ Incorrect password. Try: nukala_admin_2024</div>
-    <button class="login-btn" id="loginBtn">Enter Admin Panel →</button>
+    <label for="pw">Admin Password</label>
+    <input type="password" id="pw" placeholder="Enter admin password" autocomplete="current-password"/>
+    <div class="err" id="perr">❌ Wrong password. Default: nukala_admin_2024</div>
+    <button onclick="login()">Enter Admin Panel →</button>
     <a href="home.html">← Back to Website</a>
   </div>
 </div>
 
-<div id="adminUI">
-  <div class="topbar">
-    <div class="tb-brand">
-      <img src="logo.png" alt="Logo"/>
-      <h1 id="tbSiteName">Nukala</h1>
-      <span class="tb-badge">CMS</span>
+<!-- ADMIN UI -->
+<div id="A">
+  <!-- TOP BAR -->
+  <div class="bar">
+    <div class="bar-brand">
+      <img src="logo.png" alt=""/>
+      <span id="siteName">Nukala</span>
+      <span class="badge">CMS</span>
     </div>
-    <div class="tb-right">
-      <a href="home.html" class="tb-btn tb-view" target="_blank">👁 View Site</a>
-      <button class="tb-btn tb-out" onclick="doLogout()">Sign Out</button>
+    <div class="bar-right">
+      <a href="home.html" class="xbtn xbtn-view" target="_blank">👁 View Site</a>
+      <button class="xbtn xbtn-out" onclick="logout()">Sign Out</button>
     </div>
   </div>
-  <div class="shell">
-    <div class="sidebar">
-      <div class="nav-section">Dashboard</div>
-      <button class="nav-item active" onclick="showSec('dashboard',this)"><span class="nav-icon">📊</span>Overview</button>
-      <div class="nav-section">Family Tree</div>
-      <button class="nav-item" onclick="showSec('members',this)"><span class="nav-icon">👥</span>Members</button>
-      <div class="nav-section">Website Pages</div>
-      <button class="nav-item" onclick="showSec('home',this)"><span class="nav-icon">🏠</span>Home Page</button>
-      <button class="nav-item" onclick="showSec('history',this)"><span class="nav-icon">📜</span>History</button>
-      <button class="nav-item" onclick="showSec('gallery',this)"><span class="nav-icon">🖼️</span>Gallery</button>
-      <button class="nav-item" onclick="showSec('facts',this)"><span class="nav-icon">🌟</span>Facts</button>
-      <button class="nav-item" onclick="showSec('contact',this)"><span class="nav-icon">✉️</span>Contact</button>
-      <div class="nav-section">New Pages</div>
-      <button class="nav-item" onclick="showSec('events',this)"><span class="nav-icon">📆</span>Events</button>
-      <button class="nav-item" onclick="showSec('recipes',this)"><span class="nav-icon">🍛</span>Recipes</button>
-      <button class="nav-item" onclick="showSec('achievements',this)"><span class="nav-icon">🏆</span>Achievements</button>
-      <button class="nav-item" onclick="showSec('videos',this)"><span class="nav-icon">🎥</span>Videos</button>
-      <button class="nav-item" onclick="showSec('polls',this)"><span class="nav-icon">🗳️</span>Polls</button>
-      <div class="nav-section">Communication</div>
-      <button class="nav-item" onclick="showSec('contacts',this)"><span class="nav-icon">📱</span>Contacts</button>
-      <button class="nav-item" onclick="showSec('announcements',this)"><span class="nav-icon">📣</span>Announcements</button>
-      <div class="nav-section">Site Control</div>
-      <button class="nav-item" onclick="showSec('pagevis',this)"><span class="nav-icon">👁️</span>Page Visibility</button>
-      <button class="nav-item" onclick="showSec('pageeditor',this)"><span class="nav-icon">🎨</span>Page Editor</button>
-      <button class="nav-item" onclick="showSec('analytics',this)"><span class="nav-icon">📈</span>Analytics</button>
-      <div class="nav-section">Admin</div>
-      <button class="nav-item" onclick="showSec('settings',this)"><span class="nav-icon">⚙️</span>Settings</button>
-      <button class="nav-item" onclick="exportAll()"><span class="nav-icon">📥</span>Export Backup</button>
-      <button class="nav-item" onclick="openImport()"><span class="nav-icon">📤</span>Import Backup</button>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <div class="side">
+      <div class="ns">Dashboard</div>
+      <button class="ni on" onclick="go('dash',this)">📊 Overview</button>
+      <div class="ns">Family Tree</div>
+      <button class="ni" onclick="go('members',this)">👥 Members</button>
+      <div class="ns">Pages</div>
+      <button class="ni" onclick="go('history',this)">📜 History</button>
+      <button class="ni" onclick="go('gallery',this)">🖼️ Gallery</button>
+      <button class="ni" onclick="go('facts',this)">🌟 Facts</button>
+      <button class="ni" onclick="go('events',this)">📆 Events</button>
+      <button class="ni" onclick="go('recipes',this)">🍛 Recipes</button>
+      <button class="ni" onclick="go('achievements',this)">🏆 Achievements</button>
+      <button class="ni" onclick="go('videos',this)">🎥 Videos</button>
+      <button class="ni" onclick="go('polls',this)">🗳️ Polls</button>
+      <div class="ns">Communication</div>
+      <button class="ni" onclick="go('contacts',this)">📱 Contacts</button>
+      <button class="ni" onclick="go('announce',this)">📣 Announcements</button>
+      <div class="ns">Site Control</div>
+      <button class="ni" onclick="go('pagevis',this)">👁️ Page Visibility</button>
+      <button class="ni" onclick="go('editor',this)">🎨 Page Editor</button>
+      <button class="ni" onclick="go('analytics',this)">📈 Analytics</button>
+      <div class="ns">Admin</div>
+      <button class="ni" onclick="go('settings',this)">⚙️ Settings</button>
+      <button class="ni" onclick="expAll()">📥 Export Backup</button>
+      <button class="ni" onclick="openM('importM')">📤 Import Backup</button>
     </div>
-    <div class="main" id="mainContent">
-      <div class="page-section active" id="sec-dashboard">
-        <div class="sec-title">Welcome, <em>Admin</em></div>
-        <p class="sec-sub">Manage your entire Nukala Family website from here.</p>
-        <div class="sec-div"></div>
-        <div class="stats-row" id="dashStats">
-          <div class="stat-box"><span class="num" id="d-members">0</span><span class="lbl">Members</span></div>
-          <div class="stat-box"><span class="num" id="d-photos">0</span><span class="lbl">Photos</span></div>
-          <div class="stat-box"><span class="num" id="d-history">0</span><span class="lbl">History</span></div>
-          <div class="stat-box"><span class="num" id="d-facts">0</span><span class="lbl">Facts</span></div>
-          <div class="stat-box"><span class="num" id="d-gens">0</span><span class="lbl">Generations</span></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+      <!-- DASHBOARD -->
+      <div class="sec on" id="sec-dash">
+        <div class="sh">Welcome, <em>Admin</em></div>
+        <p class="ss">Manage your entire Nukala Family website from here.</p>
+        <div class="div"></div>
+        <div class="srow">
+          <div class="sbox"><span class="n" id="ds-m">0</span><span class="l">Members</span></div>
+          <div class="sbox"><span class="n" id="ds-g">0</span><span class="l">Photos</span></div>
+          <div class="sbox"><span class="n" id="ds-h">0</span><span class="l">History</span></div>
+          <div class="sbox"><span class="n" id="ds-f">0</span><span class="l">Facts</span></div>
+          <div class="sbox"><span class="n" id="ds-gens">0</span><span class="l">Generations</span></div>
         </div>
         <div class="panel">
-          <div class="panel-title">Quick Actions</div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-green" onclick="showSec('members',null);openMemberModal()">➕ Add Member</button>
-            <button class="btn btn-outline" onclick="showSec('gallery',null);openGalModal()">📸 Add Photo</button>
-            <button class="btn btn-outline" onclick="showSec('history',null);openHistModal()">📜 Add History</button>
-            <button class="btn btn-outline" onclick="showSec('facts',null);openFactModal()">🌟 Add Fact</button>
-            <button class="btn btn-outline" onclick="showSec('settings',null)">⚙️ Settings</button>
+          <div class="pt">Quick Actions</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn bg" onclick="go('members');openMemberM()">➕ Add Member</button>
+            <button class="btn bo" onclick="go('gallery');openGalM()">📸 Add Photo</button>
+            <button class="btn bo" onclick="go('history');openHistM()">📜 Add History</button>
+            <button class="btn bo" onclick="go('facts');openFactM()">🌟 Add Fact</button>
+            <button class="btn bo" onclick="go('settings')">⚙️ Settings</button>
           </div>
         </div>
         <div class="panel">
-          <div class="panel-title">Recent Activity</div>
-          <div id="recentAct" style="font-size:.82rem;color:var(--tm);line-height:2;">No activity yet.</div>
+          <div class="pt">Recent Activity</div>
+          <div id="ds-log" style="font-size:.8rem;color:var(--tm);line-height:1.9;">No activity yet.</div>
         </div>
       </div>
-      <div class="page-section" id="sec-members">
-        <div class="sec-title"><em>Family</em> Members</div>
-        <p class="sec-sub">Add members with photos. Set Father/Mother/Spouse IDs to link on the tree.</p>
-        <div class="sec-div"></div>
-        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
-          <button class="btn btn-green" onclick="openMemberModal()">➕ Add Member</button>
-          <select onchange="filterMGen(this.value)" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.76rem;color:var(--tm);background:var(--white);outline:none;margin-left:auto;">
-            <option value="">All Generations</option>
+
+      <!-- MEMBERS -->
+      <div class="sec" id="sec-members">
+        <div class="sh"><em>Family</em> Members</div>
+        <p class="ss">Add members with photos. Paste IDs into Father/Mother/Spouse fields to link on the tree.</p>
+        <div class="div"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+          <button class="btn bg bsm" onclick="openMemberM()">➕ Add Member</button>
+          <select id="mGenF" onchange="renderMembers()" style="padding:7px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.74rem;color:var(--tm);background:var(--w);outline:none;margin-left:auto;">
+            <option value="">All Gens</option>
             <option value="1">Gen 1</option><option value="2">Gen 2</option><option value="3">Gen 3</option>
             <option value="4">Gen 4</option><option value="5">Gen 5</option><option value="6">Gen 6</option>
             <option value="7">Gen 7</option><option value="8">Gen 8</option>
           </select>
         </div>
-        <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search members..." oninput="searchM(this.value)"/></div>
-        <div class="cards-grid" id="membersGrid"></div>
+        <div class="sb">🔍<input type="text" placeholder="Search members..." id="mSrch" oninput="renderMembers()"/></div>
+        <div class="grid" id="membersGrid"></div>
       </div>
-      <div class="page-section" id="sec-home">
-        <div class="sec-title">Edit <em>Home Page</em></div><p class="sec-sub">Update content shown on the home page.</p><div class="sec-div"></div>
-        <div class="panel"><div class="panel-title">Hero Section</div>
-          <div class="fgrp"><label>Page Title</label><input type="text" id="homeTitle" placeholder="The Nukala Family Archive"/></div>
-          <div class="fgrp"><label>Tagline</label><input type="text" id="homeTagline" placeholder="A private family archive"/></div>
-          <div class="fgrp"><label>Welcome Message</label><textarea id="homeWelcome"></textarea></div>
-        </div>
-        <div class="panel"><div class="panel-title">Stats</div>
-          <div class="frow"><div class="fgrp"><label>Stat 1 Number</label><input type="text" id="homeStat1Num" placeholder="6"/></div><div class="fgrp"><label>Stat 1 Label</label><input type="text" id="homeStat1Lbl" placeholder="Generations"/></div></div>
-          <div class="frow"><div class="fgrp"><label>Stat 2 Number</label><input type="text" id="homeStat2Num" placeholder="45"/></div><div class="fgrp"><label>Stat 2 Label</label><input type="text" id="homeStat2Lbl" placeholder="Family Members"/></div></div>
-          <div class="frow"><div class="fgrp"><label>Stat 3 Number</label><input type="text" id="homeStat3Num" placeholder="20"/></div><div class="fgrp"><label>Stat 3 Label</label><input type="text" id="homeStat3Lbl" placeholder="Stories Shared"/></div></div>
-        </div>
-        <div class="panel"><div class="panel-title">About Section</div>
-          <div class="fgrp"><label>About Title</label><input type="text" id="homeAboutTitle" placeholder="Our Roots Run Deep"/></div>
-          <div class="fgrp"><label>Paragraph 1</label><textarea id="homeAbout1" rows="3"></textarea></div>
-          <div class="fgrp"><label>Paragraph 2</label><textarea id="homeAbout2" rows="3"></textarea></div>
-          <div class="fgrp"><label>Paragraph 3</label><textarea id="homeAbout3" rows="3"></textarea></div>
-        </div>
-        <button class="btn btn-green" onclick="saveHome()">💾 Save Home Page</button>
+
+      <!-- HISTORY -->
+      <div class="sec" id="sec-history">
+        <div class="sh">Family <em>History</em></div>
+        <p class="ss">Add timeline events for the History page.</p>
+        <div class="div"></div>
+        <button class="btn bg bsm" style="margin-bottom:14px;" onclick="openHistM()">➕ Add Event</button>
+        <div id="histList"></div>
       </div>
-      <div class="page-section" id="sec-history">
-        <div class="sec-title">Family <em>History</em></div><p class="sec-sub">Add timeline events.</p><div class="sec-div"></div>
-        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openHistModal()">➕ Add Event</button>
-        <div id="historyList"></div>
+
+      <!-- GALLERY -->
+      <div class="sec" id="sec-gallery">
+        <div class="sh">Photo <em>Gallery</em></div>
+        <p class="ss">Add photos by URL. Use imgbb.com (free) to host images.</p>
+        <div class="div"></div>
+        <button class="btn bg bsm" style="margin-bottom:14px;" onclick="openGalM()">➕ Add Photo</button>
+        <div class="gg" id="galGrid"></div>
       </div>
-      <div class="page-section" id="sec-gallery">
-        <div class="sec-title">Photo <em>Gallery</em></div><p class="sec-sub">Add photos by URL.</p><div class="sec-div"></div>
-        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openGalModal()">➕ Add Photo</button>
-        <div class="gal-grid" id="galleryGrid"></div>
-      </div>
-      <div class="page-section" id="sec-facts">
-        <div class="sec-title">Interesting <em>Facts</em></div><p class="sec-sub">Add fascinating firsts, achievements and traditions.</p><div class="sec-div"></div>
-        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openFactModal()">➕ Add Fact</button>
+
+      <!-- FACTS -->
+      <div class="sec" id="sec-facts">
+        <div class="sh">Interesting <em>Facts</em></div>
+        <p class="ss">Add family firsts, achievements and traditions.</p>
+        <div class="div"></div>
+        <button class="btn bg bsm" style="margin-bottom:14px;" onclick="openFactM()">➕ Add Fact</button>
         <div id="factsList"></div>
       </div>
-      <div class="page-section" id="sec-contact">
-        <div class="sec-title">Contact <em>Page</em></div><p class="sec-sub">Update contact details.</p><div class="sec-div"></div>
-        <div class="panel"><div class="panel-title">Contact Details</div>
-          <div class="frow"><div class="fgrp"><label>Admin Name</label><input type="text" id="cName" placeholder="e.g. Ramu Nukala"/></div><div class="fgrp"><label>Contact Email</label><input type="text" id="cEmail" placeholder="family@email.com"/></div></div>
-          <div class="fgrp"><label>Contact Message</label><textarea id="cMsg"></textarea></div>
-          <div class="fgrp"><label>Formspree Form ID (optional)</label><input type="text" id="cFormspree" placeholder="e.g. xyzabc12"/></div>
-        </div>
-        <button class="btn btn-green" onclick="saveContact()">💾 Save Contact Page</button>
-      </div>
-      <div class="page-section" id="sec-events">
-        <div class="sec-title">Family <em>Events</em></div><p class="sec-sub">Manage upcoming events.</p><div class="sec-div"></div>
-        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openEvtModal()">➕ Add Event</button>
+
+      <!-- EVENTS -->
+      <div class="sec" id="sec-events">
+        <div class="sh">Family <em>Events</em></div>
+        <p class="ss">Manage upcoming events and celebrations.</p>
+        <div class="div"></div>
+        <button class="btn bg bsm" style="margin-bottom:14px;" onclick="openEvtM()">➕ Add Event</button>
         <div id="evtList"></div>
       </div>
-      <div class="page-section" id="sec-recipes">
-        <div class="sec-title">Family <em>Recipes</em></div><p class="sec-sub">Add traditional recipes.</p><div class="sec-div"></div>
-        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openRecipeModal()">➕ Add Recipe</button>
-        <div id="recipeList"></div>
+
+      <!-- RECIPES -->
+      <div class="sec" id="sec-recipes">
+        <div class="sh">Family <em>Recipes</em></div>
+        <p class="ss">Add traditional family recipes.</p>
+        <div class="div"></div>
+        <button class="btn bg bsm" style="margin-bottom:14px;" onclick="openRecM()">➕ Add Recipe</button>
+        <div id="recList"></div>
       </div>
-      <div class="page-section" id="sec-achievements">
-        <div class="sec-title">Family <em>Achievements</em></div><p class="sec-sub">Add milestones and awards.</p><div class="sec-div"></div>
-        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openAchModal()">➕ Add Achievement</button>
+
+      <!-- ACHIEVEMENTS -->
+      <div class="sec" id="sec-achievements">
+        <div class="sh">Family <em>Achievements</em></div>
+        <p class="ss">Add degrees, awards and proud milestones.</p>
+        <div class="div"></div>
+        <button class="btn bg bsm" style="margin-bottom:14px;" onclick="openAchM()">➕ Add Achievement</button>
         <div id="achList"></div>
       </div>
-      <div class="page-section" id="sec-videos">
-        <div class="sec-title">Family <em>Videos</em></div><p class="sec-sub">Add YouTube links.</p><div class="sec-div"></div>
-        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openVideoModal()">➕ Add Video</button>
-        <div id="videoList"></div>
+
+      <!-- VIDEOS -->
+      <div class="sec" id="sec-videos">
+        <div class="sh">Family <em>Videos</em></div>
+        <p class="ss">Add YouTube video links.</p>
+        <div class="div"></div>
+        <button class="btn bg bsm" style="margin-bottom:14px;" onclick="openVidM()">➕ Add Video</button>
+        <div id="vidList"></div>
       </div>
-      <div class="page-section" id="sec-polls">
-        <div class="sec-title">Family <em>Polls</em></div><p class="sec-sub">Create family polls.</p><div class="sec-div"></div>
-        <button class="btn btn-green" style="margin-bottom:16px;" onclick="openPollModal()">➕ Create Poll</button>
+
+      <!-- POLLS -->
+      <div class="sec" id="sec-polls">
+        <div class="sh">Family <em>Polls</em></div>
+        <p class="ss">Create polls for family votes.</p>
+        <div class="div"></div>
+        <button class="btn bg bsm" style="margin-bottom:14px;" onclick="openPollM()">➕ Create Poll</button>
         <div id="pollList"></div>
       </div>
-      <div class="page-section" id="sec-contacts">
-        <div class="sec-title">Family <em>Contacts</em></div><p class="sec-sub">Private contact details per member.</p><div class="sec-div"></div>
-        <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search contacts..." oninput="searchContacts(this.value)" id="cSearch"/></div>
-        <div class="cards-grid" id="contactsGrid"></div>
+
+      <!-- CONTACTS -->
+      <div class="sec" id="sec-contacts">
+        <div class="sh">Family <em>Contacts</em></div>
+        <p class="ss">Private contact details per member — admin only.</p>
+        <div class="div"></div>
+        <div class="sb">🔍<input type="text" placeholder="Search contacts..." id="cSrch" oninput="renderContacts()"/></div>
+        <div class="grid" id="contactsGrid"></div>
       </div>
-      <div class="page-section" id="sec-announcements">
-        <div class="sec-title">Send <em>Announcement</em></div><p class="sec-sub">Send messages via Email or WhatsApp.</p><div class="sec-div"></div>
-        <div class="panel"><div class="panel-title">📣 Compose</div>
-          <div class="fgrp"><label>Subject</label><input type="text" id="annTitle" placeholder="e.g. Family Reunion 2025!"/></div>
-          <div class="fgrp"><label>Message</label><textarea id="annMsg" rows="5" placeholder="Dear Nukala Family..."></textarea></div>
-          <div class="fgrp"><label>Recipients</label><div style="display:flex;gap:8px;margin-bottom:8px;"><button class="btn btn-outline btn-sm" onclick="selAll()">✅ All</button><button class="btn btn-outline btn-sm" onclick="selNone()">⬜ None</button><span id="recCount" style="font-size:.76rem;color:var(--sage-d);padding:8px 0;"></span></div>
-            <div id="recipientsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;max-height:200px;overflow-y:auto;border:1.5px solid var(--border);border-radius:10px;padding:10px;background:var(--cream);"></div>
+
+      <!-- ANNOUNCEMENTS -->
+      <div class="sec" id="sec-announce">
+        <div class="sh">Send <em>Announcement</em></div>
+        <p class="ss">Send messages to family via Email or WhatsApp.</p>
+        <div class="div"></div>
+        <div class="panel">
+          <div class="pt">📣 Compose</div>
+          <div class="fg"><label>Subject / Title</label><input type="text" id="annTitle" placeholder="e.g. Family Reunion 2025!"/></div>
+          <div class="fg"><label>Message</label><textarea id="annMsg" rows="5" placeholder="Dear Nukala Family..."></textarea></div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn bg bsm" onclick="sendEmail()">📧 Send via Email</button>
+            <button class="btn bsm" style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;border:none;border-radius:9px;font-family:'Jost',sans-serif;font-size:.68rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;" onclick="sendWA()">📱 WhatsApp</button>
           </div>
-          <div style="display:flex;gap:10px;margin-top:8px;">
-            <button class="btn btn-green" onclick="sendEmail()">📧 Send Email</button>
-            <button class="btn btn-green" style="background:linear-gradient(135deg,#128c7e,#25d366);" onclick="sendWA()">📱 WhatsApp</button>
-          </div>
-        </div>
-        <div class="panel"><div class="panel-title">📋 History</div><div id="annHistory"></div></div>
-      </div>
-      <div class="page-section" id="sec-pagevis">
-        <div class="sec-title">Page <em>Visibility</em></div><p class="sec-sub">Enable or disable pages on the website.</p><div class="sec-div"></div>
-        <div class="notice">💡 Home, Family Tree, Contact cannot be disabled — they are core pages.</div>
-        <div class="panel"><div class="panel-title">Website Pages</div>
-          <div id="pageVisList"></div>
-          <div style="margin-top:16px;display:flex;gap:10px;">
-            <button class="btn btn-green btn-sm" onclick="enableAllPages()">✅ Enable All</button>
-            <button class="btn btn-outline btn-sm" onclick="savePageVis()">💾 Save Changes</button>
-          </div>
-        </div>
-        <div class="panel"><div class="panel-title">Preview — What Visitors See</div><div id="pageVisPreview" style="display:flex;flex-wrap:wrap;gap:8px;padding-top:4px;"></div></div>
-      </div>
-      <div class="page-section" id="sec-pageeditor">
-        <div class="sec-title">Full <em>Page Editor</em></div><p class="sec-sub">Edit colours, fonts, hero text and more.</p><div class="sec-div"></div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:12px;" id="peTabBar">
-          <button class="pe-tab active" onclick="showPeTab('theme',this)">🎨 Theme & Colours</button>
-          <button class="pe-tab" onclick="showPeTab('sitewide',this)">🌐 Site Wide</button>
-          <button class="pe-tab" onclick="showPeTab('homepage',this)">🏠 Home Page</button>
-          <button class="pe-tab" onclick="showPeTab('contactpage',this)">✉️ Contact Page</button>
-          <button class="pe-tab" onclick="showPeTab('gallerypage',this)">🖼️ Gallery Page</button>
-          <button class="pe-tab" onclick="showPeTab('heropage',this)">🖼️ Hero Banners</button>
-          <button class="pe-tab" onclick="showPeTab('newpages',this)">📄 New Pages</button>
-          <button class="pe-tab" onclick="showPeTab('typography',this)">✍️ Typography</button>
-        </div>
-        <div class="pe-section active" id="pe-theme">
-          <div class="panel"><div class="panel-title">🎨 Site Colour Theme</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
-              <button onclick="applyTheme('sage')" style="background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">🌿 Sage Green</button>
-              <button onclick="applyTheme('navy')" style="background:linear-gradient(135deg,#1a3a5c,#2e6090);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">🌊 Navy Blue</button>
-              <button onclick="applyTheme('gold')" style="background:linear-gradient(135deg,#8a6a00,#c9a84c);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">✨ Royal Gold</button>
-              <button onclick="applyTheme('maroon')" style="background:linear-gradient(135deg,#6b1a1a,#a03030);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">🍷 Maroon</button>
-              <button onclick="applyTheme('purple')" style="background:linear-gradient(135deg,#4a2060,#7050a0);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">💜 Purple</button>
-              <button onclick="applyTheme('teal')" style="background:linear-gradient(135deg,#0d6e6e,#1aab9b);color:white;padding:9px 16px;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.75rem;cursor:pointer;">🦋 Teal</button>
-            </div>
-            <div class="frow">
-              <div class="fgrp"><label>Primary Colour</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="clrPrimary" value="#5c7a5c" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/><input type="text" id="clrPrimaryHex" value="#5c7a5c" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Primary')"/></div></div>
-              <div class="fgrp"><label>Secondary Colour</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="clrSecondary" value="#8aab8a" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;"/><input type="text" id="clrSecondaryHex" value="#8aab8a" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:Jost,sans-serif;font-size:.82rem;outline:none;" oninput="syncColour('Secondary')"/></div></div>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:8px;"><button class="btn btn-green" onclick="saveTheme()">💾 Save Theme</button><button class="btn btn-outline" onclick="applyTheme('sage')">↺ Reset</button></div>
-          </div>
-        </div>
-        <div class="pe-section" id="pe-sitewide">
-          <div class="panel"><div class="panel-title">🌐 Navigation Bar</div>
-            <div class="frow"><div class="fgrp"><label>Site Name</label><input type="text" id="pe-navname" placeholder="NUKALA"/></div><div class="fgrp"><label>Nav Links (comma separated)</label><input type="text" id="pe-navlinks" placeholder="Home,Family Tree,History..."/></div></div>
-            <div class="fgrp"><label>Footer Text</label><input type="text" id="pe-footer" placeholder="© 2024 The Nukala Family..."/></div>
-            <button class="btn btn-green" onclick="saveSiteWide()">💾 Save Site Wide</button>
-          </div>
-        </div>
-        <div class="pe-section" id="pe-homepage">
-          <div class="panel"><div class="panel-title">🏠 Quick Nav Cards</div><div id="quickCardsEditor"></div><button class="btn btn-outline btn-sm" onclick="addQuickCard()">➕ Add Card</button><button class="btn btn-green" style="margin-left:8px;" onclick="saveHomePage2()">💾 Save</button></div>
-        </div>
-        <div class="pe-section" id="pe-contactpage">
-          <div class="panel"><div class="panel-title">📝 Contact Form Dropdown</div><div id="dropdownEditor"></div><button class="btn btn-outline btn-sm" onclick="addDropdownOption()">➕ Add Option</button><button class="btn btn-green" style="margin-left:8px;" onclick="saveContactPage2()">💾 Save</button></div>
-          <div class="panel"><div class="panel-title">📬 Contact Ways</div><div id="contactWaysEditor"></div><button class="btn btn-outline btn-sm" onclick="addContactWay()">➕ Add Way</button></div>
-        </div>
-        <div class="pe-section" id="pe-gallerypage">
-          <div class="panel"><div class="panel-title">🗂️ Gallery Filter Categories</div><div id="galCatsEditor"></div><button class="btn btn-outline btn-sm" onclick="addGalCat()">➕ Add Category</button><button class="btn btn-green" style="margin-left:8px;" onclick="saveGalleryPage2()">💾 Save</button></div>
-        </div>
-        <div class="pe-section" id="pe-heropage">
-          <div class="panel"><div class="panel-title">🖼️ Home Hero Banner</div>
-            <div class="fgrp"><label>Background Image URL</label><input type="text" id="pe-heroimgurl" placeholder="https://..." oninput="previewHeroImg(this.value)"/></div>
-            <div id="heroImgPreview" style="display:none;margin-bottom:10px;"><img id="heroImgPreviewImg" style="width:100%;height:140px;object-fit:cover;border-radius:10px;" alt=""/></div>
-            <button class="btn btn-green" onclick="saveHeroSettings()">💾 Save Hero</button>
-          </div>
-          <div class="panel"><div class="panel-title">📄 Page Hero Texts</div><div id="pageHeroEditor"></div></div>
-        </div>
-        <div class="pe-section" id="pe-newpages">
-          <div class="panel"><div class="panel-title">📄 New Pages Editor</div><p style="font-size:.82rem;color:var(--tm);">Use the sidebar to manage Events, Recipes, Achievements, Videos and Polls content directly.</p></div>
-        </div>
-        <div class="pe-section" id="pe-typography">
-          <div class="panel"><div class="panel-title">✍️ Typography</div>
-            <div class="frow">
-              <div class="fgrp"><label>Heading Font</label><select id="fontHeading"><option value="Cormorant Garamond">Cormorant Garamond (Default)</option><option value="Playfair Display">Playfair Display</option><option value="Lora">Lora</option><option value="Merriweather">Merriweather</option></select></div>
-              <div class="fgrp"><label>Body Font</label><select id="fontBody"><option value="Jost">Jost (Default)</option><option value="Lato">Lato</option><option value="Open Sans">Open Sans</option><option value="Poppins">Poppins</option></select></div>
-            </div>
-            <button class="btn btn-green btn-sm" onclick="saveFonts()">💾 Save Fonts</button>
-          </div>
-        </div>
-      </div>
-      <div class="page-section" id="sec-analytics">
-        <div class="sec-title">Site <em>Analytics</em></div><p class="sec-sub">Visitor IPs, locations, devices and page views — admin only.</p><div class="sec-div"></div>
-        <div class="stats-row">
-          <div class="stat-box"><span class="num" id="an-logins">0</span><span class="lbl">Total Logins</span></div>
-          <div class="stat-box"><span class="num" id="an-visits">0</span><span class="lbl">Page Views</span></div>
-          <div class="stat-box"><span class="num" id="an-sessions">0</span><span class="lbl">Sessions</span></div>
-          <div class="stat-box"><span class="num" id="an-unique">0</span><span class="lbl">Unique IPs</span></div>
-          <div class="stat-box"><span class="num" id="an-today">0</span><span class="lbl">Today</span></div>
-        </div>
-        <div class="panel" style="margin-bottom:20px;overflow-x:auto;">
-          <div class="panel-title">🌐 Unique Visitors <button class="btn btn-outline btn-sm" onclick="exportVisitors()" style="float:right;">📥 Export</button></div>
-          <table style="width:100%;border-collapse:collapse;font-size:.76rem;"><thead><tr style="border-bottom:1.5px solid var(--border);text-align:left;"><th style="padding:8px 10px;">IP</th><th style="padding:8px 10px;">Location</th><th style="padding:8px 10px;">ISP</th><th style="padding:8px 10px;">Device</th><th style="padding:8px 10px;">Browser</th><th style="padding:8px 10px;">Visits</th><th style="padding:8px 10px;">Pages</th><th style="padding:8px 10px;">First Seen</th><th style="padding:8px 10px;">Last Seen</th></tr></thead><tbody id="an-visitorsBody"><tr><td colspan="9" style="padding:24px;text-align:center;color:var(--tl);">No visitors yet.</td></tr></tbody></table>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
-          <div class="panel"><div class="panel-title">📄 Most Visited Pages</div><div id="an-topPages"></div></div>
-          <div class="panel"><div class="panel-title">🔐 Recent Logins</div><div id="an-recentLogins"></div></div>
         </div>
         <div class="panel">
-          <div class="panel-title">📋 Full Visit Log</div>
-          <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-            <select id="an-filter" onchange="renderAnalytics()" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.76rem;color:var(--tm);background:var(--white);outline:none;"><option value="all">All Pages</option><option value="home.html">Home</option><option value="tree.html">Family Tree</option><option value="gallery.html">Gallery</option><option value="history.html">History</option></select>
-            <button class="btn btn-outline btn-sm" onclick="exportAnalytics()">📥 Export CSV</button>
-            <button class="btn btn-red btn-sm" onclick="if(confirm('Clear ALL analytics?')){['nukala_visits','nukala_logins','nukala_sessions','nukala_page_counts','nukala_login_count','nukala_visitors'].forEach(k=>localStorage.removeItem(k));renderAnalytics();}">🗑️ Clear</button>
-          </div>
-          <div id="an-visitLog" style="max-height:400px;overflow-y:auto;"></div>
+          <div class="pt">📋 Sent History</div>
+          <div id="annLog" style="font-size:.8rem;color:var(--tm);">No announcements sent yet.</div>
         </div>
       </div>
-      <div class="page-section" id="sec-settings">
-        <div class="sec-title">Site <em>Settings</em></div><p class="sec-sub">Manage passwords and preferences.</p><div class="sec-div"></div>
-        <div class="panel"><div class="panel-title">Site Info</div>
-          <div class="frow"><div class="fgrp"><label>Family Name</label><input type="text" id="setFamily" placeholder="Nukala"/></div><div class="fgrp"><label>Footer Text</label><input type="text" id="setFooter" placeholder="The Nukala Family"/></div></div>
-          <button class="btn btn-green btn-sm" onclick="loadSettings2()&&saveSettings2()">💾 Save Info</button>
-        </div>
-        <div class="panel"><div class="panel-title">Passwords</div>
-          <div class="setting-row"><div><div class="setting-lbl">Family Site Password</div><div class="setting-desc">Password to enter the website</div></div><div style="display:flex;gap:8px;"><input type="text" id="newSitePass" placeholder="New password" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.8rem;width:150px;outline:none;"/><button class="btn btn-outline btn-sm" onclick="saveSitePass()">Update</button></div></div>
-          <div class="setting-row"><div><div class="setting-lbl">Admin Password</div><div class="setting-desc">Password for this admin panel</div></div><div style="display:flex;gap:8px;"><input type="text" id="newAdminPass" placeholder="New password" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.8rem;width:150px;outline:none;"/><button class="btn btn-outline btn-sm" onclick="saveAdminPass()">Update</button></div></div>
-        </div>
-        <div class="panel"><div class="panel-title">Data Management</div>
-          <div class="setting-row"><div><div class="setting-lbl">Export Full Backup</div></div><button class="btn btn-outline btn-sm" onclick="exportAll()">📥 Export</button></div>
-          <div class="setting-row"><div><div class="setting-lbl">Import Backup</div></div><button class="btn btn-outline btn-sm" onclick="openImport()">📤 Import</button></div>
-          <div class="setting-row"><div><div class="setting-lbl" style="color:var(--red);">Reset All Data</div><div class="setting-desc">⚠️ Permanently delete everything</div></div><button class="btn btn-red btn-sm" onclick="if(confirm('Delete ALL data?'))resetAll()">🗑️ Reset</button></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
+      <!-- PAGE VISIBILITY -->
+      <div class="sec" id="sec-pagevis">
+        <div class="sh">Page <em>Visibility</em></div>
+        <p class="ss">Enable or disable pages. Disabled pages are hidden from nav and show "Coming Soon".</p>
+        <div class="div"></div>
+        <div class="notice">💡 Home, Family Tree and Contact cannot be disabled — they are core pages.</div>
+        <div class="panel">
+          <div class="pt">Website Pages</div>
+          <div id="visList"></div>
+          <div style="display:flex;gap:8px;margin-top:14px;">
+            <button class="btn bg bsm" onclick="visEnableAll()">✅ Enable All</button>
+            <button class="btn bo bsm" onclick="visSave()">💾 Save Changes</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="pt">Preview — What Visitors See</div>
+          <div id="visPreview" style="display:flex;flex-wrap:wrap;gap:6px;padding-top:4px;"></div>
+        </div>
+      </div>
+
+      <!-- PAGE EDITOR -->
+      <div class="sec" id="sec-editor">
+        <div class="sh">Full <em>Page Editor</em></div>
+        <p class="ss">Edit colours, fonts and site-wide settings.</p>
+        <div class="div"></div>
+        <div class="pt-tabs">
+          <button class="ptb on" onclick="peTab('theme',this)">🎨 Theme</button>
+          <button class="ptb" onclick="peTab('sitewide',this)">🌐 Site Wide</button>
+          <button class="ptb" onclick="peTab('homepage',this)">🏠 Home Page</button>
+          <button class="ptb" onclick="peTab('contact',this)">✉️ Contact</button>
+          <button class="ptb" onclick="peTab('fonts',this)">✍️ Typography</button>
+        </div>
+        <div class="pts on" id="pe-theme">
+          <div class="panel">
+            <div class="pt">Quick Colour Presets</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+              <button onclick="applyTheme('sage')" style="background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🌿 Sage Green</button>
+              <button onclick="applyTheme('navy')" style="background:linear-gradient(135deg,#1a3a5c,#2e6090);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🌊 Navy Blue</button>
+              <button onclick="applyTheme('gold')" style="background:linear-gradient(135deg,#8a6a00,#c9a84c);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">✨ Royal Gold</button>
+              <button onclick="applyTheme('maroon')" style="background:linear-gradient(135deg,#6b1a1a,#a03030);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🍷 Maroon</button>
+              <button onclick="applyTheme('purple')" style="background:linear-gradient(135deg,#4a2060,#7050a0);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">💜 Purple</button>
+              <button onclick="applyTheme('teal')" style="background:linear-gradient(135deg,#0d6e6e,#1aab9b);color:white;padding:8px 14px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;cursor:pointer;">🦋 Teal</button>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>Primary Colour</label><input type="text" id="clrPrimary" placeholder="#5c7a5c" value="#5c7a5c"/></div>
+              <div class="fg"><label>Background Colour</label><input type="text" id="clrBg" placeholder="#faf8f4" value="#faf8f4"/></div>
+            </div>
+            <button class="btn bg bsm" onclick="saveTheme()">💾 Save Theme</button>
+          </div>
+        </div>
+        <div class="pts" id="pe-sitewide">
+          <div class="panel">
+            <div class="pt">Navigation & Branding</div>
+            <div class="fr">
+              <div class="fg"><label>Site Name (Nav Bar)</label><input type="text" id="pe-sitename" placeholder="NUKALA"/></div>
+              <div class="fg"><label>Footer Text</label><input type="text" id="pe-footer" placeholder="The Nukala Family"/></div>
+            </div>
+            <button class="btn bg bsm" onclick="saveSiteWide()">💾 Save</button>
+          </div>
+          <div class="panel">
+            <div class="pt">Toggle Features</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showsearch" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Search Button</label>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showdark" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Dark Mode Button</label>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showlang" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Language Button</label>
+            </div>
+            <button class="btn bg bsm" style="margin-top:12px;" onclick="saveFeatureToggles()">💾 Save</button>
+          </div>
+        </div>
+        <div class="pts" id="pe-homepage">
+          <div class="panel">
+            <div class="pt">Hero Section</div>
+            <div class="fg"><label>Page Title</label><input type="text" id="pe-htitle" placeholder="The Nukala Family Archive"/></div>
+            <div class="fg"><label>Tagline</label><input type="text" id="pe-htagline" placeholder="A private space to celebrate our roots..."/></div>
+            <div class="fr">
+              <div class="fg"><label>Stat 1</label><input type="text" id="pe-s1" placeholder="6 · Generations"/></div>
+              <div class="fg"><label>Stat 2</label><input type="text" id="pe-s2" placeholder="45 · Members"/></div>
+            </div>
+            <button class="btn bg bsm" onclick="saveHomePage()">💾 Save</button>
+          </div>
+        </div>
+        <div class="pts" id="pe-contact">
+          <div class="panel">
+            <div class="pt">Contact Page</div>
+            <div class="fr">
+              <div class="fg"><label>Admin Name</label><input type="text" id="pe-cname" placeholder="Ramu Nukala"/></div>
+              <div class="fg"><label>Contact Email</label><input type="text" id="pe-cemail" placeholder="family@email.com"/></div>
+            </div>
+            <div class="fg"><label>Formspree ID (optional)</label><input type="text" id="pe-formspree" placeholder="e.g. xyzabc12"/></div>
+            <button class="btn bg bsm" onclick="saveContactPage()">💾 Save</button>
+          </div>
+        </div>
+        <div class="pts" id="pe-fonts">
+          <div class="panel">
+            <div class="pt">Typography</div>
+            <div class="fr">
+              <div class="fg"><label>Heading Font</label>
+                <select id="pe-fonthead">
+                  <option value="Cormorant Garamond">Cormorant Garamond (Default)</option>
+                  <option value="Playfair Display">Playfair Display</option>
+                  <option value="Lora">Lora</option>
+                  <option value="Merriweather">Merriweather</option>
+                </select>
+              </div>
+              <div class="fg"><label>Body Font</label>
+                <select id="pe-fontbody">
+                  <option value="Jost">Jost (Default)</option>
+                  <option value="Lato">Lato</option>
+                  <option value="Open Sans">Open Sans</option>
+                  <option value="Poppins">Poppins</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn bg bsm" onclick="saveFonts()">💾 Save Fonts</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div class="sec" id="sec-analytics">
+        <div class="sh">Site <em>Analytics</em></div>
+        <p class="ss">Visitor IPs, locations, devices and page views — admin only.</p>
+        <div class="div"></div>
+        <div class="srow">
+          <div class="sbox"><span class="n" id="an-logins">0</span><span class="l">Logins</span></div>
+          <div class="sbox"><span class="n" id="an-visits">0</span><span class="l">Page Views</span></div>
+          <div class="sbox"><span class="n" id="an-sessions">0</span><span class="l">Sessions</span></div>
+          <div class="sbox"><span class="n" id="an-unique">0</span><span class="l">Unique IPs</span></div>
+          <div class="sbox"><span class="n" id="an-today">0</span><span class="l">Today</span></div>
+        </div>
+        <div class="panel" style="overflow-x:auto;">
+          <div class="pt">🌐 Unique Visitors <button class="btn bo bsm" onclick="expVisitors()" style="float:right;">📥 Export</button></div>
+          <table class="at"><thead><tr>
+            <th>IP</th><th>Location</th><th>ISP</th><th>Device</th><th>Browser</th><th>Visits</th><th>Pages</th><th>First Seen</th><th>Last Seen</th>
+          </tr></thead><tbody id="an-vbody"><tr><td colspan="9" style="padding:20px;text-align:center;color:var(--tl);">No visitors yet.</td></tr></tbody></table>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <div class="panel"><div class="pt">📄 Top Pages</div><div id="an-pages"></div></div>
+          <div class="panel"><div class="pt">🔐 Recent Logins</div><div id="an-logslist"></div></div>
+        </div>
+        <div class="panel">
+          <div class="pt">📋 Visit Log
+            <button class="btn bo bsm" onclick="expAnalytics()" style="float:right;">📥 CSV</button>
+            <button class="btn br bsm" onclick="clearAnalytics()" style="float:right;margin-right:6px;">🗑️ Clear</button>
+          </div>
+          <select id="an-filter" onchange="renderAnalytics()" style="padding:7px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.73rem;color:var(--tm);background:var(--w);outline:none;margin-bottom:10px;">
+            <option value="all">All Pages</option>
+            <option value="home.html">Home</option><option value="tree.html">Family Tree</option>
+            <option value="gallery.html">Gallery</option><option value="history.html">History</option>
+            <option value="facts.html">Facts</option><option value="events.html">Events</option>
+          </select>
+          <div id="an-log" style="max-height:380px;overflow-y:auto;"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="sec" id="sec-settings">
+        <div class="sh">Site <em>Settings</em></div>
+        <p class="ss">Manage passwords and site preferences.</p>
+        <div class="div"></div>
+        <div class="panel">
+          <div class="pt">Site Info</div>
+          <div class="fr">
+            <div class="fg"><label>Family Name</label><input type="text" id="s-famname" placeholder="Nukala"/></div>
+            <div class="fg"><label>Footer Text</label><input type="text" id="s-footer" placeholder="The Nukala Family"/></div>
+          </div>
+          <button class="btn bg bsm" onclick="saveSettings()">💾 Save</button>
+        </div>
+        <div class="panel">
+          <div class="pt">Passwords</div>
+          <div class="sr">
+            <div><div class="srl">Family Site Password</div><div class="srd">Password to enter the website</div></div>
+            <div style="display:flex;gap:7px;">
+              <input type="text" id="newSitePass" placeholder="New password" style="padding:7px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.78rem;width:140px;outline:none;"/>
+              <button class="btn bo bsm" onclick="saveSitePass()">Update</button>
+            </div>
+          </div>
+          <div class="sr">
+            <div><div class="srl">Admin Password</div><div class="srd">Password for this admin panel</div></div>
+            <div style="display:flex;gap:7px;">
+              <input type="text" id="newAdminPass" placeholder="New password" style="padding:7px 11px;border:1.5px solid var(--b);border-radius:8px;font-family:'Jost',sans-serif;font-size:.78rem;width:140px;outline:none;"/>
+              <button class="btn bo bsm" onclick="saveAdminPass()">Update</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="pt">Data Management</div>
+          <div class="sr"><div><div class="srl">Export Full Backup</div></div><button class="btn bo bsm" onclick="expAll()">📥 Export</button></div>
+          <div class="sr"><div><div class="srl">Import Backup</div></div><button class="btn bo bsm" onclick="openM('importM')">📤 Import</button></div>
+          <div class="sr"><div><div class="srl" style="color:var(--r);">Reset All Data</div><div class="srd">⚠️ Cannot be undone</div></div><button class="btn br bsm" onclick="if(confirm('Delete ALL data permanently?'))resetAll()">🗑️ Reset</button></div>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+  </div><!-- /layout -->
+</div><!-- /admin -->
 
 <!-- MEMBER MODAL -->
-<div class="modal-bg" id="memberModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeMemberModal()">✕</button>
-    <h2 id="mmTitle">Add Family Member</h2>
-    <p class="modal-sub">Fill in details. Use Photo to show a picture on the tree.</p>
+<div class="mb" id="memberM">
+  <div class="mo">
+    <button class="mc" onclick="closeM('memberM')">✕</button>
+    <h2 id="mmH">Add Family Member</h2><p>Fill in details. Photo and all fields except First Name are optional.</p>
     <input type="hidden" id="mmId"/>
-    <div class="photo-upload" id="photoUploadArea" onclick="document.getElementById('mmPhotoFile').click()" style="border:2px dashed var(--sage-l);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:var(--white);margin-bottom:10px;">
-      <img id="mmPhotoPreview" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--border);margin-bottom:8px;display:none;" alt="Preview"/>
-      <div id="mmPhotoPlaceholder"><div style="font-size:28px;margin-bottom:6px;">📷</div><div style="font-size:.78rem;color:var(--tm);">Click to upload photo<br/><span style="color:var(--tl);font-size:.7rem;">or paste URL below</span></div></div>
-      <input type="file" id="mmPhotoFile" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)"/>
+    <div class="pu" onclick="document.getElementById('mmFile').click()">
+      <img id="mmPrev" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid var(--b);margin-bottom:6px;display:none;" alt=""/>
+      <div id="mmPH">📷<div style="font-size:.75rem;color:var(--tm);margin-top:4px;">Click to upload photo</div></div>
+      <input type="file" id="mmFile" accept="image/*" style="display:none;" onchange="handlePhoto(this)"/>
     </div>
-    <input type="text" id="mmPhotoUrl" placeholder="Or paste photo URL: https://..." style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Jost',sans-serif;font-size:.82rem;outline:none;margin-bottom:14px;" oninput="previewPhotoUrl(this.value)"/>
-    <div class="frow">
-      <div class="fgrp"><label>First Name *</label><input type="text" id="mmFirst" placeholder="e.g. Ramu"/></div>
-      <div class="fgrp"><label>Last Name</label><input type="text" id="mmLast" placeholder="e.g. Nukala"/></div>
+    <div class="fg"><label>Photo URL (optional)</label><input type="text" id="mmPhotoUrl" placeholder="https://... or leave blank" oninput="prevPhotoUrl(this.value)"/></div>
+    <div class="fr">
+      <div class="fg"><label>First Name *</label><input type="text" id="mmFirst" placeholder="e.g. Ramu"/></div>
+      <div class="fg"><label>Last Name</label><input type="text" id="mmLast" placeholder="e.g. Nukala"/></div>
     </div>
-    <div class="fgrp"><label>Relationship *</label>
+    <div class="fg"><label>Relationship</label>
       <select id="mmRole">
         <option value="">— Select —</option>
         <optgroup label="Ancestors"><option>Great-Great-Grandfather</option><option>Great-Great-Grandmother</option><option>Great-Grandfather</option><option>Great-Grandmother</option></optgroup>
         <optgroup label="Grandparents"><option>Grandfather</option><option>Grandmother</option></optgroup>
         <optgroup label="Parents"><option>Father</option><option>Mother</option><option>Uncle</option><option>Aunt</option></optgroup>
-        <optgroup label="Your Generation"><option>You</option><option>Spouse</option><option>Wife</option><option>Husband</option><option>Brother</option><option>Sister</option><option>Cousin</option><option>Brother-in-law</option><option>Sister-in-law</option></optgroup>
+        <optgroup label="Your Generation"><option>You</option><option>Wife</option><option>Husband</option><option>Spouse</option><option>Brother</option><option>Sister</option><option>Cousin</option><option>Brother-in-law</option><option>Sister-in-law</option></optgroup>
         <optgroup label="In-laws"><option>Father-in-law</option><option>Mother-in-law</option><option>Grandfather-in-law</option><option>Grandmother-in-law</option></optgroup>
         <optgroup label="Children"><option>Son</option><option>Daughter</option><option>Nephew</option><option>Niece</option><option>Son-in-law</option><option>Daughter-in-law</option></optgroup>
         <optgroup label="Grandchildren"><option>Grandson</option><option>Granddaughter</option></optgroup>
         <option value="other">Other...</option>
       </select>
     </div>
-    <div class="fgrp" id="mmCustomRoleGrp" style="display:none;"><label>Custom Role</label><input type="text" id="mmCustomRole" placeholder="Type role..."/></div>
-    <div class="fgrp"><label>Generation</label>
+    <div class="fg" id="mmCRG" style="display:none;"><label>Custom Role</label><input type="text" id="mmCRole" placeholder="Type role..."/></div>
+    <div class="fg"><label>Generation</label>
       <select id="mmGen">
         <option value="">— Select —</option>
         <option value="1">Gen 1 — Great-Great-Grandparents</option><option value="2">Gen 2 — Great-Grandparents</option>
@@ -478,329 +598,904 @@
         <option value="7">Gen 7 — Grandchildren</option><option value="8">Gen 8 — Great-Grandchildren</option>
       </select>
     </div>
-    <div class="frow">
-      <div class="fgrp"><label>Year Born</label><input type="text" id="mmBorn" placeholder="e.g. 1942"/></div>
-      <div class="fgrp"><label>Year Passed</label><input type="text" id="mmDied" placeholder="Leave blank if living"/></div>
+    <div class="fr">
+      <div class="fg"><label>Year Born</label><input type="text" id="mmBorn" placeholder="e.g. 1942"/></div>
+      <div class="fg"><label>Year Passed</label><input type="text" id="mmDied" placeholder="Leave blank if living"/></div>
     </div>
-    <div class="frow">
-      <div class="fgrp"><label>Birthplace</label><input type="text" id="mmPlace" placeholder="e.g. Hyderabad, India"/></div>
-      <div class="fgrp"><label>Occupation</label><input type="text" id="mmOcc" placeholder="e.g. Farmer"/></div>
+    <div class="fr">
+      <div class="fg"><label>Birthplace</label><input type="text" id="mmPlace" placeholder="e.g. Hyderabad"/></div>
+      <div class="fg"><label>Occupation</label><input type="text" id="mmOcc" placeholder="e.g. Farmer"/></div>
     </div>
-    <div class="fgrp"><label>Notes / Biography</label><textarea id="mmNotes" placeholder="Any stories or biography..."></textarea></div>
-    <div style="font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:6px;margin-top:4px;">🔗 Family Links</div>
-    <p style="font-size:.72rem;color:var(--tl);margin-bottom:10px;">Copy IDs from member cards (📋 button) and paste below to draw connecting lines on the tree.</p>
-    <div class="frow">
-      <div class="fgrp"><label>Father's Member ID</label><input type="text" id="mmFather" placeholder="Paste father's ID"/></div>
-      <div class="fgrp"><label>Mother's Member ID</label><input type="text" id="mmMother" placeholder="Paste mother's ID"/></div>
+    <div class="fg"><label>Notes / Biography</label><textarea id="mmNotes"></textarea></div>
+    <div style="font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:6px;">🔗 Family Links — Copy IDs from member cards (📋) and paste below</div>
+    <div class="fr">
+      <div class="fg"><label>Father's ID</label><input type="text" id="mmFather" placeholder="Paste father's member ID"/></div>
+      <div class="fg"><label>Mother's ID</label><input type="text" id="mmMother" placeholder="Paste mother's member ID"/></div>
     </div>
-    <div class="fgrp"><label>Spouse's Member ID</label><input type="text" id="mmSpouse" placeholder="Paste spouse's ID — creates a 💛 connection"/></div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;margin-top:8px;">
-      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmFemale" style="width:15px;height:15px;accent-color:var(--sage-d);cursor:pointer;"/><span>👩 Female</span></label>
-      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmAncestor" style="width:15px;height:15px;accent-color:var(--sage-d);cursor:pointer;"/><span>🏛️ Ancestor</span></label>
-      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmDeceased" style="width:15px;height:15px;accent-color:var(--sage-d);cursor:pointer;"/><span>✝️ Deceased</span></label>
-      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmInlaw" style="width:15px;height:15px;accent-color:var(--sage-d);cursor:pointer;"/><span>💜 In-law</span></label>
+    <div class="fg"><label>Spouse's ID</label><input type="text" id="mmSpouse" placeholder="Paste spouse's member ID — creates 💛 connection"/></div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;">
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmFemale" style="width:15px;height:15px;accent-color:var(--sd);"/>👩 Female</label>
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmAnc" style="width:15px;height:15px;accent-color:var(--sd);"/>🏛️ Ancestor</label>
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmDead" style="width:15px;height:15px;accent-color:var(--sd);"/>✝️ Deceased</label>
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;color:var(--tm);"><input type="checkbox" id="mmInlaw" style="width:15px;height:15px;accent-color:var(--sd);"/>💜 In-law</label>
     </div>
-    <div style="display:flex;gap:10px;margin-top:18px;">
-      <button class="btn btn-green" style="flex:1;" onclick="saveMember()">💾 Save Member</button>
-      <button class="btn btn-outline" onclick="closeMemberModal()">Cancel</button>
+    <div class="mf">
+      <button class="btn bg" style="flex:1;" onclick="saveMember()">💾 Save Member</button>
+      <button class="btn bo" onclick="closeM('memberM')">Cancel</button>
     </div>
   </div>
 </div>
 
 <!-- HISTORY MODAL -->
-<div class="modal-bg" id="historyModal">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="closeHistModal()">✕</button>
-    <h2 id="hmTitle">Add History Event</h2><p class="modal-sub">Add a milestone to the timeline.</p>
-    <input type="hidden" id="hmId"/>
-    <div class="frow">
-      <div class="fgrp"><label>Year *</label><input type="text" id="hmYear" placeholder="e.g. 1952"/></div>
-      <div class="fgrp"><label>Category</label><select id="hmTag"><option>📍 Origins</option><option>🏡 Family</option><option>⭐ Milestone</option><option>💒 Marriage</option><option>🎓 Education</option><option>✈️ Migration</option><option>🏆 Achievement</option></select></div>
+<div class="mb" id="histM">
+  <div class="mo" style="max-width:460px;">
+    <button class="mc" onclick="closeM('histM')">✕</button>
+    <h2 id="histMH">Add History Event</h2><p>Add a milestone to the family timeline.</p>
+    <input type="hidden" id="histId"/>
+    <div class="fr">
+      <div class="fg"><label>Year *</label><input type="text" id="histYear" placeholder="e.g. 1952"/></div>
+      <div class="fg"><label>Category</label><select id="histTag"><option>📍 Origins</option><option>🏡 Family</option><option>⭐ Milestone</option><option>💒 Marriage</option><option>🎓 Education</option><option>✈️ Migration</option><option>🏆 Achievement</option></select></div>
     </div>
-    <div class="fgrp"><label>Title *</label><input type="text" id="hmTitle2" placeholder="e.g. Family moves to Hyderabad"/></div>
-    <div class="fgrp"><label>Description</label><textarea id="hmDesc"></textarea></div>
-    <div style="display:flex;gap:10px;margin-top:18px;">
-      <button class="btn btn-green" style="flex:1;" onclick="saveHist()">💾 Save</button>
-      <button class="btn btn-outline" onclick="closeHistModal()">Cancel</button>
+    <div class="fg"><label>Title *</label><input type="text" id="histTitle" placeholder="e.g. Family moves to Hyderabad"/></div>
+    <div class="fg"><label>Description</label><textarea id="histDesc"></textarea></div>
+    <div class="mf">
+      <button class="btn bg" style="flex:1;" onclick="saveHist()">💾 Save</button>
+      <button class="btn bo" onclick="closeM('histM')">Cancel</button>
     </div>
   </div>
 </div>
 
 <!-- GALLERY MODAL -->
-<div class="modal-bg" id="galleryModal">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="closeGalModal()">✕</button>
-    <h2 id="gmTitle">Add Photo</h2><p class="modal-sub">Add a photo by URL. Use imgbb.com to host for free.</p>
-    <input type="hidden" id="gmId"/>
-    <div class="fgrp"><label>Photo Title *</label><input type="text" id="gmTitle2" placeholder="e.g. Family Reunion 1995"/></div>
-    <div class="fgrp"><label>Image URL</label><input type="text" id="gmUrl" placeholder="https://..." oninput="previewGal(this.value)"/></div>
-    <div id="gmPreview" style="display:none;margin-bottom:12px;"><img id="gmPreviewImg" style="width:100%;height:150px;object-fit:cover;border-radius:10px;" alt=""/></div>
-    <div class="frow">
-      <div class="fgrp"><label>Category</label><select id="gmCat"><option value="family">Family</option><option value="vintage">Vintage</option><option value="celebrations">Celebrations</option><option value="travel">Travel</option><option value="other">Other</option></select></div>
-      <div class="fgrp"><label>Year</label><input type="text" id="gmYear" placeholder="e.g. 1995"/></div>
+<div class="mb" id="galM">
+  <div class="mo" style="max-width:460px;">
+    <button class="mc" onclick="closeM('galM')">✕</button>
+    <h2 id="galMH">Add Photo</h2><p>Add a photo by URL. Upload to imgbb.com (free) and paste the link.</p>
+    <input type="hidden" id="galId"/>
+    <div class="fg"><label>Title *</label><input type="text" id="galTitle" placeholder="e.g. Family Reunion 1995"/></div>
+    <div class="fg"><label>Image URL</label><input type="text" id="galUrl" placeholder="https://..." oninput="prevGal(this.value)"/></div>
+    <div id="galPrevDiv" style="display:none;margin-bottom:10px;"><img id="galPrevImg" style="width:100%;height:140px;object-fit:cover;border-radius:9px;" alt=""/></div>
+    <div class="fr">
+      <div class="fg"><label>Category</label><select id="galCat"><option value="family">Family</option><option value="vintage">Vintage</option><option value="celebrations">Celebrations</option><option value="travel">Travel</option><option value="other">Other</option></select></div>
+      <div class="fg"><label>Year</label><input type="text" id="galYear" placeholder="e.g. 1995"/></div>
     </div>
-    <div class="fgrp"><label>Caption</label><textarea id="gmCaption" rows="2"></textarea></div>
-    <div style="display:flex;gap:10px;margin-top:18px;">
-      <button class="btn btn-green" style="flex:1;" onclick="saveGal()">💾 Save</button>
-      <button class="btn btn-outline" onclick="closeGalModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- FACTS MODAL -->
-<div class="modal-bg" id="factModal">
-  <div class="modal" style="max-width:500px;">
-    <button class="modal-close" onclick="closeFactModal()">✕</button>
-    <h2 id="fmTitle">Add Interesting Fact</h2><p class="modal-sub">Share a family first, achievement or tradition.</p>
-    <input type="hidden" id="fmId"/>
-    <div class="fgrp"><label>Title *</label><input type="text" id="fmTitle2" placeholder="e.g. First Doctor in the Family"/></div>
-    <div class="fgrp"><label>Description</label><textarea id="fmDesc"></textarea></div>
-    <div class="frow">
-      <div class="fgrp"><label>Category</label><select id="fmCat"><option value="Achievement">🏆 Achievement</option><option value="Milestone">⭐ Milestone</option><option value="Tradition">🎭 Tradition</option><option value="Record">📊 Record</option><option value="Fun Fact">😄 Fun Fact</option><option value="Other">📌 Other</option></select></div>
-      <div class="fgrp"><label>Icon (emoji)</label><input type="text" id="fmIcon" placeholder="e.g. 🏥 🎓"/></div>
-    </div>
-    <div class="frow">
-      <div class="fgrp"><label>Person Involved</label><input type="text" id="fmPerson"/></div>
-      <div class="fgrp"><label>Year</label><input type="text" id="fmYear"/></div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:18px;">
-      <button class="btn btn-green" style="flex:1;" onclick="saveFact()">💾 Save Fact</button>
-      <button class="btn btn-outline" onclick="closeFactModal()">Cancel</button>
+    <div class="fg"><label>Caption</label><textarea id="galCaption" rows="2"></textarea></div>
+    <div class="mf">
+      <button class="btn bg" style="flex:1;" onclick="saveGal()">💾 Save</button>
+      <button class="btn bo" onclick="closeM('galM')">Cancel</button>
     </div>
   </div>
 </div>
 
-<!-- EVENTS MODAL -->
-<div class="modal-bg" id="evtModal">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="closeEvtModal()">✕</button>
-    <h2 id="evtModalTitle">Add Event</h2>
+<!-- FACT MODAL -->
+<div class="mb" id="factM">
+  <div class="mo" style="max-width:480px;">
+    <button class="mc" onclick="closeM('factM')">✕</button>
+    <h2 id="factMH">Add Fact</h2><p>Share a family first, achievement or tradition.</p>
+    <input type="hidden" id="factId"/>
+    <div class="fg"><label>Title *</label><input type="text" id="factTitle" placeholder="e.g. First Doctor in the Family"/></div>
+    <div class="fg"><label>Description</label><textarea id="factDesc"></textarea></div>
+    <div class="fr">
+      <div class="fg"><label>Category</label><select id="factCat"><option value="Achievement">🏆 Achievement</option><option value="Milestone">⭐ Milestone</option><option value="Tradition">🎭 Tradition</option><option value="Record">📊 Record</option><option value="Fun Fact">😄 Fun Fact</option></select></div>
+      <div class="fg"><label>Icon (emoji)</label><input type="text" id="factIcon" placeholder="🏥 🎓 🌟"/></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Person Involved</label><input type="text" id="factPerson"/></div>
+      <div class="fg"><label>Year</label><input type="text" id="factYear"/></div>
+    </div>
+    <div class="mf">
+      <button class="btn bg" style="flex:1;" onclick="saveFact()">💾 Save</button>
+      <button class="btn bo" onclick="closeM('factM')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT MODAL -->
+<div class="mb" id="evtM">
+  <div class="mo" style="max-width:460px;">
+    <button class="mc" onclick="closeM('evtM')">✕</button>
+    <h2 id="evtMH">Add Event</h2>
     <input type="hidden" id="evtId"/>
-    <div class="fgrp"><label>Title *</label><input type="text" id="evtTitle"/></div>
-    <div class="frow">
-      <div class="fgrp"><label>Date</label><input type="date" id="evtDate"/></div>
-      <div class="fgrp"><label>Type</label><select id="evtType"><option>Reunion</option><option>Birthday</option><option>Anniversary</option><option>Wedding</option><option>Festival</option><option>Other</option></select></div>
+    <div class="fg"><label>Title *</label><input type="text" id="evtTitle"/></div>
+    <div class="fr">
+      <div class="fg"><label>Date</label><input type="date" id="evtDate"/></div>
+      <div class="fg"><label>Type</label><select id="evtType"><option>Reunion</option><option>Birthday</option><option>Anniversary</option><option>Wedding</option><option>Festival</option><option>Other</option></select></div>
     </div>
-    <div class="fgrp"><label>Location</label><input type="text" id="evtLocation"/></div>
-    <div class="fgrp"><label>Description</label><textarea id="evtDesc" rows="3"></textarea></div>
-    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="saveEvt()">💾 Save</button><button class="btn btn-outline" onclick="closeEvtModal()">Cancel</button></div>
+    <div class="fg"><label>Location</label><input type="text" id="evtLoc"/></div>
+    <div class="fg"><label>Description</label><textarea id="evtDesc" rows="3"></textarea></div>
+    <div class="mf"><button class="btn bg" style="flex:1;" onclick="saveEvt()">💾 Save</button><button class="btn bo" onclick="closeM('evtM')">Cancel</button></div>
   </div>
 </div>
 
 <!-- RECIPE MODAL -->
-<div class="modal-bg" id="recipeModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeRecipeModal()">✕</button>
-    <h2 id="recipeModalTitle">Add Recipe</h2>
-    <input type="hidden" id="recipeId"/>
-    <div class="frow">
-      <div class="fgrp"><label>Name *</label><input type="text" id="recipeTitle"/></div>
-      <div class="fgrp"><label>Category</label><select id="recipeCat"><option>Curry</option><option>Rice</option><option>Dessert</option><option>Snack</option><option>Drink</option><option>Breakfast</option><option>Other</option></select></div>
+<div class="mb" id="recM">
+  <div class="mo">
+    <button class="mc" onclick="closeM('recM')">✕</button>
+    <h2 id="recMH">Add Recipe</h2>
+    <input type="hidden" id="recId"/>
+    <div class="fr">
+      <div class="fg"><label>Name *</label><input type="text" id="recTitle"/></div>
+      <div class="fg"><label>Category</label><select id="recCat"><option>Curry</option><option>Rice</option><option>Dessert</option><option>Snack</option><option>Drink</option><option>Breakfast</option><option>Other</option></select></div>
     </div>
-    <div class="frow">
-      <div class="fgrp"><label>Made by</label><input type="text" id="recipeBy"/></div>
-      <div class="fgrp"><label>Cook Time</label><input type="text" id="recipeTime"/></div>
+    <div class="fr">
+      <div class="fg"><label>Made by</label><input type="text" id="recBy"/></div>
+      <div class="fg"><label>Cook Time</label><input type="text" id="recTime"/></div>
     </div>
-    <div class="fgrp"><label>Ingredients (one per line)</label><textarea id="recipeIngredients" rows="5"></textarea></div>
-    <div class="fgrp"><label>Steps (one per line)</label><textarea id="recipeSteps" rows="5"></textarea></div>
-    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="saveRecipe()">💾 Save</button><button class="btn btn-outline" onclick="closeRecipeModal()">Cancel</button></div>
+    <div class="fg"><label>Ingredients (one per line)</label><textarea id="recIng" rows="5" placeholder="2 cups rice&#10;1 cup dal&#10;Salt to taste"></textarea></div>
+    <div class="fg"><label>Steps (one per line)</label><textarea id="recSteps" rows="5" placeholder="Wash rice&#10;Boil water&#10;Cook 20 mins"></textarea></div>
+    <div class="mf"><button class="btn bg" style="flex:1;" onclick="saveRec()">💾 Save</button><button class="btn bo" onclick="closeM('recM')">Cancel</button></div>
   </div>
 </div>
 
 <!-- ACHIEVEMENT MODAL -->
-<div class="modal-bg" id="achModal">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="closeAchModal()">✕</button>
-    <h2 id="achModalTitle">Add Achievement</h2>
+<div class="mb" id="achM">
+  <div class="mo" style="max-width:460px;">
+    <button class="mc" onclick="closeM('achM')">✕</button>
+    <h2 id="achMH">Add Achievement</h2>
     <input type="hidden" id="achId"/>
-    <div class="fgrp"><label>Title *</label><input type="text" id="achTitle"/></div>
-    <div class="frow">
-      <div class="fgrp"><label>Person</label><input type="text" id="achPerson"/></div>
-      <div class="fgrp"><label>Year</label><input type="text" id="achYear"/></div>
+    <div class="fg"><label>Title *</label><input type="text" id="achTitle"/></div>
+    <div class="fr">
+      <div class="fg"><label>Person</label><input type="text" id="achPerson"/></div>
+      <div class="fg"><label>Year</label><input type="text" id="achYear"/></div>
     </div>
-    <div class="frow">
-      <div class="fgrp"><label>Icon</label><input type="text" id="achIcon" placeholder="🏆 🎓 🏅"/></div>
-      <div class="fgrp"><label>Category</label><select id="achCat"><option>Education</option><option>Career</option><option>Sports</option><option>Arts</option><option>Community</option><option>Family First</option><option>Other</option></select></div>
+    <div class="fr">
+      <div class="fg"><label>Icon</label><input type="text" id="achIcon" placeholder="🏆 🎓 🏅"/></div>
+      <div class="fg"><label>Category</label><select id="achCat"><option>Education</option><option>Career</option><option>Sports</option><option>Arts</option><option>Community</option><option>Family First</option><option>Other</option></select></div>
     </div>
-    <div class="fgrp"><label>Description</label><textarea id="achDesc" rows="3"></textarea></div>
-    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="saveAch()">💾 Save</button><button class="btn btn-outline" onclick="closeAchModal()">Cancel</button></div>
+    <div class="fg"><label>Description</label><textarea id="achDesc" rows="3"></textarea></div>
+    <div class="mf"><button class="btn bg" style="flex:1;" onclick="saveAch()">💾 Save</button><button class="btn bo" onclick="closeM('achM')">Cancel</button></div>
   </div>
 </div>
 
 <!-- VIDEO MODAL -->
-<div class="modal-bg" id="videoModal">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="closeVideoModal()">✕</button>
-    <h2 id="videoModalTitle">Add Video</h2>
-    <input type="hidden" id="videoId"/>
-    <div class="fgrp"><label>Title *</label><input type="text" id="videoTitle"/></div>
-    <div class="fgrp"><label>YouTube URL *</label><input type="text" id="videoUrl" placeholder="https://youtube.com/watch?v=..."/></div>
-    <div class="fgrp"><label>Description</label><textarea id="videoDesc" rows="2"></textarea></div>
-    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="saveVideo()">💾 Save</button><button class="btn btn-outline" onclick="closeVideoModal()">Cancel</button></div>
+<div class="mb" id="vidM">
+  <div class="mo" style="max-width:440px;">
+    <button class="mc" onclick="closeM('vidM')">✕</button>
+    <h2 id="vidMH">Add Video</h2>
+    <input type="hidden" id="vidId"/>
+    <div class="fg"><label>Title *</label><input type="text" id="vidTitle"/></div>
+    <div class="fg"><label>YouTube URL *</label><input type="text" id="vidUrl" placeholder="https://youtube.com/watch?v=..."/></div>
+    <div class="fg"><label>Description</label><textarea id="vidDesc" rows="2"></textarea></div>
+    <div class="mf"><button class="btn bg" style="flex:1;" onclick="saveVid()">💾 Save</button><button class="btn bo" onclick="closeM('vidM')">Cancel</button></div>
   </div>
 </div>
 
 <!-- POLL MODAL -->
-<div class="modal-bg" id="pollModal">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="closePollModal()">✕</button>
-    <h2 id="pollModalTitle">Create Poll</h2>
-    <div class="fgrp"><label>Question *</label><input type="text" id="pollQuestion" placeholder="e.g. Where should our next reunion be?"/></div>
-    <div class="fgrp"><label>Options (one per line, min 2)</label><textarea id="pollOptions" rows="5" placeholder="Hyderabad&#10;Chennai&#10;Bangalore"></textarea></div>
-    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="savePoll()">💾 Create Poll</button><button class="btn btn-outline" onclick="closePollModal()">Cancel</button></div>
+<div class="mb" id="pollM">
+  <div class="mo" style="max-width:440px;">
+    <button class="mc" onclick="closeM('pollM')">✕</button>
+    <h2>Create Poll</h2>
+    <div class="fg"><label>Question *</label><input type="text" id="pollQ" placeholder="e.g. Where should our next reunion be?"/></div>
+    <div class="fg"><label>Options (one per line)</label><textarea id="pollOpts" rows="5" placeholder="Hyderabad&#10;Chennai&#10;Bangalore"></textarea></div>
+    <div class="mf"><button class="btn bg" style="flex:1;" onclick="savePoll()">💾 Create</button><button class="btn bo" onclick="closeM('pollM')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- CONTACT EDIT MODAL -->
+<div class="mb" id="ceM">
+  <div class="mo" style="max-width:440px;">
+    <button class="mc" onclick="closeM('ceM')">✕</button>
+    <h2 id="ceMH">Edit Contact</h2><p>Private info — admin only.</p>
+    <input type="hidden" id="ceId"/>
+    <div class="fg"><label>Phone</label><input type="text" id="cePhone" placeholder="+91 9876543210"/></div>
+    <div class="fg"><label>Email</label><input type="text" id="ceEmail"/></div>
+    <div class="fg"><label>City</label><input type="text" id="ceCity"/></div>
+    <div class="fg"><label>Birthday</label><input type="text" id="ceBday" placeholder="e.g. 15 March 1985"/></div>
+    <div class="fg"><label>Social Media</label><input type="text" id="ceSocial" placeholder="@handle or URL"/></div>
+    <div class="fg"><label>Notes</label><textarea id="ceNotes" rows="3"></textarea></div>
+    <div class="mf"><button class="btn bg" style="flex:1;" onclick="saveCE()">💾 Save</button><button class="btn bo" onclick="closeM('ceM')">Cancel</button></div>
   </div>
 </div>
 
 <!-- IMPORT MODAL -->
-<div class="modal-bg" id="importModal">
-  <div class="modal" style="max-width:440px;">
-    <button class="modal-close" onclick="document.getElementById('importModal').classList.remove('open')">✕</button>
-    <h2>Import Backup</h2><p class="modal-sub">Paste exported JSON to restore all data.</p>
-    <div class="fgrp"><label>JSON Data</label><textarea id="importData" rows="8" placeholder="Paste JSON here..."></textarea></div>
-    <div style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-green" style="flex:1;" onclick="doImport()">📤 Import</button><button class="btn btn-outline" onclick="document.getElementById('importModal').classList.remove('open')">Cancel</button></div>
+<div class="mb" id="importM">
+  <div class="mo" style="max-width:420px;">
+    <button class="mc" onclick="closeM('importM')">✕</button>
+    <h2>Import Backup</h2><p>Paste exported JSON to restore all data.</p>
+    <div class="fg"><label>JSON Data</label><textarea id="impData" rows="8" placeholder="Paste JSON here..."></textarea></div>
+    <div class="mf"><button class="btn bg" style="flex:1;" onclick="doImport()">📤 Import</button><button class="btn bo" onclick="closeM('importM')">Cancel</button></div>
   </div>
 </div>
 
 <script>
-  // Passwords
-  function getAdminPass(){ return localStorage.getItem('nukala_admin_pass')||'nukala_admin_2024'; }
+// ═══════════════════════════════
+// DATA
+// ═══════════════════════════════
+var LS = {
+  members:'nukala_tree_data', gallery:'nukala_gallery', history:'nukala_history',
+  facts:'nukala_facts', events:'nukala_events', recipes:'nukala_recipes',
+  achievements:'nukala_achievements', videos:'nukala_videos', polls:'nukala_polls',
+  contacts:'nukala_contacts', settings:'nukala_settings', log:'nukala_log',
+  pagevis:'nukala_page_vis', visits:'nukala_visits', visitors:'nukala_visitors',
+  logins:'nukala_logins', sessions:'nukala_sessions', pagecounts:'nukala_page_counts'
+};
+function ld(k){ try{ return JSON.parse(localStorage.getItem(LS[k]||k)||'{}'); } catch(e){ return {}; } }
+function lda(k){ try{ return JSON.parse(localStorage.getItem(LS[k]||k)||'[]'); } catch(e){ return []; } }
+function sv(k,v){ localStorage.setItem(LS[k]||k, JSON.stringify(v)); }
+function log(msg){ var l=lda('log'); l.push(msg); if(l.length>50) l=l.slice(-50); sv('log',l); }
+function toast(msg){ var t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(function(){ t.remove(); },3000); }
 
-  // Login
-  function doLogin(){
-    var pw = document.getElementById('pwInput').value;
-    if(pw === getAdminPass()){
-      sessionStorage.setItem('nukala_admin','true');
-      document.getElementById('loginScreen').style.display='none';
-      document.getElementById('adminUI').style.display='block';
-      if(typeof init==='function') init();
-    } else {
-      var err = document.getElementById('pwErr');
-      err.style.display='block';
-      document.getElementById('pwInput').value='';
-      document.getElementById('pwInput').focus();
-    }
+// ═══════════════════════════════
+// AUTH
+// ═══════════════════════════════
+function getAdminPass(){ return localStorage.getItem('nukala_admin_pass')||'nukala_admin_2024'; }
+function getSitePass(){ return localStorage.getItem('nukala_site_pass')||'nukala2024'; }
+
+function login(){
+  var pw = document.getElementById('pw').value;
+  if(pw === getAdminPass()){
+    sessionStorage.setItem('nukala_admin','true');
+    document.getElementById('L').style.display='none';
+    document.getElementById('A').style.display='block';
+    initAdmin();
+  } else {
+    document.getElementById('perr').style.display='block';
+    document.getElementById('pw').value='';
+    document.getElementById('pw').focus();
+  }
+}
+function logout(){ sessionStorage.removeItem('nukala_admin'); window.location.href='home.html'; }
+document.getElementById('pw').addEventListener('keydown', function(e){ if(e.key==='Enter') login(); });
+document.getElementById('pw').focus();
+if(sessionStorage.getItem('nukala_admin')==='true'){
+  document.getElementById('L').style.display='none';
+  document.getElementById('A').style.display='block';
+}
+
+// ═══════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════
+function go(id, el){
+  document.querySelectorAll('.sec').forEach(function(s){ s.classList.remove('on'); });
+  document.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('on'); });
+  var sec = document.getElementById('sec-'+id);
+  if(sec) sec.classList.add('on');
+  if(el) el.classList.add('on');
+  var loaders = {
+    dash:renderDash, members:renderMembers, history:renderHist,
+    gallery:renderGal, facts:renderFacts, events:renderEvts,
+    recipes:renderRecs, achievements:renderAchs, videos:renderVids,
+    polls:renderPolls, contacts:renderContacts, announce:renderAnn,
+    pagevis:renderVis, analytics:renderAnalytics, settings:loadSettings
+  };
+  if(loaders[id]) loaders[id]();
+}
+
+function openM(id){ document.getElementById(id).classList.add('open'); }
+function closeM(id){ document.getElementById(id).classList.remove('open'); }
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+function initAdmin(){
+  var s = ld('settings');
+  if(s.familyName) document.getElementById('siteName').textContent = s.familyName;
+  document.getElementById('mmRole').addEventListener('change', function(){
+    document.getElementById('mmCRG').style.display = this.value==='other'?'block':'none';
+  });
+  renderDash();
+}
+if(sessionStorage.getItem('nukala_admin')==='true') initAdmin();
+
+// ═══════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════
+function renderDash(){
+  var m = Object.values(ld('members'));
+  var g = lda('gallery'), h = lda('history'), f = lda('facts');
+  var gens = [...new Set(m.map(function(x){ return x.gen; }).filter(Boolean))];
+  document.getElementById('ds-m').textContent = m.length;
+  document.getElementById('ds-g').textContent = g.length;
+  document.getElementById('ds-h').textContent = h.length;
+  document.getElementById('ds-f').textContent = f.length;
+  document.getElementById('ds-gens').textContent = gens.length;
+  var logs = lda('log');
+  var logEl = document.getElementById('ds-log');
+  if(!logs.length){ logEl.innerHTML='<span style="color:var(--tl);">No activity yet.</span>'; return; }
+  logEl.innerHTML = logs.slice(-6).reverse().map(function(l){
+    return '<div style="padding:4px 0;border-bottom:1px solid var(--b);color:var(--tm);">'+l+'</div>';
+  }).join('');
+}
+
+// ═══════════════════════════════
+// MEMBERS
+// ═══════════════════════════════
+function renderMembers(){
+  var data = ld('members');
+  var list = Object.values(data);
+  var gf = document.getElementById('mGenF').value;
+  var q = (document.getElementById('mSrch').value||'').toLowerCase();
+  if(gf) list = list.filter(function(m){ return m.gen==gf; });
+  if(q) list = list.filter(function(m){ return ([m.firstName,m.lastName,m.role,m.place].join(' ')).toLowerCase().includes(q); });
+  list.sort(function(a,b){ return (parseInt(a.gen)||9)-(parseInt(b.gen)||9); });
+  var grid = document.getElementById('membersGrid');
+  if(!list.length){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--tl);"><div style="font-size:40px;margin-bottom:10px;">🌿</div><p>No members yet. Click <strong>+ Add Member</strong> to start.</p></div>';
+    return;
+  }
+  grid.innerHTML = list.map(function(m){
+    var name = [m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+    var emoji = m.deceased?'👤':m.female?'👩':'👨';
+    var av = m.photo?'<img src="'+m.photo+'" alt=""/>':emoji;
+    var avCls = 'av'+(m.ancestor?' ta':'')+(m.female&&!m.ancestor?' tf':'');
+    var dates = [m.born, m.died?'✝ '+m.died:''].filter(Boolean).join(' · ')||'–';
+    var tags = '';
+    if(m.gen) tags+='<span class="tag tg">Gen '+m.gen+'</span>';
+    if(m.female) tags+='<span class="tag tf">Female</span>';
+    if(m.ancestor) tags+='<span class="tag ta">Ancestor</span>';
+    if(m.inlaw) tags+='<span class="tag ti">In-law</span>';
+    if(m.deceased||m.died) tags+='<span class="tag td2">Deceased</span>';
+    return '<div class="card">'
+      +'<div class="ctop"><div class="'+avCls+'">'+av+'</div>'
+      +'<div><div class="cn">'+name+'</div><div class="cr">'+(m.role||'–')+'</div><div class="cd">'+dates+'</div></div></div>'
+      +(tags?'<div class="tags">'+tags+'</div>':'')
+      +'<div class="acts">'
+      +'<button class="ab" onclick="copyId(\''+m.id+'\')">📋 ID</button>'
+      +'<button class="ab" onclick="editMember(\''+m.id+'\')">✏️ Edit</button>'
+      +'<button class="ab ab-r" onclick="delMember(\''+m.id+'\')">🗑️</button>'
+      +'</div></div>';
+  }).join('');
+}
+
+function copyId(id){ navigator.clipboard.writeText(id).catch(function(){ /* ignore */ }); toast('📋 ID copied: '+id); }
+
+function openMemberM(){
+  document.getElementById('mmId').value='';
+  document.getElementById('mmH').textContent='Add Family Member';
+  ['mmFirst','mmLast','mmBorn','mmDied','mmPlace','mmOcc','mmNotes','mmFather','mmMother','mmSpouse','mmCRole','mmPhotoUrl'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('mmRole').value='';
+  document.getElementById('mmGen').value='';
+  document.getElementById('mmFemale').checked=false;
+  document.getElementById('mmAnc').checked=false;
+  document.getElementById('mmDead').checked=false;
+  document.getElementById('mmInlaw').checked=false;
+  document.getElementById('mmPrev').style.display='none';
+  document.getElementById('mmPH').style.display='block';
+  document.getElementById('mmCRG').style.display='none';
+  openM('memberM');
+}
+
+function editMember(id){
+  var data = ld('members');
+  var m = data[id]; if(!m) return;
+  document.getElementById('mmId').value=id;
+  document.getElementById('mmH').textContent='Edit Member';
+  document.getElementById('mmFirst').value=m.firstName||'';
+  document.getElementById('mmLast').value=m.lastName||'';
+  document.getElementById('mmRole').value=m.role||'';
+  document.getElementById('mmGen').value=m.gen||'';
+  document.getElementById('mmBorn').value=m.born||'';
+  document.getElementById('mmDied').value=m.died||'';
+  document.getElementById('mmPlace').value=m.place||'';
+  document.getElementById('mmOcc').value=m.occ||'';
+  document.getElementById('mmNotes').value=m.notes||'';
+  document.getElementById('mmFather').value=m.fatherId||'';
+  document.getElementById('mmMother').value=m.motherId||'';
+  document.getElementById('mmSpouse').value=m.spouseId||'';
+  document.getElementById('mmPhotoUrl').value=m.photo||'';
+  document.getElementById('mmFemale').checked=!!m.female;
+  document.getElementById('mmAnc').checked=!!m.ancestor;
+  document.getElementById('mmDead').checked=!!m.deceased;
+  document.getElementById('mmInlaw').checked=!!m.inlaw;
+  if(m.photo){ document.getElementById('mmPrev').src=m.photo; document.getElementById('mmPrev').style.display='block'; document.getElementById('mmPH').style.display='none'; }
+  else { document.getElementById('mmPrev').style.display='none'; document.getElementById('mmPH').style.display='block'; }
+  openM('memberM');
+}
+
+function saveMember(){
+  var first = document.getElementById('mmFirst').value.trim();
+  if(!first){ alert('Please enter a first name.'); return; }
+  var id = document.getElementById('mmId').value || 'member_'+Date.now();
+  var data = ld('members');
+  var roleVal = document.getElementById('mmRole').value;
+  var role = roleVal==='other' ? document.getElementById('mmCRole').value.trim() : roleVal;
+  var photo = document.getElementById('mmPhotoUrl').value.trim() || (document.getElementById('mmPrev').src.startsWith('data:') ? document.getElementById('mmPrev').src : '');
+  data[id] = {
+    id:id, firstName:first, lastName:document.getElementById('mmLast').value.trim(),
+    role:role, gen:document.getElementById('mmGen').value,
+    born:document.getElementById('mmBorn').value.trim(), died:document.getElementById('mmDied').value.trim(),
+    place:document.getElementById('mmPlace').value.trim(), occ:document.getElementById('mmOcc').value.trim(),
+    notes:document.getElementById('mmNotes').value.trim(),
+    fatherId:document.getElementById('mmFather').value.trim(), motherId:document.getElementById('mmMother').value.trim(),
+    spouseId:document.getElementById('mmSpouse').value.trim(),
+    female:document.getElementById('mmFemale').checked, ancestor:document.getElementById('mmAnc').checked,
+    deceased:document.getElementById('mmDead').checked||!!document.getElementById('mmDied').value.trim(),
+    inlaw:document.getElementById('mmInlaw').checked, photo:photo
+  };
+  sv('members',data); closeM('memberM'); renderMembers();
+  log('Member saved: '+first); toast('✅ '+first+' saved!');
+}
+
+function delMember(id){
+  var data=ld('members'); var name=[data[id]?.firstName,data[id]?.lastName].filter(Boolean).join(' ')||'member';
+  if(!confirm('Delete '+name+'?')) return;
+  delete data[id]; sv('members',data); renderMembers(); toast('🗑️ Deleted.');
+}
+
+function handlePhoto(inp){
+  if(!inp.files||!inp.files[0]) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    document.getElementById('mmPrev').src=e.target.result;
+    document.getElementById('mmPrev').style.display='block';
+    document.getElementById('mmPH').style.display='none';
+  };
+  reader.readAsDataURL(inp.files[0]);
+}
+
+function prevPhotoUrl(url){
+  if(!url) return;
+  document.getElementById('mmPrev').src=url;
+  document.getElementById('mmPrev').style.display='block';
+  document.getElementById('mmPH').style.display='none';
+}
+
+// ═══════════════════════════════
+// HISTORY
+// ═══════════════════════════════
+function renderHist(){
+  var list = lda('history');
+  var el = document.getElementById('histList');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No history events yet.</div>'; return; }
+  el.innerHTML = list.map(function(h,i){
+    return '<div class="tl"><div class="ty">'+h.year+'</div><div class="tb2">'
+      +'<div class="tt">'+h.title+'</div><div class="td3">'+(h.tag||'')+(h.desc?' · '+h.desc:'')+'</div>'
+      +'<div class="ta2"><button class="ab" onclick="editHist('+i+')">✏️ Edit</button>'
+      +'<button class="ab ab-r" onclick="delHist('+i+')">🗑️</button></div>'
+      +'</div></div>';
+  }).join('');
+}
+
+function openHistM(){ document.getElementById('histId').value=''; document.getElementById('histMH').textContent='Add History Event'; ['histYear','histTitle','histDesc'].forEach(function(id){ document.getElementById(id).value=''; }); document.getElementById('histTag').value=document.getElementById('histTag').options[0].value; openM('histM'); }
+function editHist(i){ var l=lda('history'); var h=l[i]; document.getElementById('histId').value=i; document.getElementById('histMH').textContent='Edit Event'; document.getElementById('histYear').value=h.year||''; document.getElementById('histTitle').value=h.title||''; document.getElementById('histDesc').value=h.desc||''; document.getElementById('histTag').value=h.tag||''; openM('histM'); }
+function saveHist(){ var yr=document.getElementById('histYear').value.trim(); var ti=document.getElementById('histTitle').value.trim(); if(!yr||!ti){ alert('Year and Title required.'); return; } var l=lda('history'); var i=document.getElementById('histId').value; var obj={year:yr,title:ti,desc:document.getElementById('histDesc').value.trim(),tag:document.getElementById('histTag').value}; if(i!=='') l[parseInt(i)]=obj; else l.push(obj); l.sort(function(a,b){ return (parseInt(a.year)||0)-(parseInt(b.year)||0); }); sv('history',l); closeM('histM'); renderHist(); log('History: '+ti); toast('✅ Saved!'); }
+function delHist(i){ if(!confirm('Delete this event?')) return; var l=lda('history'); l.splice(i,1); sv('history',l); renderHist(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════
+// GALLERY
+// ═══════════════════════════════
+function renderGal(){
+  var list = lda('gallery');
+  var el = document.getElementById('galGrid');
+  if(!list.length){ el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--tl);">No photos yet.</div>'; return; }
+  el.innerHTML = list.map(function(g,i){
+    var img = g.url ? '<img src="'+g.url+'" alt="'+g.title+'" onerror="this.parentElement.innerHTML=\'<div class=gip>🖼️</div>\'">' : '<div class="gip">🖼️</div>';
+    return '<div class="gi">'+img+'<div class="git">'+g.title+'</div>'
+      +'<div class="gia"><button class="ab" onclick="editGal('+i+')">✏️</button>'
+      +'<button class="ab ab-r" onclick="delGal('+i+')">🗑️</button></div></div>';
+  }).join('');
+}
+
+function openGalM(){ document.getElementById('galId').value=''; document.getElementById('galMH').textContent='Add Photo'; ['galTitle','galUrl','galYear','galCaption'].forEach(function(id){ document.getElementById(id).value=''; }); document.getElementById('galPrevDiv').style.display='none'; openM('galM'); }
+function editGal(i){ var l=lda('gallery'); var g=l[i]; document.getElementById('galId').value=i; document.getElementById('galMH').textContent='Edit Photo'; document.getElementById('galTitle').value=g.title||''; document.getElementById('galUrl').value=g.url||''; document.getElementById('galYear').value=g.year||''; document.getElementById('galCaption').value=g.caption||''; document.getElementById('galCat').value=g.cat||'family'; if(g.url){ document.getElementById('galPrevImg').src=g.url; document.getElementById('galPrevDiv').style.display='block'; } openM('galM'); }
+function prevGal(url){ if(url){ document.getElementById('galPrevImg').src=url; document.getElementById('galPrevDiv').style.display='block'; } }
+function saveGal(){ var ti=document.getElementById('galTitle').value.trim(); if(!ti){ alert('Title required.'); return; } var l=lda('gallery'); var i=document.getElementById('galId').value; var obj={title:ti,url:document.getElementById('galUrl').value.trim(),year:document.getElementById('galYear').value.trim(),caption:document.getElementById('galCaption').value.trim(),cat:document.getElementById('galCat').value}; if(i!=='') l[parseInt(i)]=obj; else l.push(obj); sv('gallery',l); closeM('galM'); renderGal(); log('Gallery: '+ti); toast('✅ Saved!'); }
+function delGal(i){ if(!confirm('Delete?')) return; var l=lda('gallery'); l.splice(i,1); sv('gallery',l); renderGal(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════
+// FACTS
+// ═══════════════════════════════
+function renderFacts(){
+  var list = lda('facts');
+  var el = document.getElementById('factsList');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No facts yet.</div>'; return; }
+  el.innerHTML = list.map(function(f,i){
+    return '<div class="tl"><div class="ty" style="font-size:1.4rem;">'+(f.icon||'🌟')+'</div><div class="tb2">'
+      +'<div class="tt">'+f.title+'</div><div class="td3">'+(f.cat||'')+(f.person?' · '+f.person:'')+(f.year?' · '+f.year:'')+(f.desc?'<br>'+f.desc:'')+'</div>'
+      +'<div class="ta2"><button class="ab" onclick="editFact('+i+')">✏️</button>'
+      +'<button class="ab ab-r" onclick="delFact('+i+')">🗑️</button></div>'
+      +'</div></div>';
+  }).join('');
+}
+
+function openFactM(){ document.getElementById('factId').value=''; document.getElementById('factMH').textContent='Add Fact'; ['factTitle','factDesc','factIcon','factPerson','factYear'].forEach(function(id){ document.getElementById(id).value=''; }); openM('factM'); }
+function editFact(i){ var l=lda('facts'); var f=l[i]; document.getElementById('factId').value=i; document.getElementById('factMH').textContent='Edit Fact'; document.getElementById('factTitle').value=f.title||''; document.getElementById('factDesc').value=f.desc||''; document.getElementById('factIcon').value=f.icon||''; document.getElementById('factPerson').value=f.person||''; document.getElementById('factYear').value=f.year||''; document.getElementById('factCat').value=f.cat||'Achievement'; openM('factM'); }
+function saveFact(){ var ti=document.getElementById('factTitle').value.trim(); if(!ti){ alert('Title required.'); return; } var l=lda('facts'); var i=document.getElementById('factId').value; var obj={title:ti,desc:document.getElementById('factDesc').value.trim(),icon:document.getElementById('factIcon').value.trim(),person:document.getElementById('factPerson').value.trim(),year:document.getElementById('factYear').value.trim(),cat:document.getElementById('factCat').value}; if(i!=='') l[parseInt(i)]=obj; else l.push(obj); sv('facts',l); closeM('factM'); renderFacts(); log('Fact: '+ti); toast('✅ Saved!'); }
+function delFact(i){ if(!confirm('Delete?')) return; var l=lda('facts'); l.splice(i,1); sv('facts',l); renderFacts(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════
+// EVENTS
+// ═══════════════════════════════
+function renderEvts(){
+  var list=lda('events'); var el=document.getElementById('evtList');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No events yet.</div>'; return; }
+  el.innerHTML=list.map(function(e,i){
+    return '<div class="tl"><div class="ty" style="font-size:.8rem;text-align:center;">'+((e.date||'').split('-').slice(1).join('<br>'))+'</div><div class="tb2"><div class="tt">'+e.title+'</div><div class="td3">'+(e.type||'')+(e.loc?' · '+e.loc:'')+(e.desc?'<br>'+e.desc:'')+'</div><div class="ta2"><button class="ab" onclick="editEvt('+i+')">✏️</button><button class="ab ab-r" onclick="delEvt('+i+')">🗑️</button></div></div></div>';
+  }).join('');
+}
+function openEvtM(){ document.getElementById('evtId').value=''; document.getElementById('evtMH').textContent='Add Event'; ['evtTitle','evtDate','evtLoc','evtDesc'].forEach(function(id){ document.getElementById(id).value=''; }); openM('evtM'); }
+function editEvt(i){ var l=lda('events'); var e=l[i]; document.getElementById('evtId').value=i; document.getElementById('evtMH').textContent='Edit Event'; document.getElementById('evtTitle').value=e.title||''; document.getElementById('evtDate').value=e.date||''; document.getElementById('evtLoc').value=e.loc||''; document.getElementById('evtDesc').value=e.desc||''; document.getElementById('evtType').value=e.type||'Reunion'; openM('evtM'); }
+function saveEvt(){ var ti=document.getElementById('evtTitle').value.trim(); if(!ti){ alert('Title required.'); return; } var l=lda('events'); var i=document.getElementById('evtId').value; var obj={title:ti,date:document.getElementById('evtDate').value,loc:document.getElementById('evtLoc').value.trim(),desc:document.getElementById('evtDesc').value.trim(),type:document.getElementById('evtType').value}; if(i!=='') l[parseInt(i)]=obj; else l.push(obj); sv('events',l); closeM('evtM'); renderEvts(); toast('✅ Saved!'); }
+function delEvt(i){ if(!confirm('Delete?')) return; var l=lda('events'); l.splice(i,1); sv('events',l); renderEvts(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════
+// RECIPES
+// ═══════════════════════════════
+function renderRecs(){
+  var list=lda('recipes'); var el=document.getElementById('recList');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No recipes yet.</div>'; return; }
+  el.innerHTML=list.map(function(r,i){
+    return '<div class="tl"><div class="ty" style="font-size:1.2rem;">🍛</div><div class="tb2"><div class="tt">'+r.title+'</div><div class="td3">'+(r.cat||'')+(r.by?' · By: '+r.by:'')+(r.time?' · '+r.time:'')+'</div><div class="ta2"><button class="ab" onclick="editRec('+i+')">✏️</button><button class="ab ab-r" onclick="delRec('+i+')">🗑️</button></div></div></div>';
+  }).join('');
+}
+function openRecM(){ document.getElementById('recId').value=''; document.getElementById('recMH').textContent='Add Recipe'; ['recTitle','recBy','recTime','recIng','recSteps'].forEach(function(id){ document.getElementById(id).value=''; }); openM('recM'); }
+function editRec(i){ var l=lda('recipes'); var r=l[i]; document.getElementById('recId').value=i; document.getElementById('recMH').textContent='Edit Recipe'; document.getElementById('recTitle').value=r.title||''; document.getElementById('recBy').value=r.by||''; document.getElementById('recTime').value=r.time||''; document.getElementById('recIng').value=(r.ingredients||[]).join('\n'); document.getElementById('recSteps').value=(r.steps||[]).join('\n'); document.getElementById('recCat').value=r.cat||'Curry'; openM('recM'); }
+function saveRec(){ var ti=document.getElementById('recTitle').value.trim(); if(!ti){ alert('Name required.'); return; } var l=lda('recipes'); var i=document.getElementById('recId').value; var obj={title:ti,cat:document.getElementById('recCat').value,by:document.getElementById('recBy').value.trim(),time:document.getElementById('recTime').value.trim(),ingredients:document.getElementById('recIng').value.split('\n').filter(function(x){ return x.trim(); }),steps:document.getElementById('recSteps').value.split('\n').filter(function(x){ return x.trim(); })}; if(i!=='') l[parseInt(i)]=obj; else l.push(obj); sv('recipes',l); closeM('recM'); renderRecs(); toast('✅ Saved!'); }
+function delRec(i){ if(!confirm('Delete?')) return; var l=lda('recipes'); l.splice(i,1); sv('recipes',l); renderRecs(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════
+// ACHIEVEMENTS
+// ═══════════════════════════════
+function renderAchs(){
+  var list=lda('achievements'); var el=document.getElementById('achList');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No achievements yet.</div>'; return; }
+  el.innerHTML=list.map(function(a,i){
+    return '<div class="tl"><div class="ty" style="font-size:1.3rem;">'+(a.icon||'🏆')+'</div><div class="tb2"><div class="tt">'+a.title+'</div><div class="td3">'+(a.person||'')+(a.year?' · '+a.year:'')+(a.cat?' · '+a.cat:'')+(a.desc?'<br>'+a.desc:'')+'</div><div class="ta2"><button class="ab" onclick="editAch('+i+')">✏️</button><button class="ab ab-r" onclick="delAch('+i+')">🗑️</button></div></div></div>';
+  }).join('');
+}
+function openAchM(){ document.getElementById('achId').value=''; document.getElementById('achMH').textContent='Add Achievement'; ['achTitle','achPerson','achYear','achIcon','achDesc'].forEach(function(id){ document.getElementById(id).value=''; }); openM('achM'); }
+function editAch(i){ var l=lda('achievements'); var a=l[i]; document.getElementById('achId').value=i; document.getElementById('achMH').textContent='Edit Achievement'; document.getElementById('achTitle').value=a.title||''; document.getElementById('achPerson').value=a.person||''; document.getElementById('achYear').value=a.year||''; document.getElementById('achIcon').value=a.icon||''; document.getElementById('achDesc').value=a.desc||''; document.getElementById('achCat').value=a.cat||'Education'; openM('achM'); }
+function saveAch(){ var ti=document.getElementById('achTitle').value.trim(); if(!ti){ alert('Title required.'); return; } var l=lda('achievements'); var i=document.getElementById('achId').value; var obj={title:ti,person:document.getElementById('achPerson').value.trim(),year:document.getElementById('achYear').value.trim(),icon:document.getElementById('achIcon').value.trim(),cat:document.getElementById('achCat').value,desc:document.getElementById('achDesc').value.trim()}; if(i!=='') l[parseInt(i)]=obj; else l.push(obj); sv('achievements',l); closeM('achM'); renderAchs(); toast('✅ Saved!'); }
+function delAch(i){ if(!confirm('Delete?')) return; var l=lda('achievements'); l.splice(i,1); sv('achievements',l); renderAchs(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════
+// VIDEOS
+// ═══════════════════════════════
+function renderVids(){
+  var list=lda('videos'); var el=document.getElementById('vidList');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No videos yet.</div>'; return; }
+  el.innerHTML=list.map(function(v,i){
+    return '<div class="tl"><div class="ty" style="font-size:1.3rem;">🎥</div><div class="tb2"><div class="tt">'+v.title+'</div><div class="td3">'+(v.url||'')+(v.desc?'<br>'+v.desc:'')+'</div><div class="ta2"><button class="ab" onclick="editVid('+i+')">✏️</button><button class="ab ab-r" onclick="delVid('+i+')">🗑️</button></div></div></div>';
+  }).join('');
+}
+function openVidM(){ document.getElementById('vidId').value=''; document.getElementById('vidMH').textContent='Add Video'; ['vidTitle','vidUrl','vidDesc'].forEach(function(id){ document.getElementById(id).value=''; }); openM('vidM'); }
+function editVid(i){ var l=lda('videos'); var v=l[i]; document.getElementById('vidId').value=i; document.getElementById('vidMH').textContent='Edit Video'; document.getElementById('vidTitle').value=v.title||''; document.getElementById('vidUrl').value=v.url||''; document.getElementById('vidDesc').value=v.desc||''; openM('vidM'); }
+function saveVid(){ var ti=document.getElementById('vidTitle').value.trim(); var url=document.getElementById('vidUrl').value.trim(); if(!ti||!url){ alert('Title and URL required.'); return; } var l=lda('videos'); var i=document.getElementById('vidId').value; var obj={title:ti,url:url,desc:document.getElementById('vidDesc').value.trim()}; if(i!=='') l[parseInt(i)]=obj; else l.push(obj); sv('videos',l); closeM('vidM'); renderVids(); toast('✅ Saved!'); }
+function delVid(i){ if(!confirm('Delete?')) return; var l=lda('videos'); l.splice(i,1); sv('videos',l); renderVids(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════
+// POLLS
+// ═══════════════════════════════
+function renderPolls(){
+  var list=lda('polls'); var el=document.getElementById('pollList');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No polls yet.</div>'; return; }
+  el.innerHTML=list.map(function(p,i){
+    var opts=p.options.map(function(o){ return o+(p.votes&&p.votes[o]?' ('+p.votes[o]+' votes)':''); }).join(', ');
+    return '<div class="tl"><div class="ty" style="font-size:1.2rem;">🗳️</div><div class="tb2"><div class="tt">'+p.question+'</div><div class="td3">'+opts+'</div><div class="ta2"><button class="ab" onclick="resetPoll('+i+')">↺ Reset Votes</button><button class="ab ab-r" onclick="delPoll('+i+')">🗑️</button></div></div></div>';
+  }).join('');
+}
+function openPollM(){ ['pollQ','pollOpts'].forEach(function(id){ document.getElementById(id).value=''; }); openM('pollM'); }
+function savePoll(){ var q=document.getElementById('pollQ').value.trim(); var opts=document.getElementById('pollOpts').value.split('\n').map(function(o){ return o.trim(); }).filter(Boolean); if(!q||opts.length<2){ alert('Question and at least 2 options required.'); return; } var l=lda('polls'); l.push({question:q,options:opts,votes:{}}); sv('polls',l); closeM('pollM'); renderPolls(); toast('✅ Poll created!'); }
+function resetPoll(i){ var l=lda('polls'); l[i].votes={}; sv('polls',l); renderPolls(); toast('↺ Votes reset.'); }
+function delPoll(i){ if(!confirm('Delete?')) return; var l=lda('polls'); l.splice(i,1); sv('polls',l); renderPolls(); toast('🗑️ Deleted.'); }
+
+// ═══════════════════════════════
+// CONTACTS
+// ═══════════════════════════════
+function renderContacts(){
+  var members=Object.values(ld('members'));
+  var contacts=ld('contacts');
+  var q=(document.getElementById('cSrch').value||'').toLowerCase();
+  if(q) members=members.filter(function(m){ return ([m.firstName,m.lastName,m.role].join(' ')).toLowerCase().includes(q); });
+  var el=document.getElementById('contactsGrid');
+  if(!members.length){ el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--tl);">No members yet. Add members first.</div>'; return; }
+  el.innerHTML=members.map(function(m){
+    var c=contacts[m.id]||{};
+    var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+    var details=[c.phone?'📞 '+c.phone:'',c.email?'✉️ '+c.email:'',c.city?'📍 '+c.city:''].filter(Boolean).join('<br>');
+    return '<div class="card"><div class="ctop"><div class="av">'+(m.female?'👩':'👨')+'</div><div><div class="cn">'+name+'</div><div class="cr">'+(m.role||'–')+'</div></div></div>'
+      +(details?'<div style="font-size:.73rem;color:var(--tm);margin-bottom:8px;line-height:1.7;">'+details+'</div>':'<div style="font-size:.73rem;color:var(--tl);margin-bottom:8px;">No contact info yet.</div>')
+      +'<button class="ab" onclick="openCE(\''+m.id+'\')">✏️ Edit Contact</button></div>';
+  }).join('');
+}
+
+function openCE(memberId){
+  var c=ld('contacts')[memberId]||{};
+  var m=ld('members')[memberId]||{};
+  document.getElementById('ceId').value=memberId;
+  document.getElementById('ceMH').textContent='Edit: '+([m.firstName,m.lastName].filter(Boolean).join(' ')||'Member');
+  document.getElementById('cePhone').value=c.phone||'';
+  document.getElementById('ceEmail').value=c.email||'';
+  document.getElementById('ceCity').value=c.city||'';
+  document.getElementById('ceBday').value=c.birthday||'';
+  document.getElementById('ceSocial').value=c.social||'';
+  document.getElementById('ceNotes').value=c.notes||'';
+  openM('ceM');
+}
+function saveCE(){
+  var id=document.getElementById('ceId').value;
+  var contacts=ld('contacts');
+  contacts[id]={phone:document.getElementById('cePhone').value.trim(),email:document.getElementById('ceEmail').value.trim(),city:document.getElementById('ceCity').value.trim(),birthday:document.getElementById('ceBday').value.trim(),social:document.getElementById('ceSocial').value.trim(),notes:document.getElementById('ceNotes').value.trim()};
+  sv('contacts',contacts); closeM('ceM'); renderContacts(); toast('✅ Contact saved!');
+}
+
+// ═══════════════════════════════
+// ANNOUNCEMENTS
+// ═══════════════════════════════
+function renderAnn(){
+  var logs=lda('annLog'); var el=document.getElementById('annLog');
+  if(!logs.length){ el.innerHTML='<span style="color:var(--tl);">No announcements sent yet.</span>'; return; }
+  el.innerHTML=logs.slice(-10).reverse().map(function(l){ return '<div style="padding:4px 0;border-bottom:1px solid var(--b);font-size:.78rem;color:var(--tm);">'+l+'</div>'; }).join('');
+}
+function sendEmail(){
+  var title=document.getElementById('annTitle').value.trim();
+  var msg=document.getElementById('annMsg').value.trim();
+  if(!title||!msg){ alert('Title and message required.'); return; }
+  var mailto='mailto:?subject='+encodeURIComponent(title)+'&body='+encodeURIComponent(msg);
+  window.open(mailto);
+  var l=lda('annLog'); l.push('📧 Email: '+title+' — '+(new Date().toLocaleDateString())); sv('annLog',l); renderAnn(); toast('📧 Email client opened!');
+}
+function sendWA(){
+  var title=document.getElementById('annTitle').value.trim();
+  var msg=document.getElementById('annMsg').value.trim();
+  if(!msg){ alert('Message required.'); return; }
+  window.open('https://wa.me/?text='+encodeURIComponent('*'+title+'*\n\n'+msg));
+  var l=lda('annLog'); l.push('📱 WhatsApp: '+title+' — '+(new Date().toLocaleDateString())); sv('annLog',l); renderAnn(); toast('📱 WhatsApp opened!');
+}
+
+// ═══════════════════════════════
+// PAGE VISIBILITY
+// ═══════════════════════════════
+var PAGES=[
+  {id:'home',label:'🏠 Home',file:'home.html',locked:true},
+  {id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},
+  {id:'history',label:'📜 History',file:'history.html',locked:false},
+  {id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},
+  {id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},
+  {id:'stats',label:'📊 Stats',file:'stats.html',locked:false},
+  {id:'events',label:'📆 Events',file:'events.html',locked:false},
+  {id:'map',label:'🗺️ Map',file:'map.html',locked:false},
+  {id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},
+  {id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},
+  {id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},
+  {id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},
+  {id:'qr',label:'📱 Share/QR',file:'qr.html',locked:false},
+  {id:'contact',label:'✉️ Contact',file:'contact.html',locked:true},
+];
+
+function renderVis(){
+  var saved=ld('pagevis');
+  var el=document.getElementById('visList');
+  var html='';
+  PAGES.forEach(function(p){
+    var on=saved[p.id]!==false;
+    var bg=on?'#5c7a5c':'#ccc';
+    var tx=on?'translateX(20px)':'translateX(0)';
+    var bdg=on?'<span style="font-size:.68rem;font-weight:600;padding:2px 10px;border-radius:20px;background:#f0f5f0;color:#5c7a5c;">Enabled</span>':'<span style="font-size:.68rem;font-weight:600;padding:2px 10px;border-radius:20px;background:#faf0f0;color:#c0614a;">Disabled</span>';
+    html+='<div class="vr"><div style="display:flex;align-items:center;gap:12px;">'
+      +'<div class="vt"><input type="checkbox" id="v-'+p.id+'" '+(on?'checked':'')+' '+(p.locked?'disabled':'')+' onchange="visChg(\''+p.id+'\',this.checked)"/>'
+      +'<div id="vtr-'+p.id+'" class="vtr" style="background:'+bg+';"></div>'
+      +'<div id="vth-'+p.id+'" class="vth" style="transform:'+tx+';"></div></div>'
+      +'<div><div style="font-size:.84rem;font-weight:500;color:var(--td);">'+p.label+'</div>'
+      +'<div style="font-size:.68rem;color:var(--tl);">'+p.file+(p.locked?' · Core page':'')+'</div></div></div>'
+      +bdg+'</div>';
+  });
+  el.innerHTML=html;
+  visPreview();
+}
+
+function visChg(id,on){
+  var tr=document.getElementById('vtr-'+id); var th=document.getElementById('vth-'+id);
+  if(tr) tr.style.background=on?'#5c7a5c':'#ccc';
+  if(th) th.style.transform=on?'translateX(20px)':'translateX(0)';
+  visPreview();
+}
+
+function visPreview(){
+  var prev=document.getElementById('visPreview');
+  prev.innerHTML=PAGES.map(function(p){
+    var cb=document.getElementById('v-'+p.id);
+    var on=cb?cb.checked:true;
+    return '<span style="padding:4px 10px;border-radius:20px;font-size:.71rem;font-weight:500;background:'+(on?'#c8ddc8':'#f0f0f0')+';color:'+(on?'#5c7a5c':'#aaa')+(on?'':';text-decoration:line-through')+';display:inline-block;margin:2px;">'+p.label+'</span>';
+  }).join('');
+}
+
+function visSave(){
+  var vis={};
+  PAGES.forEach(function(p){
+    var cb=document.getElementById('v-'+p.id);
+    vis[p.id]=p.locked?true:(cb?cb.checked:true);
+  });
+  sv('pagevis',vis); log('Page visibility updated'); toast('✅ Visibility saved!');
+}
+
+function visEnableAll(){
+  PAGES.forEach(function(p){
+    var cb=document.getElementById('v-'+p.id);
+    if(cb&&!p.locked){ cb.checked=true; visChg(p.id,true); }
+  });
+  toast('✅ All enabled!');
+}
+
+// ═══════════════════════════════
+// PAGE EDITOR
+// ═══════════════════════════════
+function peTab(id,el){
+  document.querySelectorAll('.pts').forEach(function(s){ s.classList.remove('on'); });
+  document.querySelectorAll('.ptb').forEach(function(b){ b.classList.remove('on'); });
+  document.getElementById('pe-'+id).classList.add('on');
+  if(el) el.classList.add('on');
+}
+
+function applyTheme(t){
+  var themes={sage:{primary:'#5c7a5c',bg:'#faf8f4'},navy:{primary:'#1a3a5c',bg:'#f4f6fa'},gold:{primary:'#8a6a00',bg:'#faf8f0'},maroon:{primary:'#6b1a1a',bg:'#faf4f4'},purple:{primary:'#4a2060',bg:'#f8f4fa'},teal:{primary:'#0d6e6e',bg:'#f4fafa'}};
+  var c=themes[t];
+  if(c){ document.getElementById('clrPrimary').value=c.primary; document.getElementById('clrBg').value=c.bg; }
+}
+
+function saveTheme(){
+  var s=ld('settings');
+  s.primaryColor=document.getElementById('clrPrimary').value;
+  s.bgColor=document.getElementById('clrBg').value;
+  sv('settings',s); log('Theme saved'); toast('✅ Theme saved! Update shared.css to apply site-wide.');
+}
+
+function saveSiteWide(){
+  var s=ld('settings');
+  s.siteName=document.getElementById('pe-sitename').value.trim();
+  s.footerText=document.getElementById('pe-footer').value.trim();
+  s.showSearch=document.getElementById('pe-showsearch').checked;
+  s.showDark=document.getElementById('pe-showdark').checked;
+  s.showLang=document.getElementById('pe-showlang').checked;
+  sv('settings',s);
+  if(s.siteName) document.getElementById('siteName').textContent=s.siteName;
+  log('Site wide settings saved'); toast('✅ Saved!');
+}
+
+function saveFeatureToggles(){ saveSiteWide(); }
+function saveHomePage(){ var s=ld('settings'); s.heroTitle=document.getElementById('pe-htitle').value.trim(); s.heroTagline=document.getElementById('pe-htagline').value.trim(); sv('settings',s); toast('✅ Saved!'); }
+function saveContactPage(){ var s=ld('settings'); s.contactName=document.getElementById('pe-cname').value.trim(); s.contactEmail=document.getElementById('pe-cemail').value.trim(); s.formspree=document.getElementById('pe-formspree').value.trim(); sv('settings',s); toast('✅ Saved!'); }
+function saveFonts(){ var s=ld('settings'); s.headFont=document.getElementById('pe-fonthead').value; s.bodyFont=document.getElementById('pe-fontbody').value; sv('settings',s); toast('✅ Fonts saved!'); }
+
+// ═══════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════
+var PAGE_NAMES={'home.html':'Home','tree.html':'Family Tree','gallery.html':'Gallery','history.html':'History','facts.html':'Facts','stats.html':'Stats','events.html':'Events','contact.html':'Contact','index.html':'Login','qr.html':'Share','map.html':'Map','polls.html':'Polls','recipes.html':'Recipes','achievements.html':'Achievements','videos.html':'Videos'};
+var PAGE_EMOJI={'home.html':'🏠','tree.html':'🌳','gallery.html':'🖼️','history.html':'📜','facts.html':'🌟','stats.html':'📊','events.html':'📆','contact.html':'✉️','index.html':'🔐','qr.html':'📱','map.html':'🗺️','polls.html':'🗳️','recipes.html':'🍛','achievements.html':'🏆','videos.html':'🎥'};
+
+function renderAnalytics(){
+  var visits=lda('visits'), visitors=lda('visitors'), sessions=lda('sessions'), logins=lda('logins');
+  var totalLogins=parseInt(localStorage.getItem('nukala_login_count')||'0')||logins.length;
+  var today=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  var todayCount=visits.filter(function(v){ return v.date===today; }).length;
+  document.getElementById('an-logins').textContent=totalLogins;
+  document.getElementById('an-visits').textContent=visits.length;
+  document.getElementById('an-sessions').textContent=sessions.length;
+  document.getElementById('an-unique').textContent=visitors.length;
+  document.getElementById('an-today').textContent=todayCount;
+
+  // Visitors table
+  var tbody=document.getElementById('an-vbody');
+  if(!visitors.length){ tbody.innerHTML='<tr><td colspan="9" style="padding:20px;text-align:center;color:var(--tl);">No visitors yet.</td></tr>'; }
+  else {
+    tbody.innerHTML=[...visitors].reverse().map(function(v){
+      return '<tr style="border-bottom:1px solid var(--b);">'
+        +'<td style="font-family:monospace;font-size:.72rem;">'+v.ip+'</td>'
+        +'<td style="font-size:.72rem;">'+(v.city?v.city+', ':'')+v.country+'</td>'
+        +'<td style="font-size:.7rem;">'+v.isp+'</td>'
+        +'<td style="font-size:.72rem;">'+v.device+'</td>'
+        +'<td style="font-size:.72rem;">'+v.browser+'</td>'
+        +'<td style="font-weight:600;color:var(--sd);">'+(v.visits||1)+'</td>'
+        +'<td style="font-size:.7rem;">'+(v.pages||[]).map(function(p){ return PAGE_NAMES[p]||p; }).join(', ')+'</td>'
+        +'<td style="font-size:.7rem;">'+v.firstSeen+'</td>'
+        +'<td style="font-size:.7rem;">'+v.lastSeen+'</td>'
+        +'</tr>';
+    }).join('');
   }
 
-  function doLogout(){ sessionStorage.removeItem('nukala_admin'); window.location.href='home.html'; }
+  // Top pages
+  var counts=ld('pagecounts');
+  var sorted=Object.entries(counts).sort(function(a,b){ return b[1]-a[1]; }).slice(0,6);
+  var maxC=sorted[0]?sorted[0][1]:1;
+  document.getElementById('an-pages').innerHTML=!sorted.length?'<span style="color:var(--tl);font-size:.78rem;">No data yet.</span>'
+    :sorted.map(function(e){
+      return '<div style="margin-bottom:8px;">'
+        +'<div style="display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:2px;"><span>'+(PAGE_EMOJI[e[0]]||'📄')+' '+(PAGE_NAMES[e[0]]||e[0])+'</span><span style="font-weight:600;color:var(--sd);">'+e[1]+'</span></div>'
+        +'<div style="background:var(--sl);border-radius:20px;height:7px;"><div style="background:linear-gradient(to right,var(--sd),var(--s));border-radius:20px;height:100%;width:'+Math.round(e[1]/maxC*100)+'%;"></div></div></div>';
+    }).join('');
 
-  document.getElementById('loginBtn').addEventListener('click', doLogin);
-  document.getElementById('pwInput').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-  document.getElementById('pwInput').focus();
+  // Recent logins
+  document.getElementById('an-logslist').innerHTML=!logins.length?'<span style="color:var(--tl);font-size:.78rem;">No logins yet.</span>'
+    :[...logins].reverse().slice(0,6).map(function(l,i){
+      return '<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--b);font-size:.76rem;align-items:center;"><span>🔐</span><div><div style="font-weight:500;">Login #'+(logins.length-i)+'</div><div style="color:var(--tl);">'+l.date+' at '+l.time+'</div></div></div>';
+    }).join('');
 
-  // Auto-login if session active
-  if(sessionStorage.getItem('nukala_admin')==='true'){
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminUI').style.display='block';
-  }
+  // Visit log
+  var filter=document.getElementById('an-filter').value;
+  var filtered=filter==='all'?visits:visits.filter(function(v){ return v.page===filter; });
+  document.getElementById('an-log').innerHTML=!filtered.length?'<div style="text-align:center;padding:20px;color:var(--tl);">No visits yet.</div>'
+    :[...filtered].reverse().slice(0,150).map(function(v){
+      return '<div style="display:grid;grid-template-columns:24px 1fr auto;gap:8px;padding:7px 0;border-bottom:1px solid var(--b);font-size:.74rem;">'
+        +'<span>'+(PAGE_EMOJI[v.page]||'📄')+'</span>'
+        +'<div><div style="font-weight:500;">'+(PAGE_NAMES[v.page]||v.page)+'</div>'
+        +'<div style="color:var(--tl);">'+(v.ip&&v.ip!=='Fetching...'?'🌐 '+v.ip+' ':'')+(v.city?'📍 '+v.city+', '+v.country+' ':'')+(v.device?'· '+v.device:'')+'</div></div>'
+        +'<div style="color:var(--tl);font-size:.68rem;text-align:right;">'+v.date+'<br/>'+v.time+'</div></div>';
+    }).join('');
+}
+
+function clearAnalytics(){
+  if(!confirm('Clear ALL analytics data?')) return;
+  ['visits','visitors','logins','sessions','pagecounts'].forEach(function(k){ sv(k,[]); });
+  localStorage.removeItem('nukala_login_count');
+  renderAnalytics(); toast('🗑️ Analytics cleared.');
+}
+
+function expVisitors(){
+  var v=lda('visitors');
+  var rows=[['IP','Country','City','ISP','Device','Browser','Visits','Pages','First Seen','Last Seen']].concat(v.map(function(x){
+    return [x.ip,x.country,x.city,x.isp,x.device,x.browser,x.visits,(x.pages||[]).join('|'),x.firstSeen,x.lastSeen];
+  }));
+  dlCsv(rows,'nukala-visitors.csv'); toast('📥 Visitors exported!');
+}
+
+function expAnalytics(){
+  var v=lda('visits');
+  var rows=[['Page','Date','Time','IP','Country','City','ISP','Device','Browser']].concat(v.map(function(x){
+    return [x.page,x.date,x.time,x.ip||'',x.country||'',x.city||'',x.isp||'',x.device||'',x.browser||''];
+  }));
+  dlCsv(rows,'nukala-analytics.csv'); toast('📥 Analytics exported!');
+}
+
+function dlCsv(rows,name){
+  var csv=rows.map(function(r){ return r.map(function(c){ return '"'+String(c||'').replace(/"/g,'""')+'"'; }).join(','); }).join('\n');
+  var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download=name; a.click();
+}
+
+// ═══════════════════════════════
+// SETTINGS
+// ═══════════════════════════════
+function loadSettings(){
+  var s=ld('settings');
+  if(document.getElementById('s-famname')) document.getElementById('s-famname').value=s.familyName||'';
+  if(document.getElementById('s-footer')) document.getElementById('s-footer').value=s.footerText||'';
+}
+
+function saveSettings(){
+  var s=ld('settings');
+  s.familyName=document.getElementById('s-famname').value.trim();
+  s.footerText=document.getElementById('s-footer').value.trim();
+  sv('settings',s);
+  if(s.familyName) document.getElementById('siteName').textContent=s.familyName;
+  log('Settings saved'); toast('✅ Settings saved!');
+}
+
+function saveSitePass(){
+  var p=document.getElementById('newSitePass').value.trim();
+  if(!p){ alert('Enter a new password.'); return; }
+  localStorage.setItem('nukala_site_pass',p);
+  document.getElementById('newSitePass').value='';
+  log('Site password updated'); toast('✅ Site password updated!');
+}
+
+function saveAdminPass(){
+  var p=document.getElementById('newAdminPass').value.trim();
+  if(!p){ alert('Enter a new password.'); return; }
+  localStorage.setItem('nukala_admin_pass',p);
+  document.getElementById('newAdminPass').value='';
+  log('Admin password updated'); toast('✅ Admin password updated!');
+}
+
+function expAll(){
+  var data={};
+  Object.keys(LS).forEach(function(k){ data[k]=JSON.parse(localStorage.getItem(LS[k])||'null'); });
+  var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download='nukala-backup-'+Date.now()+'.json'; a.click(); toast('📥 Backup exported!');
+}
+
+function doImport(){
+  try{
+    var raw=document.getElementById('impData').value.trim();
+    var parsed=JSON.parse(raw);
+    Object.keys(LS).forEach(function(k){ if(parsed[k]!==undefined&&parsed[k]!==null) localStorage.setItem(LS[k],JSON.stringify(parsed[k])); });
+    closeM('importM'); renderDash(); toast('📤 Data imported!');
+  } catch(e){ alert('Invalid JSON. Please check the file and try again.'); }
+}
+
+function resetAll(){
+  Object.values(LS).forEach(function(k){ localStorage.removeItem(k); });
+  renderDash(); toast('🗑️ All data reset.');
+}
 </script>
-<script src="admin.js"></script>
-<script>
-  // Call init after admin.js loads
-  if(sessionStorage.getItem('nukala_admin')==='true' && typeof init==='function') init();
-</script>
-
-<!-- Hidden elements required by admin.js -->
-<div style="display:none;" id="admin-hidden-pool">
-  <!-- Login (legacy refs) -->
-  <input id="adminPass" type="password"/>
-  <div id="loginErr"></div>
-  
-  <!-- Announcements -->
-  <input id="annFrom" type="text"/>
-  <div id="annPreview"></div>
-  <div id="annPreviewPanel"></div>
-  
-  <!-- Contact Edit Modal -->
-  <div id="contactEditModal" class="modal-bg">
-    <div class="modal" style="max-width:460px;">
-      <button class="modal-close" onclick="document.getElementById('contactEditModal').classList.remove('open')">✕</button>
-      <h2>Edit Contact Details</h2>
-      <p class="modal-sub">Private contact info — only visible to admins.</p>
-      <input type="hidden" id="ceId"/>
-      <div class="fgrp"><label>Phone</label><input type="text" id="ce-phone" placeholder="+91 9876543210"/></div>
-      <div class="fgrp"><label>Email</label><input type="text" id="ce-email" placeholder="member@email.com"/></div>
-      <div class="fgrp"><label>City / Location</label><input type="text" id="ce-city" placeholder="e.g. Hyderabad"/></div>
-      <div class="fgrp"><label>Birthday</label><input type="text" id="ce-birthday" placeholder="e.g. 15 March 1985"/></div>
-      <div class="fgrp"><label>Social Media</label><input type="text" id="ce-social" placeholder="@handle or URL"/></div>
-      <div class="fgrp"><label>Notes</label><textarea id="ce-notes" rows="3" placeholder="Any private notes..."></textarea></div>
-      <div style="display:flex;gap:10px;margin-top:16px;">
-        <button class="btn btn-green" style="flex:1;" onclick="saveContactEntry()">💾 Save Contact</button>
-        <button class="btn btn-outline" onclick="document.getElementById('contactEditModal').classList.remove('open')">Cancel</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Page Editor — extra colour pickers -->
-  <input id="clrBg" type="color" value="#faf8f4"/>
-  <input id="clrBgHex" type="text" value="#faf8f4"/>
-  <input id="clrHighlight" type="color" value="#c9a84c"/>
-  <input id="clrHighlightHex" type="text" value="#c9a84c"/>
-  <input id="clrNav" type="color" value="#faf8f4"/>
-  <input id="clrNavHex" type="text" value="#faf8f4"/>
-  <input id="clrText" type="color" value="#2c2c2c"/>
-  <input id="clrTextHex" type="text" value="#2c2c2c"/>
-  
-  <!-- Page Editor — hero -->
-  <input id="pe-herobg" type="text"/>
-  <input id="pe-herobghex" type="text"/>
-  <input id="pe-heroopacity" type="range" min="0" max="1" step="0.05"/>
-  <span id="pe-heroopacityval">0.6</span>
-  <input id="pe-herotextclr" type="color"/>
-  <input id="pe-herotextclrhex" type="text"/>
-  
-  <!-- Page Editor — login page -->
-  <input id="pe-logintitle" type="text"/>
-  <input id="pe-loginsub" type="text"/>
-  <input id="pe-loginbtn" type="text"/>
-  <input id="pe-loginnote" type="text"/>
-  
-  <!-- Page Editor — site wide extras -->
-  <input id="pe-footersub" type="text"/>
-  <input id="pe-galtitle" type="text"/>
-  <input id="pe-galdesc" type="text"/>
-  <input id="pe-updatestitle" type="text"/>
-  <input id="pe-showdark" type="checkbox"/>
-  <input id="pe-showlang" type="checkbox"/>
-  <input id="pe-showsearch" type="checkbox"/>
-  <div id="navItemsEditor"></div>
-  <div id="updatesEditor"></div>
-  
-  <!-- Home editor extras -->
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  <!-- Settings extras -->
-  
-  
-  
-  <!-- Typography extras -->
-  <input id="typo-body" type="text"/>
-  <input id="typo-btnstyle" type="text"/>
-  <input id="typo-heading-ls" type="text"/>
-  <input id="typo-hero" type="text"/>
-  <input id="typo-maxwidth" type="text"/>
-  <input id="typo-nav" type="text"/>
-  <input id="typo-nav-ls" type="text"/>
-  <input id="typo-radius" type="text"/>
-  
-  <!-- Contact ways -->
-  <input id="cw1t" type="text"/><input id="cw1i" type="text"/><input id="cw1d" type="text"/>
-  <input id="cw2t" type="text"/><input id="cw2i" type="text"/><input id="cw2d" type="text"/>
-  
-  <input id="homeNavName" type="text"/>
-  <input id="homeSiteSubtitle" type="text"/>
-  <!-- Poll/Recipe extras -->
-  <input id="pollId" type="hidden"/>
-  <textarea id="recipeDesc"></textarea>
-</div>
-
 </body>
 </html>
