@@ -258,22 +258,22 @@
   <div class="leaf leaf-3"></div>
 
   <div class="login-card">
-    <div class="logo-icon"><img src="logo.png" alt="Nukala Family Logo"/></div>
+    <div class="logo-icon"><img id="lp-logo" src="logo.png" alt="Nukala Family Logo"/></div>
     <div class="subtitle-line"></div>
-    <h1>The <span>Nukala</span><br>Family Tree</h1>
-    <p class="tagline">A private family archive</p>
+    <h1 id="lp-title">The <span id="lp-titlespan">Nukala</span><br><span id="lp-subtitle">Family Tree</span></h1>
+    <p class="tagline" id="lp-tagline">A private family archive</p>
 
     <div class="form-group">
-      <label for="password">Family Password</label>
+      <label for="password" id="lp-label">Family Password</label>
       <input type="password" id="password" placeholder="Enter your family password" autocomplete="current-password" />
       <div class="error-msg" id="error">Incorrect password. Please try again.</div>
     </div>
 
-    <button class="btn" onclick="checkPassword()">Enter Family Archive →</button>
+    <button class="btn" id="lp-btn" onclick="checkPassword()">Enter Family Archive →</button>
 
-    <div class="divider"><span>secured &amp; private</span></div>
+    <div class="divider"><span id="lp-divider">secured &amp; private</span></div>
 
-    <p class="footer-note">
+    <p class="footer-note" id="lp-footnote">
       This site is exclusively for the <strong>Nukala family</strong>.<br/>
       Please contact the family administrator for access.
     </p>
@@ -327,5 +327,38 @@
   </script>
   <script src="nukala.js"></script>
   <script src="lang.js"></script>
+
+  <script>
+    // Apply custom login page settings from admin
+    (function(){
+      var lp = JSON.parse(localStorage.getItem('nukala_loginpage')||'null')||{};
+      if(lp.title){
+        var t = document.getElementById('lp-titlespan'); if(t) t.textContent = lp.title;
+      }
+      if(lp.subtitle){
+        var s = document.getElementById('lp-subtitle'); if(s) s.textContent = lp.subtitle;
+      }
+      if(lp.tagline){
+        var tg = document.getElementById('lp-tagline'); if(tg) tg.textContent = lp.tagline;
+      }
+      if(lp.label){
+        var lb = document.getElementById('lp-label'); if(lb) lb.textContent = lp.label;
+      }
+      if(lp.btnText){
+        var b = document.getElementById('lp-btn');
+        if(b) b.textContent = lp.btnText;
+        b.onclick = checkPassword; // keep onclick
+      }
+      if(lp.dividerText){
+        var d = document.getElementById('lp-divider'); if(d) d.textContent = lp.dividerText;
+      }
+      if(lp.footnote){
+        var f = document.getElementById('lp-footnote'); if(f) f.innerHTML = lp.footnote;
+      }
+      if(lp.bgColor){
+        document.body.style.background = lp.bgColor;
+      }
+    })();
+  </script>
 </body>
 </html>
