@@ -260,7 +260,7 @@
   <div class="login-card">
     <div class="logo-icon"><img id="lp-logo" src="logo.png" alt="Nukala Family Logo"/></div>
     <div class="subtitle-line"></div>
-    <h1 id="lp-title">The <span id="lp-titlespan">Nukala</span><br><span id="lp-subtitle">Family Tree</span></h1>
+    <h1 id="lp-title"><span id="lp-titlespan">The <em>Nukala</em></span><br><span id="lp-subtitle">Family Tree</span></h1>
     <p class="tagline" id="lp-tagline">A private family archive</p>
 
     <div class="form-group">
@@ -333,7 +333,17 @@
     (function(){
       var lp = JSON.parse(localStorage.getItem('nukala_loginpage')||'null')||{};
       if(lp.title){
-        var t = document.getElementById('lp-titlespan'); if(t) t.textContent = lp.title;
+        var t = document.getElementById('lp-titlespan');
+        // Preserve italic styling — wrap last word in <em> if it contains space
+        if(t){
+          var parts = lp.title.trim().split(' ');
+          if(parts.length > 1){
+            var last = parts.pop();
+            t.innerHTML = parts.join(' ') + ' <em>' + last + '</em>';
+          } else {
+            t.innerHTML = '<em>' + lp.title + '</em>';
+          }
+        }
       }
       if(lp.subtitle){
         var s = document.getElementById('lp-subtitle'); if(s) s.textContent = lp.subtitle;
