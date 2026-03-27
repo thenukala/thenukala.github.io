@@ -97,7 +97,7 @@
 
           <div style="margin-top:20px;padding:16px 20px;background:white;border:1px solid var(--border);border-radius:14px;">
             <div style="font-size:.78rem;font-weight:500;color:var(--text-dark);margin-bottom:4px;">📬 Direct Contact</div>
-            <div style="font-size:.8rem;color:var(--text-mid);" id="adminContactLine">Contact: <a href="mailto:Thenukala@yahoo.com" style="color:var(--sage-dark);">Thenukala@yahoo.com</a></div>
+            <div style="font-size:.8rem;color:var(--text-mid);" id="adminContactLine">Loading...</div>
           </div>
         </div>
 
@@ -145,7 +145,7 @@
     &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
 
     function initContact(){
@@ -161,8 +161,9 @@
       // Admin contact line
       const parts = [];
       if(c.name) parts.push(c.name);
-      if(c.email) parts.push(`<a class="admin-email-link" href="mailto:${c.email}">${c.email}</a>`);
-      if(parts.length) document.getElementById('adminContactLine').innerHTML = 'Contact: '+parts.join(' · ');
+      const adminEmail = c.email || ['Thenukala','yahoo.com'].join('@');
+      parts.push('<a class="admin-email-link" href="mailto:'+adminEmail+'">'+adminEmail+'</a>');
+      document.getElementById('adminContactLine').innerHTML = 'Contact: '+parts.join(' · ');
 
       // Contact ways
       const ways = [
@@ -411,11 +412,4 @@
   if(d['conDesc']){ document.querySelectorAll('.page-hero p').forEach(el=>el.textContent=d['conDesc']); }
   if(d['conHeading']){ document.querySelectorAll('.contact-info h2').forEach(el=>el.textContent=d['conHeading']); }
   if(d['conPara']){ document.querySelectorAll('.contact-info p').forEach(el=>el.textContent=d['conPara']); }
-  if(d['conFormTitle']){ document.querySelectorAll('.contact-form h3').forEach(el=>el.textContent=d['conFormTitle']); }
-  if(d['conPrivacy']){ document.querySelectorAll('.privacy-note').forEach(el=>el.textContent=d['conPrivacy']); }
-})();
-</script>
-  <script src="nukala.js"></script>
-  <script src="lang.js"></script>
-</body>
-</html>
+  if(d['conFormTitle']){ document.querySelectorAll('.contact-form h3').forEach(el=>el.textCo

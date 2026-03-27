@@ -1,3 +1,43 @@
+document.getElementById('publishBtn').addEventListener('click', function(){
+  var KEYS=['nukala_tree_data','nukala_gallery','nukala_history','nukala_facts','nukala_events','nukala_recipes','nukala_achievements','nukala_videos','nukala_polls','nukala_contacts','nukala_settings','nukala_page_vis','nukala_sitewide','nukala_home','nukala_heropage','nukala_newpages','nukala_contactpage2','nukala_gallerypage2','nukala_typography','nukala_navmenu','nukala_loginpage'];
+  var DATA={};
+  KEYS.forEach(function(k){var v=localStorage.getItem(k);if(v)try{DATA[k]=JSON.parse(v);}catch(e){}});
+  var ts=new Date().toLocaleString();
+  var js='(function(){' +
+    'var D='+JSON.stringify(DATA)+';' +
+    'Object.keys(D).forEach(function(k){if(D[k]!==undefined)localStorage.setItem(k,JSON.stringify(D[k]));});' +
+    '})();';
+  var blob=new Blob(['/* site-data.js published: '+ts+' — upload to GitHub */'+js],{type:'application/javascript'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='site-data.js';a.click();
+  toast('Downloaded site-data.js — upload to GitHub to sync all devices!');
+  log('Published: '+ts);
+});
+
+ment.getElementById('publishBtn').addEventListener('click', function(){
+  var KEYS = ['nukala_tree_data','nukala_gallery','nukala_history','nukala_facts','nukala_events','nukala_recipes','nukala_achievements','nukala_videos','nukala_polls','nukala_contacts','nukala_settings','nukala_page_vis','nukala_sitewide','nukala_home','nukala_heropage','nukala_newpages','nukala_contactpage2','nukala_gallerypage2','nukala_typography','nukala_navmenu','nukala_loginpage'];
+  var DATA = {};
+  KEYS.forEach(function(k){ var v=localStorage.getItem(k); if(v) try{ DATA[k]=JSON.parse(v); }catch(e){} });
+  var ts = new Date().toLocaleString();
+  var lines = [
+    '/* site-data.js — Published: '+ts+' */',
+    '/* Upload this file to GitHub to share data across ALL devices */',
+    '(function(){',
+    '  var DATA='+JSON.stringify(DATA)+';',
+    '  Object.keys(DATA).forEach(function(k){',
+    '    if(DATA[k]!==undefined) localStorage.setItem(k,JSON.stringify(DATA[k]));',
+    '  });',
+    '})();'
+  ];
+  var content = lines.join('\n');
+  var blob = new Blob([content], {type:'application/javascript'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'site-data.js';
+  a.click();
+  toast('\u{1F310} site-data.js downloaded! Upload it to GitHub to sync all devices.');
+  log('Published site-data.js');
+});
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1418,42 +1458,7 @@ document.getElementById('publishBtn').addEventListener('click', function(){
   });
 
   var ts = new Date().toLocaleString();
-  var content = '/**
- * site-data.js — Published: ' + ts + '
-'
-    + ' * Upload this file to GitHub to share your data across ALL devices.
-'
-    + ' * How to use:
-'
-    + ' *   1. Download this file
-'
-    + ' *   2. Upload it to your GitHub repo (same folder as your HTML files)
-'
-    + ' *   3. All family members on any device will now see your latest data
-'
-    + ' */
-'
-    + '(function(){
-'
-    + '  var DATA = ' + JSON.stringify(DATA, null, 2) + ';
-
-'
-    + '  var KEYS = Object.keys(DATA);
-'
-    + '  KEYS.forEach(function(k){
-'
-    + '    // Always overwrite with published data so all devices stay in sync
-'
-    + '    if(DATA[k] !== undefined){
-'
-    + '      localStorage.setItem(k, JSON.stringify(DATA[k]));
-'
-    + '    }
-'
-    + '  });
-'
-    + '})();
-';
+  var content='/* Published:'+ts+' — upload site-data.js to GitHub */(function(){var D='+JSON.stringify(DATA)+';Object.keys(D).forEach(function(k){localStorage.setItem(k,JSON.stringify(D[k]));});})();';
 
   var blob = new Blob([content], {type:'application/javascript'});
   var a = document.createElement('a');
