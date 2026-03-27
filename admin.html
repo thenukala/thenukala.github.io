@@ -30,6 +30,11 @@
 [data-theme=dark] .pu:hover{background:rgba(30,54,30,.3);}
 [data-theme=dark] .toast{background:var(--sd);color:#0e180e;}
 body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-height:100vh;}
+/* Logo watermark */
+body::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+width:420px;height:420px;background:url('logo.png') no-repeat center/contain;
+opacity:0.04;pointer-events:none;z-index:0;}
+#loginPage,#adminPage{position:relative;z-index:1;}
 /* LOGIN */
 #loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;}
 .lbox{background:var(--w);border:1px solid var(--b);border-radius:20px;padding:44px;width:100%;max-width:400px;box-shadow:0 4px 32px rgba(0,0,0,.07);text-align:center;}
