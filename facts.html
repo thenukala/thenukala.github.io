@@ -75,6 +75,7 @@
 </head>
 <body>
   <div class="logo-watermark"></div>
+  <script src="site-data.js"></script>
   <script src="auth.js"></script>
   <nav>
     <a class="nav-brand" href="home.html">
@@ -94,7 +95,7 @@
       <li><a href="recipes.html">Recipes</a></li>
       <li><a href="achievements.html">Achievements</a></li>
       <li><a href="videos.html">Videos</a></li>
-      <li><a href="qr.html">QR Code Share</a></li>
+      <li><a href="qr.html">QR Code</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -155,7 +156,7 @@
       const s = load('nukala_settings')||{};
       if(s.familyName){
         document.getElementById('navSiteName').textContent = s.familyName.toUpperCase();
-        document.getElementById('footerName').textContent = 'The '+s.familyName+' Family';
+        var _fn=document.getElementById('footerText');if(_fn)_fn.textContent=s.familyName?'The '+s.familyName+' Family':'The Nukala Family';
       }
       allFacts = loadArr('nukala_facts');
       renderFacts();

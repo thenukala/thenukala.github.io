@@ -341,6 +341,7 @@
   <div class="leaf-decor">🍂</div>
 
   <div class="logo-watermark"></div>
+  <script src="site-data.js"></script>
   <script src="auth.js"></script>
   <nav>
     <a class="nav-brand" href="home.html">
@@ -360,7 +361,7 @@
       <li><a href="recipes.html">Recipes</a></li>
       <li><a href="achievements.html">Achievements</a></li>
       <li><a href="videos.html">Videos</a></li>
-      <li><a href="qr.html">QR Code Share</a></li>
+      <li><a href="qr.html">QR Code</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -444,7 +445,7 @@
     const _sw = load('nukala_sitewide');
     const navName = _sw.navName || _h.navName || (_s.familyName ? _s.familyName.toUpperCase() : 'NUKALA');
     document.getElementById('navSiteName').textContent = navName;
-    if(_s.familyName) document.getElementById('footerName').textContent = 'The '+_s.familyName+' Family';
+    if(_s.familyName) var _fn=document.getElementById('footerText');if(_fn)_fn.textContent=s.familyName?'The '+s.familyName+' Family':'The Nukala Family';
 
     // ═══════════════════════════════════
     // LAYOUT ENGINE

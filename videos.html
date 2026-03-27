@@ -36,6 +36,7 @@
     </style>
 </head>
 <body>
+  <script src="site-data.js"></script>
   <script src="auth.js"></script>
   <nav>
     <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/><span class="nav-site-name" id="navSiteName">NUKALA</span></a>
@@ -52,7 +53,7 @@
       <li><a href="recipes.html">Recipes</a></li>
       <li><a href="achievements.html">Achievements</a></li>
       <li><a href="videos.html" class="active">Videos</a></li>
-      <li><a href="qr.html">QR Code Share</a></li>
+      <li><a href="qr.html">QR Code</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -77,7 +78,7 @@
     const loadArr=k=>JSON.parse(localStorage.getItem(k)||'[]');
     const s=load('nukala_settings'),h=load('nukala_home');
     document.getElementById('navSiteName').textContent=(h.navName||s.familyName||'NUKALA').toUpperCase();
-    if(s.familyName)document.getElementById('footerName').textContent='The '+s.familyName+' Family';
+    if(s.familyName)var _fn=document.getElementById('footerText');if(_fn)_fn.textContent=s.familyName?'The '+s.familyName+' Family':'The Nukala Family';
     function getYTId(url){ const m=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); return m?m[1]:null; }
     function renderVideos(){
       const videos=loadArr('nukala_videos');

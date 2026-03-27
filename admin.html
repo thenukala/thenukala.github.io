@@ -234,6 +234,7 @@ opacity:0.04;pointer-events:none;z-index:0;}
       <button class="ni" data-page="settings">⚙️ Settings</button>
       <button class="ni" id="expBtn">📥 Export Backup</button>
       <button class="ni" id="impBtn">📤 Import Backup</button>
+      <button class="ni" id="publishBtn" style="color:#c9a84c;font-weight:600;">🌐 Publish to Site</button>
     </div>
 
     <!-- MAIN -->
@@ -1120,7 +1121,7 @@ function renderAnn(){var logs=lda('annLog'),el=document.getElementById('annLog')
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PAGE VISIBILITY
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var PAGES=[{id:'home',label:'🏠 Home',file:'home.html',locked:true},{id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},{id:'history',label:'📜 History',file:'history.html',locked:false},{id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},{id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},{id:'stats',label:'📊 Stats',file:'stats.html',locked:false},{id:'events',label:'📆 Events',file:'events.html',locked:false},{id:'map',label:'🗺️ Map',file:'map.html',locked:false},{id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},{id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},{id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},{id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},{id:'qr',label:'📱 QR Code Share',file:'qr.html',locked:false},{id:'contact',label:'✉️ Contact',file:'contact.html',locked:true}];
+var PAGES=[{id:'home',label:'🏠 Home',file:'home.html',locked:true},{id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},{id:'history',label:'📜 History',file:'history.html',locked:false},{id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},{id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},{id:'stats',label:'📊 Stats',file:'stats.html',locked:false},{id:'events',label:'📆 Events',file:'events.html',locked:false},{id:'map',label:'🗺️ Map',file:'map.html',locked:false},{id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},{id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},{id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},{id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},{id:'qr',label:'📱 QR Code',file:'qr.html',locked:false},{id:'contact',label:'✉️ Contact',file:'contact.html',locked:true}];
 
 document.getElementById('visSaveBtn').addEventListener('click', visSave);
 document.getElementById('visEnableAllBtn').addEventListener('click', visEnableAll);
@@ -1308,7 +1309,7 @@ var DEFAULT_NAV_PAGES = [
   {href:'recipes.html', label:'Recipes',       locked:false},
   {href:'achievements.html', label:'Achievements', locked:false},
   {href:'videos.html',  label:'Videos',        locked:false},
-  {href:'qr.html',      label:'QR Code Share', locked:false},
+  {href:'qr.html',      label:'QR Code', locked:false},
   {href:'contact.html', label:'Contact',       locked:false},
 ];
 
@@ -1395,6 +1396,73 @@ document.getElementById('saveLoginPageBtn').addEventListener('click', function()
   svRaw('nukala_loginpage', lp);
   log('Login page customised');
   toast('✅ Login page saved! Click Preview to see changes.');
+});
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PUBLISH TO SITE — generates site-data.js for cross-device sharing
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.getElementById('publishBtn').addEventListener('click', function(){
+  var KEYS = [
+    'nukala_tree_data','nukala_gallery','nukala_history','nukala_facts',
+    'nukala_events','nukala_recipes','nukala_achievements','nukala_videos',
+    'nukala_polls','nukala_contacts','nukala_settings','nukala_page_vis',
+    'nukala_sitewide','nukala_home','nukala_heropage','nukala_newpages',
+    'nukala_contactpage2','nukala_gallerypage2','nukala_typography',
+    'nukala_navmenu','nukala_loginpage'
+  ];
+  var DATA = {};
+  KEYS.forEach(function(k){
+    var v = localStorage.getItem(k);
+    if(v) try{ DATA[k] = JSON.parse(v); } catch(e){}
+  });
+
+  var ts = new Date().toLocaleString();
+  var content = '/**
+ * site-data.js — Published: ' + ts + '
+'
+    + ' * Upload this file to GitHub to share your data across ALL devices.
+'
+    + ' * How to use:
+'
+    + ' *   1. Download this file
+'
+    + ' *   2. Upload it to your GitHub repo (same folder as your HTML files)
+'
+    + ' *   3. All family members on any device will now see your latest data
+'
+    + ' */
+'
+    + '(function(){
+'
+    + '  var DATA = ' + JSON.stringify(DATA, null, 2) + ';
+
+'
+    + '  var KEYS = Object.keys(DATA);
+'
+    + '  KEYS.forEach(function(k){
+'
+    + '    // Always overwrite with published data so all devices stay in sync
+'
+    + '    if(DATA[k] !== undefined){
+'
+    + '      localStorage.setItem(k, JSON.stringify(DATA[k]));
+'
+    + '    }
+'
+    + '  });
+'
+    + '})();
+';
+
+  var blob = new Blob([content], {type:'application/javascript'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'site-data.js';
+  a.click();
+
+  toast('🌐 site-data.js downloaded! Upload it to GitHub to sync all devices.');
+  log('Published site-data.js — ' + ts);
 });
 
 </script>
