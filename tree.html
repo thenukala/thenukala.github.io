@@ -360,7 +360,7 @@
       <li><a href="recipes.html">Recipes</a></li>
       <li><a href="achievements.html">Achievements</a></li>
       <li><a href="videos.html">Videos</a></li>
-      <li><a href="qr.html">Share</a></li>
+      <li><a href="qr.html">QR Code Share</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -410,8 +410,9 @@
         </div>
       </div>
 
-      <div class="notice" style="margin-top:14px;">
-        💡 <strong>Linking family members:</strong> In <a href="admin.html" style="color:var(--sage-dark);">Admin → Members</a>, copy a member's <strong>📋 ID</strong> and paste it into another member's Father/Mother/Spouse ID field to draw connecting branches.
+      <div style="margin-top:18px;text-align:center;padding:18px 28px;background:rgba(92,122,92,0.06);border-radius:14px;border:1px solid rgba(92,122,92,0.15);">
+        <p id="treeQuote" style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;font-weight:400;color:var(--text-mid);font-style:italic;line-height:1.7;margin:0;">"In family life, love is the oil that eases friction, the cement that binds closer together, and the music that brings harmony."</p>
+        <p id="treeQuoteAuthor" style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-light);margin-top:8px;">— Friedrich Nietzsche</p>
       </div>
 
     </div>
@@ -891,6 +892,18 @@
 })();
 </script>
   <script src="nukala.js"></script>
-  <script src="lang.js"></script>
+  <script src="lang.js">
+      // ── Custom tree quote from admin ──
+      (function(){
+        var sw = JSON.parse(localStorage.getItem('nukala_sitewide')||'null')||{};
+        if(sw.treeQuote){
+          var q=document.getElementById('treeQuote'); if(q) q.textContent='"'+sw.treeQuote+'"';
+        }
+        if(sw.treeQuoteAuthor){
+          var a=document.getElementById('treeQuoteAuthor'); if(a) a.textContent='— '+sw.treeQuoteAuthor;
+        }
+      })();
+
+  </script>
 </body>
 </html>

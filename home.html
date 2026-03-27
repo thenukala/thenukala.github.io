@@ -94,7 +94,7 @@
       <li><a href="recipes.html">Recipes</a></li>
       <li><a href="achievements.html">Achievements</a></li>
       <li><a href="videos.html">Videos</a></li>
-      <li><a href="qr.html">Share</a></li>
+      <li><a href="qr.html">QR Code Share</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -175,7 +175,7 @@
   </main>
 
   <footer>
-    &copy; 2024 <strong id="footerText">The Nukala Family</strong> · Private &amp; Password Protected · Made with 🌳 &amp; love
+    &copy; <span id="footerYear">2024</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
   </footer>
 
   <script>
@@ -191,8 +191,11 @@
 
       // Home page content
       const h = load('nukala_home')||{};
-      if(h.title) document.getElementById('heroTitle').innerHTML = h.title.replace('Nukala','<em>Nukala</em>');
-      if(h.tagline) document.getElementById('heroTagline').textContent = h.tagline;
+      // Support both old keys (title/tagline) and new admin keys (heroTitle/heroTagline)
+      const heroText = h.heroTitle || h.title;
+      const heroTagText = h.heroTagline || h.tagline;
+      if(heroText) document.getElementById('heroTitle').innerHTML = heroText.replace('Nukala','<em>Nukala</em>').replace('nukala','<em>Nukala</em>');
+      if(heroTagText) document.getElementById('heroTagline').textContent = heroTagText;
       if(h.stat1num) document.getElementById('stat1num').textContent = h.stat1num;
       if(h.stat1lbl) document.getElementById('stat1lbl').textContent = h.stat1lbl;
       if(h.stat2num) document.getElementById('stat2num').textContent = h.stat2num;
@@ -214,9 +217,15 @@
         document.getElementById('stat3num').textContent = history.length||'📖';
       }
 
-      // Settings
+      // Footer - read from multiple sources
       const s = load('nukala_settings')||{};
-      if(s.footer) document.getElementById('footerText').textContent = 'The '+s.familyName+' Family';
+      const sw = load('nukala_sitewide')||{};
+      const footerName = sw.footerName || (s.familyName ? 'The '+s.familyName+' Family' : null);
+      const footerSub = sw.footerSub || 'Private &amp; Password Protected · Made with 🌳 &amp; love';
+      const footerEl = document.getElementById('footerText');
+      if(footerEl && footerName) footerEl.textContent = footerName;
+      const footerSubEl = document.getElementById('footerSub');
+      if(footerSubEl) footerSubEl.innerHTML = footerSub;
 
       // Recent updates from activity log
       const log = loadArr('nukala_log');
@@ -232,6 +241,9 @@
           </div>`).join('');
       }
 
+      // Set footer year
+      const fyEl=document.getElementById('footerYear');
+      if(fyEl) fyEl.textContent=new Date().getFullYear();
       // Birthday check
       checkBirthdays();
     }

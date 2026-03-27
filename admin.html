@@ -8,6 +8,27 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--c:#faf8f4;--w:#fff;--sd:#5c7a5c;--s:#8aab8a;--sl:#c8ddc8;--g:#c9a84c;--gl:#e8d5a0;--td:#2c2c2c;--tm:#6b6b6b;--tl:#a0a0a0;--b:#e8e2d8;--r:#c0614a;}
+[data-theme=dark]{--c:#0e180e;--w:#131f13;--sd:#8acc8a;--s:#6aaa6a;--sl:#1e361e;--gl:#3a2a0a;--td:#e8d5a0;--tm:#a8c4a8;--tl:#5a7a5a;--b:#1e361e;--r:#e07060;}
+[data-theme=dark] .bar,[data-theme=dark] .side,[data-theme=dark] .mo{background:var(--w);border-color:var(--b);}
+[data-theme=dark] .lbox{background:var(--w);border-color:var(--b);}
+[data-theme=dark] .panel,[data-theme=dark] .card,[data-theme=dark] .li,[data-theme=dark] .gi,[data-theme=dark] .sbox{background:var(--w);border-color:var(--b);}
+[data-theme=dark] .fi{background:var(--c);color:var(--td);border-color:var(--b);}
+[data-theme=dark] .fi:focus{border-color:var(--s);background:var(--w);}
+[data-theme=dark] .ptb{background:var(--w);border-color:var(--b);color:var(--tm);}
+[data-theme=dark] .ptb.on{background:var(--sd);color:#0e180e;}
+[data-theme=dark] .ni{color:var(--tm);}
+[data-theme=dark] .ni:hover{background:rgba(106,170,106,.08);}
+[data-theme=dark] .ni.on{background:rgba(106,170,106,.15);color:var(--sd);}
+[data-theme=dark] .mb{background:rgba(0,0,0,.7);}
+[data-theme=dark] .notice{background:rgba(30,54,30,.5);border-color:var(--b);color:var(--sd);}
+[data-theme=dark] .at th{border-color:var(--b);}
+[data-theme=dark] .at td{border-color:var(--b);}
+[data-theme=dark] .vr{border-color:var(--b);}
+[data-theme=dark] .sr{border-color:var(--b);}
+[data-theme=dark] .xbtn{border-color:var(--b);color:var(--tm);}
+[data-theme=dark] .pu{background:var(--w);border-color:var(--sl);}
+[data-theme=dark] .pu:hover{background:rgba(30,54,30,.3);}
+[data-theme=dark] .toast{background:var(--sd);color:#0e180e;}
 body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-height:100vh;}
 /* LOGIN */
 #loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;}
@@ -174,6 +195,7 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
     </div>
     <div class="bar-right">
       <a href="home.html" class="xbtn" target="_blank">👁 View Site</a>
+      <button class="xbtn" id="dmBtn" title="Toggle Dark/Light Mode">🌙</button>
       <button class="xbtn" id="logoutBtn">Sign Out</button>
     </div>
   </div>
@@ -413,10 +435,16 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
           <div class="panel">
             <div class="pt">Navigation</div>
             <div class="fr">
-              <div class="fg"><label>Site Name</label><input type="text" class="fi" id="pe-sitename" placeholder="NUKALA FAMILY"/></div>
-              <div class="fg"><label>Footer Name</label><input type="text" class="fi" id="pe-footer" placeholder="The Nukala Family"/></div>
+              <div class="fg"><label>Site Name (Nav Bar)</label><input type="text" class="fi" id="pe-sitename" placeholder="NUKALA FAMILY"/></div>
+              <div class="fg"><label>Footer Family Name</label><input type="text" class="fi" id="pe-footer" placeholder="The Nukala Family"/></div>
             </div>
-            <div class="fg"><label>Footer Tagline</label><input type="text" class="fi" id="pe-footersub" placeholder="Private &amp; Password Protected"/></div>
+            <div class="fg"><label>Footer Tagline (the text after the name)</label><input type="text" class="fi" id="pe-footersub" placeholder="Private &amp; Password Protected · Made with 🌳 &amp; love"/></div>
+            <div class="notice" style="margin-top:4px;">💡 Footer changes apply to all pages instantly on next visit.</div>
+          </div>
+          <div class="panel">
+            <div class="pt">Family Tree Quote</div>
+            <div class="fg"><label>Quote Text</label><input type="text" class="fi" id="pe-treequote" placeholder="In family life, love is the oil that eases friction..."/></div>
+            <div class="fg"><label>Quote Author</label><input type="text" class="fi" id="pe-treequoteauthor" placeholder="Friedrich Nietzsche"/>
             <div style="display:flex;flex-direction:column;gap:10px;margin:12px 0;">
               <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showsearch" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Search Button</label>
               <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;color:var(--tm);"><input type="checkbox" id="pe-showdark" checked style="width:15px;height:15px;accent-color:var(--sd);"/> Show Dark Mode Button</label>
@@ -729,6 +757,24 @@ document.getElementById('pwInput').focus();
 // Auto-login if session exists
 if(sessionStorage.getItem('nukala_admin')==='true'){showAdmin();}
 
+// Dark mode
+(function(){
+  var dm = localStorage.getItem('nukala_admin_dark')==='1';
+  if(dm){ document.documentElement.setAttribute('data-theme','dark'); }
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('dmBtn');
+    if(btn){
+      btn.textContent = dm?'☀️':'🌙';
+      btn.addEventListener('click',function(){
+        dm = !dm;
+        localStorage.setItem('nukala_admin_dark', dm?'1':'0');
+        document.documentElement.setAttribute('data-theme', dm?'dark':'light');
+        this.textContent = dm?'☀️':'🌙';
+      });
+    }
+  });
+})();
+
 // Wire up logout
 document.getElementById('logoutBtn').addEventListener('click',function(){sessionStorage.removeItem('nukala_admin');window.location.href='home.html';});
 
@@ -1008,7 +1054,7 @@ function renderAnn(){var logs=lda('annLog'),el=document.getElementById('annLog')
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PAGE VISIBILITY
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var PAGES=[{id:'home',label:'🏠 Home',file:'home.html',locked:true},{id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},{id:'history',label:'📜 History',file:'history.html',locked:false},{id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},{id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},{id:'stats',label:'📊 Stats',file:'stats.html',locked:false},{id:'events',label:'📆 Events',file:'events.html',locked:false},{id:'map',label:'🗺️ Map',file:'map.html',locked:false},{id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},{id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},{id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},{id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},{id:'qr',label:'📱 Share/QR',file:'qr.html',locked:false},{id:'contact',label:'✉️ Contact',file:'contact.html',locked:true}];
+var PAGES=[{id:'home',label:'🏠 Home',file:'home.html',locked:true},{id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},{id:'history',label:'📜 History',file:'history.html',locked:false},{id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},{id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},{id:'stats',label:'📊 Stats',file:'stats.html',locked:false},{id:'events',label:'📆 Events',file:'events.html',locked:false},{id:'map',label:'🗺️ Map',file:'map.html',locked:false},{id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},{id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},{id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},{id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},{id:'qr',label:'📱 QR Code Share',file:'qr.html',locked:false},{id:'contact',label:'✉️ Contact',file:'contact.html',locked:true}];
 
 document.getElementById('visSaveBtn').addEventListener('click', visSave);
 document.getElementById('visEnableAllBtn').addEventListener('click', visEnableAll);
@@ -1062,8 +1108,19 @@ document.getElementById('saveThemeBtn').addEventListener('click',function(){
 });
 document.getElementById('resetThemeBtn').addEventListener('click',function(){localStorage.removeItem('nukala_theme');applyThemePreset('sage');toast('Theme reset.');});
 document.getElementById('saveSiteWideBtn').addEventListener('click',function(){
-  var sw={navName:document.getElementById('pe-sitename').value.trim(),footerName:document.getElementById('pe-footer').value.trim(),footerSub:document.getElementById('pe-footersub').value.trim(),showSearch:document.getElementById('pe-showsearch').checked,showDark:document.getElementById('pe-showdark').checked,showLang:document.getElementById('pe-showlang').checked};
-  svRaw('nukala_sitewide',sw);var s=ld('settings');if(sw.navName){s.familyName=sw.navName;sv('settings',s);document.getElementById('siteName').textContent=sw.navName;}log('Site wide saved');toast('Saved!');
+  var sw=ldRaw('nukala_sitewide')||{};
+  sw.navName=document.getElementById('pe-sitename').value.trim();
+  sw.footerName=document.getElementById('pe-footer').value.trim();
+  sw.footerSub=document.getElementById('pe-footersub').value.trim();
+  sw.showSearch=document.getElementById('pe-showsearch').checked;
+  sw.showDark=document.getElementById('pe-showdark').checked;
+  sw.showLang=document.getElementById('pe-showlang').checked;
+  sw.treeQuote=document.getElementById('pe-treequote').value.trim();
+  sw.treeQuoteAuthor=document.getElementById('pe-treequoteauthor').value.trim();
+  svRaw('nukala_sitewide',sw);
+  var s=ld('settings');
+  if(sw.navName){s.familyName=sw.navName;sv('settings',s);document.getElementById('siteName').textContent=sw.navName;}
+  log('Site wide saved');toast('✅ Saved! Footer and nav updated on all pages.');
 });
 document.getElementById('saveHomeBtn').addEventListener('click',function(){
   var hd=ldRaw('nukala_home')||{};
@@ -1103,7 +1160,7 @@ function applyThemePreset(t){
 
 function loadPeTab(tab){
   if(tab==='theme'){var t=ldRaw('nukala_theme')||{};if(t.primary){document.getElementById('clrPrimary').value=t.primary;document.getElementById('clrPrimaryHex').value=t.primary;}if(t.secondary){document.getElementById('clrSecondary').value=t.secondary;document.getElementById('clrSecondaryHex').value=t.secondary;}if(t.bg){document.getElementById('clrBg').value=t.bg;document.getElementById('clrBgHex').value=t.bg;}if(t.text){document.getElementById('clrText').value=t.text;document.getElementById('clrTextHex').value=t.text;}}
-  if(tab==='sitewide'){var sw=ldRaw('nukala_sitewide')||{};document.getElementById('pe-sitename').value=sw.navName||'';document.getElementById('pe-footer').value=sw.footerName||'';document.getElementById('pe-footersub').value=sw.footerSub||'';document.getElementById('pe-showsearch').checked=sw.showSearch!==false;document.getElementById('pe-showdark').checked=sw.showDark!==false;document.getElementById('pe-showlang').checked=sw.showLang!==false;}
+  if(tab==='sitewide'){var sw=ldRaw('nukala_sitewide')||{};document.getElementById('pe-sitename').value=sw.navName||'';document.getElementById('pe-footer').value=sw.footerName||'';document.getElementById('pe-footersub').value=sw.footerSub||'';document.getElementById('pe-showsearch').checked=sw.showSearch!==false;document.getElementById('pe-showdark').checked=sw.showDark!==false;document.getElementById('pe-showlang').checked=sw.showLang!==false;document.getElementById('pe-treequote').value=sw.treeQuote||'';document.getElementById('pe-treequoteauthor').value=sw.treeQuoteAuthor||'';}
   if(tab==='home'){var hd=ldRaw('nukala_home')||{},hp=ldRaw('nukala_heropage')||{};document.getElementById('pe-htitle').value=hd.heroTitle||'';document.getElementById('pe-htagline').value=hd.heroTagline||'';document.getElementById('pe-herobg').value=hp.homeImgUrl||'';document.getElementById('pe-s1num').value=hd.stat1num||'';document.getElementById('pe-s1lbl').value=hd.stat1lbl||'';document.getElementById('pe-s2num').value=hd.stat2num||'';document.getElementById('pe-s2lbl').value=hd.stat2lbl||'';document.getElementById('pe-s3num').value=hd.stat3num||'';document.getElementById('pe-s3lbl').value=hd.stat3lbl||'';document.getElementById('pe-abouttitle').value=hd.aboutTitle||'';document.getElementById('pe-about1').value=hd.about1||'';document.getElementById('pe-about2').value=hd.about2||'';document.getElementById('pe-about3').value=hd.about3||'';}
   if(tab==='pages'){var np=ldRaw('nukala_newpages')||{};document.getElementById('pageTextsEditor').innerHTML=PAGE_TEXTS.map(function(pg){var d=np[pg.key]||{};return '<div class="panel" style="margin-bottom:12px;"><div class="pt">'+pg.page+' ('+pg.file+')</div><div class="fr"><div class="fg"><label>Eyebrow Text</label><input type="text" class="fi" id="np-'+pg.key+'-eye" placeholder="'+pg.eye+'" value="'+(d.eye||'').replace(/"/g,'&quot;')+'"/></div><div class="fg"><label>Page Title</label><input type="text" class="fi" id="np-'+pg.key+'-title" placeholder="'+pg.title+'" value="'+(d.title||'').replace(/"/g,'&quot;')+'"/></div></div><div class="fg"><label>Description</label><input type="text" class="fi" id="np-'+pg.key+'-desc" placeholder="'+pg.desc+'" value="'+(d.desc||'').replace(/"/g,'&quot;')+'"/></div></div>';}).join('');}
   if(tab==='contact'){var cp=ldRaw('nukala_contactpage2')||{};document.getElementById('pe-cname').value=cp.contactName||'';document.getElementById('pe-cemail').value=cp.contactEmail||'';document.getElementById('pe-formspree').value=cp.formspree||'';document.getElementById('pe-droptions').value=(cp.dropdownOptions||['Add a family member','Submit a photo','Share a story','Other']).join('\n');}

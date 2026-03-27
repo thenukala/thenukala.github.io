@@ -52,7 +52,7 @@
       <li><a href="recipes.html">Recipes</a></li>
       <li><a href="achievements.html">Achievements</a></li>
       <li><a href="videos.html">Videos</a></li>
-      <li><a href="qr.html" class="active">Share</a></li>
+      <li><a href="qr.html" class="active">QR Code Share</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
@@ -89,7 +89,9 @@
       </div>
     </div>
   </main>
-  <footer>&copy; 2024 <strong id="footerName">The Nukala Family</strong> · Private</footer>
+    <footer>
+    &copy; <span id="footerYear">2024</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
+  </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     const load=k=>JSON.parse(localStorage.getItem(k)||'{}');
@@ -292,5 +294,46 @@
 </script>
   <script src="nukala.js"></script>
   <script src="lang.js"></script>
+
+  <script>
+  // Read admin page editor settings and apply to this page
+  (function(){
+    const KEY = 'nukala_page_qrpage';
+    const d = JSON.parse(localStorage.getItem(KEY)||'{}');
+    if(!d || !Object.keys(d).length) return;
+    const hero = document.querySelector('.page-hero');
+    if(hero){
+      const eyebrow = hero.querySelector('.eyebrow');
+      const h1 = hero.querySelector('h1');
+      const p  = hero.querySelector('p:not(.eyebrow)');
+      if(eyebrow && d.eyebrow) eyebrow.textContent = d.eyebrow;
+      if(h1 && d.title){
+        const em = h1.querySelector('em');
+        if(em){ const parts=d.title.split(' '); em.textContent=parts.pop(); h1.childNodes[0].textContent=parts.join(' ')+' '; }
+        else h1.textContent = d.title;
+      }
+      if(p && d.desc) p.textContent = d.desc;
+    }
+    // Apply any button text overrides
+    if(d.btn){
+      const btns = document.querySelectorAll('a[href="admin.html"], a[href^="admin"]');
+      btns.forEach(b=>{ if(b.textContent.includes('Admin')) b.textContent = d.btn; });
+    }
+    if(d.empty){
+      document.querySelectorAll('.empty-section p, .empty-facts p').forEach(el=>{ if(el.textContent.includes('yet')) el.innerHTML = d.empty; });
+    }
+  })();
+  
+      // ── Footer ──
+      (function(){
+        var sw=JSON.parse(localStorage.getItem('nukala_sitewide')||'null')||{};
+        var s=JSON.parse(localStorage.getItem('nukala_settings')||'null')||{};
+        var name=sw.footerName||(s.familyName?'The '+s.familyName+' Family':null);
+        var sub=sw.footerSub||'Private &amp; Password Protected · Made with 🌳 &amp; love';
+        var fy=document.getElementById('footerYear'); if(fy) fy.textContent=new Date().getFullYear();
+        var fn=document.getElementById('footerText'); if(fn&&name) fn.textContent=name;
+        var fs=document.getElementById('footerSub'); if(fs) fs.innerHTML=sub;
+      })();
+    </script>
 </body>
 </html>

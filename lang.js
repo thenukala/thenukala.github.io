@@ -13,7 +13,7 @@
       nav_gallery:'Gallery', nav_facts:'Facts', nav_stats:'Stats',
       nav_events:'Events', nav_map:'Map', nav_polls:'Polls',
       nav_recipes:'Recipes', nav_achievements:'Achievements',
-      nav_videos:'Videos', nav_share:'Share', nav_contact:'Contact',
+      nav_videos:'Videos', nav_share:'QR Code Share', nav_contact:'Contact',
       // Sign out
       signout:'Sign Out',
       // Login page
@@ -95,7 +95,7 @@
       nav_gallery:'గ్యాలరీ', nav_facts:'వాస్తవాలు', nav_stats:'గణాంకాలు',
       nav_events:'కార్యక్రమాలు', nav_map:'మ్యాప్', nav_polls:'పోల్స్',
       nav_recipes:'వంటకాలు', nav_achievements:'విజయాలు',
-      nav_videos:'వీడియోలు', nav_share:'షేర్', nav_contact:'సంప్రదించండి',
+      nav_videos:'వీడియోలు', nav_share:'QR కోడ్ షేర్', nav_contact:'సంప్రదించండి',
       // Sign out
       signout:'నిష్క్రమించు',
       // Login page
