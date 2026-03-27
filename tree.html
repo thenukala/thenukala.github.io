@@ -892,18 +892,17 @@
 })();
 </script>
   <script src="nukala.js"></script>
-  <script src="lang.js">
-      // ── Custom tree quote from admin ──
-      (function(){
-        var sw = JSON.parse(localStorage.getItem('nukala_sitewide')||'null')||{};
-        if(sw.treeQuote){
-          var q=document.getElementById('treeQuote'); if(q) q.textContent='"'+sw.treeQuote+'"';
-        }
-        if(sw.treeQuoteAuthor){
-          var a=document.getElementById('treeQuoteAuthor'); if(a) a.textContent='— '+sw.treeQuoteAuthor;
-        }
-      })();
+  <script src="lang.js"></script>
+<script>
+  (function(){
+    var sw = JSON.parse(localStorage.getItem('nukala_sitewide')||'null')||{};
+    if(sw.treeQuote){var q=document.getElementById('treeQuote');if(q)q.textContent='"'+sw.treeQuote+'"';}
+    if(sw.treeQuoteAuthor){var a=document.getElementById('treeQuoteAuthor');if(a)a.textContent='— '+sw.treeQuoteAuthor;}
+  })();
+</script>
 
-  </script>
+  <footer>
+    &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
+  </footer>
 </body>
 </html>

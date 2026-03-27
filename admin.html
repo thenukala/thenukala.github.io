@@ -30,6 +30,11 @@
 [data-theme=dark] .pu:hover{background:rgba(30,54,30,.3);}
 [data-theme=dark] .toast{background:var(--sd);color:#0e180e;}
 body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-height:100vh;}
+/* Logo watermark */
+body::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+width:420px;height:420px;background:url('logo.png') no-repeat center/contain;
+opacity:0.04;pointer-events:none;z-index:0;}
+#loginPage,#adminPage{position:relative;z-index:1;}
 /* LOGIN */
 #loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;}
 .lbox{background:var(--w);border:1px solid var(--b);border-radius:20px;padding:44px;width:100%;max-width:400px;box-shadow:0 4px 32px rgba(0,0,0,.07);text-align:center;}
@@ -221,7 +226,9 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
       <button class="ni" data-page="announce">📣 Announcements</button>
       <div class="nsec">Site Control</div>
       <button class="ni" data-page="pagevis">👁️ Page Visibility</button>
+      <button class="ni" data-page="pagenames">📝 Page Names</button>
       <button class="ni" data-page="editor">🎨 Page Editor</button>
+      <button class="ni" data-page="loginpage">🔐 Login Page</button>
       <button class="ni" data-page="analytics">📈 Analytics</button>
       <div class="nsec">Admin</div>
       <button class="ni" data-page="settings">⚙️ Settings</button>
@@ -438,8 +445,9 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
               <div class="fg"><label>Site Name (Nav Bar)</label><input type="text" class="fi" id="pe-sitename" placeholder="NUKALA FAMILY"/></div>
               <div class="fg"><label>Footer Family Name</label><input type="text" class="fi" id="pe-footer" placeholder="The Nukala Family"/></div>
             </div>
-            <div class="fg"><label>Footer Tagline (the text after the name)</label><input type="text" class="fi" id="pe-footersub" placeholder="Private &amp; Password Protected · Made with 🌳 &amp; love"/></div>
-            <div class="notice" style="margin-top:4px;">💡 Footer changes apply to all pages instantly on next visit.</div>
+            <div class="fg"><label>Footer Tagline</label><input type="text" class="fi" id="pe-footersub" placeholder="Private &amp; Password Protected · Made with 🌳 &amp; love"/></div>
+            <div class="fg"><label>Footer Year (leave blank for current year: 2026)</label><input type="text" class="fi" id="pe-footeryear" placeholder="2026" maxlength="4"/></div>
+            <div class="notice" style="margin-top:4px;">💡 Footer updates on all pages instantly. Year defaults to current year if left blank.</div>
           </div>
           <div class="panel">
             <div class="pt">Family Tree Quote</div>
@@ -512,6 +520,61 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
             <button class="btn bg bsm" id="saveFontsBtn">💾 Save Fonts</button>
           </div>
         </div>
+      </div>
+
+      <!-- PAGE NAMES -->
+      <div class="page" id="page-pagenames">
+        <div class="sh">Page <em>Names</em></div>
+        <p class="ss">Customise the label shown in the navigation menu for each page.</p>
+        <div class="div"></div>
+        <div class="notice">💡 Changes apply to all pages instantly. The page files themselves don't change — only the nav label visitors see.</div>
+        <div class="panel">
+          <div class="pt">Navigation Labels</div>
+          <div id="pageNamesEditor"></div>
+          <button class="btn bg" id="savePageNamesBtn" style="margin-top:14px;">💾 Save Page Names</button>
+        </div>
+        <div class="panel">
+          <div class="pt">Preview — what visitors see in the nav</div>
+          <div id="pageNamesPreview" style="display:flex;flex-wrap:wrap;gap:6px;padding-top:4px;"></div>
+        </div>
+      </div>
+
+      <!-- LOGIN PAGE EDITOR -->
+      <div class="page" id="page-loginpage">
+        <div class="sh">Login <em>Page</em></div>
+        <p class="ss">Customise the welcome / password page that visitors see first.</p>
+        <div class="div"></div>
+        <div class="panel">
+          <div class="pt">Heading</div>
+          <div class="fr">
+            <div class="fg"><label>Highlighted Word (shown in colour)</label><input type="text" class="fi" id="lpe-title" placeholder="Nukala"/></div>
+            <div class="fg"><label>Heading Line 2</label><input type="text" class="fi" id="lpe-subtitle" placeholder="Family Tree"/></div>
+          </div>
+          <div class="fg"><label>Tagline (small text below heading)</label><input type="text" class="fi" id="lpe-tagline" placeholder="A private family archive"/></div>
+        </div>
+        <div class="panel">
+          <div class="pt">Form</div>
+          <div class="fr">
+            <div class="fg"><label>Password Field Label</label><input type="text" class="fi" id="lpe-label" placeholder="Family Password"/></div>
+            <div class="fg"><label>Button Text</label><input type="text" class="fi" id="lpe-btn" placeholder="Enter Family Archive →"/></div>
+          </div>
+          <div class="fg"><label>Divider Text (below button)</label><input type="text" class="fi" id="lpe-divider" placeholder="secured &amp; private"/></div>
+        </div>
+        <div class="panel">
+          <div class="pt">Footer Note</div>
+          <div class="fg"><label>Footer Note (HTML allowed, e.g. &lt;strong&gt;Nukala family&lt;/strong&gt;)</label><textarea class="fi" id="lpe-footnote" rows="3" style="resize:vertical;" placeholder="This site is exclusively for the &lt;strong&gt;Nukala family&lt;/strong&gt;.&lt;br/&gt;Please contact the family administrator for access."></textarea></div>
+        </div>
+        <div class="panel">
+          <div class="pt">Background</div>
+          <div class="fg"><label>Background Colour (leave blank for default)</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="color" id="lpe-bgpicker" value="#f4f2ee" oninput="document.getElementById('lpe-bg').value=this.value" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;flex-shrink:0;"/>
+              <input type="text" class="fi" id="lpe-bg" placeholder="#f4f2ee" oninput="if(/^#[0-9a-fA-F]{6}$/.test(this.value))document.getElementById('lpe-bgpicker').value=this.value"/>
+            </div>
+          </div>
+        </div>
+        <button class="btn bg" id="saveLoginPageBtn">💾 Save Login Page</button>
+        <div style="margin-top:10px;"><a href="index.html" target="_blank" class="btn bo bsm">👁 Preview Login Page</a></div>
       </div>
 
       <!-- ANALYTICS -->
@@ -789,7 +852,7 @@ var PAGE_LOADERS = {
   gallery:renderGal, facts:renderFacts, events:renderEvts,
   recipes:renderRecs, achievements:renderAchs, videos:renderVids,
   polls:renderPolls, contacts:renderContacts, announce:renderAnn,
-  pagevis:renderVis, editor:function(){loadPeTab('theme');}, analytics:renderAnalytics, settings:loadSettings
+  pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme');}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
 
 document.querySelectorAll('.ni[data-page]').forEach(function(btn){
@@ -1120,6 +1183,8 @@ document.getElementById('saveSiteWideBtn').addEventListener('click',function(){
   sw.showLang=document.getElementById('pe-showlang').checked;
   sw.treeQuote=document.getElementById('pe-treequote').value.trim();
   sw.treeQuoteAuthor=document.getElementById('pe-treequoteauthor').value.trim();
+  var yr=document.getElementById('pe-footeryear').value.trim();
+  sw.footerYear=yr?yr:'';
   svRaw('nukala_sitewide',sw);
   var s=ld('settings');
   if(sw.navName){s.familyName=sw.navName;sv('settings',s);document.getElementById('siteName').textContent=sw.navName;}
@@ -1163,7 +1228,7 @@ function applyThemePreset(t){
 
 function loadPeTab(tab){
   if(tab==='theme'){var t=ldRaw('nukala_theme')||{};if(t.primary){document.getElementById('clrPrimary').value=t.primary;document.getElementById('clrPrimaryHex').value=t.primary;}if(t.secondary){document.getElementById('clrSecondary').value=t.secondary;document.getElementById('clrSecondaryHex').value=t.secondary;}if(t.bg){document.getElementById('clrBg').value=t.bg;document.getElementById('clrBgHex').value=t.bg;}if(t.text){document.getElementById('clrText').value=t.text;document.getElementById('clrTextHex').value=t.text;}}
-  if(tab==='sitewide'){var sw=ldRaw('nukala_sitewide')||{};document.getElementById('pe-sitename').value=sw.navName||'';document.getElementById('pe-footer').value=sw.footerName||'';document.getElementById('pe-footersub').value=sw.footerSub||'';document.getElementById('pe-showsearch').checked=sw.showSearch!==false;document.getElementById('pe-showdark').checked=sw.showDark!==false;document.getElementById('pe-showlang').checked=sw.showLang!==false;document.getElementById('pe-treequote').value=sw.treeQuote||'';document.getElementById('pe-treequoteauthor').value=sw.treeQuoteAuthor||'';}
+  if(tab==='sitewide'){var sw=ldRaw('nukala_sitewide')||{};document.getElementById('pe-sitename').value=sw.navName||'';document.getElementById('pe-footer').value=sw.footerName||'';document.getElementById('pe-footersub').value=sw.footerSub||'';document.getElementById('pe-showsearch').checked=sw.showSearch!==false;document.getElementById('pe-showdark').checked=sw.showDark!==false;document.getElementById('pe-showlang').checked=sw.showLang!==false;document.getElementById('pe-treequote').value=sw.treeQuote||'';document.getElementById('pe-treequoteauthor').value=sw.treeQuoteAuthor||'';document.getElementById('pe-footeryear').value=sw.footerYear||'';}
   if(tab==='home'){var hd=ldRaw('nukala_home')||{},hp=ldRaw('nukala_heropage')||{};document.getElementById('pe-htitle').value=hd.heroTitle||'';document.getElementById('pe-htagline').value=hd.heroTagline||'';document.getElementById('pe-herobg').value=hp.homeImgUrl||'';document.getElementById('pe-s1num').value=hd.stat1num||'';document.getElementById('pe-s1lbl').value=hd.stat1lbl||'';document.getElementById('pe-s2num').value=hd.stat2num||'';document.getElementById('pe-s2lbl').value=hd.stat2lbl||'';document.getElementById('pe-s3num').value=hd.stat3num||'';document.getElementById('pe-s3lbl').value=hd.stat3lbl||'';document.getElementById('pe-abouttitle').value=hd.aboutTitle||'';document.getElementById('pe-about1').value=hd.about1||'';document.getElementById('pe-about2').value=hd.about2||'';document.getElementById('pe-about3').value=hd.about3||'';}
   if(tab==='pages'){var np=ldRaw('nukala_newpages')||{};document.getElementById('pageTextsEditor').innerHTML=PAGE_TEXTS.map(function(pg){var d=np[pg.key]||{};return '<div class="panel" style="margin-bottom:12px;"><div class="pt">'+pg.page+' ('+pg.file+')</div><div class="fr"><div class="fg"><label>Eyebrow Text</label><input type="text" class="fi" id="np-'+pg.key+'-eye" placeholder="'+pg.eye+'" value="'+(d.eye||'').replace(/"/g,'&quot;')+'"/></div><div class="fg"><label>Page Title</label><input type="text" class="fi" id="np-'+pg.key+'-title" placeholder="'+pg.title+'" value="'+(d.title||'').replace(/"/g,'&quot;')+'"/></div></div><div class="fg"><label>Description</label><input type="text" class="fi" id="np-'+pg.key+'-desc" placeholder="'+pg.desc+'" value="'+(d.desc||'').replace(/"/g,'&quot;')+'"/></div></div>';}).join('');}
   if(tab==='contact'){var cp=ldRaw('nukala_contactpage2')||{};document.getElementById('pe-cname').value=cp.contactName||'';document.getElementById('pe-cemail').value=cp.contactEmail||'';document.getElementById('pe-formspree').value=cp.formspree||'';document.getElementById('pe-droptions').value=(cp.dropdownOptions||['Add a family member','Submit a photo','Share a story','Other']).join('\n');}
@@ -1226,6 +1291,112 @@ document.getElementById('resetAllBtn').addEventListener('click',function(){if(!c
 document.getElementById('doImportBtn').addEventListener('click',function(){try{var parsed=JSON.parse(document.getElementById('impData').value.trim());Object.keys(LS).forEach(function(k){if(parsed[k]!==undefined&&parsed[k]!==null)localStorage.setItem(LS[k],JSON.stringify(parsed[k]));});closeM('importModal');renderDash();toast('Data imported!');}catch(e){alert('Invalid JSON. Check the file and try again.');}});
 
 function expAll(){var data={};Object.keys(LS).forEach(function(k){data[k]=JSON.parse(localStorage.getItem(LS[k])||'null');});var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='nukala-backup-'+Date.now()+'.json';a.click();toast('Backup exported!');}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PAGE NAMES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var DEFAULT_NAV_PAGES = [
+  {href:'home.html',    label:'Home',          locked:true},
+  {href:'tree.html',    label:'Family Tree',   locked:true},
+  {href:'history.html', label:'History',       locked:false},
+  {href:'gallery.html', label:'Gallery',       locked:false},
+  {href:'facts.html',   label:'Facts',         locked:false},
+  {href:'stats.html',   label:'Stats',         locked:false},
+  {href:'events.html',  label:'Events',        locked:false},
+  {href:'map.html',     label:'Map',           locked:false},
+  {href:'polls.html',   label:'Polls',         locked:false},
+  {href:'recipes.html', label:'Recipes',       locked:false},
+  {href:'achievements.html', label:'Achievements', locked:false},
+  {href:'videos.html',  label:'Videos',        locked:false},
+  {href:'qr.html',      label:'QR Code Share', locked:false},
+  {href:'contact.html', label:'Contact',       locked:false},
+];
+
+function getNavPages(){
+  var saved = ldRaw('nukala_navmenu');
+  if(saved && saved.items && saved.items.length){
+    // Merge saved labels into defaults
+    var map = {};
+    saved.items.forEach(function(i){ map[i.href] = i; });
+    return DEFAULT_NAV_PAGES.map(function(p){
+      return {href:p.href, label:(map[p.href]&&map[p.href].label)||p.label, locked:p.locked, active:map[p.href]?map[p.href].active!==false:true};
+    });
+  }
+  return DEFAULT_NAV_PAGES.map(function(p){ return {href:p.href,label:p.label,locked:p.locked,active:true}; });
+}
+
+function renderPageNames(){
+  var pages = getNavPages();
+  var el = document.getElementById('pageNamesEditor');
+  el.innerHTML = pages.map(function(p,i){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b);">'
+      +'<div style="width:130px;font-size:.75rem;font-weight:500;color:var(--tl);flex-shrink:0;">'+p.href+'</div>'
+      +'<input type="text" class="fi" id="pn-'+i+'" value="'+p.label.replace(/"/g,'&quot;')+'" placeholder="'+p.label+'" '+(p.locked?'disabled style="opacity:.5;cursor:not-allowed;"':'')+' style="flex:1;padding:7px 11px;"/>'
+      +(p.locked?'<span style="font-size:.65rem;color:var(--tl);flex-shrink:0;">core</span>':'')
+      +'</div>';
+  }).join('');
+  renderPageNamesPreview(pages);
+}
+
+function renderPageNamesPreview(pages){
+  var prev = document.getElementById('pageNamesPreview');
+  if(!prev) return;
+  var cur = getNavPages();
+  prev.innerHTML = cur.map(function(p,i){
+    var inp = document.getElementById('pn-'+i);
+    var lbl = inp ? inp.value : p.label;
+    return '<span style="padding:4px 10px;border-radius:20px;font-size:.71rem;font-weight:500;background:rgba(92,122,92,.1);color:var(--sd);display:inline-block;margin:2px;">'+lbl+'</span>';
+  }).join('');
+}
+
+document.getElementById('pageNamesEditor').addEventListener('input', function(){
+  var pages = getNavPages();
+  renderPageNamesPreview(pages);
+});
+
+document.getElementById('savePageNamesBtn').addEventListener('click', function(){
+  var pages = getNavPages();
+  var items = pages.map(function(p,i){
+    var inp = document.getElementById('pn-'+i);
+    return {href:p.href, label:inp&&!p.locked ? inp.value.trim()||p.label : p.label, active:p.active!==false};
+  });
+  svRaw('nukala_navmenu', {items:items});
+  log('Page names saved');
+  toast('✅ Page names saved! Nav updated on all pages.');
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LOGIN PAGE EDITOR
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function loadLoginPageEditor(){
+  var lp = ldRaw('nukala_loginpage')||{};
+  document.getElementById('lpe-title').value    = lp.title||'';
+  document.getElementById('lpe-subtitle').value = lp.subtitle||'';
+  document.getElementById('lpe-tagline').value  = lp.tagline||'';
+  document.getElementById('lpe-label').value    = lp.label||'';
+  document.getElementById('lpe-btn').value      = lp.btnText||'';
+  document.getElementById('lpe-divider').value  = lp.dividerText||'';
+  document.getElementById('lpe-footnote').value = lp.footnote||'';
+  document.getElementById('lpe-bg').value       = lp.bgColor||'';
+  if(lp.bgColor) document.getElementById('lpe-bgpicker').value = lp.bgColor;
+}
+
+document.getElementById('saveLoginPageBtn').addEventListener('click', function(){
+  var lp = {
+    title:       document.getElementById('lpe-title').value.trim(),
+    subtitle:    document.getElementById('lpe-subtitle').value.trim(),
+    tagline:     document.getElementById('lpe-tagline').value.trim(),
+    label:       document.getElementById('lpe-label').value.trim(),
+    btnText:     document.getElementById('lpe-btn').value.trim(),
+    dividerText: document.getElementById('lpe-divider').value.trim(),
+    footnote:    document.getElementById('lpe-footnote').value.trim(),
+    bgColor:     document.getElementById('lpe-bg').value.trim(),
+  };
+  svRaw('nukala_loginpage', lp);
+  log('Login page customised');
+  toast('✅ Login page saved! Click Preview to see changes.');
+});
+
 </script>
 </body>
 </html>

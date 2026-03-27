@@ -267,7 +267,7 @@ nav::-webkit-scrollbar, .nav-links::-webkit-scrollbar { display: none; }
   nav {
     position: fixed !important;
     top: 0; left: 0; right: 0;
-    z-index: 1000 !important;
+    z-index: 100 !important;
     height: auto !important;
     min-height: 56px !important;
     padding: 0 14px !important;
