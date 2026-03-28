@@ -297,14 +297,23 @@
   // ══════════════════════════════════════
   function applyNavNames(){
     var menu = JSON.parse(localStorage.getItem('nukala_navmenu')||'null');
+    var vis  = JSON.parse(localStorage.getItem('nukala_page_vis')||'{}');
     if(!menu || !menu.items) return;
     var map = {};
     menu.items.forEach(function(item){ map[item.href] = item; });
     document.querySelectorAll('nav .nav-links a').forEach(function(a){
       var href = a.getAttribute('href');
-      if(href && map[href] && map[href].label){
-        a.textContent = map[href].label;
-      }
+      if(!href) return;
+      var item = map[href];
+      // Apply custom label
+      if(item && item.label) a.textContent = item.label;
+      // Hide if disabled in navmenu OR in page_vis
+      var li = a.parentElement;
+      if(!li) return;
+      var pageId = href.replace('.html','');
+      var hiddenByNavMenu = item && item.active === false;
+      var hiddenByVis     = vis[pageId] === false;
+      li.style.display = (hiddenByNavMenu || hiddenByVis) ? 'none' : '';
     });
   }
 

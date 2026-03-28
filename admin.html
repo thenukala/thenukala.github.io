@@ -1165,7 +1165,33 @@ function renderVis(){
 }
 function visChg(id,on){var tr=document.getElementById('vtr-'+id),th=document.getElementById('vth-'+id);if(tr)tr.style.background=on?'#5c7a5c':'#ccc';if(th)th.style.transform=on?'translateX(20px)':'translateX(0)';visPreview();}
 function visPreview(){document.getElementById('visPreview').innerHTML=PAGES.map(function(p){var cb=document.getElementById('v-'+p.id),on=cb?cb.checked:true;return '<span style="padding:4px 10px;border-radius:20px;font-size:.71rem;font-weight:500;background:'+(on?'#c8ddc8':'#f0f0f0')+';color:'+(on?'#5c7a5c':'#aaa')+(on?'':';text-decoration:line-through')+';display:inline-block;margin:2px;">'+p.label+'</span>';}).join('');}
-function visSave(){var vis={};PAGES.forEach(function(p){var cb=document.getElementById('v-'+p.id);vis[p.id]=p.locked?true:(cb?cb.checked:true);});sv('pagevis',vis);log('Page visibility updated');toast('Visibility saved!');}
+function visSave(){
+  var vis={};
+  PAGES.forEach(function(p){
+    var cb=document.getElementById('v-'+p.id);
+    vis[p.id]=p.locked?true:(cb?cb.checked:true);
+  });
+  sv('pagevis',vis);
+
+  // ALSO sync nukala_navmenu so nav hides correctly on all devices after publish
+  var nm=ldRaw('nukala_navmenu')||{items:[]};
+  if(!nm.items||!nm.items.length){
+    // Build from PAGES defaults
+    nm.items=PAGES.map(function(p){return {href:p.file,label:p.label.replace(/^[^\w]*/,''),active:vis[p.id]!==false};});
+  } else {
+    nm.items=nm.items.map(function(item){
+      var pageId=Object.keys(vis).find(function(id){
+        return PAGES.find(function(p){return p.id===id&&p.file===item.href;});
+      });
+      if(pageId) item.active=vis[pageId]!==false;
+      return item;
+    });
+  }
+  svRaw('nukala_navmenu',nm);
+
+  log('Page visibility updated');
+  toast('✅ Visibility saved! Click Publish to Site to apply to all devices.');
+}
 function visEnableAll(){PAGES.forEach(function(p){var cb=document.getElementById('v-'+p.id);if(cb&&!p.locked){cb.checked=true;visChg(p.id,true);}});toast('All enabled!');}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
