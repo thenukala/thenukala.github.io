@@ -32,19 +32,19 @@
     .recipe-step::before { content:counter(steps); background:var(--sage-dark); color:white; border-radius:50%; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:600; margin-right:10px; flex-shrink:0; }
     .recipe-step:last-child { border-bottom:none; }
     .empty-section { text-align:center; padding:60px 20px; color:var(--text-light); }
-  </style>
+  
+    .contribute-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid var(--sage-light,#c8ddc8); border-radius:16px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:36px; flex-wrap:wrap; }
+    .contribute-bar p { font-size:.88rem; color:var(--sage-dark,#5c7a5c); margin:0; line-height:1.5; }
+    .contribute-bar p strong { color:var(--text-dark,#2c2c2c); }
+    .contribute-bar a { display:inline-block; padding:10px 22px; border:1.5px solid var(--sage-dark,#5c7a5c); border-radius:10px; font-size:.78rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--sage-dark,#5c7a5c); text-decoration:none; white-space:nowrap; flex-shrink:0; transition:all .2s; }
+    .contribute-bar a:hover { background:var(--sage-dark,#5c7a5c); color:white; }
+    @media(max-width:600px){ .contribute-bar { flex-direction:column; align-items:flex-start; } .contribute-bar a { width:100%; text-align:center; box-sizing:border-box; } }
+    </style>
 
     <style>
       nav .nav-links { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
       nav .nav-links::-webkit-scrollbar { display: none; }
       nav .nav-links a { font-size: 0.7rem; white-space: nowrap; }
-    
-    .contribute-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid var(--sage-light); border-radius:16px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:36px; flex-wrap:wrap; }
-    .contribute-bar p { font-size:.88rem; color:var(--sage-dark); margin:0; line-height:1.5; }
-    .contribute-bar p strong { color:var(--text-dark); }
-    .contribute-bar a { display:inline-block; padding:10px 22px; border:1.5px solid var(--sage-dark); border-radius:10px; font-size:.78rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--sage-dark); text-decoration:none; white-space:nowrap; transition:all .2s; }
-    .contribute-bar a:hover { background:var(--sage-dark); color:white; }
-    @media(max-width:600px){ .contribute-bar { flex-direction:column; align-items:flex-start; } }
     </style>
 </head>
 <body>
@@ -80,10 +80,9 @@
     <div class="content-area">
       <div class="contribute-bar fade-in">
         <p><strong>Have a family recipe to share?</strong><br/>Share traditional family recipes and we'll preserve them in the archive.</p>
-        <a href="mailto:Thenukala@yahoo.com?subject=Recipe%20Submission%20%E2%80%94%20Nukala%20Family%20Archive&body=Hi%2C%0A%0AI%20would%20like%20to%20share%20a%20family%20recipe.%0A%0ARecipe%20name%3A%0A%0AIngredients%3A%0A%0ASteps%3A%0A%0AMade%20by%20/%20who%20taught%20you%20this%20recipe%3A">+ Share a Recipe</a>
+        <a href="contact.html">+ Share a Recipe</a>
       </div>
 
-      
       <div class="recipes-grid" id="recipesGrid"></div>
     </div>
   </main>
@@ -96,7 +95,7 @@
     <footer>
     &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
   </footer>
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const load=k=>JSON.parse(localStorage.getItem(k)||'{}');
     const loadArr=k=>JSON.parse(localStorage.getItem(k)||'[]');
     const s=load('nukala_settings'),h=load('nukala_home');
@@ -353,11 +352,4 @@
         var sw=JSON.parse(localStorage.getItem('nukala_sitewide')||'null')||{};
         var s=JSON.parse(localStorage.getItem('nukala_settings')||'null')||{};
         var name=sw.footerName||(s.familyName?'The '+s.familyName+' Family':null);
-        var sub=sw.footerSub||'Private &amp; Password Protected · Made with 🌳 &amp; love';
-        var fy=document.getElementById('footerYear'); if(fy) fy.textContent=new Date().getFullYear();
-        var fn=document.getElementById('footerText'); if(fn&&name) fn.textContent=name;
-        var fs=document.getElementById('footerSub'); if(fs) fs.innerHTML=sub;
-      })();
-    </script>
-</body>
-</html>
+   

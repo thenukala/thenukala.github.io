@@ -656,6 +656,9 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <div class="fr"><div class="fg"><label>Year Born</label><input type="text" class="fi" id="mmBorn" placeholder="e.g. 1942"/></div><div class="fg"><label>Year Passed</label><input type="text" class="fi" id="mmDied" placeholder="Leave blank if living"/></div></div>
   <div class="fr"><div class="fg"><label>Birthplace</label><input type="text" class="fi" id="mmPlace" placeholder="e.g. Hyderabad"/></div><div class="fg"><label>Occupation</label><input type="text" class="fi" id="mmOcc" placeholder="e.g. Farmer"/></div></div>
   <div class="fg"><label>Notes / Biography</label><textarea class="fi" id="mmNotes" rows="3" style="resize:vertical;"></textarea></div>
+  <div style="font-size:.66rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin:12px 0 6px;padding-top:8px;border-top:1px solid var(--b);">📞 Contact & Location</div>
+  <div class="fr"><div class="fg"><label>Phone (with country code)</label><input type="tel" class="fi" id="mmPhone" placeholder="+91 98765 43210"/></div><div class="fg"><label>WhatsApp Number</label><input type="tel" class="fi" id="mmWhatsapp" placeholder="+91 98765 43210"/></div></div>
+  <div class="fr"><div class="fg"><label>Current City / Location</label><input type="text" class="fi" id="mmCity" placeholder="e.g. Hyderabad, India"/></div><div class="fg"><label>Email Address</label><input type="text" class="fi" id="mmEmail" placeholder="e.g. name@email.com"/></div></div>
   <div style="font-size:.66rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin:8px 0 4px;">Family Links — copy IDs from cards and paste below</div>
   <div class="fr"><div class="fg"><label>Father ID</label><input type="text" class="fi" id="mmFather" placeholder="Paste father's member ID"/></div><div class="fg"><label>Mother ID</label><input type="text" class="fi" id="mmMother" placeholder="Paste mother's member ID"/></div></div>
   <div class="fg"><label>Spouse ID</label><input type="text" class="fi" id="mmSpouse" placeholder="Paste spouse's member ID"/></div>
@@ -912,7 +915,7 @@ document.getElementById('saveMemberBtn').addEventListener('click', saveMember);
 function openMemberM(){
   document.getElementById('mmId').value='';
   document.getElementById('mmH').textContent='Add Family Member';
-  ['mmFirst','mmLast','mmBorn','mmDied','mmPlace','mmOcc','mmNotes','mmFather','mmMother','mmSpouse','mmCRole','mmPhotoUrl'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  ['mmFirst','mmLast','mmBorn','mmDied','mmPlace','mmOcc','mmNotes','mmFather','mmMother','mmSpouse','mmCRole','mmPhotoUrl','mmPhone','mmWhatsapp','mmCity','mmEmail'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('mmRole').value='';document.getElementById('mmGen').value='';
   document.getElementById('mmFemale').checked=false;document.getElementById('mmAnc').checked=false;
   document.getElementById('mmDead').checked=false;document.getElementById('mmInlaw').checked=false;
@@ -928,7 +931,7 @@ function editMember(id){
   document.getElementById('mmFirst').value=m.firstName||'';document.getElementById('mmLast').value=m.lastName||'';
   document.getElementById('mmRole').value=m.role||'';document.getElementById('mmGen').value=m.gen||'';
   document.getElementById('mmBorn').value=m.born||'';document.getElementById('mmDied').value=m.died||'';
-  document.getElementById('mmPlace').value=m.place||'';document.getElementById('mmOcc').value=m.occ||'';
+  document.getElementById('mmPlace').value=m.place||'';document.getElementById('mmOcc').value=m.occ||'';if(document.getElementById('mmPhone'))document.getElementById('mmPhone').value=m.phone||'';if(document.getElementById('mmWhatsapp'))document.getElementById('mmWhatsapp').value=m.whatsapp||'';if(document.getElementById('mmCity'))document.getElementById('mmCity').value=m.city||'';if(document.getElementById('mmEmail'))document.getElementById('mmEmail').value=m.email||'';
   document.getElementById('mmNotes').value=m.notes||'';
   document.getElementById('mmFather').value=m.fatherId||'';document.getElementById('mmMother').value=m.motherId||'';
   document.getElementById('mmSpouse').value=m.spouseId||'';document.getElementById('mmPhotoUrl').value=m.photo||'';
@@ -948,7 +951,7 @@ function saveMember(){
   var role=roleVal==='other'?document.getElementById('mmCRole').value.trim():roleVal;
   var photo=document.getElementById('mmPhotoUrl').value.trim();
   if(!photo&&document.getElementById('mmPrev').src&&document.getElementById('mmPrev').src.startsWith('data:'))photo=document.getElementById('mmPrev').src;
-  data[id]={id:id,firstName:first,lastName:document.getElementById('mmLast').value.trim(),role:role,gen:document.getElementById('mmGen').value,born:document.getElementById('mmBorn').value.trim(),died:document.getElementById('mmDied').value.trim(),place:document.getElementById('mmPlace').value.trim(),occ:document.getElementById('mmOcc').value.trim(),notes:document.getElementById('mmNotes').value.trim(),fatherId:document.getElementById('mmFather').value.trim(),motherId:document.getElementById('mmMother').value.trim(),spouseId:document.getElementById('mmSpouse').value.trim(),female:document.getElementById('mmFemale').checked,ancestor:document.getElementById('mmAnc').checked,deceased:document.getElementById('mmDead').checked||!!document.getElementById('mmDied').value.trim(),inlaw:document.getElementById('mmInlaw').checked,photo:photo};
+  data[id]={id:id,firstName:first,lastName:document.getElementById('mmLast').value.trim(),role:role,gen:document.getElementById('mmGen').value,born:document.getElementById('mmBorn').value.trim(),died:document.getElementById('mmDied').value.trim(),place:document.getElementById('mmPlace').value.trim(),occ:document.getElementById('mmOcc').value.trim(),phone:document.getElementById('mmPhone')?document.getElementById('mmPhone').value.trim():'',whatsapp:document.getElementById('mmWhatsapp')?document.getElementById('mmWhatsapp').value.trim():'',city:document.getElementById('mmCity')?document.getElementById('mmCity').value.trim():'',email:document.getElementById('mmEmail')?document.getElementById('mmEmail').value.trim():'',notes:document.getElementById('mmNotes').value.trim(),fatherId:document.getElementById('mmFather').value.trim(),motherId:document.getElementById('mmMother').value.trim(),spouseId:document.getElementById('mmSpouse').value.trim(),female:document.getElementById('mmFemale').checked,ancestor:document.getElementById('mmAnc').checked,deceased:document.getElementById('mmDead').checked||!!document.getElementById('mmDied').value.trim(),inlaw:document.getElementById('mmInlaw').checked,photo:photo};
   sv('members',data);closeM('memberModal');renderMembers();log('Member: '+first);toast('Saved: '+first);
 }
 

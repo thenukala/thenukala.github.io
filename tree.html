@@ -325,7 +325,14 @@
     .empty-tree a:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(92,122,92,0.3); }
 
     .notice { background: rgba(240,245,240,0.9); border: 1px solid var(--sage-light); border-radius: 14px; padding: 12px 18px; font-size: 0.77rem; color: var(--sage-dark); margin-bottom: 14px; line-height: 1.6; position: relative; z-index: 2; backdrop-filter: blur(8px); }
-  </style>
+  
+    .contribute-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid var(--sage-light,#c8ddc8); border-radius:16px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:36px; flex-wrap:wrap; }
+    .contribute-bar p { font-size:.88rem; color:var(--sage-dark,#5c7a5c); margin:0; line-height:1.5; }
+    .contribute-bar p strong { color:var(--text-dark,#2c2c2c); }
+    .contribute-bar a { display:inline-block; padding:10px 22px; border:1.5px solid var(--sage-dark,#5c7a5c); border-radius:10px; font-size:.78rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--sage-dark,#5c7a5c); text-decoration:none; white-space:nowrap; flex-shrink:0; transition:all .2s; }
+    .contribute-bar a:hover { background:var(--sage-dark,#5c7a5c); color:white; }
+    @media(max-width:600px){ .contribute-bar { flex-direction:column; align-items:flex-start; } .contribute-bar a { width:100%; text-align:center; box-sizing:border-box; } }
+    </style>
 
     <style>
       nav .nav-links { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
@@ -378,9 +385,8 @@
     <div class="content-area">
       <div class="contribute-bar fade-in">
         <p><strong>Know a family member missing from the tree?</strong><br/>Share details and we'll add them to the family tree.</p>
-        <a href="mailto:Thenukala@yahoo.com?subject=Family%20Member%20Submission%20%E2%80%94%20Nukala%20Tree&body=Hi%2C%0A%0AI%20would%20like%20to%20add%20a%20family%20member.%0A%0AFull%20Name%3A%0A%0ARelationship%20to%20family%3A%0A%0AYear%20born%3A%0A%0ABirthplace%3A%0A%0AOccupation%3A%0A%0AAny%20other%20details%3A">+ Submit a Member</a>
+        <a href="contact.html">+ Submit a Member</a>
       </div>
-
 
       <!-- Legend pill -->
       <div class="tree-legend">
@@ -436,7 +442,7 @@
 
   
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // ═══════════════════════════════════
     // DATA
     // ═══════════════════════════════════
@@ -507,7 +513,7 @@
             <text x="60" y="70" text-anchor="middle" font-size="28" opacity="0.3">🌳</text>
           </svg>
           <h3>Your Family Tree Awaits</h3>
-          <p></p>
+          <p style="color:var(--text-light,#a0a0a0);font-size:.88rem;">Your family story starts here.</p>
           
         </div>`;
         svg.setAttribute('width','800'); svg.setAttribute('height','500');
@@ -667,12 +673,6 @@
       document.getElementById('spPhotoWrap').innerHTML=`
         <div class="sp-photo-wrap" style="${ringStyle?'--ring:'+ringStyle:''}">
           <style>.sp-photo-wrap::before{${ringStyle||'background:linear-gradient(135deg,var(--sage),var(--gold))'}}
-    .contribute-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid var(--sage-light); border-radius:16px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:36px; flex-wrap:wrap; }
-    .contribute-bar p { font-size:.88rem; color:var(--sage-dark); margin:0; line-height:1.5; }
-    .contribute-bar p strong { color:var(--text-dark); }
-    .contribute-bar a { display:inline-block; padding:10px 22px; border:1.5px solid var(--sage-dark); border-radius:10px; font-size:.78rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--sage-dark); text-decoration:none; white-space:nowrap; transition:all .2s; }
-    .contribute-bar a:hover { background:var(--sage-dark); color:white; }
-    @media(max-width:600px){ .contribute-bar { flex-direction:column; align-items:flex-start; } }
     </style>
           <div class="sp-photo-inner" style="${photoBg}">
             ${m.photo?`<img src="${m.photo}" alt="${name}" onerror="this.parentNode.innerHTML='${photoEmoji}'"/>`:`<span style="font-size:32px;">${photoEmoji}</span>`}
@@ -694,6 +694,10 @@
         ${m.died?`<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">${m.died}</div></div>`:''}
         ${m.place?`<div class="sp-row"><div class="sp-lbl">Birthplace</div><div class="sp-val">${m.place}</div></div>`:''}
         ${m.occupation?`<div class="sp-row"><div class="sp-lbl">Occupation</div><div class="sp-val">${m.occupation}</div></div>`:''}
+        ${m.city?`<div class="sp-row"><div class="sp-lbl">📍 Lives In</div><div class="sp-val">${m.city}</div></div>`:''}
+        ${m.phone?`<div class="sp-row"><div class="sp-lbl">📞 Phone</div><div class="sp-val"><a href="tel:${m.phone}" style="color:inherit;">${m.phone}</a></div></div>`:''}
+        ${m.whatsapp?`<div class="sp-row"><div class="sp-lbl">💬 WhatsApp</div><div class="sp-val"><a href="https://wa.me/${m.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:var(--sage-dark);">Chat on WhatsApp</a></div></div>`:''}
+        ${m.email?`<div class="sp-row"><div class="sp-lbl">✉️ Email</div><div class="sp-val"><a href="javascript:void(0)" onclick="navigator.clipboard&&navigator.clipboard.writeText('${m.email}')" style="color:var(--sage-dark);">${m.email}</a></div></div>`:''}
         ${m.notes?`<div class="sp-div"></div><div class="sp-notes">${m.notes}</div>`:''}
         ${rels?`<div class="sp-div"></div><div class="sp-rel-title">Family Connections</div>${rels}`:''}
         
@@ -906,13 +910,4 @@
 <script>
   (function(){
     var sw = JSON.parse(localStorage.getItem('nukala_sitewide')||'null')||{};
-    if(sw.treeQuote){var q=document.getElementById('treeQuote');if(q)q.textContent='"'+sw.treeQuote+'"';}
-    if(sw.treeQuoteAuthor){var a=document.getElementById('treeQuoteAuthor');if(a)a.textContent='— '+sw.treeQuoteAuthor;}
-  })();
-</script>
-
-  <footer>
-    &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
-  </footer>
-</body>
-</html>
+    if(sw.treeQuote){var q=document.getElementById(
