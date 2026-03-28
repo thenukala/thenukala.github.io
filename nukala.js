@@ -375,5 +375,55 @@
     } else alert('Notifications blocked.');
   };
 
+  
+  // ══════════════════════════════════════
+  // SECRET ADMIN ACCESS
+  // ══════════════════════════════════════
+  function goAdmin(){ window.location.href = 'admin.html'; }
+
+  // Method 1: Keyboard shortcut — Ctrl+Shift+A (or Cmd+Shift+A on Mac)
+  document.addEventListener('keydown', function(e){
+    if((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A'){
+      e.preventDefault();
+      goAdmin();
+    }
+  });
+
+  // Method 2: Triple-click the nav logo
+  (function(){
+    var clicks = 0, timer = null;
+    function onLogoClick(){
+      clicks++;
+      clearTimeout(timer);
+      if(clicks >= 3){ clicks = 0; goAdmin(); return; }
+      timer = setTimeout(function(){ clicks = 0; }, 600);
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      var brand = document.querySelector('.nav-brand');
+      if(brand) brand.addEventListener('click', function(e){
+        // Only trigger if clicking the logo itself, not nav links
+        if(e.target.closest('.nav-brand')){
+          onLogoClick();
+        }
+      });
+    });
+  })();
+
+  // Method 3: Tap footer copyright © symbol 3 times quickly
+  (function(){
+    var taps = 0, timer = null;
+    document.addEventListener('DOMContentLoaded', function(){
+      var footer = document.querySelector('footer');
+      if(!footer) return;
+      footer.addEventListener('click', function(e){
+        taps++;
+        clearTimeout(timer);
+        if(taps >= 3){ taps = 0; goAdmin(); return; }
+        timer = setTimeout(function(){ taps = 0; }, 800);
+      });
+    });
+  })();
+
+
   if(!window.toggleLang) window.toggleLang = function(){};
 })();
