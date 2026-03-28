@@ -392,21 +392,30 @@
   // Method 2: Triple-click the nav logo
   (function(){
     var clicks = 0, timer = null;
-    function onLogoClick(){
-      clicks++;
-      clearTimeout(timer);
-      if(clicks >= 3){ clicks = 0; goAdmin(); return; }
-      timer = setTimeout(function(){ clicks = 0; }, 600);
-    }
-    document.addEventListener('DOMContentLoaded', function(){
+    function attachLogoClick(){
       var brand = document.querySelector('.nav-brand');
-      if(brand) brand.addEventListener('click', function(e){
-        // Only trigger if clicking the logo itself, not nav links
-        if(e.target.closest('.nav-brand')){
-          onLogoClick();
+      if(!brand) return;
+      brand.addEventListener('click', function(e){
+        e.preventDefault(); // prevent navigation on rapid clicks
+        clicks++;
+        clearTimeout(timer);
+        if(clicks >= 3){
+          clicks = 0;
+          goAdmin();
+          return;
         }
+        // On single/double click, navigate normally after 650ms if no triple
+        timer = setTimeout(function(){
+          if(clicks === 1) window.location.href = brand.getAttribute('href') || 'home.html';
+          clicks = 0;
+        }, 650);
       });
-    });
+    }
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', attachLogoClick);
+    } else {
+      attachLogoClick();
+    }
   })();
 
   // Method 3: Tap footer copyright © symbol 3 times quickly
