@@ -33,6 +33,13 @@
       nav .nav-links { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
       nav .nav-links::-webkit-scrollbar { display: none; }
       nav .nav-links a { font-size: 0.7rem; white-space: nowrap; }
+    
+    .contribute-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid var(--sage-light); border-radius:16px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:36px; flex-wrap:wrap; }
+    .contribute-bar p { font-size:.88rem; color:var(--sage-dark); margin:0; line-height:1.5; }
+    .contribute-bar p strong { color:var(--text-dark); }
+    .contribute-bar a { display:inline-block; padding:10px 22px; border:1.5px solid var(--sage-dark); border-radius:10px; font-size:.78rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--sage-dark); text-decoration:none; white-space:nowrap; transition:all .2s; }
+    .contribute-bar a:hover { background:var(--sage-dark); color:white; }
+    @media(max-width:600px){ .contribute-bar { flex-direction:column; align-items:flex-start; } }
     </style>
 </head>
 <body>
@@ -66,6 +73,11 @@
       <p>Vote on family decisions — reunion locations, dates, and more. Every voice counts!</p>
     </div>
     <div class="content-area">
+      <div class="contribute-bar fade-in">
+        <p><strong>Have a topic for a family poll?</strong><br/>Suggest a question and options and we'll create a poll for everyone to vote on.</p>
+        <a href="mailto:Thenukala@yahoo.com?subject=Poll%20Suggestion%20%E2%80%94%20Nukala%20Family&body=Hi%2C%0A%0AI%20would%20like%20to%20suggest%20a%20family%20poll.%0A%0AQuestion%3A%0A%0AOption%201%3A%0AOption%202%3A%0AOption%203%3A%0AOption%204%20%28optional%29%3A">+ Suggest a Poll</a>
+      </div>
+
       
       <div id="pollsList"></div>
     </div>
@@ -85,7 +97,7 @@
       const polls=loadArr('nukala_polls');
       const voted=load('nukala_votes');
       const el=document.getElementById('pollsList');
-      if(!polls.length){ el.innerHTML='<div class="empty-section"><div style="font-size:48px;margin-bottom:12px;">🗳️</div><p>No polls yet.<br/>Create polls in the Admin panel.</p></div>'; return; }
+      if(!polls.length){ el.innerHTML='<div class="empty-section"><div style="font-size:48px;margin-bottom:12px;">🗳️</div><p>No polls yet.</p></div>'; return; }
       el.innerHTML=polls.map((p,pi)=>{
         const myVote=voted[pi];
         const totalVotes=(p.votes||[]).reduce((a,b)=>a+(b||0),0);
