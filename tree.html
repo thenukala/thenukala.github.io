@@ -348,7 +348,15 @@
   <div class="leaf-decor">🍂</div>
 
   <div class="logo-watermark"></div>
-  <script src="site-data.js"></script>
+  <script>
+  // Always fetch fresh site-data.js (bypass cache) before page loads
+  try{
+    var _xhr=new XMLHttpRequest();
+    _xhr.open('GET','site-data.js?nocache='+Date.now(),false); // false = synchronous
+    _xhr.send();
+    if(_xhr.status===200) eval(_xhr.responseText);
+  }catch(e){}
+</script>
   <script src="auth.js"></script>
   <nav>
     <a class="nav-brand" href="home.html">

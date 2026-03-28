@@ -53,7 +53,15 @@
 </head>
 <body>
   <div class="logo-watermark"></div>
-  <script src="site-data.js"></script>
+  <script>
+  // Always fetch fresh site-data.js (bypass cache) before page loads
+  try{
+    var _xhr=new XMLHttpRequest();
+    _xhr.open('GET','site-data.js?nocache='+Date.now(),false); // false = synchronous
+    _xhr.send();
+    if(_xhr.status===200) eval(_xhr.responseText);
+  }catch(e){}
+</script>
   <script src="auth.js"></script>
   <script src="nukala.js"></script>
   <script src="lang.js"></script>
