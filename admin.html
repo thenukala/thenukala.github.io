@@ -182,7 +182,7 @@ opacity:0.04;pointer-events:none;z-index:0;}
     <p>Nukala Family · Full CMS</p>
     <label for="pwInput">Admin Password</label>
     <input type="password" id="pwInput" placeholder="Enter admin password" autocomplete="current-password"/>
-    <div class="errMsg" id="errMsg">Wrong password. Default: nukala_admin_2024</div>
+    <div class="errMsg" id="errMsg">Incorrect password. Please try again.</div>
     <button class="loginBtn" id="loginBtn">Enter Admin Panel →</button>
     <a href="home.html">← Back to Website</a>
   </div>
@@ -796,11 +796,36 @@ function closeM(id){document.getElementById(id).classList.remove('open');}
 function getAdminPass(){return localStorage.getItem('nukala_admin_pass')||'nukala_admin_2024';}
 
 function doLogin(){
+  // Brute force protection - max 5 attempts
+  var attempts = parseInt(sessionStorage.getItem('admin_attempts')||'0');
+  var lockUntil = parseInt(sessionStorage.getItem('admin_lock')||'0');
+  var now = Date.now();
+
+  if(lockUntil > now){
+    var secs = Math.ceil((lockUntil - now)/1000);
+    document.getElementById('errMsg').textContent = 'Too many attempts. Try again in '+secs+' seconds.';
+    document.getElementById('errMsg').style.display='block';
+    document.getElementById('pwInput').value='';
+    return;
+  }
+
   var pw=document.getElementById('pwInput').value;
   if(pw===getAdminPass()){
+    sessionStorage.removeItem('admin_attempts');
+    sessionStorage.removeItem('admin_lock');
     sessionStorage.setItem('nukala_admin','true');
     showAdmin();
   } else {
+    attempts++;
+    sessionStorage.setItem('admin_attempts', attempts);
+    if(attempts >= 5){
+      // Lock for 60 seconds
+      sessionStorage.setItem('admin_lock', Date.now() + 60000);
+      sessionStorage.setItem('admin_attempts','0');
+      document.getElementById('errMsg').textContent = 'Too many attempts. Locked for 60 seconds.';
+    } else {
+      document.getElementById('errMsg').textContent = 'Incorrect password. Please try again.';
+    }
     document.getElementById('errMsg').style.display='block';
     document.getElementById('pwInput').value='';
     document.getElementById('pwInput').focus();
