@@ -63,7 +63,6 @@
       <p>See where Nukala family members live around the world.</p>
     </div>
     <div class="content-area">
-      <div class="notice" style="margin-bottom:16px;">💡 To show members on the map, add their <strong>City/Country</strong> in Admin → Contacts. The map uses the city name to place them automatically.</div>
       <div class="map-legend">
         <span style="font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);">Legend</span>
         <div class="map-legend-item"><div class="map-dot" style="background:#5c7a5c;"></div>Male Member</div>
@@ -94,7 +93,7 @@
     const list=document.getElementById('membersList');
 
     if(!withCity.length){
-      list.innerHTML='<div class="empty-section" style="grid-column:1/-1"><p>No members with city info yet.<br/>Add cities in Admin → Contacts.</p></div>';
+      list.innerHTML='<div class="empty-section" style="grid-column:1/-1"><p>No members with city info yet..</p></div>';
     } else {
       // Geocode using Nominatim (free OpenStreetMap geocoder)
       async function geocodeAndPlot(){

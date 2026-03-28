@@ -94,7 +94,7 @@
       <div class="timeline" id="timelineContainer">
         <div class="empty-history">
           <div class="ei">📜</div>
-          <p>No history events added yet.<br/>Go to <strong>Admin → History</strong> to add your first family milestone!</p>
+          <p>No history events added yet.</p>
         </div>
       </div>
     </div>
@@ -120,7 +120,7 @@
       if(s.familyName) var _ff=document.getElementById('footerText');if(_ff)_ff.textContent=s.familyName?'The '+s.familyName+' Family':'The Nukala Family';
 
       if(!events.length){
-        container.innerHTML = `<div class="empty-history"><div class="ei">📜</div><p>No history events added yet.<br/>Go to <strong>Admin → History</strong> to add your first family milestone!</p></div>`;
+        container.innerHTML = `<div class="empty-history"><div class="ei">📜</div><p>No history events added yet.</p></div>`;
         return;
       }
 

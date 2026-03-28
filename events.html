@@ -86,9 +86,7 @@
       <p>Reunions, birthdays, anniversaries and celebrations. Never miss a family moment.</p>
     </div>
     <div class="content-area">
-      <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
-        <a href="admin.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:var(--sage-dark);color:white;border-radius:10px;text-decoration:none;font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;">⚙️ Manage Events in Admin</a>
-      </div>
+      
       <div class="events-layout">
         <div>
           <div id="eventsList"></div>
@@ -127,7 +125,7 @@
       const events=loadArr('nukala_events');
       const today=new Date(); today.setHours(0,0,0,0);
       const el=document.getElementById('eventsList');
-      if(!events.length){ el.innerHTML='<div class="empty-events"><div style="font-size:48px;margin-bottom:12px;">📆</div><p>No events yet.<br/>Add events in Admin → Events.</p></div>'; return; }
+      if(!events.length){ el.innerHTML='<div class="empty-events"><div style="font-size:48px;margin-bottom:12px;">📆</div><p>No events yet..</p></div>'; return; }
       const sorted=[...events].sort((a,b)=>new Date(a.date)-new Date(b.date));
       el.innerHTML=sorted.map(e=>{
         const d=new Date(e.date);
@@ -189,7 +187,7 @@
       });
       bdayList.sort((a,b)=>a.daysUntil-b.daysUntil);
       const el=document.getElementById('bdayList');
-      if(!bdayList.length){ el.innerHTML='<div style="font-size:.78rem;color:var(--text-light);padding:8px 0;">Add birthdays in Admin → Contacts</div>'; return; }
+      if(!bdayList.length){ el.innerHTML='<div style="font-size:.78rem;color:var(--text-light);padding:8px 0;">No upcoming birthdays found</div>'; return; }
       el.innerHTML=bdayList.slice(0,6).map(({m,daysUntil,dateStr})=>{
         const name=[m.firstName,m.lastName].filter(Boolean).join(' ');
         const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'👩':'👨');

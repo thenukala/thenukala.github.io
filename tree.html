@@ -388,7 +388,6 @@
         <div class="lg-item"><div class="lg-dashed" style="border-color:#c9a84c;"></div>Spouse 💛</div>
         <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
           <button class="tb-btn" onclick="toggleLines()" id="btnLines" style="padding:6px 12px;border-radius:20px;">🌿 Lines On</button>
-          <a href="admin.html" style="font-size:0.72rem;color:var(--sage-dark);text-decoration:none;font-weight:500;padding:6px 12px;border:1.5px solid var(--sage-light);border-radius:20px;background:white;">⚙️ Manage</a>
         </div>
       </div>
 
@@ -504,7 +503,7 @@
           </svg>
           <h3>Your Family Tree Awaits</h3>
           <p>Start adding family members in the admin panel.<br/>Set parent and spouse IDs to grow your tree.</p>
-          <a href="admin.html">🌱 Start Growing the Tree</a>
+          
         </div>`;
         svg.setAttribute('width','800'); svg.setAttribute('height','500');
         return;
@@ -685,7 +684,7 @@
         ${m.occupation?`<div class="sp-row"><div class="sp-lbl">Occupation</div><div class="sp-val">${m.occupation}</div></div>`:''}
         ${m.notes?`<div class="sp-div"></div><div class="sp-notes">${m.notes}</div>`:''}
         ${rels?`<div class="sp-div"></div><div class="sp-rel-title">Family Connections</div>${rels}`:''}
-        <button class="sp-edit-btn" onclick="window.location.href='admin.html'">⚙️ Edit in Admin Panel</button>
+        
       `;
       document.getElementById('sidePanel').classList.add('open');
     }
