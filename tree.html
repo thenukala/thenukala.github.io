@@ -910,4 +910,12 @@
 <script>
   (function(){
     var sw = JSON.parse(localStorage.getItem('nukala_sitewide')||'null')||{};
-    if(sw.treeQuote){var q=document.getElementById(
+    if(sw.treeQuote){var q=document.getElementById('treeQuote');if(q)q.textContent=sw.treeQuote;}
+    if(sw.treeQuoteAuthor){var qa=document.getElementById('treeQuoteAuthor');if(qa)qa.textContent='— '+sw.treeQuoteAuthor;}
+  })();
+</script>
+  <footer>
+    &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
+  </footer>
+</body>
+</html>
