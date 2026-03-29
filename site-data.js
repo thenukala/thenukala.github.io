@@ -1,1 +1,25 @@
-/* Published:3/28/2026, 2:54:22 PM — upload site-data.js to GitHub */(function(){var D={"nukala_tree_data":{"member_1774727657456":{"id":"member_1774727657456","firstName":"Narasimha Reddy","lastName":"Nukala","role":"Great-Great-Grandfather","gen":"1","born":"","died":"","place":"","occ":"","phone":"","whatsapp":"","city":"","email":"","notes":"","fatherId":"","motherId":"","spouseId":"","female":false,"ancestor":false,"deceased":false,"inlaw":false,"photo":""}},"nukala_page_vis":{"home":true,"tree":true,"history":true,"gallery":true,"facts":false,"stats":false,"events":true,"map":true,"polls":false,"recipes":false,"achievements":true,"videos":false,"qr":true,"contact":true},"nukala_sitewide":{"navName":"","footerName":"","footerSub":"","showSearch":true,"showDark":true,"showLang":true,"treeQuote":"","treeQuoteAuthor":"","footerYear":"2024"},"nukala_home":{"heroTitle":"The Nukala Family","heroTagline":"","stat1num":"","stat1lbl":"","stat2num":"","stat2lbl":"","stat3num":"","stat3lbl":"","aboutTitle":"","about1":"","about2":"","about3":""},"nukala_heropage":{"homeImgUrl":""},"nukala_loginpage":{"title":"Nukala Family","subtitle":"Kothaguda, Miryalaguda","tagline":"","label":"","btnText":"","dividerText":"","footnote":"","bgColor":"#004080"}};Object.keys(D).forEach(function(k){localStorage.setItem(k,JSON.stringify(D[k]));});})();
+/**
+ * site-data.js — Nukala Family Archive
+ * 
+ * HOW TO UPDATE:
+ * 1. Go to Admin Panel
+ * 2. Make your changes (add members, photos etc.)
+ * 3. Click "Publish to Site" button in the sidebar
+ * 4. Download this file
+ * 5. Upload to GitHub (replace this file)
+ * 6. All devices see your changes within 1-2 minutes
+ *
+ * This file is loaded fresh on every page visit (no caching)
+ * so your family always sees the latest data.
+ */
+(function(){
+  // DATA is populated when you click "Publish to Site" in Admin
+  var DATA = {};
+
+  // Write all data to localStorage so every page can read it
+  Object.keys(DATA).forEach(function(k){
+    if(DATA[k] !== undefined){
+      localStorage.setItem(k, JSON.stringify(DATA[k]));
+    }
+  });
+})();
