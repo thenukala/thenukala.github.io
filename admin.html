@@ -1619,20 +1619,21 @@ function renderDashWishes(){
   // Today panel
   if(!todayEl) return;
   if(!occasions.length){
-    todayEl.innerHTML = '<span style="color:var(--tl);">No birthdays, anniversaries or events today 🌿</span>';
+    todayEl.innerHTML = '<span style="color:var(--tl);">No birthdays, anniversaries or events today &#127807;</span>';
   } else {
-    todayEl.innerHTML = occasions.map(function(o){
-      var emoji = {Birthday:'🎂',Anniversary:'💍',Memorial:'🕯️',Achievement:'🏆',Festival:'🎊',Event:'📅'}[o.type]||'⭐';
-      var msg = buildWAMessage(o);
+    // Store messages in a window array so onclick can reference by index
+    window._wishMsgs = occasions.map(function(o){ return buildWAMessage(o); });
+    todayEl.innerHTML = occasions.map(function(o,oi){
+      var emoji = {Birthday:'&#127874;',Anniversary:'&#128141;',Memorial:'&#128145;',Achievement:'&#127942;',Festival:'&#127882;',Event:'&#128197;'}[o.type]||'&#11088;';
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b);">'
         +'<div><span style="font-size:1.1rem;margin-right:8px;">'+emoji+'</span>'
         +'<strong style="font-size:.82rem;">'+o.title+'</strong>'
         +(o.type?'<span style="font-size:.7rem;color:var(--tl);margin-left:6px;">'+o.type+'</span>':'')
         +'</div>'
-        +'<button onclick="sendWA(''+msg.replace(/'/g,"\'")+'')" '
+        +'<button onclick="sendWA(window._wishMsgs['+oi+'])" '
         +'style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;border:none;'
         +'border-radius:9px;padding:6px 12px;font-size:.68rem;font-weight:500;cursor:pointer;'
-        +'white-space:nowrap;flex-shrink:0;">📱 Send Wish</button>'
+        +'white-space:nowrap;flex-shrink:0;">&#128241; Send Wish</button>'
         +'</div>';
     }).join('');
   }
