@@ -261,6 +261,18 @@ opacity:0.04;pointer-events:none;z-index:0;}
             <button class="btn bo bsm" id="qAddFact">+ Add Fact</button>
           </div>
         </div>
+        <div class="panel" style="border:1.5px solid #c9a84c;">
+          <div class="pt" style="color:#a07020;">🎉 Today's Occasions</div>
+          <div id="ds-today" style="font-size:.8rem;color:var(--tm);line-height:1.9;">Checking...</div>
+        </div>
+        <div class="panel">
+          <div class="pt" style="display:flex;align-items:center;justify-content:space-between;">
+            Custom Wishes
+            <button class="btn bo bsm" id="addWishBtn" style="font-size:.65rem;">+ Add Custom Wish</button>
+          </div>
+          <p style="font-size:.75rem;color:var(--tl);margin:4px 0 8px;">Add recurring annual occasions — weddings, achievements, etc.</p>
+          <div id="ds-wishes" style="font-size:.8rem;"></div>
+        </div>
         <div class="panel">
           <div class="pt">Recent Activity</div>
           <div id="ds-log" style="font-size:.8rem;color:var(--tm);line-height:1.9;">No activity yet.</div>
@@ -773,6 +785,47 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <h2>Import Backup</h2><p class="msub">Paste exported JSON to restore all data.</p>
   <textarea class="fi" id="impData" rows="8" style="resize:vertical;" placeholder="Paste JSON here..."></textarea>
   <div class="mft"><button class="btn bg" style="flex:1;" id="doImportBtn">📤 Import</button><button class="btn bo" data-close="importModal">Cancel</button></div>
+</div></div>
+
+<div class="mb" id="wishModal"><div class="mo" style="max-width:460px;">
+  <button class="mc" data-close="wishModal">✕</button>
+  <h2 id="wishMH">Add Custom Wish</h2>
+  <p class="msub">Add a recurring annual occasion — birthday, anniversary, achievement day etc.</p>
+  <input type="hidden" id="wishId"/>
+  <div class="fg"><label>Title *</label><input type="text" class="fi" id="wishTitle" placeholder="e.g. Ramu & Sita Wedding Anniversary"/></div>
+  <div class="fr">
+    <div class="fg"><label>Day</label>
+      <select class="fi" id="wishDay">
+        <option value="">Day</option>
+      </select>
+    </div>
+    <div class="fg"><label>Month</label>
+      <select class="fi" id="wishMonth">
+        <option value="">Month</option>
+        <option value="1">January</option><option value="2">February</option>
+        <option value="3">March</option><option value="4">April</option>
+        <option value="5">May</option><option value="6">June</option>
+        <option value="7">July</option><option value="8">August</option>
+        <option value="9">September</option><option value="10">October</option>
+        <option value="11">November</option><option value="12">December</option>
+      </select>
+    </div>
+    <div class="fg"><label>Type</label>
+      <select class="fi" id="wishType">
+        <option value="Birthday">🎂 Birthday</option>
+        <option value="Anniversary">💍 Anniversary</option>
+        <option value="Achievement">🏆 Achievement Day</option>
+        <option value="Memorial">🕯️ Memorial</option>
+        <option value="Festival">🎊 Festival</option>
+        <option value="Custom">⭐ Custom</option>
+      </select>
+    </div>
+  </div>
+  <div class="fg"><label>People involved</label><input type="text" class="fi" id="wishPeople" placeholder="e.g. Ramu Nukala, Sita Nukala"/></div>
+  <div class="fg"><label>Custom WhatsApp Message (leave blank to auto-generate)</label>
+    <textarea class="fi" id="wishMsg" rows="3" style="resize:vertical;" placeholder="Happy Anniversary Ramu garu & Sita garu! Wishing you many more years of joy 🎉"></textarea>
+  </div>
+  <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
 <script>
@@ -1463,7 +1516,7 @@ document.getElementById('publishBtn').addEventListener('click', function(){
     'nukala_polls','nukala_contacts','nukala_settings','nukala_page_vis',
     'nukala_sitewide','nukala_home','nukala_heropage','nukala_newpages',
     'nukala_contactpage2','nukala_gallerypage2','nukala_typography',
-    'nukala_navmenu','nukala_loginpage'
+    'nukala_navmenu','nukala_loginpage','nukala_wishes'
   ];
   var DATA = {};
   KEYS.forEach(function(k){
@@ -1483,6 +1536,189 @@ document.getElementById('publishBtn').addEventListener('click', function(){
   toast('✅ site-data.js downloaded! Now: go to GitHub → your repo → upload this file → replace existing site-data.js → commit. All devices will see your changes within 1-2 minutes.');
   log('Published site-data.js — ' + ts);
 });
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// TODAY'S OCCASIONS & WHATSAPP WISHES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MONTHS_LONG  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// Populate day dropdown
+(function(){
+  var sel = document.getElementById('wishDay');
+  if(sel){for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);}}
+})();
+
+function getWishes(){ return ldRaw('nukala_wishes')||[]; }
+function svWishes(w){ svRaw('nukala_wishes',w); }
+
+function buildWAMessage(occasion){
+  if(occasion.msg) return occasion.msg;
+  var name = occasion.people||occasion.title;
+  if(occasion.type==='Birthday')    return '🎂 Happy Birthday to '+name+'! Wishing you a wonderful day filled with joy and love. God bless you! 🌟 — The Nukala Family';
+  if(occasion.type==='Anniversary') return '💍 Happy Anniversary to '+name+'! Wishing you many more years of love and happiness. 🎉 — The Nukala Family';
+  if(occasion.type==='Memorial')    return '🕯️ Remembering '+name+' on this day. Forever in our hearts. — The Nukala Family';
+  if(occasion.type==='Achievement') return '🏆 Congratulations to '+name+'! Celebrating your achievement today. 🌟 — The Nukala Family';
+  return '🎊 '+occasion.title+' — wishing '+name+' a beautiful day! — The Nukala Family';
+}
+
+function sendWA(msg){
+  window.open('https://wa.me/?text='+encodeURIComponent(msg), '_blank');
+}
+
+function getTodayOccasions(){
+  var now   = new Date();
+  var month = now.getMonth()+1;
+  var day   = now.getDate();
+  var found = [];
+
+  // 1. Check custom wishes
+  getWishes().forEach(function(w){
+    if(parseInt(w.month)===month && parseInt(w.day)===day){
+      found.push({source:'custom', title:w.title, type:w.type, people:w.people, msg:w.msg, wishIdx:w.id});
+    }
+  });
+
+  // 2. Check events (Birthday / Anniversary type with matching date)
+  lda('events').forEach(function(e){
+    if(!e.date) return;
+    var parts = e.date.split('-');
+    if(parts.length<3) return;
+    var em=parseInt(parts[1]), ed=parseInt(parts[2]);
+    if(em===month && ed===day){
+      found.push({source:'event', title:e.title, type:e.type||'Event', people:e.title, msg:''});
+    }
+  });
+
+  // 3. Check member contacts for birthdays
+  var members = Object.values(ld('members'));
+  var contacts = ldRaw('nukala_contacts')||{};
+  members.forEach(function(m){
+    var c = contacts[m.id];
+    if(!c||!c.birthday) return;
+    var bday = c.birthday.toLowerCase();
+    var todayMonth = MONTHS_LONG[month-1].toLowerCase();
+    var todayShort = MONTHS_SHORT[month-1].toLowerCase();
+    if((bday.includes(todayMonth)||bday.includes(todayShort)) && bday.includes(String(day))){
+      var name = [m.firstName,m.lastName].filter(Boolean).join(' ');
+      found.push({source:'birthday', title:name+''s Birthday', type:'Birthday', people:name, msg:''});
+    }
+  });
+
+  return found;
+}
+
+function renderDashWishes(){
+  var occasions = getTodayOccasions();
+  var todayEl = document.getElementById('ds-today');
+  var wishEl  = document.getElementById('ds-wishes');
+
+  // Today panel
+  if(!todayEl) return;
+  if(!occasions.length){
+    todayEl.innerHTML = '<span style="color:var(--tl);">No birthdays, anniversaries or events today 🌿</span>';
+  } else {
+    todayEl.innerHTML = occasions.map(function(o){
+      var emoji = {Birthday:'🎂',Anniversary:'💍',Memorial:'🕯️',Achievement:'🏆',Festival:'🎊',Event:'📅'}[o.type]||'⭐';
+      var msg = buildWAMessage(o);
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b);">'
+        +'<div><span style="font-size:1.1rem;margin-right:8px;">'+emoji+'</span>'
+        +'<strong style="font-size:.82rem;">'+o.title+'</strong>'
+        +(o.type?'<span style="font-size:.7rem;color:var(--tl);margin-left:6px;">'+o.type+'</span>':'')
+        +'</div>'
+        +'<button onclick="sendWA(''+msg.replace(/'/g,"\'")+'')" '
+        +'style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;border:none;'
+        +'border-radius:9px;padding:6px 12px;font-size:.68rem;font-weight:500;cursor:pointer;'
+        +'white-space:nowrap;flex-shrink:0;">📱 Send Wish</button>'
+        +'</div>';
+    }).join('');
+  }
+
+  // Custom wishes list
+  if(!wishEl) return;
+  var wishes = getWishes();
+  if(!wishes.length){
+    wishEl.innerHTML = '<span style="color:var(--tl);font-size:.75rem;">No custom wishes added yet.</span>';
+  } else {
+    wishEl.innerHTML = wishes.map(function(w,i){
+      var emoji = {Birthday:'🎂',Anniversary:'💍',Memorial:'🕯️',Achievement:'🏆',Festival:'🎊',Custom:'⭐'}[w.type]||'⭐';
+      var dayStr = w.day+' '+MONTHS_SHORT[(parseInt(w.month)||1)-1];
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b);">'
+        +'<div style="flex:1;min-width:0;">'
+        +'<span style="font-size:.9rem;margin-right:6px;">'+emoji+'</span>'
+        +'<strong style="font-size:.78rem;">'+w.title+'</strong>'
+        +'<span style="font-size:.68rem;color:var(--tl);margin-left:6px;">Every '+dayStr+'</span>'
+        +(w.people?'<div style="font-size:.7rem;color:var(--tm);padding-left:24px;">'+w.people+'</div>':'')
+        +'</div>'
+        +'<div style="display:flex;gap:5px;flex-shrink:0;">'
+        +'<button class="ab" onclick="editWish('+i+')">✏️</button>'
+        +'<button class="ab abr" onclick="delWish('+i+')">🗑️</button>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }
+}
+
+function openWishM(){
+  document.getElementById('wishId').value='';
+  document.getElementById('wishTitle').value='';
+  document.getElementById('wishDay').value='';
+  document.getElementById('wishMonth').value='';
+  document.getElementById('wishType').value='Birthday';
+  document.getElementById('wishPeople').value='';
+  document.getElementById('wishMsg').value='';
+  document.getElementById('wishMH').textContent='Add Custom Wish';
+  openM('wishModal');
+}
+
+function editWish(i){
+  var w=getWishes()[i];
+  if(!w) return;
+  document.getElementById('wishId').value=i;
+  document.getElementById('wishTitle').value=w.title||'';
+  document.getElementById('wishDay').value=w.day||'';
+  document.getElementById('wishMonth').value=w.month||'';
+  document.getElementById('wishType').value=w.type||'Birthday';
+  document.getElementById('wishPeople').value=w.people||'';
+  document.getElementById('wishMsg').value=w.msg||'';
+  document.getElementById('wishMH').textContent='Edit Wish';
+  openM('wishModal');
+}
+
+function delWish(i){
+  if(!confirm('Delete this wish?')) return;
+  var w=getWishes(); w.splice(i,1); svWishes(w);
+  renderDashWishes(); toast('Deleted.');
+}
+
+document.getElementById('saveWishBtn').addEventListener('click', function(){
+  var title=document.getElementById('wishTitle').value.trim();
+  var day  =document.getElementById('wishDay').value;
+  var month=document.getElementById('wishMonth').value;
+  if(!title||!day||!month){alert('Title, day and month are required.');return;}
+  var w=getWishes();
+  var obj={id:Date.now(),title:title,day:day,month:month,
+    type:document.getElementById('wishType').value,
+    people:document.getElementById('wishPeople').value.trim(),
+    msg:document.getElementById('wishMsg').value.trim()};
+  var idx=document.getElementById('wishId').value;
+  if(idx!=='') w[parseInt(idx)]=obj; else w.push(obj);
+  svWishes(w);
+  closeM('wishModal');
+  renderDashWishes();
+  log('Wish saved: '+title);
+  toast('✅ Wish saved!');
+});
+
+document.getElementById('addWishBtn').addEventListener('click', openWishM);
+
+// Extend renderDash to also render wishes
+var _origRenderDash = renderDash;
+renderDash = function(){
+  _origRenderDash();
+  renderDashWishes();
+};
 
 </script>
 </body>

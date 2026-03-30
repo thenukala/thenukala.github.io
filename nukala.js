@@ -443,5 +443,107 @@
   })();
 
 
+
+  // ══════════════════════════════════════
+  // 9. TODAY'S OCCASION BANNER (shown to all family members)
+  // ══════════════════════════════════════
+  function checkTodayOccasions(){
+    // Only run on content pages, not index/admin
+    var page = location.pathname.split('/').pop()||'home.html';
+    if(page==='index.html'||page==='admin.html') return;
+
+    var now=new Date(), month=now.getMonth()+1, day=now.getDate();
+    var MONTHS_L=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var MONTHS_S=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var found=[];
+
+    // Check custom wishes
+    try{
+      var wishes=JSON.parse(localStorage.getItem('nukala_wishes')||'[]');
+      wishes.forEach(function(w){
+        if(parseInt(w.month)===month&&parseInt(w.day)===day){
+          found.push({type:w.type||'Custom',title:w.title,people:w.people,msg:w.msg});
+        }
+      });
+    }catch(e){}
+
+    // Check events
+    try{
+      var events=JSON.parse(localStorage.getItem('nukala_events')||'[]');
+      events.forEach(function(e){
+        if(!e.date) return;
+        var p=e.date.split('-');
+        if(p.length<3) return;
+        if(parseInt(p[1])===month&&parseInt(p[2])===day){
+          found.push({type:e.type||'Event',title:e.title,people:e.title,msg:''});
+        }
+      });
+    }catch(e){}
+
+    // Check member birthdays
+    try{
+      var members=Object.values(JSON.parse(localStorage.getItem('nukala_tree_data')||'{}'));
+      var contacts=JSON.parse(localStorage.getItem('nukala_contacts')||'{}');
+      members.forEach(function(m){
+        var c=contacts[m.id]; if(!c||!c.birthday) return;
+        var bday=c.birthday.toLowerCase();
+        var ml=MONTHS_L[month-1].toLowerCase(), ms=MONTHS_S[month-1].toLowerCase();
+        if((bday.includes(ml)||bday.includes(ms))&&bday.includes(String(day))){
+          var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
+          found.push({type:'Birthday',title:name+"'s Birthday",people:name,msg:''});
+        }
+      });
+    }catch(e){}
+
+    if(!found.length) return;
+
+    // Build banner
+    var emoji={Birthday:'🎂',Anniversary:'💍',Memorial:'🕯️',Achievement:'🏆',Festival:'🎊',Event:'📅'};
+    var banner=document.createElement('div');
+    banner.id='nk-occasion-banner';
+    banner.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);'
+      +'z-index:8999;background:linear-gradient(135deg,#fdfaf4,#f0f8f0);'
+      +'border:1.5px solid #c9a84c;border-radius:16px;padding:14px 20px;'
+      +'box-shadow:0 8px 30px rgba(0,0,0,0.12);max-width:480px;width:90%;'
+      +'display:flex;align-items:flex-start;gap:14px;';
+
+    var content='<div style="flex:1;">';
+    found.forEach(function(o){
+      var em=emoji[o.type]||'⭐';
+      var waMsg=o.msg||(em+' Happy '+o.type+' - '+o.people+'! Wishing you a wonderful day! 🎉 — The Nukala Family');
+      var waUrl='https://wa.me/?text='+encodeURIComponent(waMsg);
+      content+='<div style="margin-bottom:8px;">'
+        +'<span style="font-size:1.1rem;margin-right:6px;">'+em+'</span>'
+        +'<strong style="font-size:.85rem;color:#2c2c2c;">'+o.title+'</strong>'
+        +'<a href="'+waUrl+'" target="_blank" style="margin-left:10px;background:linear-gradient(135deg,#128c7e,#25d366);'
+        +'color:white;text-decoration:none;border-radius:7px;padding:3px 10px;'
+        +'font-size:.7rem;font-weight:500;white-space:nowrap;">📱 Send Wish</a>'
+        +'</div>';
+    });
+    content+='</div>';
+
+    var close='<button onclick="document.getElementById('nk-occasion-banner').remove()" '
+      +'style="background:none;border:none;font-size:1rem;cursor:pointer;color:#aaa;'
+      +'padding:0;flex-shrink:0;line-height:1;">✕</button>';
+
+    banner.innerHTML=content+close;
+
+    // Show after short delay so page is ready
+    setTimeout(function(){
+      if(!document.getElementById('nk-occasion-banner')){
+        document.body.appendChild(banner);
+        // Auto-hide after 30 seconds
+        setTimeout(function(){
+          var b=document.getElementById('nk-occasion-banner');
+          if(b) b.remove();
+        }, 30000);
+      }
+    }, 1500);
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', checkTodayOccasions);
+  } else { checkTodayOccasions(); }
+
   if(!window.toggleLang) window.toggleLang = function(){};
 })();
