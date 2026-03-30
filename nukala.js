@@ -522,7 +522,7 @@
     });
     content+='</div>';
 
-    var close='<button onclick="document.getElementById('nk-occasion-banner').remove()" '
+    var close='<button onclick="(function(){var b=document.getElementById(\'nk-occasion-banner\');if(b)b.remove();})()" '
       +'style="background:none;border:none;font-size:1rem;cursor:pointer;color:#aaa;'
       +'padding:0;flex-shrink:0;line-height:1;">✕</button>';
 
