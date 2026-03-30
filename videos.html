@@ -91,9 +91,7 @@
       </div>
 
     </main>
-    <footer>
-    &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
-  </footer>
+    
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const load=k=>JSON.parse(localStorage.getItem(k)||'{}');
     const loadArr=k=>JSON.parse(localStorage.getItem(k)||'[]');
@@ -309,39 +307,173 @@
 </script>
   <script src="nukala.js"></script>
   <script src="lang.js"></script>
+<script>
+(function(){
+  function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
 
-  <script>
-  // Read admin page editor settings and apply to this page
-  (function(){
-    const KEY = 'nukala_page_videospage';
-    const d = JSON.parse(localStorage.getItem(KEY)||'{}');
-    if(!d || !Object.keys(d).length) return;
-    const hero = document.querySelector('.page-hero');
-    if(hero){
-      const eyebrow = hero.querySelector('.eyebrow');
-      const h1 = hero.querySelector('h1');
-      const p  = hero.querySelector('p:not(.eyebrow)');
-      if(eyebrow && d.eyebrow) eyebrow.textContent = d.eyebrow;
-      if(h1 && d.title){
-        const em = h1.querySelector('em');
-        if(em){ const parts=d.title.split(' '); em.textContent=parts.pop(); h1.childNodes[0].textContent=parts.join(' ')+' '; }
-        else h1.textContent = d.title;
+  // ── THEME ──
+  const theme = load('nukala_theme');
+  if(theme){
+    const r = document.documentElement;
+    if(theme.primary)   r.style.setProperty('--sage-dark', theme.primary);
+    if(theme.secondary) r.style.setProperty('--sage', theme.secondary);
+    if(theme.highlight) r.style.setProperty('--gold', theme.highlight);
+    if(theme.bg)        r.style.setProperty('--cream', theme.bg);
+    if(theme.text)      r.style.setProperty('--text-dark', theme.text);
+    if(theme.fontBody)  document.body.style.fontFamily = theme.fontBody+', sans-serif';
+  }
+
+  // ── TYPOGRAPHY ──
+  const typo = load('nukala_typography');
+  if(typo){
+    const style = document.createElement('style');
+    let css = '';
+    if(typo.heroSize) css += `.page-hero h1, .hero-title { font-size: ${typo.heroSize} !important; }`;
+    if(typo.navSize)  css += `.nav-links a { font-size: ${typo.navSize} !important; }`;
+    if(typo.bodySize) css += `body { font-size: ${typo.bodySize}; }`;
+    if(typo.radius)   css += `.card, .panel, .pcard { border-radius: ${typo.radius} !important; }`;
+    if(typo.maxWidth) css += `.content-area, .page-hero { max-width: ${typo.maxWidth} !important; }`;
+    if(typo.navLS)    css += `.nav-links a { letter-spacing: ${typo.navLS} !important; }`;
+    if(typo.btnRadius)css += `.btn, button.nav-logout { border-radius: ${typo.btnRadius} !important; }`;
+    if(css){ style.textContent = css; document.head.appendChild(style); }
+  }
+
+  // ── SITE WIDE ──
+  const sw = load('nukala_sitewide');
+  const hd = load('nukala_home');
+  const s  = load('nukala_settings');
+  const navName = (sw&&sw.navName) || (hd&&hd.navName) || (s&&s.familyName ? s.familyName.toUpperCase() : 'NUKALA');
+  document.querySelectorAll('.nav-site-name, #navSiteName').forEach(el=>el.textContent=navName);
+  const footerName = s&&s.familyName ? 'The '+s.familyName+' Family' : 'The Nukala Family';
+  document.querySelectorAll('#footerName,#footerFamilyName,#footerText').forEach(el=>el.textContent=footerName);
+  if(sw&&sw.footer){
+    document.querySelectorAll('footer strong').forEach(el=>el.textContent=sw.footer);
+  }
+
+  // ── NAV MENU ──
+  const navMenu = load('nukala_navmenu');
+  if(navMenu && navMenu.items){
+    const activeItems = navMenu.items.filter(i=>i.active);
+    document.querySelectorAll('nav .nav-links').forEach(ul=>{
+      const currentPage = location.pathname.split('/').pop()||'home.html';
+      ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');
+    });
+  }
+
+  // ── NEW PAGES CONTENT ──
+  const np = load('nukala_newpages');
+  const currentPage = location.pathname.split('/').pop()||'home.html';
+  const pageKey = {
+    'events.html':'events','recipes.html':'recipes','achievements.html':'ach',
+    'videos.html':'videos','polls.html':'polls','stats.html':'stats',
+    'map.html':'map','facts.html':'facts','history.html':'history',
+    'gallery.html':'gallery','contact.html':'contact','tree.html':'tree'
+  }[currentPage];
+
+  if(np && pageKey && np[pageKey]){
+    const pd = np[pageKey];
+    // Eyebrow
+    const eyeEl = document.querySelector('.page-hero .eyebrow');
+    if(eyeEl && pd.eye) eyeEl.textContent = pd.eye;
+    // Title — rebuild with italic
+    const h1El = document.querySelector('.page-hero h1');
+    if(h1El && pd.title){
+      const em = pd.em || '';
+      if(em && pd.title.includes(em)){
+        h1El.innerHTML = pd.title.replace(em, `<em>${em}</em>`);
+      } else {
+        h1El.textContent = pd.title;
       }
-      if(p && d.desc) p.textContent = d.desc;
     }
-    // Apply any button text overrides
-    if(d.btn){
-      const btns = document.querySelectorAll('a[href="admin.html"], a[href^="admin"]');
-      btns.forEach(b=>{ if(b.textContent.includes('Admin')) b.textContent = d.btn; });
+    // Description
+    const descEl = document.querySelector('.page-hero p');
+    if(descEl && pd.desc) descEl.textContent = pd.desc;
+    // History quote
+    if(pageKey==='history' && pd.quote){
+      const q = document.querySelector('.history-intro');
+      if(q) q.textContent = pd.quote;
     }
-    if(d.empty){
-      document.querySelectorAll('.empty-section p, .empty-facts p').forEach(el=>{ if(el.textContent.includes('yet')) el.innerHTML = d.empty; });
+    // Contact extras
+    if(pageKey==='contact'){
+      const h = document.querySelector('.contact-info h2');
+      if(h && pd.heading) h.innerHTML = pd.heading;
+      const p = document.querySelector('.contact-info > p');
+      if(p && pd.para) p.textContent = pd.para;
     }
-  })();
-  
-      // ── Footer ──
-      (function(){
-        var sw=JSON.parse(localStorage.getItem('nukala_sitewide')||'null')||{};
-        var s=JSON.parse(localStorage.getItem('nukala_settings')||'null')||{};
-        var name=sw.footerName||(s.familyName?'The '+s.familyName+' Family':null);
-        var sub=sw.footerSub||'Private &amp; Password 
+    // Gallery title/desc
+    if(pageKey==='gallery'){
+      const gt = document.getElementById('galPageTitle');
+      const gd = document.getElementById('galPageDesc');
+      if(gt && pd.title) gt.textContent = pd.title;
+      if(gd && pd.desc) gd.textContent = pd.desc;
+    }
+  }
+
+  // ── HERO IMAGE ──
+  const hero = load('nukala_heropage');
+  if(hero && hero.homeImgUrl && currentPage==='home.html'){
+    const banner = document.querySelector('.hero-banner');
+    if(banner){
+      banner.style.backgroundImage = `url('${hero.homeImgUrl}')`;
+      banner.style.backgroundSize = 'cover';
+      banner.style.backgroundPosition = 'center';
+    }
+  }
+  // Per-page hero settings
+  if(hero){
+    const heroPageMap={'tree.html':0,'history.html':1,'gallery.html':2,'facts.html':3,'contact.html':4};
+    const heroIdx = heroPageMap[currentPage];
+    if(heroIdx !== undefined && hero['page'+heroIdx]){
+      const hpd = hero['page'+heroIdx];
+      const eyeEl = document.querySelector('.page-hero .eyebrow');
+      const h1El = document.querySelector('.page-hero h1');
+      const descEl = document.querySelector('.page-hero p');
+      // Only override if np didn't already set (np takes priority)
+      if(eyeEl && hpd.eye && !(np&&pageKey&&np[pageKey]&&np[pageKey].eye)) eyeEl.textContent = hpd.eye;
+      if(h1El && hpd.title && !(np&&pageKey&&np[pageKey]&&np[pageKey].title)) h1El.innerHTML = hpd.title;
+      if(descEl && hpd.desc && !(np&&pageKey&&np[pageKey]&&np[pageKey].desc)) descEl.textContent = hpd.desc;
+    }
+  }
+
+  // ── GALLERY FILTER CATEGORIES ──
+  const gp = load('nukala_gallerypage2');
+  if(gp && gp.cats && currentPage==='gallery.html'){
+    const filterBar = document.getElementById('filterBar');
+    if(filterBar){
+      filterBar.innerHTML = '<button class="filter-btn active" onclick="filterGallery(\'all\',this)">All Photos</button>' +
+        gp.cats.map(c=>`<button class="filter-btn" onclick="filterGallery('${c}',this)">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
+    }
+  }
+
+  // ── CONTACT DROPDOWN ──
+  const cp = load('nukala_contactpage2');
+  if(cp && cp.dropdownOpts && currentPage==='contact.html'){
+    const sel = document.getElementById('subject');
+    if(sel) sel.innerHTML = '<option value="">— Select a reason —</option>'+cp.dropdownOpts.map(o=>`<option>${o}</option>`).join('');
+  }
+  if(cp && cp.contactWays && currentPage==='contact.html'){
+    const cw = document.getElementById('contactWays');
+    if(cw) cw.innerHTML = cp.contactWays.map(w=>`<div class="contact-way"><div class="contact-way-icon">${w.icon}</div><div><div class="contact-way-title">${w.title}</div><div class="contact-way-desc">${w.desc}</div></div></div>`).join('');
+  }
+
+  // ── HOME QUICK CARDS ──
+  const hp2 = load('nukala_homepage2');
+  if(hp2 && hp2.quickCards && currentPage==='home.html'){
+    const qn = document.getElementById('quickNavCards');
+    if(qn) qn.innerHTML = hp2.quickCards.map(c=>`<a class="quick-card fade-in" href="${c.link}"><div class="quick-card-icon">${c.icon}</div><div class="quick-card-title">${c.title}</div><div class="quick-card-desc">${c.desc}</div><div class="quick-card-arrow">${c.arrow}</div></a>`).join('');
+  }
+  if(hp2 && hp2.updates && hp2.updates.length && currentPage==='home.html'){
+    const ul = document.getElementById('recentUpdatesList');
+    if(ul) ul.innerHTML = hp2.updates.map(u=>`<div class="update-item"><div class="update-dot"></div><div><div class="update-title">${u.title}</div><div class="update-date">${u.date||''}</div></div></div>`).join('');
+  }
+
+})();
+</script>
+  <script src="nukala.js"></script>
+  <script src="lang.js"></script>
+
+  <footer>
+    &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
+  </footer>
+</body>
+</html>
