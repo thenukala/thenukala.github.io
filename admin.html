@@ -635,6 +635,10 @@ opacity:0.04;pointer-events:none;z-index:0;}
         <div class="panel">
           <div class="pt">Site Info</div>
           <div class="fr"><div class="fg"><label>Family Name</label><input type="text" class="fi" id="s-famname" placeholder="Nukala"/></div><div class="fg"><label>Footer Text</label><input type="text" class="fi" id="s-footer" placeholder="The Nukala Family"/></div></div>
+          <div class="div"></div>
+          <div class="pt" style="margin-top:4px;">Join Tree Form — Where to Receive Submissions</div>
+          <p class="ss" style="margin-bottom:12px;">When family members submit the Join Tree form, their details go here.</p>
+          <div class="fr"><div class="fg"><label>Your WhatsApp Number (with country code)</label><input type="text" class="fi" id="s-adminwa" placeholder="+919876543210"/></div><div class="fg"><label>Your Email Address</label><input type="text" class="fi" id="s-adminemail" placeholder="your@email.com"/></div></div>
           <button class="btn bg bsm" id="saveSettingsBtn">💾 Save</button>
         </div>
         <div class="panel">
@@ -1181,7 +1185,7 @@ function renderAnn(){var logs=lda('annLog'),el=document.getElementById('annLog')
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PAGE VISIBILITY
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var PAGES=[{id:'home',label:'🏠 Home',file:'home.html',locked:true},{id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},{id:'history',label:'📜 History',file:'history.html',locked:false},{id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},{id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},{id:'stats',label:'📊 Stats',file:'stats.html',locked:false},{id:'events',label:'📆 Events',file:'events.html',locked:false},{id:'map',label:'🗺️ Map',file:'map.html',locked:false},{id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},{id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},{id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},{id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},{id:'qr',label:'📱 QR Code',file:'qr.html',locked:false},{id:'contact',label:'✉️ Contact',file:'contact.html',locked:true}];
+var PAGES=[{id:'home',label:'🏠 Home',file:'home.html',locked:true},{id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},{id:'history',label:'📜 History',file:'history.html',locked:false},{id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},{id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},{id:'stats',label:'📊 Stats',file:'stats.html',locked:false},{id:'events',label:'📆 Events',file:'events.html',locked:false},{id:'map',label:'🗺️ Map',file:'map.html',locked:false},{id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},{id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},{id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},{id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},{id:'qr',label:'📱 QR Code',file:'qr.html',locked:false},{id:'contact',label:'✉️ Contact',file:'contact.html',locked:true},{id:'join',label:'🌳 Join Tree',file:'join.html',locked:false}];
 
 document.getElementById('visSaveBtn').addEventListener('click', visSave);
 document.getElementById('visEnableAllBtn').addEventListener('click', visEnableAll);
@@ -1361,6 +1365,8 @@ function toggleSiteLogin(enabled){localStorage.setItem('nukala_login_disabled',e
 function loadSettings(){
   var s=ld('settings');
   document.getElementById('s-famname').value=s.familyName||'';
+  document.getElementById('s-adminwa').value=s.adminWhatsapp||'';
+  document.getElementById('s-adminemail').value=s.adminEmail||'';
   document.getElementById('s-footer').value=s.footerText||'';
   var disabled=localStorage.getItem('nukala_login_disabled')==='1';
   document.getElementById('loginToggle').checked=!disabled;
@@ -1369,7 +1375,9 @@ function loadSettings(){
   document.getElementById('loginToggleLabel').textContent=disabled?'Disabled':'Enabled';
   document.getElementById('loginToggleLabel').style.color=disabled?'var(--r)':'var(--sd)';
 }
-document.getElementById('saveSettingsBtn').addEventListener('click',function(){var s=ld('settings');s.familyName=document.getElementById('s-famname').value.trim();s.footerText=document.getElementById('s-footer').value.trim();sv('settings',s);if(s.familyName)document.getElementById('siteName').textContent=s.familyName;log('Settings saved');toast('Settings saved!');});
+document.getElementById('saveSettingsBtn').addEventListener('click',function(){var s=ld('settings');s.familyName=document.getElementById('s-famname').value.trim();
+  s.adminWhatsapp=document.getElementById('s-adminwa').value.trim();
+  s.adminEmail=document.getElementById('s-adminemail').value.trim();s.footerText=document.getElementById('s-footer').value.trim();sv('settings',s);if(s.familyName)document.getElementById('siteName').textContent=s.familyName;log('Settings saved');toast('Settings saved!');});
 document.getElementById('saveSitePassBtn').addEventListener('click',function(){var p=document.getElementById('newSitePass').value.trim();if(!p){alert('Enter a password.');return;}localStorage.setItem('nukala_site_pass',p);document.getElementById('newSitePass').value='';log('Site pass updated');toast('Site password updated!');});
 document.getElementById('saveAdminPassBtn').addEventListener('click',function(){var p=document.getElementById('newAdminPass').value.trim();if(!p){alert('Enter a password.');return;}localStorage.setItem('nukala_admin_pass',p);document.getElementById('newAdminPass').value='';log('Admin pass updated');toast('Admin password updated!');});
 document.getElementById('expAllBtn2').addEventListener('click', expAll);

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Join the Family Tree · Nukala Family</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="darkmode.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    .join-hero {
+      background: linear-gradient(135deg, #f0f5f0 0%, #faf8f4 60%, #fdf9f0 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 40px 44px;
+      text-align: center;
+    }
+    .join-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 300;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+    .join-hero h1 em { font-style: italic; color: var(--sage-dark); }
+    .join-hero p {
+      font-size: .95rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .join-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    .join-section {
+      margin-bottom: 36px;
+    }
+    .join-section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--sage-dark);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .join-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media(max-width: 540px) { .join-grid { grid-template-columns: 1fr; } }
+    .join-field { display: flex; flex-direction: column; gap: 6px; }
+    .join-field.full { grid-column: 1/-1; }
+    .join-field label {
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .join-field input,
+    .join-field select,
+    .join-field textarea {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Jost', sans-serif;
+      font-size: .9rem;
+      color: var(--text-dark);
+      background: var(--cream);
+      transition: border-color .2s;
+      outline: none;
+    }
+    .join-field input:focus,
+    .join-field select:focus,
+    .join-field textarea:focus {
+      border-color: var(--sage);
+    }
+    .join-field textarea { resize: vertical; min-height: 80px; }
+    .join-note {
+      font-size: .75rem;
+      color: var(--text-light);
+      margin-top: 3px;
+    }
+    .join-submit-area {
+      background: linear-gradient(135deg, #f0f5f0, #fdfaf4);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .join-submit-area p {
+      font-size: .85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .join-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-wa {
+      background: linear-gradient(135deg, #128c7e, #25d366);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-family: 'Jost', sans-serif;
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity .2s;
+    }
+    .btn-wa:hover { opacity: .9; }
+    .btn-email {
+      background: var(--sage-dark);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-family: 'Jost', sans-serif;
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity .2s;
+    }
+    .btn-email:hover { opacity: .9; }
+    .join-success {
+      display: none;
+      background: #eaf5ea;
+      border: 1px solid #8aab8a;
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .join-success h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--sage-dark);
+      margin-bottom: 8px;
+    }
+    .join-success p { font-size: .85rem; color: var(--text-muted); }
+    .required-note {
+      font-size: .75rem;
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+<script>
+  // Always fetch fresh site-data.js (bypass cache) before page loads
+  try{
+    var _xhr=new XMLHttpRequest();
+    _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
+    _xhr.send();
+    if(_xhr.status===200) eval(_xhr.responseText);
+  }catch(e){}
+</script>
+  <script src="auth.js"></script>
+
+  <nav>
+    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
+    <ul class="nav-links">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="tree.html">Family Tree</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="facts.html">Facts</a></li>
+      <li><a href="stats.html">Stats</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="map.html">Map</a></li>
+      <li><a href="polls.html">Polls</a></li>
+      <li><a href="recipes.html">Recipes</a></li>
+      <li><a href="achievements.html">Achievements</a></li>
+      <li><a href="videos.html">Videos</a></li>
+      <li><a href="qr.html">QR Code</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="join.html" class="active">Join Tree</a></li>
+    </ul>
+    <button class="nav-logout" onclick="logout()">Sign Out</button>
+  </nav>
+
+  <!-- HERO -->
+  <div class="join-hero">
+    <h1>Join the <em>Family Tree</em></h1>
+    <p>Help us build the most complete Nukala family archive. Fill in as much or as little as you like — every detail helps.</p>
+  </div>
+
+  <div class="join-wrap">
+    <p class="required-note">Fields marked * are helpful but nothing is strictly required — share what you're comfortable with.</p>
+
+    <!-- PERSONAL DETAILS -->
+    <div class="join-section">
+      <div class="join-section-title">👤 Personal Details</div>
+      <div class="join-grid">
+        <div class="join-field">
+          <label>First Name *</label>
+          <input type="text" id="jFirstName" placeholder="e.g. Ramu"/>
+        </div>
+        <div class="join-field">
+          <label>Last Name *</label>
+          <input type="text" id="jLastName" placeholder="e.g. Nukala"/>
+        </div>
+        <div class="join-field">
+          <label>Date of Birth</label>
+          <input type="text" id="jDOB" placeholder="e.g. 15 March 1975"/>
+        </div>
+        <div class="join-field">
+          <label>Gender</label>
+          <select id="jGender">
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+          </select>
+        </div>
+        <div class="join-field">
+          <label>City / Town you live in</label>
+          <input type="text" id="jCity" placeholder="e.g. Hyderabad"/>
+        </div>
+        <div class="join-field">
+          <label>Occupation</label>
+          <input type="text" id="jOccupation" placeholder="e.g. Software Engineer"/>
+        </div>
+        <div class="join-field full">
+          <label>Short Bio / Fun Fact about yourself</label>
+          <textarea id="jBio" placeholder="Something interesting about you..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAMILY CONNECTIONS -->
+    <div class="join-section">
+      <div class="join-section-title">🌳 Family Connections</div>
+      <div class="join-grid">
+        <div class="join-field">
+          <label>Father's Full Name</label>
+          <input type="text" id="jFather" placeholder="e.g. Venkat Nukala"/>
+        </div>
+        <div class="join-field">
+          <label>Mother's Full Name</label>
+          <input type="text" id="jMother" placeholder="e.g. Lakshmi Nukala"/>
+        </div>
+        <div class="join-field">
+          <label>Spouse's Full Name</label>
+          <input type="text" id="jSpouse" placeholder="e.g. Sita Devi"/>
+        </div>
+        <div class="join-field">
+          <label>Wedding Anniversary Date</label>
+          <input type="text" id="jAnniversary" placeholder="e.g. 12 February 2002"/>
+        </div>
+        <div class="join-field full">
+          <label>Children's Names & Birth Years</label>
+          <textarea id="jChildren" rows="2" placeholder="e.g. Kiran (2004), Priya (2007)"></textarea>
+        </div>
+        <div class="join-field full">
+          <label>Siblings' Names</label>
+          <input type="text" id="jSiblings" placeholder="e.g. Suresh Nukala, Anita Sharma"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT DETAILS -->
+    <div class="join-section">
+      <div class="join-section-title">📱 Contact Details</div>
+      <div class="join-grid">
+        <div class="join-field">
+          <label>WhatsApp Number</label>
+          <input type="tel" id="jWhatsapp" placeholder="+91 9876543210"/>
+        </div>
+        <div class="join-field">
+          <label>Email Address</label>
+          <input type="email" id="jEmail" placeholder="you@example.com"/>
+        </div>
+        <div class="join-field full">
+          <label>Photo URL (optional)</label>
+          <input type="url" id="jPhoto" placeholder="Link to your photo — Google Photos, Drive etc."/>
+          <span class="join-note">Upload a photo to Google Photos, share it, and paste the link here</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="join-submit-area">
+      <p>When you click below, your details will open in WhatsApp or Email — pre-filled and ready to send to the family admin. Nothing is sent automatically.</p>
+      <div class="join-btns">
+        <button class="btn-wa" onclick="submitViaWA()">
+          <span style="font-size:1.1rem;">📱</span> Send via WhatsApp
+        </button>
+        <button class="btn-email" onclick="submitViaEmail()">
+          <span style="font-size:1.1rem;">✉️</span> Send via Email
+        </button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="join-success" id="joinSuccess">
+      <h3>🌳 Thank you!</h3>
+      <p>Your details have been sent. The family admin will add you to the tree soon.</p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; <span id="footerYear">2026</span>
+    <strong id="footerText">The Nukala Family</strong> ·
+    <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
+  </footer>
+
+  <script>
+    // Collect form values
+    function getVal(id){ return (document.getElementById(id)||{}).value||''; }
+
+    function buildMessage(){
+      var fields = [
+        ['First Name',       getVal('jFirstName')],
+        ['Last Name',        getVal('jLastName')],
+        ['Date of Birth',    getVal('jDOB')],
+        ['Gender',           getVal('jGender')],
+        ['City',             getVal('jCity')],
+        ['Occupation',       getVal('jOccupation')],
+        ['Bio / Fun Fact',   getVal('jBio')],
+        ['Father',           getVal('jFather')],
+        ['Mother',           getVal('jMother')],
+        ['Spouse',           getVal('jSpouse')],
+        ['Anniversary',      getVal('jAnniversary')],
+        ['Children',         getVal('jChildren')],
+        ['Siblings',         getVal('jSiblings')],
+        ['WhatsApp',         getVal('jWhatsapp')],
+        ['Email',            getVal('jEmail')],
+        ['Photo URL',        getVal('jPhoto')]
+      ];
+
+      // Check at least name is filled
+      if(!getVal('jFirstName') && !getVal('jLastName')){
+        alert('Please enter at least your name before sending.');
+        return null;
+      }
+
+      var lines = ['*New Family Member Submission*', ''];
+      fields.forEach(function(f){
+        if(f[1].trim()) lines.push('*' + f[0] + ':* ' + f[1].trim());
+      });
+      lines.push('');
+      lines.push('_Sent from the Nukala Family Tree website_');
+      return lines.join('\n');
+    }
+
+    function submitViaWA(){
+      var msg = buildMessage();
+      if(!msg) return;
+      // Get admin WhatsApp from settings or use default
+      var settings = {};
+      try{ settings = JSON.parse(localStorage.getItem('nukala_settings')||'{}'); }catch(e){}
+      var adminWA = settings.adminWhatsapp || '';
+      var url = adminWA
+        ? 'https://wa.me/' + adminWA.replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(msg)
+        : 'https://wa.me/?text=' + encodeURIComponent(msg);
+      window.open(url, '_blank');
+      document.getElementById('joinSuccess').style.display = 'block';
+    }
+
+    function submitViaEmail(){
+      var msg = buildMessage();
+      if(!msg) return;
+      var settings = {};
+      try{ settings = JSON.parse(localStorage.getItem('nukala_settings')||'{}'); }catch(e){}
+      var adminEmail = settings.adminEmail || '';
+      var subject = encodeURIComponent('New Family Tree Submission — ' + (getVal('jFirstName') + ' ' + getVal('jLastName')).trim());
+      var body = encodeURIComponent(msg.replace(/\*/g,'').replace(/_/g,''));
+      window.location.href = 'mailto:' + adminEmail + '?subject=' + subject + '&body=' + body;
+      document.getElementById('joinSuccess').style.display = 'block';
+    }
+
+    // Set footer year
+    var fyEl = document.getElementById('footerYear');
+    if(fyEl) fyEl.textContent = new Date().getFullYear();
+  </script>
+
+<script>
+(function(){
+  function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
+
+  // ── THEME ──
+  var theme = load('nukala_theme');
+  if(theme){
+    var r = document.documentElement;
+    if(theme.primary)   r.style.setProperty('--sage-dark', theme.primary);
+    if(theme.secondary) r.style.setProperty('--sage', theme.secondary);
+    if(theme.highlight) r.style.setProperty('--gold', theme.highlight);
+    if(theme.bg)        r.style.setProperty('--cream', theme.bg);
+    if(theme.text)      r.style.setProperty('--text-dark', theme.text);
+  }
+
+  // ── SITE WIDE ──
+  var sw = load('nukala_sitewide');
+  var hd = load('nukala_home');
+  var s  = load('nukala_settings');
+  var navName = (sw&&sw.navName)||(hd&&hd.navName)||(s&&s.familyName?s.familyName.toUpperCase():'NUKALA');
+  document.querySelectorAll('.nav-site-name, #navSiteName').forEach(function(el){ el.textContent = navName; });
+  var footerName = sw&&sw.footerName ? sw.footerName : (s&&s.familyName ? 'The '+s.familyName+' Family' : 'The Nukala Family');
+  var footerEl = document.getElementById('footerText');
+  if(footerEl) footerEl.textContent = footerName;
+  var footerSub = sw&&sw.footerSub ? sw.footerSub : 'Private &amp; Password Protected · Made with 🌳 &amp; love';
+  var footerSubEl = document.getElementById('footerSub');
+  if(footerSubEl) footerSubEl.innerHTML = footerSub;
+  if(sw&&sw.footerYear){ var fyEl2=document.getElementById('footerYear'); if(fyEl2) fyEl2.textContent=sw.footerYear; }
+
+  // ── NAV MENU ──
+  var navMenu = load('nukala_navmenu');
+  if(navMenu && navMenu.items){
+    var activeItems = navMenu.items.filter(function(i){ return i.active !== false; });
+    document.querySelectorAll('nav .nav-links').forEach(function(ul){
+      var currentPage = location.pathname.split('/').pop()||'home.html';
+      ul.innerHTML = activeItems.map(function(item){
+        return '<li><a href="'+item.href+'" '+(currentPage===item.href?'class="active"':'')+'>'+item.label+'</a></li>';
+      }).join('');
+    });
+  }
+})();
+</script>
+
+  <script src="nukala.js"></script>
+  <script src="lang.js"></script>
+</body>
+</html>

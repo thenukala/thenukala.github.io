@@ -12,7 +12,7 @@ const STATIC_ASSETS = [
 // Files that must ALWAYS be fresh (never serve from cache)
 const ALWAYS_FRESH = [
   'site-data.js',
-  'home.html', 'tree.html', 'history.html', 'gallery.html',
+  'home.html', 'tree.html', 'join.html', 'history.html', 'gallery.html',
   'facts.html', 'stats.html', 'events.html', 'recipes.html',
   'achievements.html', 'videos.html', 'polls.html', 'map.html',
   'qr.html', 'contact.html', 'index.html', 'admin.html',
