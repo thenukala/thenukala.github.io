@@ -972,6 +972,8 @@ function renderDash(){
   document.getElementById('ds-gens').textContent=gens.length;
   var logs=lda('log');
   document.getElementById('ds-log').innerHTML=logs.length?logs.slice(-6).reverse().map(function(l){return '<div style="padding:4px 0;border-bottom:1px solid var(--b);color:var(--tm);">'+l+'</div>';}).join(''):'<span style="color:var(--tl);">No activity yet.</span>';
+  // Also render today's occasions and wishes
+  if(typeof renderDashWishes === 'function') renderDashWishes();
 }
 document.getElementById('qAddMember').addEventListener('click',function(){openMemberM();document.querySelector('.ni[data-page="members"]').click();});
 document.getElementById('qAddPhoto').addEventListener('click',function(){document.querySelector('.ni[data-page="gallery"]').click();openGalM();});
@@ -1713,12 +1715,7 @@ document.getElementById('saveWishBtn').addEventListener('click', function(){
 
 document.getElementById('addWishBtn').addEventListener('click', openWishM);
 
-// Extend renderDash to also render wishes
-var _origRenderDash = renderDash;
-renderDash = function(){
-  _origRenderDash();
-  renderDashWishes();
-};
+// renderDashWishes is called directly inside renderDash
 
 </script>
 </body>

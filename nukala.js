@@ -405,7 +405,7 @@
       var brand = document.querySelector('.nav-brand');
       if(!brand) return;
       brand.addEventListener('click', function(e){
-        e.preventDefault(); // prevent navigation on rapid clicks
+        e.preventDefault();
         clicks++;
         clearTimeout(timer);
         if(clicks >= 3){
@@ -413,11 +413,11 @@
           goAdmin();
           return;
         }
-        // On single/double click, navigate normally after 650ms if no triple
         timer = setTimeout(function(){
-          if(clicks === 1) window.location.href = brand.getAttribute('href') || 'home.html';
+          // Navigate on single or double click (only triple goes to admin)
+          if(clicks >= 1) window.location.href = brand.getAttribute('href') || 'home.html';
           clicks = 0;
-        }, 650);
+        }, 600);
       });
     }
     if(document.readyState === 'loading'){
