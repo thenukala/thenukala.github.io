@@ -490,7 +490,7 @@
         var ml=MONTHS_L[month-1].toLowerCase(), ms=MONTHS_S[month-1].toLowerCase();
         if((bday.includes(ml)||bday.includes(ms))&&bday.includes(String(day))){
           var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-          found.push({type:'Birthday',title:name+"'s Birthday",people:name,msg:''});
+          found.push({type:'Birthday',title:name+' Birthday',people:name,msg:''});
         }
       });
     }catch(e){}
