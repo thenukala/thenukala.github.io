@@ -1470,100 +1470,100 @@ var DEFAULT_NAV_PAGES = [
 ];
 
 function getNavPages(){
+  // Always returns pages in navmenu saved order, or DEFAULT order if none saved
   var saved = ldRaw('nukala_navmenu');
+  var defMap = {};
+  DEFAULT_NAV_PAGES.forEach(function(p){ defMap[p.href] = p; });
+  var result = [];
   if(saved && saved.items && saved.items.length){
-    // Build a lookup for locked status from DEFAULT_NAV_PAGES
-    var defaults = {};
-    DEFAULT_NAV_PAGES.forEach(function(p){ defaults[p.href] = p; });
-    // Return in SAVED order (respects reordering done by pnMove)
-    var result = saved.items.map(function(item){
-      var def = defaults[item.href]||{};
-      return {href:item.href, label:item.label||def.label||item.href, locked:def.locked||false, active:item.active!==false};
+    saved.items.forEach(function(item){
+      var def = defMap[item.href]||{};
+      result.push({href:item.href, label:item.label||def.label||item.href, locked:!!def.locked, active:item.active!==false});
     });
-    // Add any DEFAULT pages missing from saved (e.g. newly added pages)
+    // Add any pages in DEFAULT that are missing from saved navmenu
     DEFAULT_NAV_PAGES.forEach(function(p){
-      if(!saved.items.find(function(i){ return i.href===p.href; })){
+      if(!result.find(function(r){ return r.href===p.href; })){
         result.push({href:p.href, label:p.label, locked:p.locked, active:true});
       }
     });
-    return result;
+  } else {
+    DEFAULT_NAV_PAGES.forEach(function(p){
+      result.push({href:p.href, label:p.label, locked:p.locked, active:true});
+    });
   }
-  return DEFAULT_NAV_PAGES.map(function(p){ return {href:p.href,label:p.label,locked:p.locked,active:true}; });
+  return result;
 }
 
+// In-memory state for page names editor — avoids localStorage race conditions
+var _pnPages = null;
+
 function renderPageNames(){
-  var pages = getNavPages();
+  // Always reload from storage when first opening
+  _pnPages = getNavPages();
+  _drawPageNames();
+}
+
+function _drawPageNames(){
+  var pages = _pnPages;
   var el = document.getElementById('pageNamesEditor');
-  if(!el) return;
-  var btnSt = 'background:var(--w);border:1.5px solid var(--b);border-radius:6px;width:28px;height:24px;cursor:pointer;font-size:.75rem;line-height:1;padding:0;color:var(--td);';
-  el.innerHTML = pages.map(function(p,i){
-    var upDis = i===0 ? 'disabled style="opacity:.3;cursor:default;"' : '';
-    var dnDis = i===pages.length-1 ? 'disabled style="opacity:.3;cursor:default;"' : '';
+  if(!el || !pages) return;
+  var rows = pages.map(function(p,i){
+    var upOp = i===0               ? 'opacity:.25;cursor:not-allowed;' : '';
+    var dnOp = i===pages.length-1  ? 'opacity:.25;cursor:not-allowed;' : '';
+    var upDis = i===0               ? 'disabled' : '';
+    var dnDis = i===pages.length-1  ? 'disabled' : '';
+    var base  = 'background:var(--w);border:1.5px solid var(--b);border-radius:6px;width:30px;height:26px;cursor:pointer;font-size:.75rem;line-height:1;padding:0;color:var(--td);';
     return '<div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--b);">'
       +'<div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0;">'
-      +'<button class="pn-up" data-i="'+i+'" '+upDis+' style="'+btnSt+'">▲</button>'
-      +'<button class="pn-dn" data-i="'+i+'" '+dnDis+' style="'+btnSt+'">▼</button>'
+      +'<button class="pn-up" data-i="'+i+'" '+upDis+' style="'+base+upOp+'">▲</button>'
+      +'<button class="pn-dn" data-i="'+i+'" '+dnDis+' style="'+base+dnOp+'">▼</button>'
       +'</div>'
       +'<div style="width:115px;font-size:.72rem;color:var(--tl);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+p.href+'</div>'
       +'<input type="text" class="fi" id="pn-'+i+'" value="'+p.label.replace(/"/g,'&quot;')+'" placeholder="'+p.label+'" '+(p.locked?'disabled ':'')+' style="flex:1;padding:7px 11px;'+(p.locked?'opacity:.5;cursor:not-allowed;':'')+'">'
       +(p.locked?'<span style="font-size:.65rem;color:var(--tl);flex-shrink:0;padding:0 4px;">core</span>':'')
       +'</div>';
   }).join('');
-  // Attach via event delegation — much more reliable than inline onclick
+  el.innerHTML = rows;
+  // Single event listener on the container — never breaks on re-render
   el.onclick = function(e){
-    var btn = e.target.closest('button');
+    var btn = e.target;
+    if(btn.tagName!=='BUTTON') btn = btn.closest('button');
     if(!btn) return;
-    var i = parseInt(btn.getAttribute('data-i'));
-    if(isNaN(i)) return;
-    if(btn.classList.contains('pn-up'))  pnMove(i, -1);
-    if(btn.classList.contains('pn-dn'))  pnMove(i,  1);
+    var idx = parseInt(btn.getAttribute('data-i'));
+    if(isNaN(idx)) return;
+    if(btn.classList.contains('pn-up') && !btn.disabled) _pnSwap(idx, idx-1);
+    if(btn.classList.contains('pn-dn') && !btn.disabled) _pnSwap(idx, idx+1);
   };
   renderPageNamesPreview(pages);
 }
 
-function pnMove(idx, dir){
-  var nm = ldRaw('nukala_navmenu');
-  if(!nm||!nm.items||!nm.items.length){
-    nm = {items: DEFAULT_NAV_PAGES.map(function(p){return {href:p.href,label:p.label,active:true};})};
-  }
-  var items = nm.items;
-  var newIdx = idx + dir;
-  if(newIdx < 0 || newIdx >= items.length) return;
-  var tmp = items[idx]; items[idx] = items[newIdx]; items[newIdx] = tmp;
-  svRaw('nukala_navmenu', nm);
-  renderPageNames();
-  toast('Order updated! Click Save Page Names to keep, then Publish to Site.');
+function _pnSwap(a, b){
+  if(!_pnPages || a<0 || b<0 || a>=_pnPages.length || b>=_pnPages.length) return;
+  // Read current label values before swap so edits are preserved
+  var elA = document.getElementById('pn-'+a);
+  var elB = document.getElementById('pn-'+b);
+  if(elA && !_pnPages[a].locked) _pnPages[a].label = elA.value||_pnPages[a].label;
+  if(elB && !_pnPages[b].locked) _pnPages[b].label = elB.value||_pnPages[b].label;
+  // Swap in memory only
+  var tmp = _pnPages[a]; _pnPages[a] = _pnPages[b]; _pnPages[b] = tmp;
+  _drawPageNames();
 }
-
-function renderPageNamesPreview(pages){
-  var prev = document.getElementById('pageNamesPreview');
-  if(!prev) return;
-  var cur = getNavPages();
-  prev.innerHTML = cur.map(function(p,i){
-    var inp = document.getElementById('pn-'+i);
-    var lbl = inp ? inp.value : p.label;
-    return '<span style="padding:4px 10px;border-radius:20px;font-size:.71rem;font-weight:500;background:rgba(92,122,92,.1);color:var(--sd);display:inline-block;margin:2px;">'+lbl+'</span>';
-  }).join('');
-}
-
-document.getElementById('pageNamesEditor').addEventListener('input', function(){
-  var pages = getNavPages();
-  renderPageNamesPreview(pages);
-});
 
 document.getElementById('savePageNamesBtn').addEventListener('click', function(){
-  // Use current order from navmenu (may have been reordered by pnMove)
-  var pages = getNavPages();
-  var nm = ldRaw('nukala_navmenu')||{};
-  var items = pages.map(function(p,i){
+  if(!_pnPages) _pnPages = getNavPages();
+  // Collect any edited labels
+  _pnPages.forEach(function(p,i){
     var inp = document.getElementById('pn-'+i);
-    var label = inp&&!p.locked ? (inp.value.trim()||p.label) : p.label;
-    return {href:p.href, label:label, active:p.active!==false};
+    if(inp && !p.locked) p.label = inp.value.trim()||p.label;
+  });
+  // Save order + labels to navmenu
+  var items = _pnPages.map(function(p){
+    return {href:p.href, label:p.label, active:p.active!==false};
   });
   svRaw('nukala_navmenu', {items:items});
   log('Page names and order saved');
-  toast('✅ Page names & order saved! Now click Publish to Site.');
-  renderPageNamesPreview(pages);
+  toast('✅ Saved! Click Publish to Site to apply to all visitors.');
+  renderPageNamesPreview(_pnPages);
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
