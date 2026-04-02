@@ -192,6 +192,22 @@
     document.querySelectorAll('nav .nav-links').forEach(ul=>{
       const currentPage = location.pathname.split('/').pop()||'home.html';
       ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');
+      // Always ensure Join Tree appears in nav
+      if(!ul.querySelector('a[href="join.html"]')){
+        const li=document.createElement('li');
+        li.innerHTML=`<a href="join.html" ${currentPage==='join.html'?'class="active"':''}>Join Tree</a>`;
+        ul.appendChild(li);
+      }
+    });
+  } else {
+    // No navmenu saved yet — ensure Join Tree still appears
+    document.querySelectorAll('nav .nav-links').forEach(ul=>{
+      const currentPage = location.pathname.split('/').pop()||'home.html';
+      if(!ul.querySelector('a[href="join.html"]')){
+        const li=document.createElement('li');
+        li.innerHTML=`<a href="join.html" ${currentPage==='join.html'?'class="active"':''}>Join Tree</a>`;
+        ul.appendChild(li);
+      }
     });
   }
 

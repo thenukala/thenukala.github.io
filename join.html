@@ -428,6 +428,21 @@
       ul.innerHTML = activeItems.map(function(item){
         return '<li><a href="'+item.href+'" '+(currentPage===item.href?'class="active"':'')+'>'+item.label+'</a></li>';
       }).join('');
+      // Always ensure Join Tree appears
+      if(!ul.querySelector('a[href="join.html"]')){
+        var li=document.createElement('li');
+        li.innerHTML='<a href="join.html" '+(currentPage==='join.html'?'class="active"':'')+'>Join Tree</a>';
+        ul.appendChild(li);
+      }
+    });
+  } else {
+    document.querySelectorAll('nav .nav-links').forEach(function(ul){
+      var currentPage = location.pathname.split('/').pop()||'home.html';
+      if(!ul.querySelector('a[href="join.html"]')){
+        var li=document.createElement('li');
+        li.innerHTML='<a href="join.html" '+(currentPage==='join.html'?'class="active"':'')+'>Join Tree</a>';
+        ul.appendChild(li);
+      }
     });
   }
 })();
