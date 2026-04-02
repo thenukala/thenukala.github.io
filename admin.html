@@ -1411,12 +1411,21 @@ var DEFAULT_NAV_PAGES = [
 function getNavPages(){
   var saved = ldRaw('nukala_navmenu');
   if(saved && saved.items && saved.items.length){
-    // Merge saved labels into defaults
-    var map = {};
-    saved.items.forEach(function(i){ map[i.href] = i; });
-    return DEFAULT_NAV_PAGES.map(function(p){
-      return {href:p.href, label:(map[p.href]&&map[p.href].label)||p.label, locked:p.locked, active:map[p.href]?map[p.href].active!==false:true};
+    // Build a lookup for locked status from DEFAULT_NAV_PAGES
+    var defaults = {};
+    DEFAULT_NAV_PAGES.forEach(function(p){ defaults[p.href] = p; });
+    // Return in SAVED order (respects reordering done by pnMove)
+    var result = saved.items.map(function(item){
+      var def = defaults[item.href]||{};
+      return {href:item.href, label:item.label||def.label||item.href, locked:def.locked||false, active:item.active!==false};
     });
+    // Add any DEFAULT pages missing from saved (e.g. newly added pages)
+    DEFAULT_NAV_PAGES.forEach(function(p){
+      if(!saved.items.find(function(i){ return i.href===p.href; })){
+        result.push({href:p.href, label:p.label, locked:p.locked, active:true});
+      }
+    });
+    return result;
   }
   return DEFAULT_NAV_PAGES.map(function(p){ return {href:p.href,label:p.label,locked:p.locked,active:true}; });
 }
