@@ -1433,16 +1433,21 @@ function getNavPages(){
 function renderPageNames(){
   var pages = getNavPages();
   var el = document.getElementById('pageNamesEditor');
+  if(!el) return;
+  var btnBase = 'background:none;border:1px solid var(--b);border-radius:5px;width:26px;height:22px;cursor:pointer;font-size:.7rem;line-height:1;padding:0;';
   el.innerHTML = pages.map(function(p,i){
-    var isFirst=i===0, isLast=i===pages.length-1;
-    return '<div class="pn-row" data-idx="'+i+'" style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);">'
-      +'<div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0;">'
-      +'<button onclick="pnMove('+i+',-1)" '+(isFirst?'disabled style="opacity:.3;"':'')+' style="background:none;border:1px solid var(--b);border-radius:5px;width:24px;height:20px;cursor:pointer;font-size:.65rem;line-height:1;">▲</button>'
-      +'<button onclick="pnMove('+i+',1)" '+(isLast?'disabled style="opacity:.3;"':'')+' style="background:none;border:1px solid var(--b);border-radius:5px;width:24px;height:20px;cursor:pointer;font-size:.65rem;line-height:1;">▼</button>'
+    var upStyle  = btnBase + (i===0                 ? 'opacity:.25;cursor:not-allowed;' : '');
+    var dnStyle  = btnBase + (i===pages.length-1    ? 'opacity:.25;cursor:not-allowed;' : '');
+    var upDisabled  = i===0               ? 'disabled' : '';
+    var dnDisabled  = i===pages.length-1  ? 'disabled' : '';
+    return '<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);">'
+      +'<div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0;">'
+      +'<button '+upDisabled+' onclick="pnMove('+i+',-1)" style="'+upStyle+'">▲</button>'
+      +'<button '+dnDisabled+' onclick="pnMove('+i+',1)"  style="'+dnStyle+'">▼</button>'
       +'</div>'
-      +'<div style="width:110px;font-size:.72rem;color:var(--tl);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+p.href+'</div>'
-      +'<input type="text" class="fi" id="pn-'+i+'" value="'+p.label.replace(/"/g,'&quot;')+'" placeholder="'+p.label+'" '+(p.locked?'disabled style="opacity:.5;cursor:not-allowed;"':'')+' style="flex:1;padding:7px 11px;"/>'
-      +(p.locked?'<span style="font-size:.65rem;color:var(--tl);flex-shrink:0;">core</span>':'')
+      +'<div style="width:120px;font-size:.72rem;color:var(--tl);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+p.href+'</div>'
+      +'<input type="text" class="fi" id="pn-'+i+'" value="'+p.label.replace(/"/g,'&quot;')+'" placeholder="'+p.label+'" '+(p.locked?'disabled':'')+' style="flex:1;padding:7px 11px;'+(p.locked?'opacity:.5;cursor:not-allowed;':'')+'">'
+      +(p.locked?'<span style="font-size:.65rem;color:var(--tl);flex-shrink:0;padding:0 4px;">core</span>':'')
       +'</div>';
   }).join('');
   renderPageNamesPreview(pages);
