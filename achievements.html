@@ -164,7 +164,7 @@
   // ── NAV MENU ──
   const navMenu = load('nukala_navmenu');
   if(navMenu && navMenu.items){
-    const activeItems = navMenu.items.filter(i=>i.active);
+    const activeItems = navMenu.items.filter(i=>i.active!==false);
     document.querySelectorAll('nav .nav-links').forEach(ul=>{
       const currentPage = location.pathname.split('/').pop()||'home.html';
       ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');
@@ -364,7 +364,7 @@
   // ── NAV MENU ──
   const navMenu = load('nukala_navmenu');
   if(navMenu && navMenu.items){
-    const activeItems = navMenu.items.filter(i=>i.active);
+    const activeItems = navMenu.items.filter(i=>i.active!==false);
     document.querySelectorAll('nav .nav-links').forEach(ul=>{
       const currentPage = location.pathname.split('/').pop()||'home.html';
       ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');

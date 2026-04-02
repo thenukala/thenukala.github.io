@@ -409,6 +409,7 @@
       <!-- Toolbar -->
       <div class="tree-toolbar">
         <button class="tb-btn" onclick="fitToScreen()" data-translate="btn-fit">⊡ Fit to Screen</button>
+        <button class="tb-btn" id="btnDownloadTree" onclick="downloadTree()" style="background:linear-gradient(135deg,var(--sage-dark),var(--sage));color:white;border-color:var(--sage-dark);">📥 Download Image</button>
         <button class="tb-btn" onclick="resetView()" data-translate="btn-reset">↺ Reset View</button>
         <div class="zoom-wrap">
           <button class="z-btn" onclick="zoomOut()">−</button>
@@ -665,7 +666,16 @@
     // ═══════════════════════════════════
     function showPanel(id){
       const members=load('nukala_tree_data');
-      const m=members[id]; if(!m) return;
+      const raw=members[id]; if(!raw) return;
+      // Merge contact details (phone, whatsapp, email, city stored in contacts)
+      const contacts=load('nukala_contacts')||{};
+      const contact=contacts[id]||{};
+      const m=Object.assign({}, raw, {
+        phone: raw.phone||contact.phone||'',
+        whatsapp: raw.whatsapp||contact.whatsapp||'',
+        email: raw.email||contact.email||'',
+        city: raw.city||contact.city||''
+      });
       selectedId=id; renderTree();
 
       const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
@@ -800,7 +810,7 @@
   // ── NAV MENU ──
   const navMenu = load('nukala_navmenu');
   if(navMenu && navMenu.items){
-    const activeItems = navMenu.items.filter(i=>i.active);
+    const activeItems = navMenu.items.filter(i=>i.active!==false);
     document.querySelectorAll('nav .nav-links').forEach(ul=>{
       const currentPage = location.pathname.split('/').pop()||'home.html';
       ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');
@@ -944,5 +954,59 @@
   <footer>
     &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
   </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+  function downloadTree(){
+    var btn = document.getElementById('btnDownloadTree');
+    btn.textContent = '⏳ Capturing...';
+    btn.disabled = true;
+
+    var canvas = document.getElementById('treeCanvas');
+    var vp     = document.getElementById('treeVp');
+
+    // Temporarily reset zoom/scroll so full tree is captured
+    var prevTransform = canvas.style.transform;
+    canvas.style.transform = 'scale(1)';
+    var prevScroll = [vp.scrollLeft, vp.scrollTop];
+    vp.scrollLeft = 0; vp.scrollTop = 0;
+
+    // Get full canvas dimensions
+    var fullW = canvas.scrollWidth;
+    var fullH = canvas.scrollHeight;
+
+    html2canvas(canvas, {
+      backgroundColor: '#fdfaf4',
+      scale: 1.5,
+      width: fullW,
+      height: fullH,
+      scrollX: 0,
+      scrollY: 0,
+      useCORS: true,
+      logging: false
+    }).then(function(cvs){
+      // Restore zoom/scroll
+      canvas.style.transform = prevTransform;
+      vp.scrollLeft = prevScroll[0];
+      vp.scrollTop  = prevScroll[1];
+      btn.textContent = '📥 Download Image';
+      btn.disabled = false;
+
+      // Download as PNG
+      var link = document.createElement('a');
+      var settings = {};
+      try{ settings = JSON.parse(localStorage.getItem('nukala_settings')||'{}'); }catch(e){}
+      var familyName = settings.familyName || 'Nukala';
+      link.download = familyName + '-Family-Tree.png';
+      link.href = cvs.toDataURL('image/png');
+      link.click();
+    }).catch(function(err){
+      canvas.style.transform = prevTransform;
+      btn.textContent = '📥 Download Image';
+      btn.disabled = false;
+      alert('Could not capture tree. Try Fit to Screen first, then try again.');
+    });
+  }
+  </script>
 </body>
 </html>

@@ -433,7 +433,10 @@ opacity:0.04;pointer-events:none;z-index:0;}
         <div class="sh">Family <em>Contacts</em></div>
         <p class="ss">Private contact details per member — admin only.</p>
         <div class="div"></div>
-        <div class="sb">🔍<input type="text" placeholder="Search..." id="cSrch"/></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+          <div class="sb" style="flex:1;min-width:200px;">🔍<input type="text" placeholder="Search contacts..." id="cSrch"/></div>
+          <button class="btn bg bsm" id="expContactsBtn" style="flex-shrink:0;white-space:nowrap;">📥 Download Excel</button>
+        </div>
         <div class="grid" id="contactsGrid"></div>
       </div>
 
@@ -1236,6 +1239,66 @@ function saveCE(){
   sv('contacts',contacts);closeM('ceModal');renderContacts();toast('Contact saved!');
 }
 
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CONTACTS EXCEL EXPORT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.getElementById('expContactsBtn').addEventListener('click', function(){
+  var members  = Object.values(ld('members'));
+  var contacts = ld('contacts');
+  var settings = ld('settings');
+
+  // Build rows — one per member with all details
+  var headers = [
+    'First Name','Last Name','Generation','Role',
+    'Date of Birth','Birthplace','Occupation',
+    'City / Lives In','Phone','WhatsApp','Email',
+    'Birthday (Contact)','Social Media','Notes (Contact)',
+    'Father','Mother','Spouse','Deceased'
+  ];
+
+  // Helper: get name from id
+  var allMem = ld('members');
+  function getName(id){ if(!id||!allMem[id]) return ''; return [allMem[id].firstName,allMem[id].lastName].filter(Boolean).join(' '); }
+
+  var rows = members.map(function(m){
+    var c = contacts[m.id]||{};
+    return [
+      m.firstName||'',
+      m.lastName||'',
+      m.gen||'',
+      m.role||'',
+      m.born||'',
+      m.place||'',
+      m.occ||'',
+      m.city||c.city||'',
+      m.phone||c.phone||'',
+      m.whatsapp||c.whatsapp||'',
+      m.email||c.email||'',
+      c.birthday||'',
+      c.social||'',
+      c.notes||'',
+      getName(m.fatherId),
+      getName(m.motherId),
+      getName(m.spouseId),
+      m.deceased?'Yes':''
+    ];
+  });
+
+  // Sort by generation then name
+  rows.sort(function(a,b){
+    var gA=parseInt(a[2])||99, gB=parseInt(b[2])||99;
+    if(gA!==gB) return gA-gB;
+    return (a[0]+a[1]).localeCompare(b[0]+b[1]);
+  });
+
+  var familyName = (settings&&settings.familyName)||'Nukala';
+  var date = new Date().toISOString().slice(0,10);
+  dlCsv([headers].concat(rows), familyName+'-Contacts-'+date+'.csv');
+  toast('✅ Contacts downloaded! Open in Excel or Google Sheets.');
+  log('Exported contacts to CSV');
+});
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ANNOUNCEMENTS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1556,13 +1619,13 @@ document.getElementById('savePageNamesBtn').addEventListener('click', function()
     var inp = document.getElementById('pn-'+i);
     if(inp && !p.locked) p.label = inp.value.trim()||p.label;
   });
-  // Save order + labels to navmenu
+  // Save order + labels to navmenu (active defaults to true if not set)
   var items = _pnPages.map(function(p){
-    return {href:p.href, label:p.label, active:p.active!==false};
+    return {href:p.href, label:p.label, active:p.active===false?false:true};
   });
   svRaw('nukala_navmenu', {items:items});
   log('Page names and order saved');
-  toast('✅ Saved! Click Publish to Site to apply to all visitors.');
+  toast('✅ Order & labels saved! Now click 🌐 Publish to Site in the sidebar to apply to all family members.');
   renderPageNamesPreview(_pnPages);
 });
 
