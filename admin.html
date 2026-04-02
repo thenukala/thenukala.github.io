@@ -345,6 +345,7 @@ opacity:0.04;pointer-events:none;z-index:0;}
         <div class="div"></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
           <button class="btn bg bsm" id="addMemberBtn">+ Add Member</button>
+          <a href="tree.html" target="_blank" class="btn bo bsm" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;">🌳 View Tree &amp; Download</a>
           <select id="mGenF" class="fi" style="width:auto;padding:7px 11px;margin-left:auto;">
             <option value="">All Gens</option>
             <option value="1">Gen 1</option><option value="2">Gen 2</option><option value="3">Gen 3</option>
@@ -453,6 +454,14 @@ opacity:0.04;pointer-events:none;z-index:0;}
             <button class="btn bg bsm" id="sendEmailBtn">📧 Email</button>
             <button class="btn bsm" id="sendWABtn" style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.68rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:6px 12px;">📱 WhatsApp</button>
           </div>
+        </div>
+        <div class="panel">
+          <div class="pt" style="display:flex;align-items:center;justify-content:space-between;">
+            Send to Each Member on WhatsApp
+            <button class="btn bo bsm" onclick="refreshWAList()" style="font-size:.65rem;">🔄 Refresh</button>
+          </div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:10px;">Click any name to open WhatsApp with your message pre-filled. Send one by one.</p>
+          <div id="annWAList" style="font-size:.8rem;"></div>
         </div>
         <div class="panel"><div class="pt">Sent History</div><div id="annLog" style="font-size:.8rem;color:var(--tm);">No announcements sent yet.</div></div>
       </div>
@@ -1303,8 +1312,74 @@ document.getElementById('expContactsBtn').addEventListener('click', function(){
 // ANNOUNCEMENTS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.getElementById('sendEmailBtn').addEventListener('click',function(){var title=document.getElementById('annTitle').value.trim(),msg=document.getElementById('annMsg').value.trim();if(!title||!msg){alert('Title and message required.');return;}window.open('mailto:?subject='+encodeURIComponent(title)+'&body='+encodeURIComponent(msg));var l=lda('annLog');l.push('📧 '+title+' — '+(new Date().toLocaleDateString()));sv('annLog',l);renderAnn();toast('Email client opened!');});
-document.getElementById('sendWABtn').addEventListener('click',function(){var title=document.getElementById('annTitle').value.trim(),msg=document.getElementById('annMsg').value.trim();if(!msg){alert('Message required.');return;}window.open('https://wa.me/?text='+encodeURIComponent('*'+title+'*\n\n'+msg));var l=lda('annLog');l.push('📱 '+title+' — '+(new Date().toLocaleDateString()));sv('annLog',l);renderAnn();toast('WhatsApp opened!');});
-function renderAnn(){var logs=lda('annLog'),el=document.getElementById('annLog');el.innerHTML=logs.length?logs.slice(-10).reverse().map(function(l){return '<div style="padding:4px 0;border-bottom:1px solid var(--b);font-size:.78rem;color:var(--tm);">'+l+'</div>';}).join(''):'No announcements sent yet.';}
+document.getElementById('sendWABtn').addEventListener('click',function(){
+  var title=document.getElementById('annTitle').value.trim();
+  var msg=document.getElementById('annMsg').value.trim();
+  if(!msg){alert('Message required.');return;}
+  // Open general WA share (no specific recipient)
+  window.open('https://wa.me/?text='+encodeURIComponent('*'+title+'*\n\n'+msg));
+  var l=lda('annLog');
+  l.push('📱 '+title+' — '+(new Date().toLocaleDateString()));
+  sv('annLog',l);
+  renderAnn();
+  toast('WhatsApp opened! Use the list below to send to individual members.');
+});
+
+// Update WA list when message changes
+document.getElementById('annMsg').addEventListener('input', refreshWAList);
+document.getElementById('annTitle').addEventListener('input', refreshWAList);
+function renderAnn(){
+  var logs=lda('annLog'),el=document.getElementById('annLog');
+  el.innerHTML=logs.length?logs.slice(-10).reverse().map(function(l){return '<div style="padding:4px 0;border-bottom:1px solid var(--b);font-size:.78rem;color:var(--tm);">'+l+'</div>';}).join(''):'No announcements sent yet.';
+  refreshWAList();
+}
+
+function refreshWAList(){
+  var el = document.getElementById('annWAList');
+  if(!el) return;
+  var members  = Object.values(ld('members'));
+  var contacts = ld('contacts');
+  var msg = (document.getElementById('annMsg')||{}).value||'';
+  var title = (document.getElementById('annTitle')||{}).value||'';
+  var fullMsg = (title?'*'+title+'*\n\n':'')+msg;
+
+  // Filter members who have a WhatsApp number
+  var withWA = members.filter(function(m){
+    var c=contacts[m.id]||{};
+    return m.whatsapp||c.whatsapp;
+  });
+  var noWA   = members.filter(function(m){
+    var c=contacts[m.id]||{};
+    return !m.whatsapp&&!c.whatsapp;
+  });
+
+  if(!members.length){
+    el.innerHTML='<span style="color:var(--tl);">No members added yet.</span>';
+    return;
+  }
+
+  var rows = withWA.map(function(m){
+    var c   = contacts[m.id]||{};
+    var wa  = m.whatsapp||c.whatsapp||'';
+    var num = wa.replace(/[^0-9]/g,'');
+    var name= [m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+    var url = 'https://wa.me/'+num+'?text='+encodeURIComponent(fullMsg||'Hello '+name+'!');
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b);">'
+      +'<div><strong style="font-size:.8rem;">'+name+'</strong>'
+      +(m.gen?'<span style="font-size:.68rem;color:var(--tl);margin-left:6px;">Gen '+m.gen+'</span>':'')
+      +'<div style="font-size:.7rem;color:var(--tl);">'+wa+'</div></div>'
+      +'<a href="'+url+'" target="_blank" style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;text-decoration:none;border-radius:8px;padding:5px 12px;font-size:.7rem;font-weight:500;white-space:nowrap;">📱 Send</a>'
+      +'</div>';
+  }).join('');
+
+  var noWANote = noWA.length
+    ? '<div style="font-size:.72rem;color:var(--tl);margin-top:8px;">⚠️ '+noWA.length+' member(s) have no WhatsApp number — add it in Admin → Members or Contacts.</div>'
+    : '';
+
+  el.innerHTML = withWA.length
+    ? rows + noWANote
+    : '<div style="color:var(--tl);font-size:.78rem;">No members have WhatsApp numbers yet. Add WhatsApp numbers in Admin → Members or Contacts.</div>';
+}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PAGE VISIBILITY

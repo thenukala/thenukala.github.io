@@ -714,13 +714,13 @@
         ${m.born?`<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">${m.born}</div></div>`:''}
         ${m.died?`<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">${m.died}</div></div>`:''}
         ${m.place?`<div class="sp-row"><div class="sp-lbl">Birthplace</div><div class="sp-val">${m.place}</div></div>`:''}
-        ${m.occupation?`<div class="sp-row"><div class="sp-lbl">Occupation</div><div class="sp-val">${m.occupation}</div></div>`:''}
+        ${(m.occ||m.occupation)?`<div class="sp-row"><div class="sp-lbl">Occupation</div><div class="sp-val">${m.occ||m.occupation}</div></div>`:''}
         ${m.city?`<div class="sp-row"><div class="sp-lbl">📍 Lives In</div><div class="sp-val">${m.city}</div></div>`:''}
         ${m.phone?`<div class="sp-row"><div class="sp-lbl">📞 Phone</div><div class="sp-val"><a href="tel:${m.phone}" style="color:inherit;">${m.phone}</a></div></div>`:''}
         ${m.whatsapp?`<div class="sp-row"><div class="sp-lbl">💬 WhatsApp</div><div class="sp-val"><a href="https://wa.me/${m.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:var(--sage-dark);">Chat on WhatsApp</a></div></div>`:''}
         ${m.email?`<div class="sp-row"><div class="sp-lbl">✉️ Email</div><div class="sp-val"><a href="javascript:void(0)" onclick="navigator.clipboard&&navigator.clipboard.writeText('${m.email}')" style="color:var(--sage-dark);">${m.email}</a></div></div>`:''}
         ${m.notes?`<div class="sp-div"></div><div class="sp-notes">${m.notes}</div>`:''}
-        ${rels?`<div class="sp-div"></div><div class="sp-rel-title">Family Connections</div>${rels}`:''}
+        ${rels?`<div class="sp-div"></div><div class="sp-rel-title">Family Connections</div>${rels}`:`<div class="sp-div"></div><div style="font-size:.72rem;color:var(--text-light);text-align:center;padding:8px 0;">No family connections linked yet.<br>Set Father/Mother/Spouse in Admin → Members.</div>`}
         
       `;
       document.getElementById('sidePanel').classList.add('open');
