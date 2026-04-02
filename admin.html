@@ -973,7 +973,8 @@ var PAGE_LOADERS = {
   dash:renderDash, members:renderMembers, history:renderHist,
   gallery:renderGal, facts:renderFacts, events:renderEvts,
   recipes:renderRecs, achievements:renderAchs, videos:renderVids,
-  polls:renderPolls, stats:renderStats, map:renderMap, qr:renderQR, join:renderJoin,
+  polls:renderPolls,
+  stats:function(){},  map:function(){},  qr:function(){},  join:function(){},
   contacts:renderContacts, announce:renderAnn,
   pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme');}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
