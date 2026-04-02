@@ -221,6 +221,10 @@ opacity:0.04;pointer-events:none;z-index:0;}
       <button class="ni" data-page="achievements">🏆 Achievements</button>
       <button class="ni" data-page="videos">🎥 Videos</button>
       <button class="ni" data-page="polls">🗳️ Polls</button>
+      <button class="ni" data-page="stats">📊 Stats</button>
+      <button class="ni" data-page="map">🗺️ Map</button>
+      <button class="ni" data-page="qr">📱 QR Code</button>
+      <button class="ni" data-page="join">🌳 Join Tree</button>
       <div class="nsec">Communication</div>
       <button class="ni" data-page="contacts">📱 Contacts</button>
       <button class="ni" data-page="announce">📣 Announcements</button>
@@ -279,7 +283,62 @@ opacity:0.04;pointer-events:none;z-index:0;}
         </div>
       </div>
 
-      <!-- MEMBERS -->
+      
+      <!-- STATS PAGE INFO -->
+      <div class="page" id="page-stats">
+        <div class="sh">Stats <em>Page</em></div>
+        <p class="ss">The Stats page auto-generates family statistics from your members data.</p>
+        <div class="div"></div>
+        <div class="panel">
+          <div class="pt">About This Page</div>
+          <p style="font-size:.82rem;color:var(--tm);line-height:1.7;">Stats are calculated automatically from the Members you add. No manual editing needed — add more members to see richer statistics.</p>
+          <a href="stats.html" target="_blank" class="btn bo bsm" style="margin-top:12px;display:inline-block;text-decoration:none;">👁️ View Stats Page</a>
+        </div>
+      </div>
+
+      <!-- MAP PAGE INFO -->
+      <div class="page" id="page-map">
+        <div class="sh">Map <em>Page</em></div>
+        <p class="ss">The Map page shows where family members live based on their City field.</p>
+        <div class="div"></div>
+        <div class="panel">
+          <div class="pt">About This Page</div>
+          <p style="font-size:.82rem;color:var(--tm);line-height:1.7;">The family map is generated automatically from the City field of each member. Make sure to fill in the City when adding or editing members.</p>
+          <a href="map.html" target="_blank" class="btn bo bsm" style="margin-top:12px;display:inline-block;text-decoration:none;">👁️ View Map Page</a>
+        </div>
+      </div>
+
+      <!-- QR PAGE INFO -->
+      <div class="page" id="page-qr">
+        <div class="sh">QR Code <em>Page</em></div>
+        <p class="ss">Share the family website with a QR code that anyone can scan.</p>
+        <div class="div"></div>
+        <div class="panel">
+          <div class="pt">About This Page</div>
+          <p style="font-size:.82rem;color:var(--tm);line-height:1.7;">The QR code links directly to your family website. Print it and share at family gatherings, or send the image on WhatsApp so relatives can save the site easily.</p>
+          <a href="qr.html" target="_blank" class="btn bo bsm" style="margin-top:12px;display:inline-block;text-decoration:none;">👁️ View QR Page</a>
+        </div>
+      </div>
+
+      <!-- JOIN TREE PAGE INFO -->
+      <div class="page" id="page-join">
+        <div class="sh">Join Tree <em>Form</em></div>
+        <p class="ss">Family members fill this in to submit their details for the tree.</p>
+        <div class="div"></div>
+        <div class="panel">
+          <div class="pt">How It Works</div>
+          <p style="font-size:.82rem;color:var(--tm);line-height:1.7;">Family members visit this page, fill in their personal details, and send them to you via WhatsApp or Email. You then add them to the Members section manually.</p>
+          <p style="font-size:.82rem;color:var(--tm);margin-top:8px;">Share the link: <strong>nukalafamily.com/join.html</strong></p>
+          <a href="join.html" target="_blank" class="btn bo bsm" style="margin-top:12px;display:inline-block;text-decoration:none;">👁️ View Join Form</a>
+        </div>
+        <div class="panel">
+          <div class="pt">Receive Submissions At</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:8px;">Set in Admin → Settings → Join Tree Form section</p>
+          <button class="btn bo bsm" onclick="document.querySelector('.ni[data-page=\'settings\']').click()">⚙️ Go to Settings</button>
+        </div>
+      </div>
+
+<!-- MEMBERS -->
       <div class="page" id="page-members">
         <div class="sh"><em>Family</em> Members</div>
         <p class="ss">Add members with photos. Paste IDs into Father/Mother/Spouse to link on the tree.</p>
@@ -914,7 +973,8 @@ var PAGE_LOADERS = {
   dash:renderDash, members:renderMembers, history:renderHist,
   gallery:renderGal, facts:renderFacts, events:renderEvts,
   recipes:renderRecs, achievements:renderAchs, videos:renderVids,
-  polls:renderPolls, contacts:renderContacts, announce:renderAnn,
+  polls:renderPolls, stats:renderStats, map:renderMap, qr:renderQR, join:renderJoin,
+  contacts:renderContacts, announce:renderAnn,
   pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme');}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
 
@@ -1434,22 +1494,29 @@ function renderPageNames(){
   var pages = getNavPages();
   var el = document.getElementById('pageNamesEditor');
   if(!el) return;
-  var btnBase = 'background:none;border:1px solid var(--b);border-radius:5px;width:26px;height:22px;cursor:pointer;font-size:.7rem;line-height:1;padding:0;';
+  var btnSt = 'background:var(--w);border:1.5px solid var(--b);border-radius:6px;width:28px;height:24px;cursor:pointer;font-size:.75rem;line-height:1;padding:0;color:var(--td);';
   el.innerHTML = pages.map(function(p,i){
-    var upStyle  = btnBase + (i===0                 ? 'opacity:.25;cursor:not-allowed;' : '');
-    var dnStyle  = btnBase + (i===pages.length-1    ? 'opacity:.25;cursor:not-allowed;' : '');
-    var upDisabled  = i===0               ? 'disabled' : '';
-    var dnDisabled  = i===pages.length-1  ? 'disabled' : '';
-    return '<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);">'
+    var upDis = i===0 ? 'disabled style="opacity:.3;cursor:default;"' : '';
+    var dnDis = i===pages.length-1 ? 'disabled style="opacity:.3;cursor:default;"' : '';
+    return '<div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--b);">'
       +'<div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0;">'
-      +'<button '+upDisabled+' onclick="pnMove('+i+',-1)" style="'+upStyle+'">▲</button>'
-      +'<button '+dnDisabled+' onclick="pnMove('+i+',1)"  style="'+dnStyle+'">▼</button>'
+      +'<button class="pn-up" data-i="'+i+'" '+upDis+' style="'+btnSt+'">▲</button>'
+      +'<button class="pn-dn" data-i="'+i+'" '+dnDis+' style="'+btnSt+'">▼</button>'
       +'</div>'
-      +'<div style="width:120px;font-size:.72rem;color:var(--tl);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+p.href+'</div>'
-      +'<input type="text" class="fi" id="pn-'+i+'" value="'+p.label.replace(/"/g,'&quot;')+'" placeholder="'+p.label+'" '+(p.locked?'disabled':'')+' style="flex:1;padding:7px 11px;'+(p.locked?'opacity:.5;cursor:not-allowed;':'')+'">'
+      +'<div style="width:115px;font-size:.72rem;color:var(--tl);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+p.href+'</div>'
+      +'<input type="text" class="fi" id="pn-'+i+'" value="'+p.label.replace(/"/g,'&quot;')+'" placeholder="'+p.label+'" '+(p.locked?'disabled ':'')+' style="flex:1;padding:7px 11px;'+(p.locked?'opacity:.5;cursor:not-allowed;':'')+'">'
       +(p.locked?'<span style="font-size:.65rem;color:var(--tl);flex-shrink:0;padding:0 4px;">core</span>':'')
       +'</div>';
   }).join('');
+  // Attach via event delegation — much more reliable than inline onclick
+  el.onclick = function(e){
+    var btn = e.target.closest('button');
+    if(!btn) return;
+    var i = parseInt(btn.getAttribute('data-i'));
+    if(isNaN(i)) return;
+    if(btn.classList.contains('pn-up'))  pnMove(i, -1);
+    if(btn.classList.contains('pn-dn'))  pnMove(i,  1);
+  };
   renderPageNamesPreview(pages);
 }
 
