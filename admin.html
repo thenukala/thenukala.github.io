@@ -538,7 +538,7 @@ opacity:0.04;pointer-events:none;z-index:0;}
       <!-- PAGE NAMES -->
       <div class="page" id="page-pagenames">
         <div class="sh">Page <em>Names</em></div>
-        <p class="ss">Customise the label shown in the navigation menu for each page.</p>
+        <p class="ss">Customise the label and order of pages in the navigation menu. Use ▲▼ to reorder.</p>
         <div class="div"></div>
         <div class="notice">💡 Changes apply to all pages instantly. The page files themselves don't change — only the nav label visitors see.</div>
         <div class="panel">
@@ -1233,7 +1233,7 @@ function visEnableAll(){PAGES.forEach(function(p){var cb=document.getElementById
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PAGE EDITOR
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var PAGE_TEXTS=[{key:'history',page:'History',file:'history.html',eye:'Our Story',title:'Nukala Family History',desc:'A journey through time.'},{key:'gallery',page:'Gallery',file:'gallery.html',eye:'Memories',title:'Photo Gallery',desc:'A visual archive.'},{key:'facts',page:'Facts',file:'facts.html',eye:'Did You Know?',title:'Interesting Family Facts',desc:'Fascinating milestones.'},{key:'tree',page:'Family Tree',file:'tree.html',eye:'Our Roots',title:'Nukala Family Tree',desc:'Click any leaf to discover.'},{key:'events',page:'Events',file:'events.html',eye:'Upcoming',title:'Family Events',desc:'Reunions and celebrations.'},{key:'recipes',page:'Recipes',file:'recipes.html',eye:'Traditional',title:'Family Recipes',desc:'Cherished recipes.'},{key:'achievements',page:'Achievements',file:'achievements.html',eye:'Pride of the Family',title:'Family Achievements',desc:'Degrees and awards.'},{key:'videos',page:'Videos',file:'videos.html',eye:'Memories in Motion',title:'Family Videos',desc:'Memorable moments.'},{key:'polls',page:'Polls',file:'polls.html',eye:'Have Your Say',title:'Family Polls',desc:'Every voice counts.'},{key:'stats',page:'Stats',file:'stats.html',eye:'By The Numbers',title:'Family Statistics',desc:'Fascinating insights.'},{key:'map',page:'Map',file:'map.html',eye:'Where We Are',title:'Family Map',desc:'See where we live.'},{key:'contact',page:'Contact',file:'contact.html',eye:'Contribute',title:'Get In Touch',desc:'Share a story or photo.'}];
+var PAGE_TEXTS=[{key:'history',page:'History',file:'history.html',eye:'Our Story',title:'Nukala Family History',desc:'A journey through time.'},{key:'gallery',page:'Gallery',file:'gallery.html',eye:'Memories',title:'Photo Gallery',desc:'A visual archive.'},{key:'facts',page:'Facts',file:'facts.html',eye:'Did You Know?',title:'Interesting Family Facts',desc:'Fascinating milestones.'},{key:'tree',page:'Family Tree',file:'tree.html',eye:'Our Roots',title:'Nukala Family Tree',desc:'Click any leaf to discover.'},{key:'events',page:'Events',file:'events.html',eye:'Upcoming',title:'Family Events',desc:'Reunions and celebrations.'},{key:'recipes',page:'Recipes',file:'recipes.html',eye:'Traditional',title:'Family Recipes',desc:'Cherished recipes.'},{key:'achievements',page:'Achievements',file:'achievements.html',eye:'Pride of the Family',title:'Family Achievements',desc:'Degrees and awards.'},{key:'videos',page:'Videos',file:'videos.html',eye:'Memories in Motion',title:'Family Videos',desc:'Memorable moments.'},{key:'polls',page:'Polls',file:'polls.html',eye:'Have Your Say',title:'Family Polls',desc:'Every voice counts.'},{key:'stats',page:'Stats',file:'stats.html',eye:'By The Numbers',title:'Family Statistics',desc:'Fascinating insights.'},{key:'map',page:'Map',file:'map.html',eye:'Where We Are',title:'Family Map',desc:'See where we live.'},{key:'contact',page:'Contact',file:'contact.html',eye:'Contribute',title:'Get In Touch',desc:'Share a story or photo.'},{key:'join',page:'Join Tree',file:'join.html',eye:'Join the Family',title:'Join the Family Tree',desc:'Help us build the most complete Nukala family archive.'}];
 
 document.querySelectorAll('.ptb[data-tab]').forEach(function(btn){
   btn.addEventListener('click',function(){
@@ -1405,6 +1405,7 @@ var DEFAULT_NAV_PAGES = [
   {href:'videos.html',  label:'Videos',        locked:false},
   {href:'qr.html',      label:'QR Code', locked:false},
   {href:'contact.html', label:'Contact',       locked:false},
+  {href:'join.html',    label:'Join Tree',     locked:false},
 ];
 
 function getNavPages(){
@@ -1424,13 +1425,32 @@ function renderPageNames(){
   var pages = getNavPages();
   var el = document.getElementById('pageNamesEditor');
   el.innerHTML = pages.map(function(p,i){
-    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b);">'
-      +'<div style="width:130px;font-size:.75rem;font-weight:500;color:var(--tl);flex-shrink:0;">'+p.href+'</div>'
+    var isFirst=i===0, isLast=i===pages.length-1;
+    return '<div class="pn-row" data-idx="'+i+'" style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);">'
+      +'<div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0;">'
+      +'<button onclick="pnMove('+i+',-1)" '+(isFirst?'disabled style="opacity:.3;"':'')+' style="background:none;border:1px solid var(--b);border-radius:5px;width:24px;height:20px;cursor:pointer;font-size:.65rem;line-height:1;">▲</button>'
+      +'<button onclick="pnMove('+i+',1)" '+(isLast?'disabled style="opacity:.3;"':'')+' style="background:none;border:1px solid var(--b);border-radius:5px;width:24px;height:20px;cursor:pointer;font-size:.65rem;line-height:1;">▼</button>'
+      +'</div>'
+      +'<div style="width:110px;font-size:.72rem;color:var(--tl);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+p.href+'</div>'
       +'<input type="text" class="fi" id="pn-'+i+'" value="'+p.label.replace(/"/g,'&quot;')+'" placeholder="'+p.label+'" '+(p.locked?'disabled style="opacity:.5;cursor:not-allowed;"':'')+' style="flex:1;padding:7px 11px;"/>'
       +(p.locked?'<span style="font-size:.65rem;color:var(--tl);flex-shrink:0;">core</span>':'')
       +'</div>';
   }).join('');
   renderPageNamesPreview(pages);
+}
+
+function pnMove(idx, dir){
+  var nm = ldRaw('nukala_navmenu');
+  if(!nm||!nm.items||!nm.items.length){
+    nm = {items: DEFAULT_NAV_PAGES.map(function(p){return {href:p.href,label:p.label,active:true};})};
+  }
+  var items = nm.items;
+  var newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= items.length) return;
+  var tmp = items[idx]; items[idx] = items[newIdx]; items[newIdx] = tmp;
+  svRaw('nukala_navmenu', nm);
+  renderPageNames();
+  toast('Order updated! Click Save Page Names to keep, then Publish to Site.');
 }
 
 function renderPageNamesPreview(pages){
@@ -1450,14 +1470,18 @@ document.getElementById('pageNamesEditor').addEventListener('input', function(){
 });
 
 document.getElementById('savePageNamesBtn').addEventListener('click', function(){
+  // Use current order from navmenu (may have been reordered by pnMove)
   var pages = getNavPages();
+  var nm = ldRaw('nukala_navmenu')||{};
   var items = pages.map(function(p,i){
     var inp = document.getElementById('pn-'+i);
-    return {href:p.href, label:inp&&!p.locked ? inp.value.trim()||p.label : p.label, active:p.active!==false};
+    var label = inp&&!p.locked ? (inp.value.trim()||p.label) : p.label;
+    return {href:p.href, label:label, active:p.active!==false};
   });
   svRaw('nukala_navmenu', {items:items});
-  log('Page names saved');
-  toast('✅ Page names saved! Nav updated on all pages.');
+  log('Page names and order saved');
+  toast('✅ Page names & order saved! Now click Publish to Site.');
+  renderPageNamesPreview(pages);
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
