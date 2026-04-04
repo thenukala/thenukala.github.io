@@ -434,6 +434,11 @@
         li.innerHTML='<a href="join.html" '+(currentPage==='join.html'?'class="active"':'')+'>Join Tree</a>';
         ul.appendChild(li);
       }
+      if(!ul.querySelector('a[href="about.html"]')){
+        var li2=document.createElement('li');
+        li2.innerHTML='<a href="about.html" '+(currentPage==='about.html'?'class="active"':'')+'>About</a>';
+        ul.appendChild(li2);
+      }
     });
   } else {
     document.querySelectorAll('nav .nav-links').forEach(function(ul){

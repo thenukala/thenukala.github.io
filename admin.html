@@ -225,6 +225,7 @@ opacity:0.04;pointer-events:none;z-index:0;}
       <button class="ni" data-page="map">🗺️ Map</button>
       <button class="ni" data-page="qr">📱 QR Code</button>
       <button class="ni" data-page="join">🌳 Join Tree</button>
+      <button class="ni" data-page="about">ℹ️ About Page</button>
       <div class="nsec">Communication</div>
       <button class="ni" data-page="contacts">📱 Contacts</button>
       <button class="ni" data-page="announce">📣 Announcements</button>
@@ -343,9 +344,17 @@ opacity:0.04;pointer-events:none;z-index:0;}
         <div class="sh"><em>Family</em> Members</div>
         <p class="ss">Add members with photos. Paste IDs into Father/Mother/Spouse to link on the tree.</p>
         <div class="div"></div>
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="pt">📥 Download Family Tree</div>
+          <p style="font-size:.78rem;color:var(--tm);margin-bottom:14px;line-height:1.6;">Download a snapshot of the entire family tree as an image or PDF. The tree page will open, capture automatically, and download.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn bg bsm" onclick="downloadTreeFromAdmin('png')" style="display:flex;align-items:center;gap:6px;">🖼️ Download as Image (PNG)</button>
+            <button class="btn bo bsm" onclick="downloadTreeFromAdmin('pdf')" style="display:flex;align-items:center;gap:6px;">📄 Download as PDF</button>
+          </div>
+          <p style="font-size:.7rem;color:var(--tl);margin-top:10px;">A new tab will open, capture the tree, download the file, then close automatically.</p>
+        </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
           <button class="btn bg bsm" id="addMemberBtn">+ Add Member</button>
-          <a href="tree.html" target="_blank" class="btn bo bsm" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;">🌳 View Tree &amp; Download</a>
           <select id="mGenF" class="fi" style="width:auto;padding:7px 11px;margin-left:auto;">
             <option value="">All Gens</option>
             <option value="1">Gen 1</option><option value="2">Gen 2</option><option value="3">Gen 3</option>
@@ -464,6 +473,40 @@ opacity:0.04;pointer-events:none;z-index:0;}
           <div id="annWAList" style="font-size:.8rem;"></div>
         </div>
         <div class="panel"><div class="pt">Sent History</div><div id="annLog" style="font-size:.8rem;color:var(--tm);">No announcements sent yet.</div></div>
+      </div>
+
+
+      <!-- ABOUT PAGE -->
+      <div class="page" id="page-about">
+        <div class="sh">About <em>Page</em></div>
+        <p class="ss">Add the story behind this website — developers, inspirations, and contributors.</p>
+        <div class="div"></div>
+
+        <div class="panel">
+          <div class="pt">Page Header</div>
+          <div class="fg"><label>Page Title</label><input type="text" class="fi" id="ab-title" placeholder="About This Project"/></div>
+          <div class="fg"><label>Page Subtitle</label><input type="text" class="fi" id="ab-desc" placeholder="The story behind the Nukala Family Archive..."/></div>
+        </div>
+
+        <div class="panel">
+          <div class="pt">Opening Message / Quote</div>
+          <div class="fg"><label>Message</label><textarea class="fi" id="ab-message" rows="3" style="resize:vertical;" placeholder="A warm message or quote about the family..."></textarea></div>
+          <div class="fg"><label>Author of Quote</label><input type="text" class="fi" id="ab-msgname" placeholder="e.g. Ramu Nukala"/></div>
+        </div>
+
+        <div class="panel">
+          <div class="pt" style="display:flex;align-items:center;justify-content:space-between;">
+            People Sections
+            <button class="btn bg bsm" onclick="abAddSection()" style="font-size:.65rem;">+ Add Section</button>
+          </div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:10px;">Create sections like "Developers", "Inspired By", "Special Thanks" and add people with photos to each.</p>
+          <div id="abSections"></div>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="btn bg" id="saveAboutBtn">💾 Save About Page</button>
+          <a href="about.html" target="_blank" class="btn bo" style="text-decoration:none;">👁️ Preview</a>
+        </div>
       </div>
 
       <!-- PAGE VISIBILITY -->
@@ -704,8 +747,32 @@ opacity:0.04;pointer-events:none;z-index:0;}
           </div>
         </div>
         <div class="panel">
+          <div class="pt">Family Tree Page</div>
+          <div class="sr">
+            <div>
+              <div class="srl">Show Download Button on Tree Page</div>
+              <div class="srd">Allow family members to download the tree as an image directly from the tree page</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span id="treeDownloadLabel" style="font-size:.76rem;font-weight:600;color:var(--r);">Hidden</span>
+              <div class="vt">
+                <input type="checkbox" id="treeDownloadToggle" onchange="toggleTreeDownload(this.checked)"/>
+                <div id="treeDownloadTrack" class="vtr" style="background:#ccc;"></div>
+                <div id="treeDownloadThumb" class="vth" style="transform:translateX(0);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
           <div class="pt">Site Info</div>
           <div class="fr"><div class="fg"><label>Family Name</label><input type="text" class="fi" id="s-famname" placeholder="Nukala"/></div><div class="fg"><label>Footer Text</label><input type="text" class="fi" id="s-footer" placeholder="The Nukala Family"/></div></div>
+          <div class="div"></div>
+          <div class="pt" style="margin-top:4px;">Family Tree Page Options</div>
+          <div class="sr">
+            <div><div class="srl">Show Download Button on Tree Page</div><div class="srd">When ON, family members can also download the tree themselves</div></div>
+            <label class="sw"><input type="checkbox" id="s-showTreeDl"/><span class="swt"></span></label>
+          </div>
+          <button class="btn bg bsm" id="saveTreeDlBtn" style="margin-top:10px;">💾 Save</button>
           <div class="div"></div>
           <div class="pt" style="margin-top:4px;">Join Tree Form — Where to Receive Submissions</div>
           <p class="ss" style="margin-bottom:12px;">When family members submit the Join Tree form, their details go here.</p>
@@ -986,7 +1053,7 @@ var PAGE_LOADERS = {
   gallery:renderGal, facts:renderFacts, events:renderEvts,
   recipes:renderRecs, achievements:renderAchs, videos:renderVids,
   polls:renderPolls,
-  stats:function(){},  map:function(){},  qr:function(){},  join:function(){},
+  stats:function(){},  map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,  about:renderAbout,
   contacts:renderContacts, announce:renderAnn,
   pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme');}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
@@ -1214,6 +1281,24 @@ function resetPoll(i){var l=lda('polls');l[i].votes={};sv('polls',l);renderPolls
 function delPoll(i){if(!confirm('Delete?'))return;var l=lda('polls');l.splice(i,1);sv('polls',l);renderPolls();toast('Deleted.');}
 function renderPolls(){var list=lda('polls'),el=document.getElementById('pollList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No polls yet.</div>';return;}el.innerHTML=list.map(function(p,i){var opts=p.options.map(function(o){return o+(p.votes&&p.votes[o]?' ('+p.votes[o]+')':'');}).join(', ');return '<div class="li"><div class="ly" style="font-size:1.2rem;">🗳️</div><div class="lb"><div class="lt">'+p.question+'</div><div class="ld">'+opts+'</div><div class="la"><button class="ab" onclick="resetPoll('+i+')">↺ Reset</button><button class="ab abr" onclick="delPoll('+i+')">🗑️</button></div></div></div>';}).join('');}
 
+
+document.getElementById('saveTreeDlBtn').addEventListener('click', function(){
+  var s = ld('settings');
+  s.showTreeDownload = document.getElementById('s-showTreeDl').checked;
+  sv('settings', s);
+  toast(s.showTreeDownload ? '✅ Download button now visible to all family members.' : '✅ Download button hidden — admin only.');
+  log('Tree download toggle: ' + (s.showTreeDownload ? 'ON' : 'OFF'));
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// FAMILY TREE DOWNLOAD (from admin)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function downloadTreeFromAdmin(format){
+  var url = 'tree.html?download='+format;
+  var w = window.open(url, '_blank');
+  if(!w) alert('Please allow pop-ups for this site, then try again.');
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // CONTACTS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1248,6 +1333,106 @@ function saveCE(){
   sv('contacts',contacts);closeM('ceModal');renderContacts();toast('Contact saved!');
 }
 
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ABOUT PAGE EDITOR
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderAbout(){
+  var d = ldRaw('nukala_about')||{sections:[]};
+  document.getElementById('ab-title').value   = d.heroTitle||'';
+  document.getElementById('ab-desc').value    = d.heroDesc||'';
+  document.getElementById('ab-message').value = d.message||'';
+  document.getElementById('ab-msgname').value = d.messageName||'';
+  abDrawSections(d.sections||[]);
+}
+
+function abDrawSections(sections){
+  var el = document.getElementById('abSections');
+  if(!sections.length){
+    el.innerHTML='<div style="text-align:center;padding:20px;color:var(--tl);font-size:.8rem;">No sections yet. Click + Add Section.</div>';
+    return;
+  }
+  el.innerHTML = sections.map(function(sec,si){
+    var people = (sec.people||[]).map(function(p,pi){
+      return '<div style="display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--b);">'
+        +'<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:6px;">'
+        +'<input type="text" class="fi" placeholder="Name *" value="'+((p.name||'').replace(/"/g,'&quot;'))+'" style="padding:6px 10px;" oninput="abUpdate('+si+','+pi+',\'name\',this.value)"/>'
+        +'<input type="text" class="fi" placeholder="Role / Title" value="'+((p.role||'').replace(/"/g,'&quot;'))+'" style="padding:6px 10px;" oninput="abUpdate('+si+','+pi+',\'role\',this.value)"/>'
+        +'<input type="text" class="fi" placeholder="Photo URL (optional)" value="'+((p.photo||'').replace(/"/g,'&quot;'))+'" style="padding:6px 10px;grid-column:1/-1;" oninput="abUpdate('+si+','+pi+',\'photo\',this.value)"/>'
+        +'<input type="text" class="fi" placeholder="Short note (optional)" value="'+((p.note||'').replace(/"/g,'&quot;'))+'" style="padding:6px 10px;grid-column:1/-1;" oninput="abUpdate('+si+','+pi+',\'note\',this.value)"/>'
+        +'</div>'
+        +'<button class="ab abr" onclick="abRemovePerson('+si+','+pi+')" style="flex-shrink:0;margin-top:2px;">🗑️</button>'
+        +'</div>';
+    }).join('');
+
+    return '<div style="border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:12px;">'
+      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">'
+      +'<input type="text" class="fi" placeholder="Section title e.g. Developers" value="'+((sec.title||'').replace(/"/g,'&quot;'))+'" style="flex:1;padding:7px 11px;" oninput="abUpdateSection('+si+',\'title\',this.value)"/>'
+      +'<button class="ab abr" onclick="abRemoveSection('+si+')" title="Delete section">🗑️</button>'
+      +'</div>'
+      +'<input type="text" class="fi" placeholder="Section description (optional)" value="'+((sec.desc||'').replace(/"/g,'&quot;'))+'" style="width:100%;padding:7px 11px;margin-bottom:10px;" oninput="abUpdateSection('+si+',\'desc\',this.value)"/>'
+      +'<div id="ab-people-'+si+'">'+people+'</div>'
+      +'<button class="btn bo bsm" onclick="abAddPerson('+si+')" style="margin-top:8px;font-size:.7rem;">+ Add Person</button>'
+      +'</div>';
+  }).join('');
+}
+
+// In-memory about data
+var _abData = null;
+function abGetData(){
+  if(!_abData) _abData = ldRaw('nukala_about')||{sections:[]};
+  return _abData;
+}
+
+function abAddSection(){
+  var d = abGetData();
+  d.sections = d.sections||[];
+  d.sections.push({title:'New Section',desc:'',people:[]});
+  abDrawSections(d.sections);
+}
+
+function abRemoveSection(si){
+  if(!confirm('Delete this section?')) return;
+  var d = abGetData();
+  d.sections.splice(si,1);
+  abDrawSections(d.sections);
+}
+
+function abAddPerson(si){
+  var d = abGetData();
+  d.sections[si].people = d.sections[si].people||[];
+  d.sections[si].people.push({name:'',role:'',photo:'',note:''});
+  abDrawSections(d.sections);
+}
+
+function abRemovePerson(si,pi){
+  var d = abGetData();
+  d.sections[si].people.splice(pi,1);
+  abDrawSections(d.sections);
+}
+
+function abUpdate(si,pi,field,val){
+  var d = abGetData();
+  d.sections[si].people[pi][field]=val;
+}
+
+function abUpdateSection(si,field,val){
+  var d = abGetData();
+  d.sections[si][field]=val;
+}
+
+document.getElementById('saveAboutBtn').addEventListener('click',function(){
+  var d = abGetData();
+  d.heroTitle   = document.getElementById('ab-title').value.trim();
+  d.heroDesc    = document.getElementById('ab-desc').value.trim();
+  d.message     = document.getElementById('ab-message').value.trim();
+  d.messageName = document.getElementById('ab-msgname').value.trim();
+  svRaw('nukala_about', d);
+  _abData = null; // reset cache
+  log('About page saved');
+  toast('✅ About page saved! Click Publish to Site to apply.');
+});
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // CONTACTS EXCEL EXPORT
@@ -1384,7 +1569,7 @@ function refreshWAList(){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PAGE VISIBILITY
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var PAGES=[{id:'home',label:'🏠 Home',file:'home.html',locked:true},{id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},{id:'history',label:'📜 History',file:'history.html',locked:false},{id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},{id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},{id:'stats',label:'📊 Stats',file:'stats.html',locked:false},{id:'events',label:'📆 Events',file:'events.html',locked:false},{id:'map',label:'🗺️ Map',file:'map.html',locked:false},{id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},{id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},{id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},{id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},{id:'qr',label:'📱 QR Code',file:'qr.html',locked:false},{id:'contact',label:'✉️ Contact',file:'contact.html',locked:true},{id:'join',label:'🌳 Join Tree',file:'join.html',locked:false}];
+var PAGES=[{id:'home',label:'🏠 Home',file:'home.html',locked:true},{id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},{id:'history',label:'📜 History',file:'history.html',locked:false},{id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},{id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},{id:'stats',label:'📊 Stats',file:'stats.html',locked:false},{id:'events',label:'📆 Events',file:'events.html',locked:false},{id:'map',label:'🗺️ Map',file:'map.html',locked:false},{id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},{id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},{id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},{id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},{id:'qr',label:'📱 QR Code',file:'qr.html',locked:false},{id:'contact',label:'✉️ Contact',file:'contact.html',locked:true},{id:'join',label:'🌳 Join Tree',file:'join.html',locked:false},{id:'about',label:'ℹ️ About',file:'about.html',locked:false}];
 
 document.getElementById('visSaveBtn').addEventListener('click', visSave);
 document.getElementById('visEnableAllBtn').addEventListener('click', visEnableAll);
@@ -1561,11 +1746,23 @@ function dlCsv(rows,name){var csv=rows.map(function(r){return r.map(function(c){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function toggleSiteLogin(enabled){localStorage.setItem('nukala_login_disabled',enabled?'0':'1');document.getElementById('loginToggleTrack').style.background=enabled?'#5c7a5c':'#ccc';document.getElementById('loginToggleThumb').style.transform=enabled?'translateX(20px)':'translateX(0)';document.getElementById('loginToggleLabel').textContent=enabled?'Enabled':'Disabled';document.getElementById('loginToggleLabel').style.color=enabled?'var(--sd)':'var(--r)';toast(enabled?'Site login enabled!':'Site login disabled!');}
 
+
+function toggleTreeDownload(on){
+  var s=ld('settings');
+  s.showTreeDownload=on;
+  sv('settings',s);
+  document.getElementById('treeDownloadTrack').style.background=on?'#5c7a5c':'#ccc';
+  document.getElementById('treeDownloadThumb').style.transform=on?'translateX(20px)':'translateX(0)';
+  document.getElementById('treeDownloadLabel').textContent=on?'Visible':'Hidden';
+  document.getElementById('treeDownloadLabel').style.color=on?'var(--sd)':'var(--r)';
+  toast(on?'✅ Download button now visible on tree page — Publish to apply.':'Download button hidden from tree page — Publish to apply.');
+}
 function loadSettings(){
   var s=ld('settings');
   document.getElementById('s-famname').value=s.familyName||'';
   document.getElementById('s-adminwa').value=s.adminWhatsapp||'';
   document.getElementById('s-adminemail').value=s.adminEmail||'';
+  if(document.getElementById('s-showTreeDl')) document.getElementById('s-showTreeDl').checked=!!s.showTreeDownload;
   document.getElementById('s-footer').value=s.footerText||'';
   var disabled=localStorage.getItem('nukala_login_disabled')==='1';
   document.getElementById('loginToggle').checked=!disabled;
@@ -1573,10 +1770,20 @@ function loadSettings(){
   document.getElementById('loginToggleThumb').style.transform=disabled?'translateX(0)':'translateX(20px)';
   document.getElementById('loginToggleLabel').textContent=disabled?'Disabled':'Enabled';
   document.getElementById('loginToggleLabel').style.color=disabled?'var(--r)':'var(--sd)';
+  // Tree download toggle
+  var tdl = document.getElementById('treeDownloadToggle');
+  var showDl = s.showTreeDownload===true;
+  if(tdl){ 
+    tdl.checked=showDl;
+    document.getElementById('treeDownloadTrack').style.background=showDl?'#5c7a5c':'#ccc';
+    document.getElementById('treeDownloadThumb').style.transform=showDl?'translateX(20px)':'translateX(0)';
+    document.getElementById('treeDownloadLabel').textContent=showDl?'Visible':'Hidden';
+    document.getElementById('treeDownloadLabel').style.color=showDl?'var(--sd)':'var(--r)';
+  }
 }
 document.getElementById('saveSettingsBtn').addEventListener('click',function(){var s=ld('settings');s.familyName=document.getElementById('s-famname').value.trim();
   s.adminWhatsapp=document.getElementById('s-adminwa').value.trim();
-  s.adminEmail=document.getElementById('s-adminemail').value.trim();s.footerText=document.getElementById('s-footer').value.trim();sv('settings',s);if(s.familyName)document.getElementById('siteName').textContent=s.familyName;log('Settings saved');toast('Settings saved!');});
+  s.adminEmail=document.getElementById('s-adminemail').value.trim();s.footerText=document.getElementById('s-footer').value.trim();s.showTreeDownload=document.getElementById('treeDownloadToggle').checked;sv('settings',s);if(s.familyName)document.getElementById('siteName').textContent=s.familyName;log('Settings saved');toast('Settings saved!');});
 document.getElementById('saveSitePassBtn').addEventListener('click',function(){var p=document.getElementById('newSitePass').value.trim();if(!p){alert('Enter a password.');return;}localStorage.setItem('nukala_site_pass',p);document.getElementById('newSitePass').value='';log('Site pass updated');toast('Site password updated!');});
 document.getElementById('saveAdminPassBtn').addEventListener('click',function(){var p=document.getElementById('newAdminPass').value.trim();if(!p){alert('Enter a password.');return;}localStorage.setItem('nukala_admin_pass',p);document.getElementById('newAdminPass').value='';log('Admin pass updated');toast('Admin password updated!');});
 document.getElementById('expAllBtn2').addEventListener('click', expAll);
@@ -1605,6 +1812,7 @@ var DEFAULT_NAV_PAGES = [
   {href:'qr.html',      label:'QR Code', locked:false},
   {href:'contact.html', label:'Contact',       locked:false},
   {href:'join.html',    label:'Join Tree',     locked:false},
+  {href:'about.html',   label:'About',         locked:false},
 ];
 
 function getNavPages(){
@@ -1747,7 +1955,7 @@ document.getElementById('publishBtn').addEventListener('click', function(){
     'nukala_polls','nukala_contacts','nukala_settings','nukala_page_vis',
     'nukala_sitewide','nukala_home','nukala_heropage','nukala_newpages',
     'nukala_contactpage2','nukala_gallerypage2','nukala_typography',
-    'nukala_navmenu','nukala_loginpage','nukala_wishes'
+    'nukala_navmenu','nukala_loginpage','nukala_wishes','nukala_about','nukala_about'
   ];
   var DATA = {};
   KEYS.forEach(function(k){

@@ -409,7 +409,8 @@
       <!-- Toolbar -->
       <div class="tree-toolbar">
         <button class="tb-btn" onclick="fitToScreen()" data-translate="btn-fit">⊡ Fit to Screen</button>
-        <button class="tb-btn" id="btnDownloadTree" onclick="downloadTree()" style="background:linear-gradient(135deg,var(--sage-dark),var(--sage));color:white;border-color:var(--sage-dark);">📥 Download Image</button>
+        <button class="tb-btn" id="btnDownloadTree" onclick="downloadTree()" style="display:none;background:linear-gradient(135deg,var(--sage-dark),var(--sage));color:white;border-color:var(--sage-dark);">📥 Download Image</button>
+        
         <button class="tb-btn" onclick="resetView()" data-translate="btn-reset">↺ Reset View</button>
         <div class="zoom-wrap">
           <button class="z-btn" onclick="zoomOut()">−</button>
@@ -762,6 +763,26 @@
     vp.addEventListener('touchmove',e=>{ if(e.touches.length===2){ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); if(d>lastTD+5) zoomIn(); else if(d<lastTD-5) zoomOut(); lastTD=d; }});
 
     renderTree();
+
+    // Show download button if admin enabled it in Settings
+    (function(){
+      try{
+        var s = JSON.parse(localStorage.getItem('nukala_settings')||'{}');
+        if(s.showTreeDownload){
+          var b = document.getElementById('btnDownloadTree');
+          if(b) b.style.display = '';
+        }
+      }catch(e){}
+    })();
+
+    // Auto-trigger download if opened from admin panel (?download=png or ?download=pdf)
+    (function(){
+      var params = new URLSearchParams(window.location.search);
+      var fmt = params.get('download');
+      if(fmt==='png'||fmt==='pdf'){
+        setTimeout(function(){ downloadTree(fmt); }, 2500);
+      }
+    })();
   </script>
 
 <script>
@@ -819,6 +840,11 @@
         const li=document.createElement('li');
         li.innerHTML=`<a href="join.html" ${currentPage==='join.html'?'class="active"':''}>Join Tree</a>`;
         ul.appendChild(li);
+      }
+      if(!ul.querySelector('a[href="about.html"]')){
+        const li2=document.createElement('li');
+        li2.innerHTML=`<a href="about.html" ${currentPage==='about.html'?'class="active"':''}>About</a>`;
+        ul.appendChild(li2);
       }
     });
   } else {
@@ -956,22 +982,21 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-  function downloadTree(){
+  function downloadTree(format){
+    format = format || 'png';
     var btn = document.getElementById('btnDownloadTree');
-    btn.textContent = '⏳ Capturing...';
-    btn.disabled = true;
+    if(btn){ btn.textContent = '⏳ Capturing...'; btn.disabled = true; }
 
     var canvas = document.getElementById('treeCanvas');
     var vp     = document.getElementById('treeVp');
 
-    // Temporarily reset zoom/scroll so full tree is captured
     var prevTransform = canvas.style.transform;
     canvas.style.transform = 'scale(1)';
     var prevScroll = [vp.scrollLeft, vp.scrollTop];
     vp.scrollLeft = 0; vp.scrollTop = 0;
 
-    // Get full canvas dimensions
     var fullW = canvas.scrollWidth;
     var fullH = canvas.scrollHeight;
 
@@ -985,26 +1010,37 @@
       useCORS: true,
       logging: false
     }).then(function(cvs){
-      // Restore zoom/scroll
       canvas.style.transform = prevTransform;
       vp.scrollLeft = prevScroll[0];
       vp.scrollTop  = prevScroll[1];
-      btn.textContent = '📥 Download Image';
-      btn.disabled = false;
+      if(btn){ btn.textContent = '📥 Download Image'; btn.disabled = false; }
 
-      // Download as PNG
-      var link = document.createElement('a');
       var settings = {};
       try{ settings = JSON.parse(localStorage.getItem('nukala_settings')||'{}'); }catch(e){}
       var familyName = settings.familyName || 'Nukala';
-      link.download = familyName + '-Family-Tree.png';
-      link.href = cvs.toDataURL('image/png');
-      link.click();
-    }).catch(function(err){
+      var link = document.createElement('a');
+
+      if(format === 'pdf'){
+        var imgData = cvs.toDataURL('image/png');
+        var { jsPDF } = window.jspdf;
+        var orientation = fullW > fullH ? 'landscape' : 'portrait';
+        var pdf = new jsPDF({ orientation: orientation, unit: 'px', format: [fullW*0.75, fullH*0.75] });
+        pdf.addImage(imgData, 'PNG', 0, 0, fullW*0.75, fullH*0.75);
+        pdf.save(familyName+'-Family-Tree.pdf');
+      } else {
+        link.download = familyName+'-Family-Tree.png';
+        link.href = cvs.toDataURL('image/png');
+        link.click();
+      }
+
+      // If opened via admin download button, close tab after download
+      if(window.location.search.includes('download=')){
+        setTimeout(function(){ window.close(); }, 1000);
+      }
+    }).catch(function(){
       canvas.style.transform = prevTransform;
-      btn.textContent = '📥 Download Image';
-      btn.disabled = false;
-      alert('Could not capture tree. Try Fit to Screen first, then try again.');
+      if(btn){ btn.textContent = '📥 Download Image'; btn.disabled = false; }
+      alert('Capture failed. Try Fit to Screen first, then try again.');
     });
   }
   </script>
