@@ -578,21 +578,6 @@ opacity:0.04;pointer-events:none;z-index:0;}
             </div>
           </div>
 
-          <div class="panel" style="margin-top:16px;">
-            <div class="pt">Font Size</div>
-            <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Adjust text size across all pages.</p>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-              <button class="btn bsm" data-fontsize="small"  style="border:1.5px solid var(--b);">A- Small</button>
-              <button class="btn bsm" data-fontsize="normal" style="border:1.5px solid var(--b);">A Normal</button>
-              <button class="btn bsm" data-fontsize="large"  style="border:1.5px solid var(--b);">A+ Large</button>
-              <button class="btn bsm" data-fontsize="xlarge" style="border:1.5px solid var(--b);">A++ X-Large</button>
-            </div>
-            <div class="fr">
-              <div class="fg"><label>Custom Body Size (e.g. 16px)</label><input type="text" class="fi" id="fontSizeCustom" placeholder="16px"/></div>
-              <div class="fg"><label>Custom Heading Scale (e.g. 1.2)</label><input type="text" class="fi" id="fontScaleCustom" placeholder="1.0"/></div>
-            </div>
-            <button class="btn bg bsm" id="saveFontSizeBtn" style="margin-top:8px;">💾 Save Font Size</button>
-          </div>
 
           <div class="panel" style="margin-top:16px;">
             <div class="pt">Background</div>
@@ -665,6 +650,16 @@ opacity:0.04;pointer-events:none;z-index:0;}
             <div class="fg"><label>Paragraph 2</label><textarea class="fi" id="pe-about2" rows="3" style="resize:vertical;"></textarea></div>
             <div class="fg"><label>Paragraph 3</label><textarea class="fi" id="pe-about3" rows="3" style="resize:vertical;"></textarea></div>
           </div>
+          <div class="panel">
+            <div class="pt">Coming Up — Home Page Panel</div>
+            <p style="font-size:.75rem;color:var(--tl);margin-bottom:10px;">The "Coming Up" panel on the Home page auto-shows events, birthdays and anniversaries in the next 14 days. To populate it:</p>
+            <ul style="font-size:.78rem;color:var(--tm);line-height:1.8;padding-left:18px;margin-bottom:10px;">
+              <li>🎂 <strong>Birthdays</strong> — set the <em>Birthday</em> field in Admin → Contacts for each member</li>
+              <li>💍 <strong>Anniversaries</strong> — set the <em>Anniversary</em> field in Admin → Contacts</li>
+              <li>📅 <strong>Events</strong> — add events in Admin → Events with a date</li>
+            </ul>
+            <p style="font-size:.75rem;color:var(--tl);">No manual editing needed — it updates automatically from your data.</p>
+          </div>
           <button class="btn bg" id="saveHomeBtn">💾 Save Home Page</button>
         </div>
         <div class="pts" id="pt-pages">
@@ -699,6 +694,22 @@ opacity:0.04;pointer-events:none;z-index:0;}
               <div class="fg"><label>Body Font</label><select class="fi" id="pe-fontbody"><option value="Jost">Jost (Default)</option><option value="Lato">Lato</option><option value="Open Sans">Open Sans</option><option value="Poppins">Poppins</option></select></div>
             </div>
             <button class="btn bg bsm" id="saveFontsBtn">💾 Save Fonts</button>
+          </div>
+
+          <div class="panel" style="margin-top:16px;">
+            <div class="pt">Font Size</div>
+            <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Adjust text size across all pages. Quick presets or enter a custom size.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+              <button class="btn bsm" data-fontsize="small"  style="border:1.5px solid var(--b);font-size:.7rem;">A⁻ Small</button>
+              <button class="btn bsm" data-fontsize="normal" style="border:1.5px solid var(--b);font-size:.78rem;">A Normal</button>
+              <button class="btn bsm" data-fontsize="large"  style="border:1.5px solid var(--b);font-size:.86rem;">A⁺ Large</button>
+              <button class="btn bsm" data-fontsize="xlarge" style="border:1.5px solid var(--b);font-size:.94rem;">A⁺⁺ X-Large</button>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>Custom Body Size (e.g. 15px, 1rem)</label><input type="text" class="fi" id="fontSizeCustom" placeholder="15px"/></div>
+              <div class="fg"><label>Heading Scale Multiplier (e.g. 1.2)</label><input type="text" class="fi" id="fontScaleCustom" placeholder="1.0"/></div>
+            </div>
+            <button class="btn bg bsm" id="saveFontSizeBtn" style="margin-top:10px;">💾 Save Font Size</button>
           </div>
         </div>
       </div>
@@ -746,14 +757,42 @@ opacity:0.04;pointer-events:none;z-index:0;}
           <div class="fg"><label>Footer Note (HTML allowed, e.g. &lt;strong&gt;Nukala family&lt;/strong&gt;)</label><textarea class="fi" id="lpe-footnote" rows="3" style="resize:vertical;" placeholder="This site is exclusively for the &lt;strong&gt;Nukala family&lt;/strong&gt;.&lt;br/&gt;Please contact the family administrator for access."></textarea></div>
         </div>
         <div class="panel">
-          <div class="pt">Background</div>
-          <div class="fg"><label>Background Colour (leave blank for default)</label>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <input type="color" id="lpe-bgpicker" value="#f4f2ee" oninput="document.getElementById('lpe-bg').value=this.value" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;flex-shrink:0;"/>
-              <input type="text" class="fi" id="lpe-bg" placeholder="#f4f2ee" oninput="if(/^#[0-9a-fA-F]{6}$/.test(this.value))document.getElementById('lpe-bgpicker').value=this.value"/>
+          <div class="pt">Theme Presets</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">One-click themes for the login page. Each sets background, colours and feel.</p>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;">
+            <button class="btn bsm lpe-theme-btn" data-lpe-theme="classic" style="background:linear-gradient(135deg,#faf8f4,#f0f5f0);border:1.5px solid var(--b);color:var(--td);">🌿 Classic Green</button>
+            <button class="btn bsm lpe-theme-btn" data-lpe-theme="gold"    style="background:linear-gradient(135deg,#fdf6e8,#f0d990);border:1.5px solid #c9a84c;color:#7a5a10;">✨ Royal Gold</button>
+            <button class="btn bsm lpe-theme-btn" data-lpe-theme="navy"    style="background:linear-gradient(135deg,#0f1f3d,#1a3a6c);border:1.5px solid #2e6090;color:white;">🌊 Deep Navy</button>
+            <button class="btn bsm lpe-theme-btn" data-lpe-theme="rose"    style="background:linear-gradient(135deg,#fdf0f2,#f5d5dc);border:1.5px solid #c48090;color:#7a3040;">🌹 Rose</button>
+            <button class="btn bsm lpe-theme-btn" data-lpe-theme="dark"    style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1.5px solid #0f3460;color:white;">🌙 Dark</button>
+            <button class="btn bsm lpe-theme-btn" data-lpe-theme="sand"    style="background:linear-gradient(135deg,#f5f0e8,#ede5d5);border:1.5px solid #c8b89a;color:#5a4830;">🏖️ Sandy</button>
+            <button class="btn bsm lpe-theme-btn" data-lpe-theme="custom"  style="border:1.5px dashed var(--b);color:var(--tm);">🎨 Custom…</button>
+          </div>
+          <div id="lpe-custom-bg-wrap" style="display:none;">
+            <div class="fg">
+              <label>Custom Background (colour, gradient, or image URL)</label>
+              <input type="text" class="fi" id="lpe-bg-custom" placeholder="e.g. #f4f2ee or linear-gradient(...) or url('https://...')"/>
             </div>
           </div>
+          <input type="hidden" id="lpe-bg"/>
+          <div id="lpe-theme-preview" style="height:46px;border-radius:10px;border:1px solid var(--b);margin-top:8px;transition:background .3s;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:var(--tl);">Preview</div>
         </div>
+
+        <div class="panel">
+          <div class="pt">Font Size for Login Page</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:10px;">Adjust the text size on the login/welcome screen.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+            <button class="btn bsm lpe-size-btn" data-lpe-size="13px" style="border:1.5px solid var(--b);font-size:.7rem;">A⁻ Small</button>
+            <button class="btn bsm lpe-size-btn" data-lpe-size="15px" style="border:1.5px solid var(--b);font-size:.78rem;">A Normal</button>
+            <button class="btn bsm lpe-size-btn" data-lpe-size="17px" style="border:1.5px solid var(--b);font-size:.86rem;">A⁺ Large</button>
+            <button class="btn bsm lpe-size-btn" data-lpe-size="19px" style="border:1.5px solid var(--b);font-size:.94rem;">A⁺⁺ X-Large</button>
+          </div>
+          <div class="fg">
+            <label>Custom Font Size (e.g. 16px)</label>
+            <input type="text" class="fi" id="lpe-fontsize" placeholder="15px"/>
+          </div>
+        </div>
+
         <button class="btn bg" id="saveLoginPageBtn">💾 Save Login Page</button>
         <div style="margin-top:10px;"><a href="index.html" target="_blank" class="btn bo bsm">👁 Preview Login Page</a></div>
       </div>

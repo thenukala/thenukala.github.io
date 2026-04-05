@@ -1231,10 +1231,21 @@ function loadLoginPageEditor(){
   document.getElementById('lpe-divider').value  = lp.dividerText||'';
   document.getElementById('lpe-footnote').value = lp.footnote||'';
   document.getElementById('lpe-bg').value       = lp.bgColor||'';
-  if(lp.bgColor) document.getElementById('lpe-bgpicker').value = lp.bgColor;
+  if(lp.fontSize) document.getElementById('lpe-fontsize').value = lp.fontSize;
+  if(lp.bgColor){
+    document.getElementById('lpe-bg-custom').value = lp.bgColor;
+    var prev = document.getElementById('lpe-theme-preview');
+    if(prev){ prev.style.background=lp.bgColor; prev.textContent=''; }
+  }
+  // Highlight active theme preset
+  document.querySelectorAll('.lpe-theme-btn').forEach(function(b){
+    b.style.outline = b.getAttribute('data-lpe-theme')===(lp.activeTheme||'') ? '2px solid var(--sd)' : '';
+  });
 }
 
 document.getElementById('saveLoginPageBtn').addEventListener('click', function(){
+  var bgVal = document.getElementById('lpe-bg').value.trim() ||
+              document.getElementById('lpe-bg-custom').value.trim();
   var lp = {
     title:       document.getElementById('lpe-title').value.trim(),
     subtitle:    document.getElementById('lpe-subtitle').value.trim(),
@@ -1243,13 +1254,62 @@ document.getElementById('saveLoginPageBtn').addEventListener('click', function()
     btnText:     document.getElementById('lpe-btn').value.trim(),
     dividerText: document.getElementById('lpe-divider').value.trim(),
     footnote:    document.getElementById('lpe-footnote').value.trim(),
-    bgColor:     document.getElementById('lpe-bg').value.trim(),
+    bgColor:     bgVal,
+    fontSize:    document.getElementById('lpe-fontsize').value.trim(),
+    activeTheme: (document.querySelector('.lpe-theme-btn[style*="2px solid"]')||{}).getAttribute&&(document.querySelector('.lpe-theme-btn[style*="2px solid"]')).getAttribute('data-lpe-theme')||'',
   };
   svRaw('nukala_loginpage', lp);
   log('Login page customised');
   toast('✅ Login page saved! Click Preview to see changes.');
 });
 
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LOGIN PAGE THEME PRESETS + FONT SIZE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var LPE_THEMES = {
+  classic: { bg: 'linear-gradient(135deg,#faf8f4 0%,#f0f5f0 100%)',  accent: '#5c7a5c' },
+  gold:    { bg: 'linear-gradient(135deg,#fdf6e8 0%,#f5e8b0 100%)',  accent: '#c9a84c' },
+  navy:    { bg: 'linear-gradient(135deg,#0f1f3d 0%,#1a3a6c 100%)',  accent: '#5090d0' },
+  rose:    { bg: 'linear-gradient(135deg,#fdf0f2 0%,#f0d0d8 100%)',  accent: '#c06080' },
+  dark:    { bg: 'linear-gradient(135deg,#1a1a2e 0%,#16213e 100%)',  accent: '#7090d0' },
+  sand:    { bg: 'linear-gradient(135deg,#f5f0e8 0%,#ede5d5 100%)',  accent: '#8a6a40' },
+};
+
+document.querySelectorAll('.lpe-theme-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var key = this.getAttribute('data-lpe-theme');
+    var customWrap = document.getElementById('lpe-custom-bg-wrap');
+    var prev = document.getElementById('lpe-theme-preview');
+    document.querySelectorAll('.lpe-theme-btn').forEach(function(b){ b.style.outline=''; });
+    this.style.outline = '2px solid var(--sd)';
+    if(key === 'custom'){
+      if(customWrap) customWrap.style.display = 'block';
+      return;
+    }
+    if(customWrap) customWrap.style.display = 'none';
+    var theme = LPE_THEMES[key];
+    if(!theme) return;
+    document.getElementById('lpe-bg').value = theme.bg;
+    if(prev){ prev.style.background=theme.bg; prev.style.backgroundSize='cover'; prev.textContent=''; }
+  });
+});
+
+document.getElementById('lpe-bg-custom').addEventListener('input', function(){
+  var val = this.value.trim();
+  document.getElementById('lpe-bg').value = val;
+  var prev = document.getElementById('lpe-theme-preview');
+  if(prev && val){ prev.style.background=val; prev.style.backgroundSize='cover'; prev.textContent=''; }
+});
+
+document.querySelectorAll('.lpe-size-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.getElementById('lpe-fontsize').value = this.getAttribute('data-lpe-size');
+    document.querySelectorAll('.lpe-size-btn').forEach(function(b){ b.style.background=''; b.style.color=''; });
+    this.style.background = 'var(--sd)'; this.style.color = 'white';
+  });
+});
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PUBLISH TO SITE — generates site-data.js for cross-device sharing

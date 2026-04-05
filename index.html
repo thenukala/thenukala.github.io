@@ -376,6 +376,11 @@
       }
       if(lp.bgColor){
         document.body.style.background = lp.bgColor;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundAttachment = 'fixed';
+      }
+      if(lp.fontSize){
+        document.body.style.fontSize = lp.fontSize;
       }
     })();
   </script>
