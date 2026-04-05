@@ -34,9 +34,13 @@
 </head>
 <body>
 <script>
-  /* about.html reads directly from localStorage — no XHR needed.
-     Changes saved in admin are immediately visible here.
-     site-data.js publishes nukala_about to all other devices when you Publish. */
+  try{
+    var _x=new XMLHttpRequest();
+    _x.open('GET','site-data.js?nocache='+Date.now(),false);
+    _x.send();
+    if(_x.status===200) eval(_x.responseText);
+  }catch(e){}
+  // nukala_about_draft is never in site-data.js so admin previews survive
 </script>
 
 <script src="auth.js"></script>
@@ -84,7 +88,7 @@
 function loadKey(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
 
 function initAbout(){
-  var d = loadKey('nukala_about')||{};
+  var d = loadKey('nukala_about_draft')||loadKey('nukala_about')||{};
   var sections = d.sections||[];
 
   if(d.heroTitle) document.getElementById('aboutHeroTitle').innerHTML = d.heroTitle;

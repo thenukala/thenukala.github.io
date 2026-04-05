@@ -465,13 +465,7 @@ function delPoll(i){if(!confirm('Delete?'))return;var l=lda('polls');l.splice(i,
 function renderPolls(){var list=lda('polls'),el=document.getElementById('pollList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No polls yet.</div>';return;}el.innerHTML=list.map(function(p,i){var opts=p.options.map(function(o){return o+(p.votes&&p.votes[o]?' ('+p.votes[o]+')':'');}).join(', ');return '<div class="li"><div class="ly" style="font-size:1.2rem;">🗳️</div><div class="lb"><div class="lt">'+p.question+'</div><div class="ld">'+opts+'</div><div class="la"><button class="ab" onclick="resetPoll('+i+')">↺ Reset</button><button class="ab abr" onclick="delPoll('+i+')">🗑️</button></div></div></div>';}).join('');}
 
 
-document.getElementById('saveTreeDlBtn').addEventListener('click', function(){
-  var s = ld('settings');
-  s.showTreeDownload = document.getElementById('s-showTreeDl').checked;
-  sv('settings', s);
-  toast(s.showTreeDownload ? '✅ Download button now visible to all family members.' : '✅ Download button hidden — admin only.');
-  log('Tree download toggle: ' + (s.showTreeDownload ? 'ON' : 'OFF'));
-});
+
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // FAMILY TREE DOWNLOAD (from admin)
@@ -523,7 +517,7 @@ function saveCE(){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function renderAbout(){
   _abData = null; // always reload fresh from storage when tab is opened
-  var d = ldRaw('nukala_about')||{sections:[]};
+  var d = ldRaw('nukala_about_draft')||ldRaw('nukala_about')||{sections:[]};
   document.getElementById('ab-title').value   = d.heroTitle||'';
   document.getElementById('ab-desc').value    = d.heroDesc||'';
   document.getElementById('ab-message').value = d.message||'';
@@ -565,7 +559,7 @@ function abDrawSections(sections){
 // In-memory about data
 var _abData = null;
 function abGetData(){
-  if(!_abData) _abData = ldRaw('nukala_about')||{sections:[]};
+  if(!_abData) _abData = ldRaw('nukala_about_draft')||ldRaw('nukala_about')||{sections:[]};
   return _abData;
 }
 
@@ -613,6 +607,7 @@ document.getElementById('saveAboutBtn').addEventListener('click',function(){
   d.message     = document.getElementById('ab-message').value.trim();
   d.messageName = document.getElementById('ab-msgname').value.trim();
   svRaw('nukala_about', d);
+  svRaw('nukala_about_draft', d); // draft survives site-data.js XHR on other pages
   _abData = null; // reset cache
   log('About page saved');
   toast('✅ About page saved! Click Publish to Site to apply.');
