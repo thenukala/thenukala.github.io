@@ -421,13 +421,19 @@
   // ── Init ──
   const savedLang = localStorage.getItem(LK) || 'en';
 
-  // Build language toggle button
-  document.querySelectorAll('.nk-lang').forEach(btn => {
-    btn.textContent = savedLang === 'te' ? 'EN' : '\u0c24\u0c46';
-    btn.addEventListener('click', () => {
-      const next = localStorage.getItem(LK) === 'te' ? 'en' : 'te';
-      applyLang(next);
+  // Expose toggleLang globally so nukala.js button click handler works
+  window.toggleLang = function(){
+    const next = localStorage.getItem(LK) === 'te' ? 'en' : 'te';
+    applyLang(next);
+    // Update all lang button labels
+    document.querySelectorAll('.nk-lang').forEach(function(b){
+      b.textContent = next === 'te' ? 'EN' : '\u0c24\u0c46';
     });
+  };
+
+  // Also wire any static .nk-lang buttons
+  document.querySelectorAll('.nk-lang').forEach(function(btn){
+    btn.textContent = savedLang === 'te' ? 'EN' : '\u0c24\u0c46';
   });
 
   if(savedLang !== 'en') applyLang(savedLang);
