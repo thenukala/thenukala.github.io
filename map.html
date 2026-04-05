@@ -3,27 +3,42 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Family Map · Nukala Family</title>
+  <title>Family Map - Nukala Family</title>
   <link rel="stylesheet" href="shared.css"/>
   <link rel="stylesheet" href="darkmode.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
-    .map-section{padding:0 0 40px;}
-    #familyMap{width:100%;height:420px;border-radius:16px;border:1px solid var(--border);margin-bottom:24px;z-index:1;}
-    .map-member{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cream);border:1px solid var(--border);border-radius:12px;}
-    .map-avatar{width:38px;height:38px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden;border:2px solid var(--border);}
-    .map-avatar img{width:100%;height:100%;object-fit:cover;}
-    #membersList{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:24px;}
-    .geo-panel{background:var(--cream);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px;}
-    .geo-panel h3{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:300;margin-bottom:14px;color:var(--text-dark);}
-    .nearby-panel{background:linear-gradient(135deg,#f0f5f0,#fdfaf4);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px;}
-    .nearby-panel h3{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:300;margin-bottom:8px;color:var(--text-dark);}
-    .btn-locate{background:linear-gradient(135deg,var(--sage-dark),var(--sage));color:white;border:none;border-radius:10px;padding:9px 18px;font-family:Jost,sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;margin-bottom:14px;}
-    .btn-locate:hover{opacity:.9;}
+    #familyMap{width:100%;height:440px;border-radius:16px;border:1px solid var(--border,#ddd);position:relative;z-index:1;background:#e8e4dc;margin-bottom:14px;}
+    .mtype-wrap{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+    .mtype-btn{background:var(--cream,#faf8f4);border:1.5px solid var(--border,#ddd);border-radius:20px;padding:6px 14px;font-family:Jost,sans-serif;font-size:.74rem;font-weight:500;cursor:pointer;color:var(--text-dark,#2c2c2c);transition:all .15s;}
+    .mtype-btn.on{background:var(--sage-dark,#5c7a5c);color:white;border-color:var(--sage-dark,#5c7a5c);}
+    .mtype-btn:hover:not(.on){border-color:var(--sage-dark,#5c7a5c);}
+    #memberChips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:22px;}
+    .mchip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 7px;background:var(--cream,#faf8f4);border:1px solid var(--border,#ddd);border-radius:30px;font-size:.74rem;}
+    .mchip-av{width:26px;height:26px;border-radius:50%;background:var(--sage,#8aab8a);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;overflow:hidden;}
+    .mchip-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .mpanel{background:var(--cream,#faf8f4);border:1px solid var(--border,#ddd);border-radius:16px;padding:20px 22px;margin-bottom:20px;}
+    .mpanel-title{font-family:"Cormorant Garamond",serif;font-size:1.15rem;font-weight:400;color:var(--text-dark,#2c2c2c);margin-bottom:5px;}
+    .mpanel-sub{font-size:.75rem;color:var(--text-light,#999);margin-bottom:14px;line-height:1.6;}
+    .btn-locate{background:linear-gradient(135deg,#5c7a5c,#8aab8a);color:white;border:none;border-radius:10px;padding:9px 18px;font-family:Jost,sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;margin-bottom:14px;}
+    .city-tag{display:inline-flex;align-items:center;gap:6px;background:white;border:1.5px solid var(--border,#ddd);border-radius:20px;padding:6px 14px;font-family:Jost,sans-serif;font-size:.76rem;cursor:pointer;color:var(--text-dark,#2c2c2c);transition:border-color .15s;}
+    .city-tag:hover{border-color:var(--sage-dark,#5c7a5c);}
+    .city-tag.on{border-color:var(--sage-dark,#5c7a5c);background:#f0f5f0;}
+    .city-cnt{background:var(--sage-dark,#5c7a5c);color:white;border-radius:20px;padding:1px 8px;font-size:.67rem;}
+    .mcard{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border,#eee);}
+    .mcard:last-child{border-bottom:none;}
+    .mav{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#8aab8a,#c9a84c);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;overflow:hidden;border:2px solid var(--border,#ddd);}
+    .mav img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .mname{font-size:.87rem;font-weight:500;color:var(--text-dark,#2c2c2c);}
+    .mrole{font-size:.7rem;color:var(--sage-dark,#5c7a5c);margin-top:1px;}
+    .mgen{font-size:.67rem;color:var(--text-light,#aaa);}
+    .mclinks{margin-top:5px;display:flex;flex-wrap:wrap;gap:8px;}
+    .mclinks a,.mclinks span{font-size:.7rem;text-decoration:none;}
+    .ndist{background:var(--sage-dark,#5c7a5c);color:white;border-radius:20px;padding:2px 10px;font-size:.7rem;font-weight:500;display:inline-block;margin-bottom:6px;}
   </style>
 </head>
 <body>
@@ -31,9 +46,8 @@
   try{var _x=new XMLHttpRequest();_x.open('GET','site-data.js?nocache='+Date.now(),false);_x.send();if(_x.status===200)eval(_x.responseText);}catch(e){}
 </script>
 <script src="auth.js"></script>
-
 <nav>
-  <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
+  <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/><span class="nav-site-name" id="navSiteName">NUKALA</span></a>
   <ul class="nav-links">
     <li><a href="home.html">Home</a></li>
     <li><a href="tree.html">Family Tree</a></li>
@@ -42,7 +56,7 @@
     <li><a href="facts.html">Facts</a></li>
     <li><a href="stats.html">Stats</a></li>
     <li><a href="events.html">Events</a></li>
-    <li><a href="map.html" class="active">Map</a></li>
+    <li><a href="map.html">Map</a></li>
     <li><a href="polls.html">Polls</a></li>
     <li><a href="recipes.html">Recipes</a></li>
     <li><a href="achievements.html">Achievements</a></li>
@@ -52,425 +66,253 @@
   </ul>
   <button class="nav-logout" onclick="logout()">Sign Out</button>
 </nav>
-
 <main>
   <div class="page-hero">
-    <div class="eyebrow">Where We Are</div>
+    <p class="eyebrow">Where We Are</p>
     <h1 class="hero-title">Family <em>Map</em></h1>
-    <p>See where the Nukala family lives across the world — and find who is near you.</p>
+    <div class="hero-divider"></div>
+    <p>See where the Nukala family lives across the world and find who is near you.</p>
   </div>
-
-  <div class="content-wrap map-section">
-
-    <!-- MAP -->
+  <div class="content-area">
+    <div class="mtype-wrap">
+      <button class="mtype-btn on" data-mtype="street">&#128506; Street</button>
+      <button class="mtype-btn" data-mtype="satellite">&#128752; Satellite</button>
+      <button class="mtype-btn" data-mtype="terrain">&#9968; Terrain</button>
+      <button class="mtype-btn" data-mtype="dark">&#9790; Dark</button>
+      <button class="mtype-btn" data-mtype="watercolor">&#127912; Watercolour</button>
+      <button class="mtype-btn" data-mtype="topo">&#128208; Topo</button>
+    </div>
     <div id="familyMap"></div>
-
-    <!-- MEMBER CHIPS -->
-    <div id="membersList"></div>
-
-    <!-- NEARBY MEMBERS -->
-    <div class="nearby-panel">
-      <h3>📍 Family Near You</h3>
-      <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:10px;">Find out which family members live closest to your current location.</p>
-      <button class="btn-locate" id="nearbyBtn" onclick="tryNearby()">📍 Find Nearby Members</button>
+    <div id="memberChips"></div>
+    <div class="mpanel">
+      <div class="mpanel-title">&#128205; Family Near You</div>
+      <p class="mpanel-sub">Find which family members live closest to you. Distances are straight-line (km).</p>
+      <button class="btn-locate" id="nearbyBtn" onclick="tryNearby()">&#128205; Find Nearby Members</button>
       <div id="nearbySection"></div>
     </div>
-
-    <!-- GEOGRAPHIC BREAKDOWN -->
-    <div class="geo-panel">
-      <h3>🌍 Family by Location</h3>
-      <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:14px;">Click any location to see all family members there with their contact details.</p>
+    <div class="mpanel">
+      <div class="mpanel-title">&#127758; Family by Location</div>
+      <p class="mpanel-sub">Click any city to see all family members there with photos and contact details.</p>
       <div id="geoStats"></div>
     </div>
-
   </div>
 </main>
-
 <footer>
   &copy; <span id="footerYear">2026</span>
-  <strong id="footerText">The Nukala Family</strong> ·
-  <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
+  <strong id="footerText">The Nukala Family</strong> &middot;
+  <span id="footerSub">Private &amp; Password Protected &middot; Made with love</span>
 </footer>
 
 <script>
-    const load=k=>JSON.parse(localStorage.getItem(k)||'{}');
-    const st=load('nukala_settings'),hd=load('nukala_home');
-    document.getElementById('navSiteName').textContent=(hd.navName||st.familyName||'NUKALA').toUpperCase();
-    var _fn=document.getElementById('footerText');if(_fn&&st.familyName)_fn.textContent='The '+st.familyName+' Family';
-    document.getElementById('footerYear').textContent=new Date().getFullYear();
+(function(){
+  function load(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+  var st=load('nukala_settings')||{};
+  var hd=load('nukala_home')||{};
+  var allMembers=Object.values(load('nukala_tree_data')||{});
+  var contacts=load('nukala_contacts')||{};
+  var nnel=document.getElementById('navSiteName');
+  if(nnel)nnel.textContent=(hd.navName||st.familyName||'NUKALA').toUpperCase();
+  var ftel=document.getElementById('footerText');
+  if(ftel)ftel.textContent=st.familyName?'The '+st.familyName+' Family':'The Nukala Family';
+  var fyel=document.getElementById('footerYear');
+  if(fyel)fyel.textContent=new Date().getFullYear();
 
-    const map=L.map('familyMap').setView([20,78],3);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:18}).addTo(map);
+  var withCity=allMembers.filter(function(m){return contacts[m.id]&&(contacts[m.id].city||'').trim();});
+  var cityGroups={};
+  withCity.forEach(function(m){
+    var city=(contacts[m.id].city||'').trim();
+    if(!city)return;
+    if(!cityGroups[city])cityGroups[city]=[];
+    cityGroups[city].push(m);
+  });
+  var citySorted=Object.keys(cityGroups).sort(function(a,b){return cityGroups[b].length-cityGroups[a].length;});
+  var geocache={};
+  var activeCity=null;
 
-    const allMembers=Object.values(load('nukala_tree_data'));
-    const contacts=load('nukala_contacts')||{};
-    const withCity=allMembers.filter(m=>contacts[m.id]&&contacts[m.id].city);
-    const list=document.getElementById('membersList');
+  var TILES={
+    street:{url:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',attr:'&copy; OpenStreetMap contributors'},
+    satellite:{url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',attr:'&copy; Esri'},
+    terrain:{url:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',attr:'&copy; OpenTopoMap'},
+    dark:{url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',attr:'&copy; CartoDB'},
+    watercolor:{url:'https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg',attr:'&copy; Stadia Maps / Stamen Design'},
+    topo:{url:'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',attr:'&copy; OpenStreetMap contributors'},
+  };
 
-    // ── GEOGRAPHIC GROUPS ──
-    var cityGroups={};
-    withCity.forEach(function(m){
-      var city=(contacts[m.id].city||'').trim();
-      if(!city) return;
-      if(!cityGroups[city]) cityGroups[city]=[];
-      cityGroups[city].push(m);
+  var fmap=L.map('familyMap',{zoomControl:true,preferCanvas:true}).setView([20,78],3);
+  var curTile=L.tileLayer(TILES.street.url,{attribution:TILES.street.attr,maxZoom:18}).addTo(fmap);
+  setTimeout(function(){fmap.invalidateSize();},400);
+  window.addEventListener('load',function(){fmap.invalidateSize();});
+
+  document.querySelectorAll('.mtype-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var t=TILES[this.getAttribute('data-mtype')];
+      if(!t)return;
+      fmap.removeLayer(curTile);
+      curTile=L.tileLayer(t.url,{attribution:t.attr,maxZoom:18}).addTo(fmap);
+      document.querySelectorAll('.mtype-btn').forEach(function(b){b.classList.remove('on');});
+      this.classList.add('on');
     });
-    var citySorted=Object.keys(cityGroups).sort(function(a,b){return cityGroups[b].length-cityGroups[a].length;});
-    var geocacheMap={};
+  });
 
-    // ── MEMBER CARD ──
-    function memberCard(m,c){
-      var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Member';
-      var av=m.photo?'<img src="'+m.photo+'" alt="'+name+'" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;">'
-        :'<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--sage),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">'+(m.female?'👩':'👨')+'</div>';
-      c=c||{};
-      var phone=m.phone||c.phone||'';
-      var wa=m.whatsapp||c.whatsapp||'';
-      var email=m.email||c.email||'';
-      var contactHtml='';
-      if(phone) contactHtml+='<a href="tel:'+phone+'" style="font-size:.7rem;color:var(--sage-dark);text-decoration:none;margin-right:8px;display:inline-block;margin-top:2px;">📞 '+phone+'</a>';
-      if(wa)    contactHtml+='<a href="https://wa.me/'+wa.replace(/[^0-9]/g,'')+'" target="_blank" style="font-size:.7rem;color:#25d366;text-decoration:none;margin-right:8px;display:inline-block;margin-top:2px;">💬 Chat</a>';
-      if(email) contactHtml+='<span style="font-size:.7rem;color:var(--text-muted);display:inline-block;margin-top:2px;">✉️ '+email+'</span>';
-      return '<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);">'
-        +av
-        +'<div style="flex:1;min-width:0;">'
-        +'<div style="font-size:.86rem;font-weight:500;color:var(--text-dark);">'+name+'</div>'
-        +(m.role?'<div style="font-size:.7rem;color:var(--sage-dark);">'+m.role+'</div>':'')
-        +(m.gen?'<div style="font-size:.68rem;color:var(--text-light);">Generation '+m.gen+'</div>':'')
-        +(contactHtml?'<div>'+contactHtml+'</div>':'<div style="font-size:.7rem;color:var(--text-light);margin-top:2px;">No contact info added yet</div>')
-        +'</div></div>';
+  function mcard(m,c){
+    var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Member';
+    var phone=m.phone||(c&&c.phone)||'';
+    var wa=m.whatsapp||(c&&c.whatsapp)||'';
+    var email=m.email||(c&&c.email)||'';
+    var av=m.photo?'<img src="'+m.photo+'" alt="'+name+'">':'&#128100;';
+    var cl='';
+    if(phone)cl+='<a href="tel:'+phone+'" style="color:var(--sage-dark,#5c7a5c);">&#128222; '+phone+'</a>';
+    if(wa)cl+='<a href="https://wa.me/'+wa.replace(/[^0-9]/g,'')+'" target="_blank" style="color:#25d366;">&#128172; Chat</a>';
+    if(email)cl+='<span style="color:#aaa;">&#9993;&#65039; '+email+'</span>';
+    return '<div class="mcard"><div class="mav">'+av+'</div><div style="flex:1;min-width:0;">'
+      +'<div class="mname">'+name+'</div>'
+      +(m.role?'<div class="mrole">'+m.role+'</div>':'')
+      +(m.gen?'<div class="mgen">Generation '+m.gen+'</div>':'')
+      +(cl?'<div class="mclinks">'+cl+'</div>':'<div class="mgen" style="margin-top:3px;">No contact info yet</div>')
+      +'</div></div>';
+  }
+
+  function renderGeo(){
+    var el=document.getElementById('geoStats');
+    if(!citySorted.length){
+      el.innerHTML='<p style="font-size:.8rem;color:#aaa;">No members have city info yet. Add city in Admin > Contacts.</p>';
+      return;
     }
+    el.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">'
+      +citySorted.map(function(city){
+        return '<button class="city-tag" onclick="showCity(\''+city.replace(/\'/g,"\\'")+'\')">&#128205; '+city+' <span class="city-cnt">'+cityGroups[city].length+'</span></button>';
+      }).join('')+'</div><div id="cityDetail"></div>';
+  }
 
-    // ── GEOGRAPHIC BREAKDOWN ──
-    function renderGeoStats(){
-      var el=document.getElementById('geoStats');
-      if(!citySorted.length){
-        el.innerHTML='<p style="font-size:.82rem;color:var(--text-muted);">No members have city information yet.<br>Add city details in Admin → Contacts for each member.</p>';
-        return;
-      }
-      var html='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">';
-      citySorted.forEach(function(city){
-        var count=cityGroups[city].length;
-        html+='<button onclick="showCityMembers(''+city.replace(/'/g,"\'")+'')" style="background:white;border:1.5px solid var(--border);border-radius:20px;padding:7px 14px;cursor:pointer;font-family:Jost,sans-serif;font-size:.78rem;display:inline-flex;align-items:center;gap:6px;transition:border-color .15s;color:var(--text-dark);" onmouseover="this.style.borderColor='var(--sage-dark)'" onmouseout="this.style.borderColor='var(--border)'">📍 '+city+' <span style="background:var(--sage-dark);color:white;border-radius:20px;padding:1px 8px;font-size:.68rem;">'+count+'</span></button>';
-      });
-      html+='</div><div id="cityMemberDetail"></div>';
-      el.innerHTML=html;
+  window.showCity=function(city){
+    var det=document.getElementById('cityDetail');
+    if(activeCity===city){det.innerHTML='';activeCity=null;document.querySelectorAll('.city-tag').forEach(function(b){b.classList.remove('on');});return;}
+    activeCity=city;
+    document.querySelectorAll('.city-tag').forEach(function(b){b.classList.remove('on');if(b.getAttribute('onclick')||'')b.classList.toggle('on',b.getAttribute('onclick').indexOf("'"+city+"'")>-1);});
+    var mems=cityGroups[city]||[];
+    det.innerHTML='<div style="border:1px solid var(--border,#ddd);border-radius:12px;padding:16px;background:white;margin-top:6px;">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">'
+      +'<span style="font-family:\'Cormorant Garamond\',serif;font-size:1.05rem;">&#128205; '+city+'</span>'
+      +'<span style="font-size:.7rem;background:var(--sage-dark,#5c7a5c);color:white;border-radius:20px;padding:2px 10px;">'+mems.length+' member'+(mems.length>1?'s':'')+'</span>'
+      +'</div>'+mems.map(function(m){return mcard(m,contacts[m.id]);}).join('')+'</div>';
+    det.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+
+  var uLat=null,uLng=null;
+  window.tryNearby=function(){
+    if(!navigator.geolocation){document.getElementById('nearbySection').innerHTML='<p style="font-size:.8rem;color:#aaa;">Geolocation not supported.</p>';return;}
+    document.getElementById('nearbyBtn').textContent='Locating...';
+    navigator.geolocation.getCurrentPosition(function(p){
+      uLat=p.coords.latitude;uLng=p.coords.longitude;
+      document.getElementById('nearbyBtn').textContent='Refresh';
+      document.getElementById('nearbySection').innerHTML='<p style="font-size:.8rem;color:#aaa;">Finding family members near you...</p>';
+      doNearby();
+    },function(){
+      document.getElementById('nearbySection').innerHTML='<p style="font-size:.8rem;color:#aaa;">Location access denied.</p>';
+      document.getElementById('nearbyBtn').textContent='&#128205; Find Nearby Members';
+    });
+  };
+
+  function hav(la1,lo1,la2,lo2){
+    var R=6371,dL=(la2-la1)*Math.PI/180,dG=(lo2-lo1)*Math.PI/180;
+    var a=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dG/2)*Math.sin(dG/2);
+    return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+  }
+
+  async function geocity(city){
+    if(geocache[city])return geocache[city];
+    try{
+      var r=await fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(city)+'&format=json&limit=1',{headers:{'Accept-Language':'en'}});
+      var d=await r.json();
+      if(d[0])geocache[city]={lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon)};
+    }catch(e){}
+    await new Promise(function(r){setTimeout(r,300);});
+    return geocache[city]||null;
+  }
+
+  async function doNearby(){
+    var res=[];
+    for(var i=0;i<withCity.length;i++){
+      var m=withCity[i];
+      var city=contacts[m.id].city;
+      var c=await geocity(city);
+      if(c)res.push({m:m,ct:contacts[m.id],dist:hav(uLat,uLng,c.lat,c.lng),city:city});
     }
+    res.sort(function(a,b){return a.dist-b.dist;});
+    var nb=res.slice(0,8);
+    var el=document.getElementById('nearbySection');
+    if(!nb.length){el.innerHTML='<p style="font-size:.8rem;color:#aaa;">No members with location data found.</p>';return;}
+    el.innerHTML=nb.map(function(r){
+      return '<div style="margin-bottom:10px;border:1px solid var(--border,#ddd);border-radius:10px;padding:10px 12px;background:white;">'
+        +'<span class="ndist">'+r.dist+' km away</span> <span style="font-size:.72rem;color:#aaa;">&#128205; '+r.city+'</span>'
+        +mcard(r.m,r.ct)+'</div>';
+    }).join('');
+  }
 
-    function showCityMembers(city){
-      var members=cityGroups[city]||[];
-      var html='<div style="border:1px solid var(--border);border-radius:12px;padding:16px;background:white;margin-top:8px;">'
-        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
-        +'<div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text-dark);">📍 '+city+'</div>'
-        +'<span style="font-size:.72rem;background:var(--sage-dark);color:white;border-radius:20px;padding:2px 10px;">'+members.length+' member'+(members.length>1?'s':'')+'</span>'
-        +'</div>';
-      html+=members.map(function(m){return memberCard(m,contacts[m.id]);}).join('');
-      html+='</div>';
-      document.getElementById('cityMemberDetail').innerHTML=html;
-      document.getElementById('cityMemberDetail').scrollIntoView({behavior:'smooth',block:'nearest'});
-    }
-    window.showCityMembers=showCityMembers;
-
-    // ── NEARBY MEMBERS ──
-    var userLat=null,userLng=null;
-    function tryNearby(){
-      if(!navigator.geolocation){
-        document.getElementById('nearbySection').innerHTML='<p style="font-size:.8rem;color:var(--text-muted);">Geolocation is not supported on this device or browser.</p>';
-        return;
-      }
-      document.getElementById('nearbyBtn').textContent='⏳ Locating...';
-      navigator.geolocation.getCurrentPosition(function(pos){
-        userLat=pos.coords.latitude;
-        userLng=pos.coords.longitude;
-        document.getElementById('nearbyBtn').textContent='🔄 Refresh';
-        document.getElementById('nearbySection').innerHTML='<p style="font-size:.8rem;color:var(--text-muted);">Finding nearby family members...</p>';
-        renderNearby();
-      },function(){
-        document.getElementById('nearbySection').innerHTML='<p style="font-size:.8rem;color:var(--text-muted);">Location access denied. Please enable location access in your browser settings.</p>';
-        document.getElementById('nearbyBtn').textContent='📍 Find Nearby Members';
-      });
-    }
-    window.tryNearby=tryNearby;
-
-    function haversine(lat1,lng1,lat2,lng2){
-      var R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
-      var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
-      return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
-    }
-
-    async function renderNearby(){
-      var results=[];
+  var chips=document.getElementById('memberChips');
+  if(!withCity.length){
+    chips.innerHTML='<div style="width:100%;padding:12px 0;font-size:.82rem;color:#aaa;">No members have city data yet. Add city in Admin > Contacts.</div>';
+  } else {
+    chips.innerHTML=withCity.map(function(m){
+      var c=contacts[m.id];
+      var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
+      var av=m.photo?'<img src="'+m.photo+'" alt="'+name+'">':'&#128100;';
+      return '<div class="mchip"><div class="mchip-av">'+av+'</div><div style="line-height:1.3;"><div style="font-weight:500;">'+name+'</div><div style="font-size:.67rem;color:#aaa;">&#128205; '+(c.city||'')+'</div></div></div>';
+    }).join('');
+    (async function(){
+      var bounds=[];
       for(var i=0;i<withCity.length;i++){
-        var mem=withCity[i];
-        var city=contacts[mem.id].city;
-        if(!geocacheMap[city]){
-          try{
-            var res=await fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(city)+'&format=json&limit=1',{headers:{'Accept-Language':'en'}});
-            var data=await res.json();
-            if(data[0]) geocacheMap[city]={lat:parseFloat(data[0].lat),lng:parseFloat(data[0].lon)};
-          }catch(e){}
-          await new Promise(r=>setTimeout(r,300));
-        }
-        if(geocacheMap[city]){
-          var dist=haversine(userLat,userLng,geocacheMap[city].lat,geocacheMap[city].lng);
-          results.push({m:mem,c:contacts[mem.id],dist:dist,city:city});
+        var m=withCity[i];
+        var c=contacts[m.id];
+        var gc=await geocity(c.city);
+        if(gc){
+          var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
+          var col=m.ancestor?'#c9a84c':m.female?'#9060b0':'#5c7a5c';
+          var mk=L.circleMarker([gc.lat,gc.lng],{radius:9,fillColor:col,color:'white',weight:2,opacity:1,fillOpacity:0.9}).addTo(fmap);
+          mk.bindPopup('<strong>'+name+'</strong><br>'+(m.role||'')+(m.gen?'<br>Gen '+m.gen:'')+'<br>&#128205; '+(c.city||''));
+          bounds.push([gc.lat,gc.lng]);
         }
       }
-      results.sort(function(a,b){return a.dist-b.dist;});
-      var nearby=results.slice(0,8);
-      var el=document.getElementById('nearbySection');
-      if(!nearby.length){
-        el.innerHTML='<p style="font-size:.8rem;color:var(--text-muted);">No members with location data found nearby.</p>';
-        return;
-      }
-      el.innerHTML=nearby.map(function(r){
-        return '<div style="border-radius:10px;border:1px solid var(--border);padding:10px;margin-bottom:8px;background:white;">'
-          +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
-          +'<span style="background:var(--sage-dark);color:white;border-radius:20px;padding:2px 10px;font-size:.7rem;font-weight:500;">'+r.dist+' km away</span>'
-          +'<span style="font-size:.72rem;color:var(--text-muted);">📍 '+r.city+'</span>'
-          +'</div>'
-          +memberCard(r.m,r.c)
-          +'</div>';
-      }).join('');
-    }
-
-    // ── MAP MARKERS ──
-    if(!withCity.length){
-      list.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;"><p>No members have city information yet.</p><p style="margin-top:8px;">Add city details in Admin → Contacts for each member.</p></div>';
-    } else {
-      (async function(){
-        var placed=[];
-        for(var i=0;i<withCity.length;i++){
-          var mem=withCity[i];
-          var c=contacts[mem.id];
-          if(!geocacheMap[c.city]){
-            try{
-              var res=await fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(c.city)+'&format=json&limit=1',{headers:{'Accept-Language':'en'}});
-              var data=await res.json();
-              if(data[0]) geocacheMap[c.city]={lat:parseFloat(data[0].lat),lng:parseFloat(data[0].lon)};
-            }catch(e){}
-            await new Promise(r=>setTimeout(r,300));
-          }
-          var coords=geocacheMap[c.city];
-          if(coords){
-            var name=[mem.firstName,mem.lastName].filter(Boolean).join(' ');
-            var colour=mem.ancestor?'#c9a84c':mem.female?'#9060b0':'#5c7a5c';
-            var marker=L.circleMarker([coords.lat,coords.lng],{radius:9,fillColor:colour,color:'white',weight:2,opacity:1,fillOpacity:0.9}).addTo(map);
-            marker.bindPopup('<strong>'+name+'</strong><br>'+(mem.role||'')+(mem.gen?'<br>Generation '+mem.gen:'')+'<br>📍 '+c.city);
-            placed.push([coords.lat,coords.lng]);
-          }
-        }
-        if(placed.length) map.fitBounds(placed,{padding:[40,40]});
-      })();
-      list.innerHTML=withCity.map(function(mem){
-        var c=contacts[mem.id];
-        var name=[mem.firstName,mem.lastName].filter(Boolean).join(' ');
-        var av=mem.photo?'<img src="'+mem.photo+'" alt="'+name+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">':(mem.female?'👩':'👨');
-        return '<div class="map-member"><div class="map-avatar">'+av+'</div><div><div style="font-size:.86rem;font-weight:500;color:var(--text-dark);">'+name+'</div><div style="font-size:.72rem;color:var(--text-light);">📍 '+c.city+'</div></div></div>';
-      }).join('');
-    }
-
-    renderGeoStats();
+      if(bounds.length){fmap.fitBounds(bounds,{padding:[50,50]});fmap.invalidateSize();}
+    })();
+  }
+  renderGeo();
+})();
 </script>
 
+
 <script>
-
 (function(){
-  function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
-
-  // ── THEME ──
-  const theme = load('nukala_theme');
+  function load(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+  var theme=load('nukala_theme');
   if(theme){
-    const r = document.documentElement;
-    if(theme.primary)   r.style.setProperty('--sage-dark', theme.primary);
-    if(theme.secondary) r.style.setProperty('--sage', theme.secondary);
-    if(theme.highlight) r.style.setProperty('--gold', theme.highlight);
-    if(theme.bg)        r.style.setProperty('--cream', theme.bg);
-    if(theme.text)      r.style.setProperty('--text-dark', theme.text);
-    if(theme.fontBody)  document.body.style.fontFamily = theme.fontBody+', sans-serif';
-    if(theme.fontSize)  document.body.style.fontSize = theme.fontSize;
-    if(theme.fontScale && theme.fontScale !== '1.0'){
-      const scale = parseFloat(theme.fontScale)||1;
-      document.querySelectorAll('h1,h2,h3,.hero-title,.sh').forEach(function(el){
-        const curr = parseFloat(getComputedStyle(el).fontSize)||16;
-        el.style.fontSize = (curr * scale) + 'px';
-      });
-    }
-    if(theme.siteBackground){
-      document.body.style.background = theme.siteBackground;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundAttachment = 'fixed';
-      document.documentElement.style.setProperty('--cream', 'transparent');
-    }
+    var r=document.documentElement;
+    if(theme.primary)   r.style.setProperty('--sage-dark',theme.primary);
+    if(theme.secondary) r.style.setProperty('--sage',theme.secondary);
+    if(theme.highlight) r.style.setProperty('--gold',theme.highlight);
+    if(theme.bg)        r.style.setProperty('--cream',theme.bg);
+    if(theme.text)      r.style.setProperty('--text-dark',theme.text);
+    if(theme.fontBody)  document.body.style.fontFamily=theme.fontBody+',sans-serif';
+    if(theme.fontSize)  document.body.style.fontSize=theme.fontSize;
+    if(theme.siteBackground){document.body.style.background=theme.siteBackground;document.body.style.backgroundSize='cover';document.body.style.backgroundAttachment='fixed';}
   }
-
-  // ── TYPOGRAPHY ──
-  const typo = load('nukala_typography');
-  if(typo){
-    const style = document.createElement('style');
-    let css = '';
-    if(typo.heroSize) css += `.page-hero h1, .hero-title { font-size: ${typo.heroSize} !important; }`;
-    if(typo.navSize)  css += `.nav-links a { font-size: ${typo.navSize} !important; }`;
-    if(typo.bodySize) css += `body { font-size: ${typo.bodySize}; }`;
-    if(typo.radius)   css += `.card, .panel, .pcard { border-radius: ${typo.radius} !important; }`;
-    if(typo.maxWidth) css += `.content-area, .page-hero { max-width: ${typo.maxWidth} !important; }`;
-    if(typo.navLS)    css += `.nav-links a { letter-spacing: ${typo.navLS} !important; }`;
-    if(typo.btnRadius)css += `.btn, button.nav-logout { border-radius: ${typo.btnRadius} !important; }`;
-    if(css){ style.textContent = css; document.head.appendChild(style); }
+  var sw=load('nukala_sitewide')||{};
+  if(sw.footerName){var f=document.getElementById('footerText');if(f)f.textContent=sw.footerName;}
+  if(sw.footerSub){var fs=document.getElementById('footerSub');if(fs)fs.textContent=sw.footerSub;}
+  if(sw.footerYear){var fy=document.getElementById('footerYear');if(fy)fy.textContent=sw.footerYear;}
+  var nav=load('nukala_navmenu');
+  var DEF=[{href:'home.html',label:'Home'},{href:'tree.html',label:'Family Tree'},{href:'history.html',label:'History'},{href:'gallery.html',label:'Gallery'},{href:'facts.html',label:'Facts'},{href:'stats.html',label:'Stats'},{href:'events.html',label:'Events'},{href:'map.html',label:'Map'},{href:'polls.html',label:'Polls'},{href:'recipes.html',label:'Recipes'},{href:'achievements.html',label:'Achievements'},{href:'videos.html',label:'Videos'},{href:'qr.html',label:'QR Code'},{href:'contact.html',label:'Contact'}];
+  var pages=(nav&&nav.items&&nav.items.length)?nav.items.filter(function(i){return i.active!==false;}):DEF;
+  var cur=location.pathname.split('/').pop()||'home.html';
+  var ul=document.querySelector('nav .nav-links');
+  if(ul){
+    ul.innerHTML=pages.map(function(p){return '<li><a href="'+p.href+'"'+(p.href===cur?' class="active"':'')+'>'+p.label+'</a></li>';}).join('');
+    if(!pages.find(function(p){return p.href==='join.html';}))ul.innerHTML+='<li><a href="join.html">Join Tree</a></li>';
+    if(!pages.find(function(p){return p.href==='about.html';}))ul.innerHTML+='<li><a href="about.html">About</a></li>';
   }
-
-  // ── SITE WIDE ──
-  const sw = load('nukala_sitewide');
-  const hd = load('nukala_home');
-  const s  = load('nukala_settings');
-  const navName = (sw&&sw.navName) || (hd&&hd.navName) || (s&&s.familyName ? s.familyName.toUpperCase() : 'NUKALA');
-  document.querySelectorAll('.nav-site-name, #navSiteName').forEach(el=>el.textContent=navName);
-  const footerName = s&&s.familyName ? 'The '+s.familyName+' Family' : 'The Nukala Family';
-  document.querySelectorAll('#footerName,#footerFamilyName,#footerText').forEach(el=>el.textContent=footerName);
-  if(sw&&sw.footer){
-    document.querySelectorAll('footer strong').forEach(el=>el.textContent=sw.footer);
-  }
-
-  // ── NAV MENU ──
-  const navMenu = load('nukala_navmenu');
-  if(navMenu && navMenu.items){
-    const activeItems = navMenu.items.filter(i=>i.active!==false);
-    document.querySelectorAll('nav .nav-links').forEach(ul=>{
-      const currentPage = location.pathname.split('/').pop()||'home.html';
-      ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');
-      // Always ensure Join Tree appears in nav
-      if(!ul.querySelector('a[href="join.html"]')){
-        const li=document.createElement('li');
-        li.innerHTML=`<a href="join.html" ${currentPage==='join.html'?'class="active"':''}>Join Tree</a>`;
-        ul.appendChild(li);
-      }
-      if(!ul.querySelector('a[href="about.html"]')){
-        const li2=document.createElement('li');
-        li2.innerHTML=`<a href="about.html" ${currentPage==='about.html'?'class="active"':''}>About</a>`;
-        ul.appendChild(li2);
-      }
-    });
-  } else {
-    // No navmenu saved yet — ensure Join Tree still appears
-    document.querySelectorAll('nav .nav-links').forEach(ul=>{
-      const currentPage = location.pathname.split('/').pop()||'home.html';
-      if(!ul.querySelector('a[href="join.html"]')){
-        const li=document.createElement('li');
-        li.innerHTML=`<a href="join.html" ${currentPage==='join.html'?'class="active"':''}>Join Tree</a>`;
-        ul.appendChild(li);
-      }
-    });
-  }
-
-  // ── NEW PAGES CONTENT ──
-  const np = load('nukala_newpages');
-  const currentPage = location.pathname.split('/').pop()||'home.html';
-  const pageKey = {
-    'events.html':'events','recipes.html':'recipes','achievements.html':'ach',
-    'videos.html':'videos','polls.html':'polls','stats.html':'stats',
-    'map.html':'map','facts.html':'facts','history.html':'history',
-    'gallery.html':'gallery','contact.html':'contact','tree.html':'tree'
-  }[currentPage];
-
-  if(np && pageKey && np[pageKey]){
-    const pd = np[pageKey];
-    // Eyebrow
-    const eyeEl = document.querySelector('.page-hero .eyebrow');
-    if(eyeEl && pd.eye) eyeEl.textContent = pd.eye;
-    // Title — rebuild with italic
-    const h1El = document.querySelector('.page-hero h1');
-    if(h1El && pd.title){
-      const em = pd.em || '';
-      if(em && pd.title.includes(em)){
-        h1El.innerHTML = pd.title.replace(em, `<em>${em}</em>`);
-      } else {
-        h1El.textContent = pd.title;
-      }
-    }
-    // Description
-    const descEl = document.querySelector('.page-hero p');
-    if(descEl && pd.desc) descEl.textContent = pd.desc;
-    // History quote
-    if(pageKey==='history' && pd.quote){
-      const q = document.querySelector('.history-intro');
-      if(q) q.textContent = pd.quote;
-    }
-    // Contact extras
-    if(pageKey==='contact'){
-      const h = document.querySelector('.contact-info h2');
-      if(h && pd.heading) h.innerHTML = pd.heading;
-      const p = document.querySelector('.contact-info > p');
-      if(p && pd.para) p.textContent = pd.para;
-    }
-    // Gallery title/desc
-    if(pageKey==='gallery'){
-      const gt = document.getElementById('galPageTitle');
-      const gd = document.getElementById('galPageDesc');
-      if(gt && pd.title) gt.textContent = pd.title;
-      if(gd && pd.desc) gd.textContent = pd.desc;
-    }
-  }
-
-  // ── HERO IMAGE ──
-  const hero = load('nukala_heropage');
-  if(hero && hero.homeImgUrl && currentPage==='home.html'){
-    const banner = document.querySelector('.hero-banner');
-    if(banner){
-      banner.style.backgroundImage = `url('${hero.homeImgUrl}')`;
-      banner.style.backgroundSize = 'cover';
-      banner.style.backgroundPosition = 'center';
-    }
-  }
-  // Per-page hero settings
-  if(hero){
-    const heroPageMap={'tree.html':0,'history.html':1,'gallery.html':2,'facts.html':3,'contact.html':4};
-    const heroIdx = heroPageMap[currentPage];
-    if(heroIdx !== undefined && hero['page'+heroIdx]){
-      const hpd = hero['page'+heroIdx];
-      const eyeEl = document.querySelector('.page-hero .eyebrow');
-      const h1El = document.querySelector('.page-hero h1');
-      const descEl = document.querySelector('.page-hero p');
-      // Only override if np didn't already set (np takes priority)
-      if(eyeEl && hpd.eye && !(np&&pageKey&&np[pageKey]&&np[pageKey].eye)) eyeEl.textContent = hpd.eye;
-      if(h1El && hpd.title && !(np&&pageKey&&np[pageKey]&&np[pageKey].title)) h1El.innerHTML = hpd.title;
-      if(descEl && hpd.desc && !(np&&pageKey&&np[pageKey]&&np[pageKey].desc)) descEl.textContent = hpd.desc;
-    }
-  }
-
-  // ── GALLERY FILTER CATEGORIES ──
-  const gp = load('nukala_gallerypage2');
-  if(gp && gp.cats && currentPage==='gallery.html'){
-    const filterBar = document.getElementById('filterBar');
-    if(filterBar){
-      filterBar.innerHTML = '<button class="filter-btn active" onclick="filterGallery(\'all\',this)">All Photos</button>' +
-        gp.cats.map(c=>`<button class="filter-btn" onclick="filterGallery('${c}',this)">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
-    }
-  }
-
-  // ── CONTACT DROPDOWN ──
-  const cp = load('nukala_contactpage2');
-  if(cp && cp.dropdownOpts && currentPage==='contact.html'){
-    const sel = document.getElementById('subject');
-    if(sel) sel.innerHTML = '<option value="">— Select a reason —</option>'+cp.dropdownOpts.map(o=>`<option>${o}</option>`).join('');
-  }
-  if(cp && cp.contactWays && currentPage==='contact.html'){
-    const cw = document.getElementById('contactWays');
-    if(cw) cw.innerHTML = cp.contactWays.map(w=>`<div class="contact-way"><div class="contact-way-icon">${w.icon}</div><div><div class="contact-way-title">${w.title}</div><div class="contact-way-desc">${w.desc}</div></div></div>`).join('');
-  }
-
-  // ── HOME QUICK CARDS ──
-  const hp2 = load('nukala_homepage2');
-  if(hp2 && hp2.quickCards && currentPage==='home.html'){
-    const qn = document.getElementById('quickNavCards');
-    if(qn) qn.innerHTML = hp2.quickCards.map(c=>`<a class="quick-card fade-in" href="${c.link}"><div class="quick-card-icon">${c.icon}</div><div class="quick-card-title">${c.title}</div><div class="quick-card-desc">${c.desc}</div><div class="quick-card-arrow">${c.arrow}</div></a>`).join('');
-  }
-  if(hp2 && hp2.updates && hp2.updates.length && currentPage==='home.html'){
-    const ul = document.getElementById('recentUpdatesList');
-    if(ul) ul.innerHTML = hp2.updates.map(u=>`<div class="update-item"><div class="update-dot"></div><div><div class="update-title">${u.title}</div><div class="update-date">${u.date||''}</div></div></div>`).join('');
-  }
-
+  var vis=load('nukala_page_vis');
+  if(vis){document.querySelectorAll('nav .nav-links a').forEach(function(a){if(vis[a.getAttribute('href')]===false)a.parentElement.style.display='none';});}
 })();
-
 </script>
 
 <script src="nukala.js"></script>

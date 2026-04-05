@@ -116,73 +116,111 @@
     if(s.familyName)var _fn=document.getElementById('footerText');if(_fn)_fn.textContent=s.familyName?'The '+s.familyName+' Family':'The Nukala Family';
 
     function initStats(){
-      const members=Object.values(load('nukala_tree_data'));
-      if(!members.length) return;
-      const gens=[...new Set(members.map(m=>m.gen).filter(Boolean))];
-      const living=members.filter(m=>!m.died&&!m.deceased);
-      const deceased=members.filter(m=>m.died||m.deceased);
-      const female=members.filter(m=>m.female);
-      const withPhoto=members.filter(m=>m.photo);
-      const inlaws=members.filter(m=>m.inlaw);
+      var members=Object.values(load('nukala_tree_data'));
+      if(!members.length){
+        document.getElementById('statsContent').innerHTML='<div class="no-data"><div class="ei">&#128202;</div><p>No family data yet. Add members in the Admin panel.</p></div>';
+        return;
+      }
+      var contacts=load('nukala_contacts')||{};
+      var gens=[...new Set(members.map(m=>m.gen).filter(Boolean))];
+      var living=members.filter(m=>!m.died&&!m.deceased);
+      var deceased=members.filter(m=>m.died||m.deceased);
+      var female=members.filter(m=>m.female);
+      var withPhoto=members.filter(m=>m.photo);
+      var inlaws=members.filter(m=>m.inlaw);
 
-      // Count children per person
-      const childCount={};
-      members.forEach(m=>{ [m.fatherId,m.motherId].filter(Boolean).forEach(pid=>{ childCount[pid]=(childCount[pid]||0)+1; }); });
+      // ── Family name analysis ──
+      var settings=load('nukala_settings')||{};
+      var mainName=(settings.familyName||'Nukala').trim().toLowerCase();
+      var sameLastName=members.filter(function(m){return (m.lastName||'').toLowerCase()===mainName;});
+      // Connected families = unique last names that are NOT the main family name
+      var allLastNames=members.map(function(m){return (m.lastName||'').trim();}).filter(Boolean);
+      var connectedFamilies=[...new Set(allLastNames.filter(function(n){return n.toLowerCase()!==mainName&&n.length>0;}))];
 
-      // Most children
-      const mostKids=members.filter(m=>childCount[m.id]).sort((a,b)=>(childCount[b.id]||0)-(childCount[a.id]||0)).slice(0,5);
+      // ── Children count ──
+      var childCount={};
+      members.forEach(m=>{[m.fatherId,m.motherId].filter(Boolean).forEach(pid=>{childCount[pid]=(childCount[pid]||0)+1;});});
+      var mostKids=members.filter(m=>childCount[m.id]).sort((a,b)=>(childCount[b.id]||0)-(childCount[a.id]||0)).slice(0,5);
 
-      // Oldest (lowest birth year)
-      const withBirth=members.filter(m=>m.born&&!isNaN(parseInt(m.born))).sort((a,b)=>parseInt(a.born)-parseInt(b.born));
-      const oldest=withBirth.slice(0,5);
-      const youngest=withBirth.slice(-5).reverse();
+      // ── Birth years ──
+      var withBirth=members.filter(m=>m.born&&!isNaN(parseInt(m.born))).sort((a,b)=>parseInt(a.born)-parseInt(b.born));
+      var oldest=withBirth.slice(0,5);
+      var youngest=withBirth.slice(-5).reverse();
 
-      // By generation
-      const byGen={};
-      members.forEach(m=>{ const g=m.gen||'?'; byGen[g]=(byGen[g]||0)+1; });
-      const maxInGen=Math.max(...Object.values(byGen));
+      // ── By generation ──
+      var byGen={};
+      members.forEach(m=>{var g=m.gen||'?';byGen[g]=(byGen[g]||0)+1;});
+      var maxInGen=Math.max(...Object.values(byGen));
+
+      // ── Locations ──
+      var byCityRaw={};
+      members.forEach(function(m){var c=contacts[m.id];if(c&&c.city)(byCityRaw[c.city.trim()]=byCityRaw[c.city.trim()]||0)+1? byCityRaw[c.city.trim()]++ : byCityRaw[c.city.trim()]=1;});
+      var cities=Object.keys(byCityRaw).sort(function(a,b){return byCityRaw[b]-byCityRaw[a];});
 
       document.getElementById('statsContent').innerHTML=`
         <div class="stats-hero">
-          <div class="stat-card"><div class="stat-icon">🌳</div><span class="stat-num">${members.length}</span><span class="stat-lbl">Total Members</span></div>
-          <div class="stat-card"><div class="stat-icon">🏛️</div><span class="stat-num">${gens.length}</span><span class="stat-lbl">Generations</span></div>
-          <div class="stat-card"><div class="stat-icon">💚</div><span class="stat-num">${living.length}</span><span class="stat-lbl">Living Members</span></div>
-          <div class="stat-card"><div class="stat-icon">🕊️</div><span class="stat-num">${deceased.length}</span><span class="stat-lbl">Passed Away</span></div>
-          <div class="stat-card"><div class="stat-icon">👩</div><span class="stat-num">${female.length}</span><span class="stat-lbl">Female Members</span></div>
-          <div class="stat-card"><div class="stat-icon">👨</div><span class="stat-num">${members.length-female.length}</span><span class="stat-lbl">Male Members</span></div>
-          <div class="stat-card"><div class="stat-icon">💜</div><span class="stat-num">${inlaws.length}</span><span class="stat-lbl">In-laws</span></div>
-          <div class="stat-card"><div class="stat-icon">📸</div><span class="stat-num">${withPhoto.length}</span><span class="stat-lbl">Have Photos</span></div>
+          <div class="stat-card"><div class="stat-icon">&#127819;</div><span class="stat-num">${members.length}</span><span class="stat-lbl">Total Members</span></div>
+          <div class="stat-card"><div class="stat-icon">&#127963;</div><span class="stat-num">${gens.length}</span><span class="stat-lbl">Generations</span></div>
+          <div class="stat-card"><div class="stat-icon">&#128154;</div><span class="stat-num">${living.length}</span><span class="stat-lbl">Living Members</span></div>
+          <div class="stat-card"><div class="stat-icon">&#128218;</div><span class="stat-num">${sameLastName.length}</span><span class="stat-lbl">${settings.familyName||'Nukala'} by Birth</span></div>
+          <div class="stat-card"><div class="stat-icon">&#128101;</div><span class="stat-num">${connectedFamilies.length}</span><span class="stat-lbl">Connected Families</span></div>
+          <div class="stat-card"><div class="stat-icon">&#128105;</div><span class="stat-num">${female.length}</span><span class="stat-lbl">Female Members</span></div>
+          <div class="stat-card"><div class="stat-icon">&#128104;</div><span class="stat-num">${members.length-female.length}</span><span class="stat-lbl">Male Members</span></div>
+          <div class="stat-card"><div class="stat-icon">&#128149;</div><span class="stat-num">${inlaws.length}</span><span class="stat-lbl">In-laws</span></div>
+          <div class="stat-card"><div class="stat-icon">&#128247;</div><span class="stat-num">${withPhoto.length}</span><span class="stat-lbl">Have Photos</span></div>
+          <div class="stat-card"><div class="stat-icon">&#127758;</div><span class="stat-num">${cities.length}</span><span class="stat-lbl">Cities Worldwide</span></div>
         </div>
+
+        ${connectedFamilies.length?`<div class="card" style="margin-bottom:24px;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;margin-bottom:16px;">&#128101; Connected Families</div>
+          <p style="font-size:.78rem;color:var(--text-light);margin-bottom:14px;">Families tied to the ${settings.familyName||'Nukala'} family through marriage or lineage.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            ${connectedFamilies.map(function(n){
+              var cnt=members.filter(function(m){return(m.lastName||'').toLowerCase()===n.toLowerCase();}).length;
+              return '<span style="background:var(--cream);border:1.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:.78rem;display:inline-flex;align-items:center;gap:6px;">'+n+' <span style="background:var(--sage-dark);color:white;border-radius:20px;padding:1px 7px;font-size:.68rem;">'+cnt+'</span></span>';
+            }).join('')}
+          </div>
+        </div>`:''}
+
+        ${cities.length?`<div class="card" style="margin-bottom:24px;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;margin-bottom:16px;">&#127758; Where We Live</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            ${cities.map(function(city){
+              return '<span style="background:var(--cream);border:1.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:.78rem;display:inline-flex;align-items:center;gap:6px;">&#128205; '+city+' <span style="background:var(--sage-dark);color:white;border-radius:20px;padding:1px 7px;font-size:.68rem;">'+byCityRaw[city]+'</span></span>';
+            }).join('')}
+          </div>
+          <p style="font-size:.72rem;color:var(--text-light);margin-top:10px;">Add more city info in Admin &#8594; Contacts to see more locations here.</p>
+        </div>`:''}
 
         <div class="insight-grid">
           ${mostKids.length?`<div class="insight-card">
-            <div class="insight-title">👶 Most Children</div>
+            <div class="insight-title">&#128118; Most Children</div>
             ${mostKids.map((m,i)=>{
               const name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-              const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'👩':'👨');
+              const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'&#128105;':'&#128104;');
               return `<div class="insight-row"><div class="insight-rank">#${i+1}</div><div class="insight-avatar">${av}</div><div><div class="insight-name">${name}</div><div class="insight-meta">${childCount[m.id]} children</div></div></div>`;
             }).join('')}
           </div>`:''}
           ${oldest.length?`<div class="insight-card">
-            <div class="insight-title">👴 Oldest Members (by birth year)</div>
+            <div class="insight-title">&#128116; Oldest Members</div>
             ${oldest.map((m,i)=>{
               const name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-              const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'👩':'👴');
+              const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'&#128105;':'&#128116;');
               return `<div class="insight-row"><div class="insight-rank">#${i+1}</div><div class="insight-avatar">${av}</div><div><div class="insight-name">${name}</div><div class="insight-meta">Born ${m.born}</div></div></div>`;
             }).join('')}
           </div>`:''}
           ${youngest.length?`<div class="insight-card">
-            <div class="insight-title">👶 Youngest Members</div>
+            <div class="insight-title">&#128118; Youngest Members</div>
             ${youngest.map((m,i)=>{
               const name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-              const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'👧':'👦');
+              const av=m.photo?`<img src="${m.photo}" alt="${name}"/>`:(m.female?'&#128103;':'&#128102;');
               return `<div class="insight-row"><div class="insight-rank">#${i+1}</div><div class="insight-avatar">${av}</div><div><div class="insight-name">${name}</div><div class="insight-meta">Born ${m.born}</div></div></div>`;
             }).join('')}
           </div>`:''}
         </div>
 
         <div class="card" style="margin-bottom:24px;">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;margin-bottom:20px;">📊 Members per Generation</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;margin-bottom:20px;">&#128202; Members per Generation</div>
           ${Object.keys(byGen).sort((a,b)=>parseInt(a)-parseInt(b)).map(g=>`
             <div class="gen-bar-wrap">
               <div class="gen-bar-label"><span>Generation ${g}</span><span>${byGen[g]} member${byGen[g]>1?'s':''}</span></div>
