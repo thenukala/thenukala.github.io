@@ -13,14 +13,15 @@
       nav_gallery:'Gallery', nav_facts:'Facts', nav_stats:'Stats',
       nav_events:'Events', nav_map:'Map', nav_polls:'Polls',
       nav_recipes:'Recipes', nav_achievements:'Achievements',
-      nav_videos:'Videos', nav_share:'QR Code Share', nav_contact:'Contact',
+      nav_videos:'Videos', nav_share:'QR Code', nav_contact:'Contact',
+      nav_join:'Join Tree', nav_about:'About',
       // Sign out
       signout:'Sign Out',
       // Login page
       login_title:'The Nukala Family Tree',
-      login_sub:'A private family archive · Enter your password to continue',
+      login_sub:'A private family archive \u00b7 Enter your password to continue',
       login_placeholder:'Enter family password',
-      login_btn:'Enter Family Archive →',
+      login_btn:'Enter Family Archive \u2192',
       login_note:'This site is exclusively for the Nukala family.',
       // Home hero
       hero_eyebrow:'Welcome to the',
@@ -28,19 +29,19 @@
       hero_tagline:'A private space to celebrate our roots, preserve our stories, and stay connected across generations.',
       stat1_lbl:'Generations', stat2_lbl:'Family Members', stat3_lbl:'Stories Shared',
       about_title:'Our Roots Run Deep',
-      about_p1:'Welcome to the Nukala Family Tree — a private, members-only archive dedicated to preserving and celebrating our shared heritage.',
+      about_p1:'Welcome to the Nukala Family Tree \u2014 a private, members-only archive dedicated to preserving and celebrating our shared heritage.',
       about_p2:'This site is a living record of who we are: our ancestors, our stories, our photos, and the bonds that tie us together.',
-      about_p3:'We invite every family member to contribute — add your memories, upload old photographs, and help build this archive for generations to come.',
+      about_p3:'We invite every family member to contribute \u2014 add your memories, upload old photographs, and help build this archive for generations to come.',
       recent_updates:'Recent Updates',
       // Quick cards
-      card_tree_title:'Family Tree', card_tree_desc:'Explore our family connections, branches, and lineage.', card_tree_arrow:'View tree →',
-      card_history_title:'Our History', card_history_desc:'Read stories, milestones, and heritage of the Nukala family.', card_history_arrow:'Read more →',
-      card_gallery_title:'Photo Gallery', card_gallery_desc:'Browse cherished photos and memories across the years.', card_gallery_arrow:'View photos →',
-      card_contact_title:'Get in Touch', card_contact_desc:'Contribute your own stories, photos, or corrections.', card_contact_arrow:'Contact us →',
+      card_tree_title:'Family Tree', card_tree_desc:'Explore our family connections, branches, and lineage.', card_tree_arrow:'View tree \u2192',
+      card_history_title:'Our History', card_history_desc:'Read stories, milestones, and heritage of the Nukala family.', card_history_arrow:'Read more \u2192',
+      card_gallery_title:'Photo Gallery', card_gallery_desc:'Browse cherished photos and memories across the years.', card_gallery_arrow:'View photos \u2192',
+      card_contact_title:'Get in Touch', card_contact_desc:'Contribute your own stories, photos, or corrections.', card_contact_arrow:'Contact us \u2192',
       // History
       hist_eyebrow:'Our Story', hist_title_em:'Nukala', hist_title:'Family History',
-      hist_sub:'A journey through time — the milestones, moments, and memories that shaped who we are.',
-      hist_quote:'"A family\'s story is a river — it flows through time, carves its own path, and nourishes everything it touches."',
+      hist_sub:'A journey through time \u2014 the milestones, moments, and memories that shaped who we are.',
+      hist_quote:'\u201cA family\'s story is a river \u2014 it flows through time, carves its own path, and nourishes everything it touches.\u201d',
       add_story:'+ Add a Story',
       // Gallery
       gal_eyebrow:'Memories', gal_title_em:'Nukala', gal_title:'Photo Gallery',
@@ -49,128 +50,161 @@
       filter_celebrations:'Celebrations', filter_travel:'Travel', filter_other:'Other',
       // Facts
       facts_eyebrow:'Did You Know?', facts_title:'Interesting Family Facts',
-      facts_sub:'Fascinating milestones, achievements, traditions and firsts from across the Nukala family.',
+      facts_sub:'Fascinating milestones, traditions, and records that make the Nukala family unique.',
       filter_achievements:'Achievements', filter_milestones:'Milestones',
       filter_traditions:'Traditions', filter_records:'Records', filter_fun:'Fun Facts',
-      // Tree
-      tree_eyebrow:'Our Roots', tree_title_em:'Nukala', tree_title:'Family Tree',
-      tree_sub:'Click any leaf to discover the story within. Lines trace the branches of our family across generations.',
-      btn_fit:'Fit to Screen', btn_reset:'Reset View', lines_on:'Lines On', lines_off:'Lines Off',
-      // Contact
-      cont_eyebrow:'Contribute', cont_title:'Get In Touch',
-      cont_sub:'Have a story to share, a photo to contribute, or a correction to suggest?',
-      form_fn:'First Name', form_ln:'Last Name', form_email:'Email Address',
-      form_subj:'What would you like to do?', form_msg:'Your Message',
-      form_btn:'Send Message →',
       // Stats
       stats_eyebrow:'By The Numbers', stats_title:'Family Statistics',
-      stats_sub:'Fascinating insights and records from across the Nukala family.',
+      stats_sub:'Fascinating insights into the Nukala family \u2014 our reach, our roots, and our remarkable story.',
       // Events
       evts_eyebrow:'Upcoming', evts_title:'Family Events',
-      evts_sub:'Reunions, birthdays, anniversaries and celebrations.',
+      evts_sub:'Reunions, celebrations, and gatherings \u2014 stay connected and never miss a moment.',
       // Recipes
       rec_eyebrow:'Traditional', rec_title:'Family Recipes',
-      rec_sub:'Cherished recipes passed down through generations of the Nukala family.',
+      rec_sub:'Cherished recipes passed down through generations \u2014 the tastes of home.',
       // Achievements
       ach_eyebrow:'Pride of the Family', ach_title:'Family Achievements',
-      ach_sub:'Degrees, awards, milestones and proud moments.',
+      ach_sub:'Degrees, awards, honours, and proud milestones that make us who we are.',
       // Videos
       vid_eyebrow:'Memories in Motion', vid_title:'Family Videos',
-      vid_sub:'Family videos, celebrations and memorable moments captured on film.',
+      vid_sub:'Memorable moments captured on film \u2014 watch our story unfold.',
       // Map
       map_eyebrow:'Where We Are', map_title:'Family Map',
-      map_sub:'See where Nukala family members live around the world.',
+      map_sub:'See where members of the Nukala family are located around the world.',
       // Polls
       poll_eyebrow:'Have Your Say', poll_title:'Family Polls',
-      poll_sub:'Vote on family decisions — every voice counts!',
+      poll_sub:'Every voice counts \u2014 share your opinion on family matters.',
       // QR
-      qr_eyebrow:'Share Access', qr_title:'QR Code Access',
-      qr_sub:'Share the family website with relatives — scan to open instantly.',
+      qr_eyebrow:'Share the Site', qr_title:'Family QR Code',
+      qr_sub:'Scan or share this code to bring more family members to the archive.',
+      // Tree
+      tree_eyebrow:'Our Roots', tree_title_em:'Nukala', tree_title:'Family Tree',
+      tree_sub:'Click any family member to discover their story and connections.',
+      'btn-fit':'Fit to Screen', 'btn-reset':'Reset View',
+      // Contact
+      cont_eyebrow:'Contribute', cont_title:'Get In Touch',
+      cont_sub:'Share a story, submit a photo, or suggest a correction.',
+      form_fn:'First Name', form_ln:'Last Name', form_email:'Email',
+      form_subj:'Subject', form_msg:'Message', form_btn:'Send Message',
+      // Join Tree page
+      join_eyebrow:'Join the Family', join_title:'Join the Family Tree',
+      join_sub:'Help us build the most complete Nukala family archive. Fill in as much or as little as you like \u2014 every detail helps.',
+      join_personal:'Personal Details', join_connections:'Family Connections', join_contact_details:'Contact Details',
+      join_firstname:'First Name', join_lastname:'Last Name', join_dob:'Date of Birth',
+      join_gender:'Gender', join_city:'City / Town you live in', join_occ:'Occupation', join_bio:'Short Bio / Fun Fact about yourself',
+      join_father:"Father's Full Name", join_mother:"Mother's Full Name", join_spouse:"Spouse's Full Name",
+      join_anniversary:'Wedding Anniversary Date', join_children:"Children's Names & Birth Years",
+      join_siblings:"Siblings' Names", join_wa:'WhatsApp Number', join_email:'Email Address',
+      join_photo:'Photo URL (optional)', join_photo_note:'Upload a photo to Google Photos, share it, and paste the link here',
+      join_note:'Fields marked * are helpful but nothing is strictly required \u2014 share what you\'re comfortable with.',
+      join_submit_note:'When you click below, your details will open in WhatsApp or Email \u2014 pre-filled and ready to send to the family admin.',
+      join_send_wa:'Send via WhatsApp', join_send_email:'Send via Email',
+      // About page
+      about_eyebrow:'About This Project', about_title_str:'About This Project',
+      about_sub:'The story behind the Nukala Family Archive \u2014 who built it, who inspired it, and who made it possible.',
+      about_coming_soon:'About page coming soon', about_coming_sub:'The admin will add details here shortly.',
       // Footer
-      footer_private:'Private & Password Protected · Made with 🌳 & love',
+      footer_private:'Private & Password Protected \u00b7 Made with love',
     },
+
     te: {
       // Nav links
-      nav_home:'హోమ్', nav_tree:'కుటుంబ వృక్షం', nav_history:'చరిత్ర',
-      nav_gallery:'గ్యాలరీ', nav_facts:'వాస్తవాలు', nav_stats:'గణాంకాలు',
-      nav_events:'కార్యక్రమాలు', nav_map:'మ్యాప్', nav_polls:'పోల్స్',
-      nav_recipes:'వంటకాలు', nav_achievements:'విజయాలు',
-      nav_videos:'వీడియోలు', nav_share:'QR కోడ్ షేర్', nav_contact:'సంప్రదించండి',
+      nav_home:'\u0c39\u0c4b\u0c2e\u0c4d', nav_tree:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c43\u0c15\u0c4d\u0c37\u0c02', nav_history:'\u0c1a\u0c30\u0c3f\u0c24\u0c4d\u0c30',
+      nav_gallery:'\u0c17\u0c4d\u0c2f\u0c3e\u0c32\u0c30\u0c40', nav_facts:'\u0c35\u0c3e\u0c38\u0c4d\u0c24\u0c35\u0c3e\u0c32\u0c41', nav_stats:'\u0c17\u0c23\u0c3e\u0c02\u0c15\u0c3e\u0c32\u0c41',
+      nav_events:'\u0c15\u0c3e\u0c30\u0c4d\u0c2f\u0c15\u0c4d\u0c30\u0c2e\u0c3e\u0c32\u0c41', nav_map:'\u0c2e\u0c4d\u0c2f\u0c3e\u0c2a\u0c4d', nav_polls:'\u0c2a\u0c4b\u0c32\u0c4d\u0c38\u0c4d',
+      nav_recipes:'\u0c35\u0c02\u0c1f\u0c15\u0c3e\u0c32\u0c41', nav_achievements:'\u0c35\u0c3f\u0c1c\u0c2f\u0c3e\u0c32\u0c41',
+      nav_videos:'\u0c35\u0c40\u0c21\u0c3f\u0c2f\u0c4b\u0c32\u0c41', nav_share:'QR \u0c15\u0c4b\u0c21\u0c4d \u0c37\u0c47\u0c30\u0c4d', nav_contact:'\u0c38\u0c02\u0c2a\u0c4d\u0c30\u0c26\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f',
+      nav_join:'\u0c1a\u0c47\u0c30\u0c02\u0c21\u0c3f', nav_about:'\u0c17\u0c41\u0c30\u0c3f\u0c02\u0c1a\u0c3f',
       // Sign out
-      signout:'నిష్క్రమించు',
+      signout:'\u0c28\u0c3f\u0c37\u0c4d\u0c15\u0c4d\u0c30\u0c2e\u0c3f\u0c02\u0c1a\u0c41',
       // Login page
-      login_title:'నుకాల కుటుంబ వృక్షం',
-      login_sub:'ప్రైవేట్ కుటుంబ సంగ్రహశాల · కొనసాగించడానికి పాస్‌వర్డ్ నమోదు చేయండి',
-      login_placeholder:'కుటుంబ పాస్‌వర్డ్ నమోదు చేయండి',
-      login_btn:'కుటుంబ సంగ్రహశాలలోకి ప్రవేశించండి →',
-      login_note:'ఈ సైట్ ప్రత్యేకంగా నుకాల కుటుంబానికి మాత్రమే.',
+      login_title:'\u0c28\u0c41\u0c15\u0c3e\u0c32 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c43\u0c15\u0c4d\u0c37\u0c02',
+      login_sub:'\u0c2a\u0c4d\u0c30\u0c48\u0c35\u0c47\u0c1f\u0c4d \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c02\u0c17\u0c4d\u0c30\u0c39\u0c36\u0c3e\u0c32 \u00b7 \u0c15\u0c4a\u0c28\u0c38\u0c3e\u0c17\u0c3f\u0c02\u0c1a\u0c21\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d \u0c28\u0c2e\u0c4b\u0c26\u0c41 \u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f',
+      login_placeholder:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d \u0c28\u0c2e\u0c4b\u0c26\u0c41 \u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f',
+      login_btn:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c02\u0c17\u0c4d\u0c30\u0c39\u0c36\u0c3e\u0c32\u0c32\u0c4b\u0c15\u0c3f \u0c2a\u0c4d\u0c30\u0c35\u0c47\u0c36\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f \u2192',
+      login_note:'\u0c08 \u0c38\u0c48\u0c1f\u0c4d \u0c2a\u0c4d\u0c30\u0c24\u0c4d\u0c2f\u0c47\u0c15\u0c02\u0c17\u0c3e \u0c28\u0c41\u0c15\u0c3e\u0c32 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c2e\u0c3e\u0c24\u0c4d\u0c30\u0c2e\u0c47.',
       // Home hero
-      hero_eyebrow:'స్వాగతం',
-      hero_title_1:'', hero_title_em:'నుకాల', hero_title_2:'కుటుంబ సంగ్రహశాల',
-      hero_tagline:'మన మూలాలను వేడుక చేసుకోవడానికి, మన కథలను భద్రపరచడానికి, తరాల అంతటా అనుసంధానంగా ఉండడానికి ఒక ప్రైవేట్ స్థలం.',
-      stat1_lbl:'తరాలు', stat2_lbl:'కుటుంబ సభ్యులు', stat3_lbl:'పంచుకున్న కథలు',
-      about_title:'మన వేర్లు లోతుగా ఉన్నాయి',
-      about_p1:'నుకాల ఫ్యామిలీ ట్రీకి స్వాగతం — మన పూర్వీకులను మరియు వారసత్వాన్ని భద్రపరచడానికి అంకితమైన ప్రైవేట్ సభ్యత్వ సంగ్రహశాల.',
-      about_p2:'ఈ సైట్ మనం ఎవరో అనే దానికి జీవంతమైన రికార్డు: మన పూర్వీకులు, మన కథలు, మన ఫోటోలు మరియు మనల్ని కలిపే బంధాలు.',
-      about_p3:'ప్రతి కుటుంబ సభ్యుడూ సహకరించమని ఆహ్వానిస్తున్నాం — మీ జ్ఞాపకాలు జోడించండి, పాత ఫోటోలు అప్‌లోడ్ చేయండి.',
-      recent_updates:'తాజా అప్‌డేట్‌లు',
-      // Quick cards
-      card_tree_title:'కుటుంబ వృక్షం', card_tree_desc:'మన కుటుంబ సంబంధాలు, శాఖలు మరియు వంశావళిని అన్వేషించండి.', card_tree_arrow:'వృక్షం చూడండి →',
-      card_history_title:'మన చరిత్ర', card_history_desc:'నుకాల కుటుంబ కథలు, మైలురాళ్ళు మరియు వారసత్వాన్ని చదవండి.', card_history_arrow:'మరింత చదవండి →',
-      card_gallery_title:'ఫోటో గ్యాలరీ', card_gallery_desc:'సంవత్సరాల జ్ఞాపకాలు మరియు ఫోటోలు చూడండి.', card_gallery_arrow:'ఫోటోలు చూడండి →',
-      card_contact_title:'సంప్రదించండి', card_contact_desc:'మీ కథలు, ఫోటోలు లేదా సవరణలు అందించండి.', card_contact_arrow:'సంప్రదించండి →',
+      hero_eyebrow:'\u0c38\u0c4d\u0c35\u0c3e\u0c17\u0c24\u0c02',
+      hero_title_1:'', hero_title_em:'\u0c28\u0c41\u0c15\u0c3e\u0c32', hero_title_2:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c02\u0c17\u0c4d\u0c30\u0c39\u0c36\u0c3e\u0c32',
+      hero_tagline:'\u0c2e\u0c28 \u0c2e\u0c42\u0c32\u0c3e\u0c32\u0c28\u0c41 \u0c35\u0c47\u0c21\u0c41\u0c15 \u0c1a\u0c47\u0c38\u0c41\u0c15\u0c4a\u0c35\u0c21\u0c3e\u0c28\u0c3f\u0c15\u0c3f, \u0c2e\u0c28 \u0c15\u0c25\u0c32\u0c28\u0c41 \u0c2d\u0c26\u0c4d\u0c30\u0c2a\u0c30\u0c1a\u0c21\u0c3e\u0c28\u0c3f\u0c15\u0c3f, \u0c24\u0c30\u0c3e\u0c32 \u0c05\u0c02\u0c24\u0c1f\u0c3e \u0c05\u0c28\u0c41\u0c38\u0c02\u0c27\u0c3e\u0c28\u0c02\u0c17\u0c3e \u0c09\u0c02\u0c21\u0c21\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c12\u0c15 \u0c2a\u0c4d\u0c30\u0c48\u0c35\u0c47\u0c1f\u0c4d \u0c38\u0c4d\u0c25\u0c32\u0c02.',
+      stat1_lbl:'\u0c24\u0c30\u0c3e\u0c32\u0c41', stat2_lbl:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c2d\u0c4d\u0c2f\u0c41\u0c32\u0c41', stat3_lbl:'\u0c2a\u0c02\u0c1a\u0c41\u0c15\u0c41\u0c28\u0c4d\u0c28 \u0c15\u0c25\u0c32\u0c41',
+      about_title:'\u0c2e\u0c28 \u0c35\u0c47\u0c30\u0c4d\u0c32\u0c41 \u0c32\u0c4b\u0c24\u0c41\u0c17\u0c3e \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c2f\u0c3f',
+      about_p1:'\u0c28\u0c41\u0c15\u0c3e\u0c32 \u0c2b\u0c4d\u0c2f\u0c3e\u0c2e\u0c3f\u0c32\u0c40 \u0c1f\u0c4d\u0c30\u0c40\u0c15\u0c3f \u0c38\u0c4d\u0c35\u0c3e\u0c17\u0c24\u0c02 \u2014 \u0c2e\u0c28 \u0c2a\u0c42\u0c30\u0c4d\u0c35\u0c40\u0c15\u0c41\u0c32\u0c28\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c35\u0c3e\u0c30\u0c38\u0c24\u0c4d\u0c35\u0c3e\u0c28\u0c4d\u0c28\u0c3f \u0c2d\u0c26\u0c4d\u0c30\u0c2a\u0c30\u0c1a\u0c21\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c05\u0c02\u0c15\u0c3f\u0c24\u0c2e\u0c48\u0c28 \u0c2a\u0c4d\u0c30\u0c48\u0c35\u0c47\u0c1f\u0c4d \u0c38\u0c2d\u0c4d\u0c2f\u0c24\u0c4d\u0c35 \u0c38\u0c02\u0c17\u0c4d\u0c30\u0c39\u0c36\u0c3e\u0c32.',
+      about_p2:'\u0c08 \u0c38\u0c48\u0c1f\u0c4d \u0c2e\u0c28\u0c02 \u0c0e\u0c35\u0c30\u0c4b \u0c05\u0c28\u0c47 \u0c26\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c1c\u0c40\u0c35\u0c02\u0c24\u0c2e\u0c48\u0c28 \u0c30\u0c3f\u0c15\u0c3e\u0c30\u0c4d\u0c21\u0c41.',
+      about_p3:'\u0c2a\u0c4d\u0c30\u0c24\u0c3f \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c2d\u0c4d\u0c2f\u0c41\u0c21\u0c42 \u0c38\u0c39\u0c15\u0c30\u0c3f\u0c02\u0c1a\u0c2e\u0c28\u0c3f \u0c06\u0c39\u0c4d\u0c35\u0c3e\u0c28\u0c3f\u0c38\u0c4d\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02.',
+      recent_updates:'\u0c24\u0c3e\u0c1c\u0c3e \u0c05\u0c2a\u0c4d\u200c\u0c21\u0c47\u0c1f\u0c4d\u200c\u0c32\u0c41',
+      card_tree_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c43\u0c15\u0c4d\u0c37\u0c02', card_tree_desc:'\u0c2e\u0c28 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c02\u0c2c\u0c02\u0c27\u0c3e\u0c32\u0c41, \u0c36\u0c3e\u0c16\u0c32\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c35\u0c02\u0c36\u0c3e\u0c35\u0c33\u0c3f\u0c28\u0c3f \u0c05\u0c28\u0c4d\u0c35\u0c47\u0c37\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f.', card_tree_arrow:'\u0c35\u0c43\u0c15\u0c4d\u0c37\u0c02 \u0c1a\u0c42\u0c21\u0c02\u0c21\u0c3f \u2192',
+      card_history_title:'\u0c2e\u0c28 \u0c1a\u0c30\u0c3f\u0c24\u0c4d\u0c30', card_history_desc:'\u0c28\u0c41\u0c15\u0c3e\u0c32 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c15\u0c25\u0c32\u0c41, \u0c2e\u0c48\u0c32\u0c41\u0c30\u0c3e\u0c33\u0c4d\u0c33\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c35\u0c3e\u0c30\u0c38\u0c24\u0c4d\u0c35\u0c3e\u0c28\u0c4d\u0c28\u0c3f \u0c1a\u0c26\u0c35\u0c02\u0c21\u0c3f.', card_history_arrow:'\u0c2e\u0c30\u0c3f\u0c02\u0c24 \u0c1a\u0c26\u0c35\u0c02\u0c21\u0c3f \u2192',
+      card_gallery_title:'\u0c2b\u0c4b\u0c1f\u0c4b \u0c17\u0c4d\u0c2f\u0c3e\u0c32\u0c30\u0c40', card_gallery_desc:'\u0c38\u0c02\u0c35\u0c24\u0c4d\u0c38\u0c30\u0c3e\u0c32 \u0c1c\u0c4d\u0c1e\u0c3e\u0c2a\u0c15\u0c3e\u0c32\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c2b\u0c4b\u0c1f\u0c4b\u0c32\u0c41 \u0c1a\u0c42\u0c21\u0c02\u0c21\u0c3f.', card_gallery_arrow:'\u0c2b\u0c4b\u0c1f\u0c4b\u0c32\u0c41 \u0c1a\u0c42\u0c21\u0c02\u0c21\u0c3f \u2192',
+      card_contact_title:'\u0c38\u0c02\u0c2a\u0c4d\u0c30\u0c26\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f', card_contact_desc:'\u0c2e\u0c40 \u0c38\u0c4d\u0c35\u0c02\u0c24 \u0c15\u0c25\u0c32\u0c41, \u0c2b\u0c4b\u0c1f\u0c4b\u0c32\u0c41 \u0c32\u0c47\u0c26\u0c3e \u0c38\u0c30\u0c3f\u0c26\u0c3f\u0c26\u0c4d\u0c26\u0c41\u0c32\u0c41 \u0c38\u0c39\u0c15\u0c30\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f.', card_contact_arrow:'\u0c38\u0c02\u0c2a\u0c4d\u0c30\u0c26\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f \u2192',
       // History
-      hist_eyebrow:'మన కథ', hist_title_em:'నుకాల', hist_title:'కుటుంబ చరిత్ర',
-      hist_sub:'కాలం గుండా ఒక ప్రయాణం — మనం ఎవరో అని రూపొందించిన మైలురాళ్ళు, క్షణాలు మరియు జ్ఞాపకాలు.',
-      hist_quote:'"కుటుంబ కథ ఒక నది — అది కాలంలో ప్రవహిస్తుంది, తన దారిని తానే కోసుకుంటుంది."',
-      add_story:'+ కథ జోడించు',
+      hist_eyebrow:'\u0c2e\u0c28 \u0c15\u0c25', hist_title_em:'\u0c28\u0c41\u0c15\u0c3e\u0c32', hist_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c1a\u0c30\u0c3f\u0c24\u0c4d\u0c30',
+      hist_sub:'\u0c15\u0c3e\u0c32\u0c02 \u0c17\u0c41\u0c02\u0c21\u0c3e \u0c12\u0c15 \u0c2a\u0c4d\u0c30\u0c2f\u0c3e\u0c23\u0c02 \u2014 \u0c2e\u0c28\u0c32\u0c28\u0c41 \u0c24\u0c40\u0c30\u0c4d\u0c1a\u0c3f\u0c26\u0c3f\u0c26\u0c4d\u0c26\u0c3f\u0c28 \u0c2e\u0c48\u0c32\u0c41\u0c30\u0c3e\u0c33\u0c4d\u0c33\u0c41, \u0c15\u0c4d\u0c37\u0c23\u0c3e\u0c32\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c1c\u0c4d\u0c1e\u0c3e\u0c2a\u0c15\u0c3e\u0c32\u0c41.',
+      hist_quote:'\u201c\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c15\u0c25 \u0c12\u0c15 \u0c28\u0c26\u0c3f \u2014 \u0c05\u0c26\u0c3f \u0c15\u0c3e\u0c32\u0c02 \u0c17\u0c41\u0c02\u0c21\u0c3e \u0c2a\u0c4d\u0c30\u0c35\u0c39\u0c3f\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f.\u201d',
+      add_story:'+ \u0c15\u0c25 \u0c1c\u0c4b\u0c21\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f',
       // Gallery
-      gal_eyebrow:'జ్ఞాపకాలు', gal_title_em:'నుకాల', gal_title:'ఫోటో గ్యాలరీ',
-      gal_sub:'ప్రియమైన క్షణాలు, వేడుకలు మరియు సంవత్సరాల ముఖాల దృశ్య సంగ్రహశాల.',
-      filter_all:'అన్ని ఫోటోలు', filter_family:'కుటుంబం', filter_vintage:'పాత ఫోటోలు',
-      filter_celebrations:'వేడుకలు', filter_travel:'ప్రయాణం', filter_other:'ఇతరాలు',
+      gal_eyebrow:'\u0c1c\u0c4d\u0c1e\u0c3e\u0c2a\u0c15\u0c3e\u0c32\u0c41', gal_title_em:'\u0c28\u0c41\u0c15\u0c3e\u0c32', gal_title:'\u0c2b\u0c4b\u0c1f\u0c4b \u0c17\u0c4d\u0c2f\u0c3e\u0c32\u0c30\u0c40',
+      gal_sub:'\u0c38\u0c02\u0c35\u0c24\u0c4d\u0c38\u0c30\u0c3e\u0c32\u0c41\u0c17\u0c3e \u0c05\u0c2e\u0c42\u0c32\u0c4d\u0c2f\u0c2e\u0c48\u0c28 \u0c15\u0c4d\u0c37\u0c23\u0c3e\u0c32\u0c41, \u0c35\u0c47\u0c21\u0c41\u0c15\u0c32\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c2e\u0c41\u0c16\u0c3e\u0c32 \u0c26\u0c43\u0c36\u0c4d\u0c2f \u0c38\u0c02\u0c17\u0c4d\u0c30\u0c39\u0c36\u0c3e\u0c32.',
+      filter_all:'\u0c05\u0c28\u0c4d\u0c28\u0c3f \u0c2b\u0c4b\u0c1f\u0c4b\u0c32\u0c41', filter_family:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c\u0c02', filter_vintage:'\u0c35\u0c3f\u0c02\u0c1f\u0c47\u0c1c\u0c4d',
+      filter_celebrations:'\u0c35\u0c47\u0c21\u0c41\u0c15\u0c32\u0c41', filter_travel:'\u0c2a\u0c4d\u0c30\u0c2f\u0c3e\u0c23\u0c02', filter_other:'\u0c07\u0c24\u0c30',
       // Facts
-      facts_eyebrow:'మీకు తెలుసా?', facts_title:'ఆసక్తికర కుటుంబ వాస్తవాలు',
-      facts_sub:'నుకాల కుటుంబం అంతటా ఆసక్తికర మైలురాళ్ళు, విజయాలు మరియు సంప్రదాయాలు.',
-      filter_achievements:'విజయాలు', filter_milestones:'మైలురాళ్ళు',
-      filter_traditions:'సంప్రదాయాలు', filter_records:'రికార్డులు', filter_fun:'సరదా విషయాలు',
-      // Tree
-      tree_eyebrow:'మన మూలాలు', tree_title_em:'నుకాల', tree_title:'కుటుంబ వృక్షం',
-      tree_sub:'లోపలి కథను కనుగొనడానికి ఏదైనా ఆకును క్లిక్ చేయండి.',
-      btn_fit:'స్క్రీన్‌కు అమర్చు', btn_reset:'రీసెట్ చేయి', lines_on:'రేఖలు ఆన్', lines_off:'రేఖలు ఆఫ్',
-      // Contact
-      cont_eyebrow:'సహకరించండి', cont_title:'సంప్రదించండి',
-      cont_sub:'పంచుకోవడానికి కథ, ఫోటో లేదా సవరణ ఉందా?',
-      form_fn:'మొదటి పేరు', form_ln:'చివరి పేరు', form_email:'ఇమెయిల్ చిరునామా',
-      form_subj:'మీరు ఏమి చేయాలనుకుంటున్నారు?', form_msg:'మీ సందేశం',
-      form_btn:'సందేశం పంపండి →',
+      facts_eyebrow:'\u0c2e\u0c40\u0c15\u0c41 \u0c24\u0c46\u0c32\u0c41\u0c38\u0c3e?', facts_title:'\u0c06\u0c38\u0c15\u0c4d\u0c24\u0c3f\u0c15\u0c30\u0c2e\u0c48\u0c28 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c3e\u0c38\u0c4d\u0c24\u0c35\u0c3e\u0c32\u0c41',
+      facts_sub:'\u0c28\u0c41\u0c15\u0c3e\u0c32 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c\u0c3e\u0c28\u0c4d\u0c28\u0c3f \u0c2a\u0c4d\u0c30\u0c24\u0c4d\u0c2f\u0c47\u0c15\u0c02\u0c17\u0c3e \u0c1a\u0c47\u0c38\u0c47 \u0c06\u0c38\u0c15\u0c4d\u0c24\u0c3f\u0c15\u0c30\u0c2e\u0c48\u0c28 \u0c35\u0c3f\u0c37\u0c2f\u0c3e\u0c32\u0c41.',
+      filter_achievements:'\u0c35\u0c3f\u0c1c\u0c2f\u0c3e\u0c32\u0c41', filter_milestones:'\u0c2e\u0c48\u0c32\u0c41\u0c30\u0c3e\u0c33\u0c4d\u0c33\u0c41',
+      filter_traditions:'\u0c38\u0c02\u0c2a\u0c4d\u0c30\u0c26\u0c3e\u0c2f\u0c3e\u0c32\u0c41', filter_records:'\u0c30\u0c3f\u0c15\u0c3e\u0c30\u0c4d\u0c21\u0c41\u0c32\u0c41', filter_fun:'\u0c38\u0c30\u0c26\u0c3e \u0c35\u0c3f\u0c37\u0c2f\u0c3e\u0c32\u0c41',
       // Stats
-      stats_eyebrow:'సంఖ్యల ప్రకారం', stats_title:'కుటుంబ గణాంకాలు',
-      stats_sub:'నుకాల కుటుంబం అంతటా ఆసక్తికర అంతర్దృష్టులు మరియు రికార్డులు.',
+      stats_eyebrow:'\u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32\u0c4d\u0c32\u0c4b', stats_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c17\u0c23\u0c3e\u0c02\u0c15\u0c3e\u0c32\u0c41',
+      stats_sub:'\u0c28\u0c41\u0c15\u0c3e\u0c32 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c\u0c02\u0c32\u0c4b \u0c06\u0c38\u0c15\u0c4d\u0c24\u0c3f\u0c15\u0c30\u0c2e\u0c48\u0c28 \u0c35\u0c3f\u0c37\u0c2f\u0c3e\u0c32\u0c41.',
       // Events
-      evts_eyebrow:'రానున్నవి', evts_title:'కుటుంబ కార్యక్రమాలు',
-      evts_sub:'పునర్మిలనాలు, పుట్టినరోజులు, వార్షికోత్సవాలు మరియు వేడుకలు.',
+      evts_eyebrow:'\u0c30\u0c3e\u0c2c\u0c4b\u0c2f\u0c47 \u0c15\u0c3e\u0c30\u0c4d\u0c2f\u0c15\u0c4d\u0c30\u0c2e\u0c3e\u0c32\u0c41', evts_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c15\u0c3e\u0c30\u0c4d\u0c2f\u0c15\u0c4d\u0c30\u0c2e\u0c3e\u0c32\u0c41',
+      evts_sub:'\u0c38\u0c2e\u0c3e\u0c35\u0c47\u0c36\u0c3e\u0c32\u0c41, \u0c35\u0c47\u0c21\u0c41\u0c15\u0c32\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c38\u0c2e\u0c3e\u0c35\u0c47\u0c36\u0c3e\u0c32\u0c41 \u2014 \u0c05\u0c28\u0c41\u0c38\u0c02\u0c27\u0c3e\u0c28\u0c02\u0c17\u0c3e \u0c09\u0c02\u0c21\u0c02\u0c21\u0c3f.',
       // Recipes
-      rec_eyebrow:'సాంప్రదాయ', rec_title:'కుటుంబ వంటకాలు',
-      rec_sub:'నుకాల కుటుంబంలో తరాల నుండి తరాలకు అందజేయబడిన ప్రియమైన వంటకాలు.',
+      rec_eyebrow:'\u0c38\u0c02\u0c2a\u0c4d\u0c30\u0c26\u0c3e\u0c2f', rec_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c02\u0c1f\u0c15\u0c3e\u0c32\u0c41',
+      rec_sub:'\u0c24\u0c30\u0c3e\u0c32 \u0c17\u0c41\u0c02\u0c21\u0c3e \u0c05\u0c02\u0c26\u0c3f\u0c02\u0c1a\u0c2c\u0c21\u0c3f\u0c28 \u0c05\u0c2e\u0c42\u0c32\u0c4d\u0c2f\u0c2e\u0c48\u0c28 \u0c35\u0c02\u0c1f\u0c15\u0c3e\u0c32\u0c41 \u2014 \u0c07\u0c02\u0c1f\u0c3f \u0c30\u0c41\u0c1a\u0c41\u0c32\u0c41.',
       // Achievements
-      ach_eyebrow:'కుటుంబ గర్వం', ach_title:'కుటుంబ విజయాలు',
-      ach_sub:'పట్టాలు, అవార్డులు, మైలురాళ్ళు మరియు గర్వంగా చెప్పుకోగలిగే క్షణాలు.',
+      ach_eyebrow:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c17\u0c30\u0c4d\u0c35\u0c02', ach_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c3f\u0c1c\u0c2f\u0c3e\u0c32\u0c41',
+      ach_sub:'\u0c21\u0c3f\u0c17\u0c4d\u0c30\u0c40\u0c32\u0c41, \u0c2a\u0c41\u0c30\u0c38\u0c4d\u0c15\u0c3e\u0c30\u0c3e\u0c32\u0c41, \u0c17\u0c4c\u0c30\u0c35\u0c3e\u0c32\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c17\u0c30\u0c4d\u0c35\u0c15\u0c30\u0c2e\u0c48\u0c28 \u0c38\u0c3e\u0c27\u0c28\u0c32\u0c41.',
       // Videos
-      vid_eyebrow:'చలనంలో జ్ఞాపకాలు', vid_title:'కుటుంబ వీడియోలు',
-      vid_sub:'కుటుంబ వీడియోలు, వేడుకలు మరియు చిత్రీకరించిన అద్భుతమైన క్షణాలు.',
+      vid_eyebrow:'\u0c1a\u0c32\u0c28\u0c1a\u0c3f\u0c24\u0c4d\u0c30\u0c3e\u0c32\u0c4d\u0c32\u0c4b \u0c1c\u0c4d\u0c1e\u0c3e\u0c2a\u0c15\u0c3e\u0c32\u0c41', vid_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c40\u0c21\u0c3f\u0c2f\u0c4b\u0c32\u0c41',
+      vid_sub:'\u0c1a\u0c3f\u0c24\u0c4d\u0c30\u0c40\u0c15\u0c30\u0c3f\u0c02\u0c1a\u0c2c\u0c21\u0c3f\u0c28 \u0c05\u0c2e\u0c42\u0c32\u0c4d\u0c2f\u0c2e\u0c48\u0c28 \u0c15\u0c4d\u0c37\u0c23\u0c3e\u0c32\u0c41 \u2014 \u0c2e\u0c28 \u0c15\u0c25 \u0c1a\u0c42\u0c21\u0c02\u0c21\u0c3f.',
       // Map
-      map_eyebrow:'మనం ఎక్కడ ఉన్నాం', map_title:'కుటుంబ మ్యాప్',
-      map_sub:'నుకాల కుటుంబ సభ్యులు ప్రపంచంలో ఎక్కడ నివసిస్తున్నారో చూడండి.',
+      map_eyebrow:'\u0c2e\u0c28\u0c02 \u0c0e\u0c15\u0c4d\u0c15\u0c21 \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c2e\u0c41', map_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c2e\u0c4d\u0c2f\u0c3e\u0c2a\u0c4d',
+      map_sub:'\u0c2a\u0c4d\u0c30\u0c2a\u0c02\u0c1a\u0c02 \u0c05\u0c02\u0c24\u0c1f\u0c3e \u0c28\u0c41\u0c15\u0c3e\u0c32 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c2d\u0c4d\u0c2f\u0c41\u0c32\u0c41 \u0c0e\u0c15\u0c4d\u0c15\u0c21 \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c30\u0c4b \u0c1a\u0c42\u0c21\u0c02\u0c21\u0c3f.',
       // Polls
-      poll_eyebrow:'మీ అభిప్రాయం చెప్పండి', poll_title:'కుటుంబ పోల్స్',
-      poll_sub:'కుటుంబ నిర్ణయాలపై ఓటు వేయండి — ప్రతి గొంతూ ముఖ్యమే!',
+      poll_eyebrow:'\u0c2e\u0c40 \u0c05\u0c2d\u0c3f\u0c2a\u0c4d\u0c30\u0c3e\u0c2f\u0c02 \u0c37\u0c47\u0c30\u0c4d \u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f', poll_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c2a\u0c4b\u0c32\u0c4d\u0c38\u0c4d',
+      poll_sub:'\u0c2a\u0c4d\u0c30\u0c24\u0c3f \u0c17\u0c33\u0c41 \u0c2e\u0c41\u0c16\u0c4d\u0c2f\u0c2e\u0c47 \u2014 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c3f\u0c37\u0c2f\u0c3e\u0c32\u0c2a\u0c48 \u0c2e\u0c40 \u0c05\u0c2d\u0c3f\u0c2a\u0c4d\u0c30\u0c3e\u0c2f\u0c02 \u0c37\u0c47\u0c30\u0c4d \u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f.',
       // QR
-      qr_eyebrow:'యాక్సెస్ షేర్ చేయండి', qr_title:'QR కోడ్ యాక్సెస్',
-      qr_sub:'బంధువులతో కుటుంబ వెబ్‌సైట్‌ను షేర్ చేయండి.',
+      qr_eyebrow:'\u0c38\u0c48\u0c1f\u0c4d \u0c37\u0c47\u0c30\u0c4d \u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f', qr_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c QR \u0c15\u0c4b\u0c21\u0c4d',
+      qr_sub:'\u0c2e\u0c30\u0c3f\u0c02\u0c24 \u0c2e\u0c02\u0c26\u0c3f \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c2d\u0c4d\u0c2f\u0c41\u0c32\u0c28\u0c41 \u0c38\u0c02\u0c17\u0c4d\u0c30\u0c39\u0c36\u0c3e\u0c32\u0c15\u0c41 \u0c24\u0c30\u0c32\u0c42 \u0c38\u0c4d\u0c15\u0c4d\u0c2f\u0c3e\u0c28\u0c4d \u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f.',
+      // Tree
+      tree_eyebrow:'\u0c2e\u0c28 \u0c35\u0c47\u0c30\u0c41\u0c32\u0c41', tree_title_em:'\u0c28\u0c41\u0c15\u0c3e\u0c32', tree_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c43\u0c15\u0c4d\u0c37\u0c02',
+      tree_sub:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c2d\u0c4d\u0c2f\u0c41\u0c28\u0c3f \u0c2e\u0c4b\u0c38\u0c4d \u0c1a\u0c47\u0c38\u0c3f \u0c35\u0c3e\u0c30\u0c3f \u0c35\u0c3f\u0c35\u0c30\u0c3e\u0c32\u0c41 \u0c15\u0c28\u0c41\u0c17\u0c4a\u0c02\u0c21\u0c3f.',
+      'btn-fit':'\u0c38\u0c4d\u0c15\u0c4d\u0c30\u0c40\u0c28\u0c4d\u0c15\u0c41 \u0c38\u0c30\u0c3f\u0c2a\u0c4e\u0c02\u0c1a\u0c02\u0c21\u0c3f', 'btn-reset':'\u0c30\u0c40\u0c38\u0c46\u0c1f\u0c4d \u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f',
+      // Contact
+      cont_eyebrow:'\u0c38\u0c39\u0c15\u0c30\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f', cont_title:'\u0c38\u0c02\u0c2a\u0c4d\u0c30\u0c26\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f',
+      cont_sub:'\u0c12\u0c15 \u0c15\u0c25, \u0c2b\u0c4b\u0c1f\u0c4b \u0c38\u0c2e\u0c30\u0c4d\u0c2a\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f, \u0c32\u0c47\u0c26\u0c3e \u0c38\u0c30\u0c3f\u0c26\u0c3f\u0c26\u0c4d\u0c26\u0c41\u0c32\u0c41 \u0c38\u0c42\u0c1a\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f.',
+      form_fn:'\u0c2e\u0c4a\u0c26\u0c1f\u0c3f \u0c2a\u0c47\u0c30\u0c41', form_ln:'\u0c1a\u0c3f\u0c35\u0c30\u0c3f \u0c2a\u0c47\u0c30\u0c41', form_email:'\u0c07\u0c2e\u0c46\u0c2f\u0c3f\u0c32\u0c4d',
+      form_subj:'\u0c35\u0c3f\u0c37\u0c2f\u0c02', form_msg:'\u0c38\u0c02\u0c26\u0c47\u0c36\u0c02', form_btn:'\u0c38\u0c02\u0c26\u0c47\u0c36\u0c02 \u0c2a\u0c02\u0c2a\u0c02\u0c21\u0c3f',
+      // Join Tree page
+      join_eyebrow:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c\u0c02\u0c32\u0c4b \u0c1a\u0c47\u0c30\u0c02\u0c21\u0c3f', join_title:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c35\u0c43\u0c15\u0c4d\u0c37\u0c02\u0c32\u0c4b \u0c1a\u0c47\u0c30\u0c02\u0c21\u0c3f',
+      join_sub:'\u0c28\u0c41\u0c15\u0c3e\u0c32 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c02\u0c17\u0c4d\u0c30\u0c39\u0c36\u0c3e\u0c32\u0c28\u0c41 \u0c28\u0c3f\u0c30\u0c4d\u0c2e\u0c3f\u0c02\u0c1a\u0c21\u0c02\u0c32\u0c4b \u0c38\u0c39\u0c3e\u0c2f\u0c2a\u0c21\u0c02\u0c21\u0c3f.',
+      join_personal:'\u0c35\u0c4d\u0c2f\u0c15\u0c4d\u0c24\u0c3f\u0c17\u0c24 \u0c35\u0c3f\u0c35\u0c30\u0c3e\u0c32\u0c41', join_connections:'\u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c05\u0c28\u0c41\u0c38\u0c02\u0c27\u0c3e\u0c28\u0c3e\u0c32\u0c41', join_contact_details:'\u0c38\u0c02\u0c2a\u0c4d\u0c30\u0c26\u0c3f\u0c02\u0c2a\u0c41 \u0c35\u0c3f\u0c35\u0c30\u0c3e\u0c32\u0c41',
+      join_firstname:'\u0c2e\u0c4a\u0c26\u0c1f\u0c3f \u0c2a\u0c47\u0c30\u0c41', join_lastname:'\u0c1a\u0c3f\u0c35\u0c30\u0c3f \u0c2a\u0c47\u0c30\u0c41', join_dob:'\u0c2a\u0c41\u0c1f\u0c4d\u0c1f\u0c3f\u0c28 \u0c24\u0c47\u0c26\u0c40',
+      join_gender:'\u0c32\u0c3f\u0c02\u0c17\u0c02', join_city:'\u0c2e\u0c40\u0c30\u0c41 \u0c28\u0c3f\u0c35\u0c38\u0c3f\u0c02\u0c1a\u0c47 \u0c28\u0c17\u0c30\u0c02', join_occ:'\u0c35\u0c43\u0c24\u0c4d\u0c24\u0c3f', join_bio:'\u0c2e\u0c40 \u0c17\u0c41\u0c30\u0c3f\u0c02\u0c1a\u0c3f \u0c38\u0c02\u0c15\u0c4d\u0c37\u0c3f\u0c2a\u0c4d\u0c24 \u0c35\u0c3f\u0c35\u0c30\u0c23',
+      join_father:'\u0c24\u0c02\u0c21\u0c4d\u0c30\u0c3f \u0c2a\u0c42\u0c30\u0c4d\u0c24\u0c3f \u0c2a\u0c47\u0c30\u0c41', join_mother:'\u0c24\u0c32\u0c4d\u0c32\u0c3f \u0c2a\u0c42\u0c30\u0c4d\u0c24\u0c3f \u0c2a\u0c47\u0c30\u0c41', join_spouse:'\u0c1c\u0c40\u0c35\u0c3f\u0c24 \u0c2d\u0c3e\u0c17\u0c38\u0c4d\u0c35\u0c3e\u0c2e\u0c3f \u0c2a\u0c42\u0c30\u0c4d\u0c24\u0c3f \u0c2a\u0c47\u0c30\u0c41',
+      join_anniversary:'\u0c35\u0c3f\u0c35\u0c3e\u0c39 \u0c35\u0c3e\u0c30\u0c4d\u0c37\u0c3f\u0c15\u0c4b\u0c24\u0c4d\u0c38\u0c35 \u0c24\u0c47\u0c26\u0c40', join_children:'\u0c2a\u0c3f\u0c32\u0c4d\u0c32\u0c32 \u0c2a\u0c47\u0c30\u0c4d\u0c32\u0c41', join_siblings:'\u0c24\u0c4b\u0c2c\u0c41\u0c1f\u0c4d\u0c1f\u0c41\u0c35\u0c41\u0c32 \u0c2a\u0c47\u0c30\u0c4d\u0c32\u0c41',
+      join_wa:'\u0c35\u0c3e\u0c1f\u0c4d\u0c38\u0c3e\u0c2a\u0c4d \u0c28\u0c02\u0c2c\u0c30\u0c4d', join_email:'\u0c07\u0c2e\u0c46\u0c2f\u0c3f\u0c32\u0c4d \u0c1a\u0c3f\u0c30\u0c41\u0c28\u0c3e\u0c2e\u0c3e', join_photo:'\u0c2b\u0c4b\u0c1f\u0c4b URL (\u0c10\u0c1a\u0c4d\u0c1b\u0c3f\u0c15\u0c02)',
+      join_photo_note:'Google \u0c2b\u0c4b\u0c1f\u0c4b\u0c32\u0c15\u0c41 \u0c2b\u0c4b\u0c1f\u0c4b \u0c05\u0c2a\u0c4d\u200c\u0c32\u0c4b\u0c21\u0c4d \u0c1a\u0c47\u0c38\u0c3f, \u0c37\u0c47\u0c30\u0c4d \u0c1a\u0c47\u0c38\u0c3f, \u0c32\u0c3f\u0c02\u0c15\u0c4d \u0c07\u0c15\u0c4d\u0c15\u0c21 \u0c05\u0c24\u0c3f\u0c15\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f',
+      join_note:'\u0c2e\u0c40\u0c15\u0c41 \u0c28\u0c1a\u0c4d\u0c1a\u0c3f\u0c28\u0c26\u0c3f \u0c2a\u0c02\u0c1a\u0c41\u0c15\u0c4a\u0c02\u0c21\u0c3f.',
+      join_submit_note:'\u0c2e\u0c40\u0c30\u0c41 \u0c15\u0c4d\u0c30\u0c3f\u0c02\u0c26 \u0c15\u0c4d\u0c32\u0c3f\u0c15\u0c4d \u0c1a\u0c47\u0c38\u0c3f\u0c28\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41, \u0c2e\u0c40 \u0c35\u0c3f\u0c35\u0c30\u0c3e\u0c32\u0c41 \u0c35\u0c3e\u0c1f\u0c4d\u0c38\u0c3e\u0c2a\u0c4d \u0c32\u0c47\u0c26\u0c3e \u0c07\u0c2e\u0c46\u0c2f\u0c3f\u0c32\u0c4d\u0c32\u0c4b \u0c24\u0c46\u0c30\u0c41\u0c1a\u0c41\u0c15\u0c41\u0c02\u0c1f\u0c3e\u0c2f\u0c3f.',
+      join_send_wa:'\u0c35\u0c3e\u0c1f\u0c4d\u0c38\u0c3e\u0c2a\u0c4d \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c2a\u0c02\u0c2a\u0c02\u0c21\u0c3f', join_send_email:'\u0c07\u0c2e\u0c46\u0c2f\u0c3f\u0c32\u0c4d \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c2a\u0c02\u0c2a\u0c02\u0c21\u0c3f',
+      // About page
+      about_eyebrow:'\u0c08 \u0c2a\u0c4d\u0c30\u0c3e\u0c1c\u0c46\u0c15\u0c4d\u0c1f\u0c4d \u0c17\u0c41\u0c30\u0c3f\u0c02\u0c1a\u0c3f', about_title_str:'\u0c08 \u0c2a\u0c4d\u0c30\u0c3e\u0c1c\u0c46\u0c15\u0c4d\u0c1f\u0c4d \u0c17\u0c41\u0c30\u0c3f\u0c02\u0c1a\u0c3f',
+      about_sub:'\u0c28\u0c41\u0c15\u0c3e\u0c32 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c02\u0c17\u0c4d\u0c30\u0c39\u0c36\u0c3e\u0c32 \u0c35\u0c46\u0c28\u0c41\u0c15 \u0c15\u0c25.',
+      about_coming_soon:'\u0c05\u0c2c\u0c4c\u0c1f\u0c4d \u0c2a\u0c47\u0c1c\u0c40 \u0c24\u0c4d\u0c35\u0c30\u0c32\u0c4b \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f', about_coming_sub:'\u0c28\u0c3f\u0c30\u0c4d\u0c35\u0c3e\u0c39\u0c15\u0c41\u0c21\u0c41 \u0c24\u0c4d\u0c35\u0c30\u0c32\u0c4b \u0c35\u0c3f\u0c35\u0c30\u0c3e\u0c32\u0c41 \u0c1c\u0c4b\u0c21\u0c3f\u0c38\u0c4d\u0c24\u0c3e\u0c30\u0c41.',
       // Footer
-      footer_private:'ప్రైవేట్ & పాస్‌వర్డ్ రక్షిత · 🌳 & ప్రేమతో చేయబడింది',
-    }
+      footer_private:'\u0c2a\u0c4d\u0c30\u0c48\u0c35\u0c47\u0c1f\u0c4d & \u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d \u0c30\u0c15\u0c4d\u0c37\u0c3f\u0c24\u0c02 \u00b7 \u0c2a\u0c4d\u0c30\u0c47\u0c2e\u0c24\u0c4b \u0c24\u0c2f\u0c3e\u0c30\u0c41 \u0c1a\u0c47\u0c38\u0c3e\u0c02',
+    },
   };
 
   const NAV_MAP = {
@@ -178,10 +212,10 @@
     'gallery.html':'nav_gallery','facts.html':'nav_facts','stats.html':'nav_stats',
     'events.html':'nav_events','map.html':'nav_map','polls.html':'nav_polls',
     'recipes.html':'nav_recipes','achievements.html':'nav_achievements',
-    'videos.html':'nav_videos','qr.html':'nav_share','contact.html':'nav_contact'
+    'videos.html':'nav_videos','qr.html':'nav_share','contact.html':'nav_contact',
+    'join.html':'nav_join','about.html':'nav_about'
   };
 
-  // Page → translation key prefix
   const PAGE_KEYS = {
     'home.html':    { eyebrow:'hero_eyebrow', p:'hero_tagline', extra:'home' },
     'history.html': { eyebrow:'hist_eyebrow', p:'hist_sub', extra:'history' },
@@ -197,12 +231,11 @@
     'map.html':     { eyebrow:'map_eyebrow',  p:'map_sub',   extra:'map' },
     'polls.html':   { eyebrow:'poll_eyebrow', p:'poll_sub',  extra:'polls' },
     'qr.html':      { eyebrow:'qr_eyebrow',   p:'qr_sub',    extra:'qr' },
+    'join.html':    { eyebrow:'join_eyebrow',  p:'join_sub',  extra:'join' },
+    'about.html':   { eyebrow:'about_eyebrow', p:'about_sub', extra:'about' },
   };
 
-  function setText(sel, val, root){
-    const el = (root||document).querySelector(sel);
-    if(el && val) el.textContent = val;
-  }
+  function setText(sel, val){ if(!val) return; const el = document.querySelector(sel); if(el) el.textContent = val; }
 
   function applyLang(lang){
     localStorage.setItem(LK, lang);
@@ -223,18 +256,17 @@
     });
 
     // 3. Language toggle button text
-    document.querySelectorAll('.nk-lang').forEach(b => b.textContent = lang==='te' ? 'EN' : 'తె');
+    document.querySelectorAll('.nk-lang').forEach(b => b.textContent = lang==='te' ? 'EN' : '\u0c24\u0c46');
 
     // 4. Page hero
     const pk = PAGE_KEYS[page];
     if(pk){
-      const hero = document.querySelector('.page-hero, .hero-banner');
+      const hero = document.querySelector('.page-hero, .hero-banner, .join-hero, .about-hero');
       if(hero){
         const eyebrow = hero.querySelector('.eyebrow');
         if(eyebrow && t[pk.eyebrow]) eyebrow.textContent = t[pk.eyebrow];
         const p = hero.querySelector('p, .hero-tagline');
         if(p && t[pk.p]) p.textContent = t[pk.p];
-        // H1 — handle em tag
         const h1 = hero.querySelector('h1, .hero-title');
         if(h1){
           const titleKey = pk.extra + '_title';
@@ -242,10 +274,9 @@
           if(t[emKey]){
             const em = h1.querySelector('em');
             if(em){
-              // Set text around the em
               const t1 = t[pk.extra+'_title_1'] || '';
               const t2 = t[pk.extra+'_title_2'] || (t[titleKey]||'');
-              h1.innerHTML = (t1 ? t1+' ' : '') + `<em>${t[emKey]}</em>` + (t2 ? '<br>'+t2 : '');
+              h1.innerHTML = (t1 ? t1+' ' : '') + '<em>'+t[emKey]+'</em>' + (t2 ? '<br>'+t2 : '');
             } else {
               if(t[titleKey]) h1.textContent = t[titleKey];
             }
@@ -256,18 +287,11 @@
       }
     }
 
-    // 5. Home page specific
+    // 5. Home page
     if(page === 'home.html'){
-      setText('#stat1lbl', t.stat1_lbl);
-      setText('#stat2lbl', t.stat2_lbl);
-      setText('#stat3lbl', t.stat3_lbl);
-      setText('#aboutTitle', t.about_title);
-      setText('#aboutP1', t.about_p1);
-      setText('#aboutP2', t.about_p2);
-      setText('#aboutP3', t.about_p3);
-      // Recent updates heading
+      setText('#stat1lbl', t.stat1_lbl); setText('#stat2lbl', t.stat2_lbl); setText('#stat3lbl', t.stat3_lbl);
+      setText('#aboutTitle', t.about_title); setText('#aboutP1', t.about_p1); setText('#aboutP2', t.about_p2); setText('#aboutP3', t.about_p3);
       document.querySelectorAll('.recent-updates h2').forEach(el => el.textContent = t.recent_updates);
-      // Quick nav cards
       const cards = document.querySelectorAll('.quick-card');
       const cardKeys = [
         {title:'card_tree_title', desc:'card_tree_desc', arrow:'card_tree_arrow'},
@@ -334,23 +358,59 @@
 
     // 11. Footer
     document.querySelectorAll('footer').forEach(f => {
-      const txt = f.querySelector('strong');
-      // Don't touch family name inside strong, but translate the rest
       const nodes = [...f.childNodes];
       nodes.forEach(n => {
         if(n.nodeType === 3 && n.textContent.includes('Private')){
-          n.textContent = ' · ' + t.footer_private;
+          n.textContent = ' \u00b7 ' + t.footer_private;
         }
       });
     });
 
-    // 12. Login page
+    // 12. Join Tree page
+    if(page === 'join.html'){
+      var jLabels = {
+        jFirstName:t.join_firstname, jLastName:t.join_lastname,
+        jDOB:t.join_dob, jGender:t.join_gender,
+        jCity:t.join_city, jOccupation:t.join_occ, jBio:t.join_bio,
+        jFather:t.join_father, jMother:t.join_mother,
+        jSpouse:t.join_spouse, jAnniversary:t.join_anniversary,
+        jChildren:t.join_children, jSiblings:t.join_siblings,
+        jWhatsapp:t.join_wa, jEmail:t.join_email, jPhoto:t.join_photo
+      };
+      Object.keys(jLabels).forEach(function(id){
+        if(!jLabels[id]) return;
+        var el = document.getElementById(id);
+        if(!el) return;
+        var field = el.closest('.join-field');
+        var lbl = field && field.querySelector('label');
+        if(lbl) lbl.textContent = jLabels[id];
+      });
+      document.querySelectorAll('button.btn-wa').forEach(function(b){
+        if(t.join_send_wa) b.innerHTML = '<span style="font-size:1.1rem;">&#128241;</span> ' + t.join_send_wa;
+      });
+      document.querySelectorAll('button.btn-email').forEach(function(b){
+        if(t.join_send_email) b.innerHTML = '<span style="font-size:1.1rem;">&#9993;</span> ' + t.join_send_email;
+      });
+      var noteEl = document.querySelector('.required-note');
+      if(noteEl && t.join_note) noteEl.textContent = t.join_note;
+      var submitNote = document.querySelector('.join-submit-area p');
+      if(submitNote && t.join_submit_note) submitNote.textContent = t.join_submit_note;
+    }
+
+    // 13. About page
+    if(page === 'about.html'){
+      var emptyEl = document.querySelector('.empty-about h3');
+      if(emptyEl && t.about_coming_soon) emptyEl.textContent = t.about_coming_soon;
+      var emptySubEl = document.querySelector('.empty-about p');
+      if(emptySubEl && t.about_coming_sub) emptySubEl.textContent = t.about_coming_sub;
+    }
+
+    // 14. Login page
     if(page === 'index.html'){
       const title = document.querySelector('.ltitle, h1');
       const sub   = document.querySelector('.lsub');
       const inp   = document.querySelector('input[type="password"]');
       const btn   = document.querySelector('.btnp');
-      const note  = document.querySelector('.login-note, p[style*="color"]');
       if(title) title.textContent  = t.login_title;
       if(sub)   sub.textContent    = t.login_sub;
       if(inp)   inp.placeholder    = t.login_placeholder;
@@ -358,20 +418,18 @@
     }
   }
 
-  window.toggleLang = function(){
-    applyLang(localStorage.getItem(LK) === 'te' ? 'en' : 'te');
-  };
+  // ── Init ──
+  const savedLang = localStorage.getItem(LK) || 'en';
 
-  // Apply on DOM ready
-  function init(){
-    const saved = localStorage.getItem(LK) || 'en';
-    if(saved === 'te') applyLang('te');
-  }
+  // Build language toggle button
+  document.querySelectorAll('.nk-lang').forEach(btn => {
+    btn.textContent = savedLang === 'te' ? 'EN' : '\u0c24\u0c46';
+    btn.addEventListener('click', () => {
+      const next = localStorage.getItem(LK) === 'te' ? 'en' : 'te';
+      applyLang(next);
+    });
+  });
 
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if(savedLang !== 'en') applyLang(savedLang);
 
 })();
