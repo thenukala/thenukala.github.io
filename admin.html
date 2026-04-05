@@ -1326,7 +1326,14 @@ function showEvtReminders(evtIdx){
     ? '<div style="font-size:.72rem;color:var(--tl);margin-top:8px;">⚠️ '+noWA.length+' member(s) have no WhatsApp number.</div>'
     : '';
 
-  document.getElementById('evtReminderList').innerHTML = rows + noWANote;
+  var groupBtn = '<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:2px solid var(--b);">'
+    +'<div style="font-size:.75rem;color:var(--tl);margin-bottom:6px;">📤 Send to entire WhatsApp group at once:</div>'
+    +'<a href="https://wa.me/?text='+encodeURIComponent(buildEvtMsg(e,''))+'" target="_blank"'
+    +' style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#128c7e,#25d366);color:white;text-decoration:none;border-radius:8px;padding:8px 16px;font-size:.8rem;font-weight:500;">'
+    +'📤 Send to a Group / Anyone</a>'
+    +'<div style="font-size:.68rem;color:var(--tl);margin-top:5px;">Opens WhatsApp → you pick any group or person → tap Send</div>'
+    +'</div>';
+  document.getElementById('evtReminderList').innerHTML = groupBtn + rows + noWANote;
 }
 
 document.getElementById('sendAllRemindersBtn').addEventListener('click', function(){
@@ -1376,7 +1383,24 @@ document.getElementById('sendAllRemindersBtn').addEventListener('click', functio
   }).join('');
 
   var noWA = members.filter(function(m){ var c=contacts[m.id]||{}; return !m.whatsapp&&!c.whatsapp; });
-  document.getElementById('evtReminderList').innerHTML = rows
+  var allMsg = 'Dear Family,
+
+'
+    +'🌳 *'+familyName+' Family — Upcoming Events*
+
+'
+    +evtLines+'
+
+We hope to see you there! 🎉
+_Sent from the '+familyName+' Family website_';
+  var groupBtn2 = '<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:2px solid var(--b);">'
+    +'<div style="font-size:.75rem;color:var(--tl);margin-bottom:6px;">📤 Send to entire WhatsApp group at once:</div>'
+    +'<a href="https://wa.me/?text='+encodeURIComponent(allMsg)+'" target="_blank"'
+    +' style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#128c7e,#25d366);color:white;text-decoration:none;border-radius:8px;padding:8px 16px;font-size:.8rem;font-weight:500;">'
+    +'📤 Send to a Group / Anyone</a>'
+    +'<div style="font-size:.68rem;color:var(--tl);margin-top:5px;">Opens WhatsApp → you pick any group or person → tap Send</div>'
+    +'</div>';
+  document.getElementById('evtReminderList').innerHTML = groupBtn2 + rows
     +(noWA.length?'<div style="font-size:.72rem;color:var(--tl);margin-top:8px;">⚠️ '+noWA.length+' member(s) have no WhatsApp number.</div>':'');
 });
 
@@ -1709,8 +1733,15 @@ function refreshWAList(){
     ? '<div style="font-size:.72rem;color:var(--tl);margin-top:8px;">⚠️ '+noWA.length+' member(s) have no WhatsApp number — add it in Admin → Members or Contacts.</div>'
     : '';
 
+  var groupAnnBtn = withWA.length ? '<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:2px solid var(--b);">'
+    +'<div style="font-size:.75rem;color:var(--tl);margin-bottom:6px;">📤 Send to entire WhatsApp group at once:</div>'
+    +'<a href="https://wa.me/?text='+encodeURIComponent(fullMsg)+'" target="_blank"'
+    +' style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#128c7e,#25d366);color:white;text-decoration:none;border-radius:8px;padding:8px 16px;font-size:.8rem;font-weight:500;">'
+    +'📤 Send to a Group / Anyone</a>'
+    +'<div style="font-size:.68rem;color:var(--tl);margin-top:5px;">Opens WhatsApp → you pick any group or person → tap Send</div>'
+    +'</div>' : '';
   el.innerHTML = withWA.length
-    ? rows + noWANote
+    ? groupAnnBtn + rows + noWANote
     : '<div style="color:var(--tl);font-size:.78rem;">No members have WhatsApp numbers yet. Add WhatsApp numbers in Admin → Members or Contacts.</div>';
 }
 
