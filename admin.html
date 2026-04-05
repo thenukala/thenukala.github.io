@@ -468,9 +468,10 @@ opacity:0.04;pointer-events:none;z-index:0;}
           <div class="pt">Compose</div>
           <div class="fg"><label>Subject</label><input type="text" class="fi" id="annTitle" placeholder="e.g. Family Reunion 2025!"/></div>
           <div class="fg"><label>Message</label><textarea class="fi" id="annMsg" rows="5" placeholder="Dear Nukala Family..." style="resize:vertical;min-height:80px;"></textarea></div>
-          <div style="display:flex;gap:8px;margin-top:8px;">
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
             <button class="btn bg bsm" id="sendEmailBtn">📧 Email</button>
             <button class="btn bsm" id="sendWABtn" style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.68rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:6px 12px;">📱 WhatsApp</button>
+            <button class="btn bsm" id="sendWAGroupBtn" style="background:linear-gradient(135deg,#075e54,#128c7e);color:white;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.68rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:6px 12px;">📤 Send to Group</button>
           </div>
         </div>
         <div class="panel">
@@ -1685,6 +1686,22 @@ document.getElementById('sendWABtn').addEventListener('click',function(){
 // Update WA list when message changes
 document.getElementById('annMsg').addEventListener('input', refreshWAList);
 document.getElementById('annTitle').addEventListener('input', refreshWAList);
+
+// Send to Group button — opens WA with no recipient so admin can pick any group
+document.getElementById('sendWAGroupBtn').addEventListener('click', function(){
+  var title = document.getElementById('annTitle').value.trim();
+  var msg   = document.getElementById('annMsg').value.trim();
+  if(!msg){ alert('Please type a message first.'); return; }
+  var fullMsg = (title ? '*'+title+'*
+
+' : '') + msg;
+  window.open('https://wa.me/?text='+encodeURIComponent(fullMsg), '_blank');
+  var l = lda('annLog');
+  l.push('📤 '+title+' (Group) — '+(new Date().toLocaleDateString()));
+  sv('annLog', l);
+  renderAnn();
+  toast('WhatsApp opened — pick your family group and tap Send!');
+});
 function renderAnn(){
   var logs=lda('annLog'),el=document.getElementById('annLog');
   el.innerHTML=logs.length?logs.slice(-10).reverse().map(function(l){return '<div style="padding:4px 0;border-bottom:1px solid var(--b);font-size:.78rem;color:var(--tm);">'+l+'</div>';}).join(''):'No announcements sent yet.';

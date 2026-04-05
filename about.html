@@ -34,13 +34,16 @@
 </head>
 <body>
 <script>
+  var _savedAbout = localStorage.getItem('nukala_about');
   try{
     var _x=new XMLHttpRequest();
     _x.open('GET','site-data.js?nocache='+Date.now(),false);
     _x.send();
     if(_x.status===200) eval(_x.responseText);
   }catch(e){}
+  if(_savedAbout !== null){ localStorage.setItem('nukala_about', _savedAbout); }
 </script>
+
 <script src="auth.js"></script>
 
 <nav>
