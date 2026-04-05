@@ -87,18 +87,16 @@ function initAbout(){
   var d = loadKey('nukala_about')||{};
   var sections = d.sections||[];
 
-  // Hero
   if(d.heroTitle) document.getElementById('aboutHeroTitle').innerHTML = d.heroTitle;
   if(d.heroDesc)  document.getElementById('aboutHeroDesc').textContent = d.heroDesc;
 
-  // Opening message
   var mw = document.getElementById('aboutMessageWrap');
   if(d.message){
-    mw.innerHTML = '<div class="about-message">&ldquo;'+d.message+'&rdquo;'
-      +(d.messageName?'<cite>&mdash; '+d.messageName+'</cite>':'')+'</div>';
+    mw.innerHTML = '<div class="about-message">&ldquo;' + d.message + '&rdquo;'
+      + (d.messageName ? '<cite>&mdash; ' + d.messageName + '</cite>' : '')
+      + '</div>';
   }
 
-  // Sections
   var sw = document.getElementById('aboutSections');
   if(!sections.length){
     sw.innerHTML = '<div class="empty-about"><h3>About page coming soon</h3><p>The admin will add details here shortly.</p></div>';
@@ -106,25 +104,25 @@ function initAbout(){
   }
 
   sw.innerHTML = sections.map(function(sec){
-    var people = sec.people||[];
-    var cards = people.length
-      ? '<div class="people-grid">'
-        + people.map(function(p){
-            var av = p.photo
-              ? '<img class="pcard-photo" src="'+p.photo+'" alt="'+p.name+'" onerror="this.style.display='none';this.nextSibling.style.display='flex'">'
-                +'<div class="pcard-avatar" style="display:none;">'+(p.emoji||'👤')+'</div>'
-              : '<div class="pcard-avatar">'+(p.emoji||'👤')+'</div>';
-            return '<div class="pcard">'+av
-              +'<div class="pcard-name">'+(p.name||'')+'</div>'
-              +(p.role?'<div class="pcard-role">'+p.role+'</div>':'')
-              +(p.note?'<div class="pcard-note">'+p.note+'</div>':'')
-              +'</div>';
-          }).join('')
-        +'</div>'
-      : '';
-    return '<div class="section-title">'+(sec.title||'')+'</div>'
-      +(sec.desc?'<p class="section-desc">'+sec.desc+'</p>':'')
-      +cards;
+    var people = sec.people || [];
+    var cards = '';
+    if(people.length){
+      var pcards = people.map(function(p){
+        var av = p.photo
+          ? '<img class="pcard-photo" src="' + p.photo + '" alt="' + (p.name||'') + '">'
+          : '<div class="pcard-avatar">&#128100;</div>';
+        return '<div class="pcard">'
+          + av
+          + '<div class="pcard-name">' + (p.name||'') + '</div>'
+          + (p.role ? '<div class="pcard-role">' + p.role + '</div>' : '')
+          + (p.note ? '<div class="pcard-note">' + p.note + '</div>' : '')
+          + '</div>';
+      }).join('');
+      cards = '<div class="people-grid">' + pcards + '</div>';
+    }
+    return '<div class="section-title">' + (sec.title||'') + '</div>'
+      + (sec.desc ? '<p class="section-desc">' + sec.desc + '</p>' : '')
+      + cards;
   }).join('');
 }
 
