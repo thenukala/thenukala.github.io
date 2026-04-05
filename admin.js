@@ -703,9 +703,7 @@ document.getElementById('sendWAGroupBtn').addEventListener('click', function(){
   var title = document.getElementById('annTitle').value.trim();
   var msg   = document.getElementById('annMsg').value.trim();
   if(!msg){ alert('Please type a message first.'); return; }
-  var fullMsg = (title ? '*'+title+'*
-
-' : '') + msg;
+  var fullMsg = (title ? '*'+title+'*\n\n' : '') + msg;
   window.open('https://wa.me/?text='+encodeURIComponent(fullMsg), '_blank');
   var l = lda('annLog');
   l.push('📤 '+title+' (Group) — '+(new Date().toLocaleDateString()));
