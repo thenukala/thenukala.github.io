@@ -396,10 +396,19 @@ opacity:0.04;pointer-events:none;z-index:0;}
       <!-- EVENTS -->
       <div class="page" id="page-events">
         <div class="sh">Family <em>Events</em></div>
-        <p class="ss">Manage upcoming events and celebrations.</p>
+        <p class="ss">Manage upcoming events and send WhatsApp reminders to all members.</p>
         <div class="div"></div>
-        <button class="btn bg bsm" id="addEvtBtn" style="margin-bottom:14px;">+ Add Event</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+          <button class="btn bg bsm" id="addEvtBtn">+ Add Event</button>
+          <button class="btn bsm" id="sendAllRemindersBtn" style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;border:none;border-radius:9px;font-family:Jost,sans-serif;font-size:.68rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:6px 14px;">📱 Send All Upcoming Reminders</button>
+        </div>
         <div id="evtList"></div>
+        <div class="panel" id="evtReminderPanel" style="margin-top:16px;display:none;">
+          <div class="pt">📱 WhatsApp Reminders</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:10px;">Sending reminders for: <strong id="evtReminderTitle"></strong></p>
+          <div id="evtReminderList"></div>
+          <button class="btn bo bsm" onclick="document.getElementById('evtReminderPanel').style.display='none';" style="margin-top:10px;">✕ Close</button>
+        </div>
       </div>
 
       <!-- RECIPES -->
@@ -1053,7 +1062,7 @@ var PAGE_LOADERS = {
   gallery:renderGal, facts:renderFacts, events:renderEvts,
   recipes:renderRecs, achievements:renderAchs, videos:renderVids,
   polls:renderPolls,
-  stats:function(){},  map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,  about:renderAbout,
+  stats:function(){},  map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,
   contacts:renderContacts, announce:renderAnn,
   pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme');}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
@@ -1231,7 +1240,145 @@ function openEvtM(){document.getElementById('evtId').value='';document.getElemen
 function editEvt(i){var l=lda('events'),e=l[i];document.getElementById('evtId').value=i;document.getElementById('evtMH').textContent='Edit Event';document.getElementById('evtTitle').value=e.title||'';document.getElementById('evtDate').value=e.date||'';document.getElementById('evtLoc').value=e.loc||'';document.getElementById('evtDesc').value=e.desc||'';document.getElementById('evtType').value=e.type||'Reunion';openM('evtModal');}
 function saveEvt(){var ti=document.getElementById('evtTitle').value.trim();if(!ti){alert('Title required.');return;}var l=lda('events'),i=document.getElementById('evtId').value,obj={title:ti,date:document.getElementById('evtDate').value,loc:document.getElementById('evtLoc').value.trim(),desc:document.getElementById('evtDesc').value.trim(),type:document.getElementById('evtType').value};if(i!=='')l[parseInt(i)]=obj;else l.push(obj);sv('events',l);closeM('evtModal');renderEvts();toast('Saved!');}
 function delEvt(i){if(!confirm('Delete?'))return;var l=lda('events');l.splice(i,1);sv('events',l);renderEvts();toast('Deleted.');}
-function renderEvts(){var list=lda('events'),el=document.getElementById('evtList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No events yet.</div>';return;}el.innerHTML=list.map(function(e,i){return '<div class="li"><div class="ly" style="font-size:.75rem;text-align:center;">'+((e.date||'').slice(5).replace('-','/'))+'</div><div class="lb"><div class="lt">'+e.title+'</div><div class="ld">'+(e.type||'')+(e.loc?' · '+e.loc:'')+(e.desc?'<br>'+e.desc:'')+'</div><div class="la"><button class="ab" onclick="editEvt('+i+')">✏️</button><button class="ab abr" onclick="delEvt('+i+')">🗑️</button></div></div></div>';}).join('');}
+function renderEvts(){
+  var list=lda('events'), el=document.getElementById('evtList');
+  document.getElementById('evtReminderPanel').style.display='none';
+  if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No events yet.</div>';return;}
+  var today = new Date(); today.setHours(0,0,0,0);
+  el.innerHTML=list.map(function(e,i){
+    var evtDate = e.date ? new Date(e.date) : null;
+    var isUpcoming = evtDate && evtDate >= today;
+    var daysLeft = evtDate ? Math.ceil((evtDate-today)/(1000*60*60*24)) : null;
+    var badge = isUpcoming
+      ? (daysLeft===0?'<span style="font-size:.65rem;font-weight:700;color:#fff;background:#e07030;border-radius:20px;padding:2px 8px;margin-left:6px;">TODAY</span>'
+        :daysLeft<=7?'<span style="font-size:.65rem;font-weight:700;color:#fff;background:#5c7a5c;border-radius:20px;padding:2px 8px;margin-left:6px;">'+daysLeft+'d away</span>'
+        :'<span style="font-size:.65rem;color:var(--tl);margin-left:6px;">'+daysLeft+'d away</span>')
+      : '';
+    var reminderBtn = isUpcoming
+      ? '<button class="ab" onclick="showEvtReminders('+i+')" title="Send WhatsApp Reminders" style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;border:none;">📱</button>'
+      : '';
+    return '<div class="li"><div class="ly" style="font-size:.75rem;text-align:center;">'+((e.date||'').slice(5).replace('-','/'))+'</div>'
+      +'<div class="lb"><div class="lt">'+e.title+badge+'</div>'
+      +'<div class="ld">'+(e.type||'')+(e.loc?' · '+e.loc:'')+(e.desc?'<br>'+e.desc:'')+'</div>'
+      +'<div class="la">'+reminderBtn+'<button class="ab" onclick="editEvt('+i+')">✏️</button><button class="ab abr" onclick="delEvt('+i+')">🗑️</button></div>'
+      +'</div></div>';
+  }).join('');
+}
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// EVENT WHATSAPP REMINDERS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function buildEvtMsg(e, memberName){
+  var evtDate = e.date ? new Date(e.date).toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) : 'Date TBC';
+  var today = new Date(); today.setHours(0,0,0,0);
+  var daysLeft = e.date ? Math.ceil((new Date(e.date)-today)/(1000*60*60*24)) : null;
+  var greeting = memberName ? 'Dear *'+memberName+'*,\n\n' : '';
+  var msg = greeting
+    + '🌳 *Nukala Family Event Reminder*\n\n'
+    + '*'+e.title+'*\n'
+    + (e.type ? '📋 Type: '+e.type+'\n' : '')
+    + '📅 Date: '+evtDate+'\n'
+    + (daysLeft!==null ? (daysLeft===0?'⏰ *This is today!*\n':'⏰ '+daysLeft+' day'+(daysLeft===1?'':'s')+' away\n') : '')
+    + (e.loc ? '📍 Location: '+e.loc+'\n' : '')
+    + (e.desc ? '\n'+e.desc+'\n' : '')
+    + '\nWe hope to see you there! 🎉\n'
+    + '\n_Sent from the Nukala Family website_';
+  return msg;
+}
+
+function showEvtReminders(evtIdx){
+  var events = lda('events');
+  var e = events[evtIdx];
+  if(!e) return;
+  var members  = Object.values(ld('members'));
+  var contacts = ld('contacts');
+
+  var panel = document.getElementById('evtReminderPanel');
+  document.getElementById('evtReminderTitle').textContent = e.title;
+  panel.style.display = 'block';
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  var withWA = members.filter(function(m){ var c=contacts[m.id]||{}; return m.whatsapp||c.whatsapp; });
+  var noWA   = members.filter(function(m){ var c=contacts[m.id]||{}; return !m.whatsapp&&!c.whatsapp; });
+
+  if(!withWA.length){
+    document.getElementById('evtReminderList').innerHTML = '<div style="color:var(--tl);font-size:.8rem;">No members have WhatsApp numbers yet. Add them in Admin → Members or Contacts.</div>';
+    return;
+  }
+
+  var rows = withWA.map(function(m){
+    var c = contacts[m.id]||{};
+    var wa = m.whatsapp||c.whatsapp||'';
+    var num = wa.replace(/[^0-9]/g,'');
+    var name = [m.firstName,m.lastName].filter(Boolean).join(' ')||'';
+    var msg = buildEvtMsg(e, name);
+    var url = 'https://wa.me/'+num+'?text='+encodeURIComponent(msg);
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b);">'
+      +'<div><strong style="font-size:.8rem;">'+name+'</strong>'
+      +(m.gen?'<span style="font-size:.68rem;color:var(--tl);margin-left:6px;">Gen '+m.gen+'</span>':'')
+      +'<div style="font-size:.7rem;color:var(--tl);">'+wa+'</div></div>'
+      +'<a href="'+url+'" target="_blank" style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;text-decoration:none;border-radius:8px;padding:5px 12px;font-size:.7rem;font-weight:500;white-space:nowrap;flex-shrink:0;">📱 Send</a>'
+      +'</div>';
+  }).join('');
+
+  var noWANote = noWA.length
+    ? '<div style="font-size:.72rem;color:var(--tl);margin-top:8px;">⚠️ '+noWA.length+' member(s) have no WhatsApp number.</div>'
+    : '';
+
+  document.getElementById('evtReminderList').innerHTML = rows + noWANote;
+}
+
+document.getElementById('sendAllRemindersBtn').addEventListener('click', function(){
+  var events = lda('events');
+  var today = new Date(); today.setHours(0,0,0,0);
+  var upcoming = events.filter(function(e){ return e.date && new Date(e.date) >= today; });
+  if(!upcoming.length){ alert('No upcoming events found. Add events with future dates first.'); return; }
+  var members  = Object.values(ld('members'));
+  var contacts = ld('contacts');
+  var withWA = members.filter(function(m){ var c=contacts[m.id]||{}; return m.whatsapp||c.whatsapp; });
+  if(!withWA.length){ alert('No members have WhatsApp numbers yet. Add them in Members or Contacts.'); return; }
+
+  // Build one combined message for all upcoming events
+  var settings = ld('settings');
+  var familyName = (settings&&settings.familyName)||'Nukala';
+  var evtLines = upcoming.map(function(e){
+    var evtDate = e.date ? new Date(e.date).toLocaleDateString('en-GB',{weekday:'short',month:'short',day:'numeric'}) : 'TBC';
+    var today2 = new Date(); today2.setHours(0,0,0,0);
+    var days = e.date ? Math.ceil((new Date(e.date)-today2)/(1000*60*60*24)) : null;
+    return '• *'+e.title+'*'+(e.loc?' @ '+e.loc:'')
+      +'\n  📅 '+evtDate+(days!==null?' ('+days+'d away)':''
+      +(e.desc?'\n  '+e.desc:''));
+  }).join('\n\n');
+
+  var panel = document.getElementById('evtReminderPanel');
+  document.getElementById('evtReminderTitle').textContent = upcoming.length+' upcoming event'+(upcoming.length>1?'s':'');
+  panel.style.display = 'block';
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  var rows = withWA.map(function(m){
+    var c = contacts[m.id]||{};
+    var wa = m.whatsapp||c.whatsapp||'';
+    var num = wa.replace(/[^0-9]/g,'');
+    var name = [m.firstName,m.lastName].filter(Boolean).join(' ')||'';
+    var msg = 'Dear *'+name+'*,\n\n'
+      +'🌳 *'+familyName+' Family — Upcoming Events*\n\n'
+      +evtLines+'\n\n'
+      +'We hope to see you there! 🎉\n'
+      +'_Sent from the '+familyName+' Family website_';
+    var url = 'https://wa.me/'+num+'?text='+encodeURIComponent(msg);
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b);">'
+      +'<div><strong style="font-size:.8rem;">'+name+'</strong>'
+      +(m.gen?'<span style="font-size:.68rem;color:var(--tl);margin-left:6px;">Gen '+m.gen+'</span>':'')
+      +'<div style="font-size:.7rem;color:var(--tl);">'+wa+'</div></div>'
+      +'<a href="'+url+'" target="_blank" style="background:linear-gradient(135deg,#128c7e,#25d366);color:white;text-decoration:none;border-radius:8px;padding:5px 12px;font-size:.7rem;font-weight:500;white-space:nowrap;flex-shrink:0;">📱 Send</a>'
+      +'</div>';
+  }).join('');
+
+  var noWA = members.filter(function(m){ var c=contacts[m.id]||{}; return !m.whatsapp&&!c.whatsapp; });
+  document.getElementById('evtReminderList').innerHTML = rows
+    +(noWA.length?'<div style="font-size:.72rem;color:var(--tl);margin-top:8px;">⚠️ '+noWA.length+' member(s) have no WhatsApp number.</div>':'');
+});
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // RECIPES
@@ -1339,6 +1486,7 @@ function saveCE(){
 // ABOUT PAGE EDITOR
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function renderAbout(){
+  _abData = null; // always reload fresh from storage when tab is opened
   var d = ldRaw('nukala_about')||{sections:[]};
   document.getElementById('ab-title').value   = d.heroTitle||'';
   document.getElementById('ab-desc').value    = d.heroDesc||'';
