@@ -593,9 +593,12 @@ opacity:0.04;pointer-events:none;z-index:0;}
               <button class="btn bsm bg-preset-btn" data-bg="dark"      style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1.5px solid #333;color:white;">🌙 Dark</button>
             </div>
             <div class="fg">
-              <label>Custom Background (colour, gradient, or image URL)</label>
-              <input type="text" class="fi" id="bgCustomInput" placeholder="e.g. #f5f0e8 or url('https://...') or linear-gradient(135deg,#fff,#eee)"/>
-              <div style="font-size:.7rem;color:var(--tl);margin-top:4px;">Paste a direct image URL for a photo background, or any CSS value.</div>
+              <label>Custom Background (colour picker, gradient, or image URL)</label>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+                <input type="color" id="bgColorPicker" value="#faf8f4" style="width:42px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;flex-shrink:0;" oninput="document.getElementById('bgCustomInput').value=this.value;document.getElementById('bgPreview').style.background=this.value;document.getElementById('bgPreview').textContent='';" title="Pick a colour"/>
+                <input type="text" class="fi" id="bgCustomInput" placeholder="e.g. #f5f0e8 or url('https://...') or linear-gradient(135deg,#fff,#eee)" oninput="if(this.value.match(/^#[0-9a-fA-F]{6}$/))document.getElementById('bgColorPicker').value=this.value;document.getElementById('bgPreview').style.background=this.value;document.getElementById('bgPreview').textContent='';"/>
+              </div>
+              <div style="font-size:.7rem;color:var(--tl);">Pick a colour OR paste a gradient/image URL for a photo background.</div>
             </div>
             <div style="display:flex;gap:8px;margin-top:10px;">
               <button class="btn bg bsm" id="saveBgBtn">💾 Save Background</button>
@@ -770,8 +773,11 @@ opacity:0.04;pointer-events:none;z-index:0;}
           </div>
           <div id="lpe-custom-bg-wrap" style="display:none;">
             <div class="fg">
-              <label>Custom Background (colour, gradient, or image URL)</label>
-              <input type="text" class="fi" id="lpe-bg-custom" placeholder="e.g. #f4f2ee or linear-gradient(...) or url('https://...')"/>
+              <label>Custom Background (colour picker, gradient, or image URL)</label>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+                <input type="color" id="lpe-bg-picker" value="#f4f2ee" style="width:42px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;flex-shrink:0;" oninput="document.getElementById('lpe-bg-custom').value=this.value;document.getElementById('lpe-bg').value=this.value;var p=document.getElementById('lpe-theme-preview');if(p){p.style.background=this.value;p.textContent='';}" title="Pick a colour"/>
+                <input type="text" class="fi" id="lpe-bg-custom" placeholder="e.g. #f4f2ee or linear-gradient(...) or url('https://...')" oninput="if(this.value.match(/^#[0-9a-fA-F]{6}$/))document.getElementById('lpe-bg-picker').value=this.value;document.getElementById('lpe-bg').value=this.value;var p=document.getElementById('lpe-theme-preview');if(p){p.style.background=this.value;p.textContent='';}"/>
+              </div>
             </div>
           </div>
           <input type="hidden" id="lpe-bg"/>
