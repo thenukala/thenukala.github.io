@@ -145,6 +145,12 @@ initAbout();
     if(theme.secondary)r.style.setProperty('--sage',theme.secondary);
     if(theme.highlight)r.style.setProperty('--gold',theme.highlight);
     if(theme.bg)       r.style.setProperty('--cream',theme.bg);
+    if(theme.fontSize)  document.body.style.fontSize = theme.fontSize;
+    if(theme.siteBackground){
+      document.body.style.background = theme.siteBackground;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+    }
     if(theme.text)     r.style.setProperty('--text-dark',theme.text);
   }
 

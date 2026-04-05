@@ -577,6 +577,47 @@ opacity:0.04;pointer-events:none;z-index:0;}
               <button class="btn bo bsm" id="resetThemeBtn">↺ Reset</button>
             </div>
           </div>
+
+          <div class="panel" style="margin-top:16px;">
+            <div class="pt">Font Size</div>
+            <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Adjust text size across all pages.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+              <button class="btn bsm" data-fontsize="small"  style="border:1.5px solid var(--b);">A- Small</button>
+              <button class="btn bsm" data-fontsize="normal" style="border:1.5px solid var(--b);">A Normal</button>
+              <button class="btn bsm" data-fontsize="large"  style="border:1.5px solid var(--b);">A+ Large</button>
+              <button class="btn bsm" data-fontsize="xlarge" style="border:1.5px solid var(--b);">A++ X-Large</button>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>Custom Body Size (e.g. 16px)</label><input type="text" class="fi" id="fontSizeCustom" placeholder="16px"/></div>
+              <div class="fg"><label>Custom Heading Scale (e.g. 1.2)</label><input type="text" class="fi" id="fontScaleCustom" placeholder="1.0"/></div>
+            </div>
+            <button class="btn bg bsm" id="saveFontSizeBtn" style="margin-top:8px;">💾 Save Font Size</button>
+          </div>
+
+          <div class="panel" style="margin-top:16px;">
+            <div class="pt">Background</div>
+            <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">One-click background presets — applies to all pages instantly.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+              <button class="btn bsm bg-preset-btn" data-bg="default"   style="background:linear-gradient(135deg,#faf8f4,#f0f5f0);border:1.5px solid var(--b);color:var(--td);">🌿 Default</button>
+              <button class="btn bsm bg-preset-btn" data-bg="warm"      style="background:linear-gradient(135deg,#fdf6ee,#faf0e6);border:1.5px solid var(--b);color:var(--td);">🌅 Warm Ivory</button>
+              <button class="btn bsm bg-preset-btn" data-bg="sand"      style="background:linear-gradient(135deg,#f5f0e8,#ede5d5);border:1.5px solid var(--b);color:var(--td);">🏖️ Sandy</button>
+              <button class="btn bsm bg-preset-btn" data-bg="mint"      style="background:linear-gradient(135deg,#eef6f0,#dff0e8);border:1.5px solid var(--b);color:var(--td);">🌱 Mint</button>
+              <button class="btn bsm bg-preset-btn" data-bg="blush"     style="background:linear-gradient(135deg,#fdf0f0,#f5e6e8);border:1.5px solid var(--b);color:var(--td);">🌸 Blush</button>
+              <button class="btn bsm bg-preset-btn" data-bg="sky"       style="background:linear-gradient(135deg,#eef4fd,#e0eeff);border:1.5px solid var(--b);color:var(--td);">☁️ Sky</button>
+              <button class="btn bsm bg-preset-btn" data-bg="lavender"  style="background:linear-gradient(135deg,#f4eefb,#ede0f5);border:1.5px solid var(--b);color:var(--td);">💜 Lavender</button>
+              <button class="btn bsm bg-preset-btn" data-bg="dark"      style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1.5px solid #333;color:white;">🌙 Dark</button>
+            </div>
+            <div class="fg">
+              <label>Custom Background (colour, gradient, or image URL)</label>
+              <input type="text" class="fi" id="bgCustomInput" placeholder="e.g. #f5f0e8 or url('https://...') or linear-gradient(135deg,#fff,#eee)"/>
+              <div style="font-size:.7rem;color:var(--tl);margin-top:4px;">Paste a direct image URL for a photo background, or any CSS value.</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+              <button class="btn bg bsm" id="saveBgBtn">💾 Save Background</button>
+              <button class="btn bo bsm" id="resetBgBtn">↺ Reset</button>
+            </div>
+            <div id="bgPreview" style="margin-top:10px;height:50px;border-radius:10px;border:1px solid var(--b);background:var(--cream);transition:background .3s;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:var(--tl);">Preview</div>
+          </div>
         </div>
         <div class="pts" id="pt-sitewide">
           <div class="panel">

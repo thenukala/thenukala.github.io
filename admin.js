@@ -847,6 +847,112 @@ document.getElementById('saveThemeBtn').addEventListener('click',function(){
   var theme={primary:document.getElementById('clrPrimaryHex').value||document.getElementById('clrPrimary').value,secondary:document.getElementById('clrSecondaryHex').value||document.getElementById('clrSecondary').value,bg:document.getElementById('clrBgHex').value||document.getElementById('clrBg').value,text:document.getElementById('clrTextHex').value||document.getElementById('clrText').value};
   svRaw('nukala_theme',theme);log('Theme saved');toast('Theme saved!');
 });
+// ─── FONT SIZE ───────────────────────────────────
+var FONT_SIZES = {
+  small:  {base:'13px', scale:'0.9'},
+  normal: {base:'15px', scale:'1.0'},
+  large:  {base:'17px', scale:'1.1'},
+  xlarge: {base:'19px', scale:'1.2'}
+};
+
+document.querySelectorAll('[data-fontsize]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var sz = FONT_SIZES[this.getAttribute('data-fontsize')];
+    document.getElementById('fontSizeCustom').value  = sz.base;
+    document.getElementById('fontScaleCustom').value = sz.scale;
+    applyFontPreview(sz.base, sz.scale);
+    document.querySelectorAll('[data-fontsize]').forEach(function(b){ b.style.background=''; b.style.color=''; });
+    this.style.background = 'var(--sd)'; this.style.color = 'white';
+  });
+});
+
+function applyFontPreview(base, scale){
+  var theme = ldRaw('nukala_theme')||{};
+  theme.fontSize = base;
+  theme.fontScale = scale;
+  svRaw('nukala_theme', theme);
+}
+
+document.getElementById('saveFontSizeBtn').addEventListener('click', function(){
+  var base  = document.getElementById('fontSizeCustom').value.trim()||'15px';
+  var scale = document.getElementById('fontScaleCustom').value.trim()||'1.0';
+  var theme = ldRaw('nukala_theme')||{};
+  theme.fontSize  = base;
+  theme.fontScale = scale;
+  svRaw('nukala_theme', theme);
+  log('Font size updated');
+  toast('✅ Font size saved! Publish to Site to apply to all devices.');
+});
+
+// Load saved font size into inputs
+(function(){
+  var theme = ldRaw('nukala_theme')||{};
+  if(theme.fontSize)  { var el=document.getElementById('fontSizeCustom');  if(el) el.value=theme.fontSize; }
+  if(theme.fontScale) { var el2=document.getElementById('fontScaleCustom'); if(el2) el2.value=theme.fontScale; }
+})();
+
+// ─── BACKGROUND PRESETS ──────────────────────────
+var BG_PRESETS = {
+  default:  '#faf8f4',
+  warm:     'linear-gradient(135deg,#fdf6ee,#faf0e6)',
+  sand:     'linear-gradient(135deg,#f5f0e8,#ede5d5)',
+  mint:     'linear-gradient(135deg,#eef6f0,#dff0e8)',
+  blush:    'linear-gradient(135deg,#fdf0f0,#f5e6e8)',
+  sky:      'linear-gradient(135deg,#eef4fd,#e0eeff)',
+  lavender: 'linear-gradient(135deg,#f4eefb,#ede0f5)',
+  dark:     'linear-gradient(135deg,#1a1a2e,#16213e)'
+};
+
+document.querySelectorAll('.bg-preset-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var key = this.getAttribute('data-bg');
+    var val = BG_PRESETS[key]||'#faf8f4';
+    document.getElementById('bgCustomInput').value = val;
+    var prev = document.getElementById('bgPreview');
+    if(prev){ prev.style.background=val; prev.style.backgroundSize='cover'; }
+    document.querySelectorAll('.bg-preset-btn').forEach(function(b){ b.style.outline=''; });
+    this.style.outline = '2px solid var(--sd)';
+  });
+});
+
+document.getElementById('bgCustomInput').addEventListener('input', function(){
+  var val = this.value.trim();
+  if(!val) return;
+  var prev = document.getElementById('bgPreview');
+  if(prev){ prev.style.background=val; prev.style.backgroundSize='cover'; prev.textContent=''; }
+});
+
+document.getElementById('saveBgBtn').addEventListener('click', function(){
+  var val = document.getElementById('bgCustomInput').value.trim();
+  if(!val){ toast('Please enter or select a background.'); return; }
+  var theme = ldRaw('nukala_theme')||{};
+  theme.siteBackground = val;
+  svRaw('nukala_theme', theme);
+  log('Background updated');
+  toast('✅ Background saved! Publish to Site to apply to all devices.');
+});
+
+document.getElementById('resetBgBtn').addEventListener('click', function(){
+  var theme = ldRaw('nukala_theme')||{};
+  delete theme.siteBackground;
+  svRaw('nukala_theme', theme);
+  document.getElementById('bgCustomInput').value = '';
+  var prev = document.getElementById('bgPreview');
+  if(prev){ prev.style.background='var(--cream)'; prev.textContent='Preview'; }
+  document.querySelectorAll('.bg-preset-btn').forEach(function(b){ b.style.outline=''; });
+  toast('✅ Background reset to default.');
+});
+
+// Load saved background into input on open
+(function(){
+  var theme = ldRaw('nukala_theme')||{};
+  if(theme.siteBackground){
+    var el=document.getElementById('bgCustomInput'); if(el) el.value=theme.siteBackground;
+    var prev=document.getElementById('bgPreview');
+    if(prev){ prev.style.background=theme.siteBackground; prev.style.backgroundSize='cover'; prev.textContent=''; }
+  }
+})();
+
 document.getElementById('resetThemeBtn').addEventListener('click',function(){localStorage.removeItem('nukala_theme');applyThemePreset('sage');toast('Theme reset.');});
 document.getElementById('saveSiteWideBtn').addEventListener('click',function(){
   var sw=ldRaw('nukala_sitewide')||{};

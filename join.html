@@ -457,3 +457,9 @@
   <script src="lang.js"></script>
 </body>
 </html>
+    if(theme.fontSize)  document.body.style.fontSize = theme.fontSize;
+    if(theme.siteBackground){
+      document.body.style.background = theme.siteBackground;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+    }

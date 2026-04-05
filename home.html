@@ -175,10 +175,10 @@
         <p id="aboutP3">We invite every family member to contribute — add your memories, upload old photographs, and help build this archive for generations to come.</p>
       </div>
 
-      <div class="recent-updates card fade-in stagger-3">
-        <h2>Recent Updates</h2>
-        <div id="recentUpdatesList">
-          <div class="update-item"><div class="update-dot"></div><div><div class="update-title">Website launched! 🎉</div><div class="update-date">Welcome to the Nukala Family Tree</div></div></div>
+      <div class="recent-updates card fade-in stagger-3" id="upcomingPanel">
+        <h2 id="upcomingPanelTitle">This Week</h2>
+        <div id="upcomingList">
+          <div class="update-item"><div class="update-dot" style="background:var(--gold);"></div><div><div class="update-title">No events this week</div><div class="update-date">Check back soon</div></div></div>
         </div>
       </div>
     </div>
@@ -238,24 +238,116 @@
       if(footerSubEl) footerSubEl.innerHTML = footerSub;
 
       // Recent updates from activity log
-      const log = loadArr('nukala_log');
-      if(log.length){
-        const list = document.getElementById('recentUpdatesList');
-        list.innerHTML = log.slice(-4).reverse().map(l=>`
-          <div class="update-item">
-            <div class="update-dot"></div>
-            <div>
-              <div class="update-title">${l.split('—')[1]?.trim()||l}</div>
-              <div class="update-date">${l.split('—')[0]?.trim()||''}</div>
-            </div>
-          </div>`).join('');
-      }
-
       // Set footer year
       const fyEl=document.getElementById('footerYear');
       if(fyEl) fyEl.textContent=new Date().getFullYear();
-      // Birthday check
+      // Populate upcoming events/birthdays/anniversaries
+      populateUpcoming();
       checkBirthdays();
+    }
+
+    function getDaysUntil(dateStr){
+      // Parse dates like "15 March", "March 15", "15/03", "2026-03-15"
+      if(!dateStr) return null;
+      const today = new Date(); today.setHours(0,0,0,0);
+      const months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+      let d = null, mo = null;
+      // Try YYYY-MM-DD
+      const iso = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/);
+      if(iso){ d=parseInt(iso[3]); mo=parseInt(iso[2])-1; }
+      if(d===null){
+        // Try "15 March" or "March 15"
+        const parts = dateStr.toLowerCase().replace(/[^a-z0-9\s]/g,'').split(/\s+/);
+        parts.forEach(p=>{
+          const mi=months.findIndex(m=>p.startsWith(m));
+          if(mi>=0) mo=mi;
+          else if(/^\d+$/.test(p) && parseInt(p)<=31) d=parseInt(p);
+        });
+      }
+      if(d===null||mo===null) return null;
+      // Find next occurrence this year or next
+      let next=new Date(today.getFullYear(),mo,d);
+      if(next<today) next=new Date(today.getFullYear()+1,mo,d);
+      return Math.ceil((next-today)/(1000*60*60*24));
+    }
+
+    function populateUpcoming(){
+      const members = Object.values(load('nukala_tree_data')||{});
+      const contacts = load('nukala_contacts')||{};
+      const events = JSON.parse(localStorage.getItem('nukala_events')||'[]');
+      const today = new Date(); today.setHours(0,0,0,0);
+      const items = [];
+
+      // Birthdays from contacts
+      members.forEach(m=>{
+        const c = contacts[m.id]||{};
+        const name = [m.firstName,m.lastName].filter(Boolean).join(' ')||'Member';
+        if(c.birthday){
+          const days = getDaysUntil(c.birthday);
+          if(days!==null && days<=14){
+            items.push({
+              icon: days===0?'🎂':'🎈',
+              title: days===0 ? name+"'s Birthday is TODAY! 🎉" : name+"'s Birthday",
+              sub: days===0 ? 'Wish them a wonderful day!' : 'in '+days+' day'+(days===1?'':'s'),
+              days, type:'birthday'
+            });
+          }
+        }
+        // Anniversary from contacts
+        if(c.anniversary || m.anniversary){
+          const annDate = c.anniversary||m.anniversary;
+          const days = getDaysUntil(annDate);
+          if(days!==null && days<=14){
+            const spouseId = m.spouseId;
+            const spouse = spouseId&&members.find?.(x=>x.id===spouseId);
+            const spouseName = spouse?[spouse.firstName,spouse.lastName].filter(Boolean).join(' '):'';
+            items.push({
+              icon: days===0?'💍':'💑',
+              title: days===0?name+(spouseName?' & '+spouseName:'')+" Anniversary TODAY! 🎉":name+(spouseName?' & '+spouseName:'')+" Anniversary",
+              sub: days===0?'Wishing them a wonderful day!':'in '+days+' day'+(days===1?'':'s'),
+              days, type:'anniversary'
+            });
+          }
+        }
+      });
+
+      // Events from admin
+      events.forEach(e=>{
+        if(!e.date) return;
+        const eDate = new Date(e.date); eDate.setHours(0,0,0,0);
+        const days = Math.ceil((eDate-today)/(1000*60*60*24));
+        if(days>=0 && days<=14){
+          items.push({
+            icon: days===0?'📅':'🗓️',
+            title: e.title+(days===0?' — TODAY!':''),
+            sub: days===0?'Today!':(e.loc?e.loc+' · ':'')+'in '+days+' day'+(days===1?'':'s'),
+            days, type:'event'
+          });
+        }
+      });
+
+      // Sort by days
+      items.sort((a,b)=>a.days-b.days);
+
+      const list = document.getElementById('upcomingList');
+      const titleEl = document.getElementById('upcomingPanelTitle');
+      if(!list) return;
+
+      if(!items.length){
+        titleEl.textContent = 'This Week';
+        list.innerHTML = '<div class="update-item"><div class="update-dot" style="background:var(--gold);"></div><div><div class="update-title" style="color:var(--text-muted);font-size:.88rem;">No upcoming events or birthdays in the next 2 weeks</div></div></div>';
+        return;
+      }
+
+      titleEl.textContent = 'Coming Up ✨';
+      list.innerHTML = items.slice(0,5).map(item=>`
+        <div class="update-item">
+          <div class="update-dot" style="background:${item.type==='birthday'?'#e07030':item.type==='anniversary'?'#9060b0':'var(--sage-dark)'};"></div>
+          <div>
+            <div class="update-title" style="font-size:.92rem;">${item.icon} ${item.title}</div>
+            <div class="update-date">${item.sub}</div>
+          </div>
+        </div>`).join('');
     }
 
     function checkBirthdays(){
@@ -264,7 +356,6 @@
       const today = new Date();
       const todayDay = today.getDate();
       const todayMonth = today.toLocaleString('default',{month:'long'});
-
       const bdays = [];
       members.forEach(m=>{
         const c = contacts[m.id];
@@ -275,7 +366,6 @@
           bdays.push(name);
         }
       });
-
       if(bdays.length){
         const banner = document.getElementById('bdayBanner');
         document.getElementById('bdayText').innerHTML =
@@ -304,6 +394,20 @@
     if(theme.bg)        r.style.setProperty('--cream', theme.bg);
     if(theme.text)      r.style.setProperty('--text-dark', theme.text);
     if(theme.fontBody)  document.body.style.fontFamily = theme.fontBody+', sans-serif';
+    if(theme.fontSize)  document.body.style.fontSize = theme.fontSize;
+    if(theme.fontScale && theme.fontScale !== '1.0'){
+      const scale = parseFloat(theme.fontScale)||1;
+      document.querySelectorAll('h1,h2,h3,.hero-title,.sh').forEach(function(el){
+        const curr = parseFloat(getComputedStyle(el).fontSize)||16;
+        el.style.fontSize = (curr * scale) + 'px';
+      });
+    }
+    if(theme.siteBackground){
+      document.body.style.background = theme.siteBackground;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.documentElement.style.setProperty('--cream', 'transparent');
+    }
   }
 
   // ── TYPOGRAPHY ──
@@ -466,10 +570,7 @@
     const qn = document.getElementById('quickNavCards');
     if(qn) qn.innerHTML = hp2.quickCards.map(c=>`<a class="quick-card fade-in" href="${c.link}"><div class="quick-card-icon">${c.icon}</div><div class="quick-card-title">${c.title}</div><div class="quick-card-desc">${c.desc}</div><div class="quick-card-arrow">${c.arrow}</div></a>`).join('');
   }
-  if(hp2 && hp2.updates && hp2.updates.length && currentPage==='home.html'){
-    const ul = document.getElementById('recentUpdatesList');
-    if(ul) ul.innerHTML = hp2.updates.map(u=>`<div class="update-item"><div class="update-dot"></div><div><div class="update-title">${u.title}</div><div class="update-date">${u.date||''}</div></div></div>`).join('');
-  }
+  // Recent Updates removed — see Admin panel log
 
 })();
 </script>

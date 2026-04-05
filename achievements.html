@@ -132,6 +132,20 @@
     if(theme.bg)        r.style.setProperty('--cream', theme.bg);
     if(theme.text)      r.style.setProperty('--text-dark', theme.text);
     if(theme.fontBody)  document.body.style.fontFamily = theme.fontBody+', sans-serif';
+    if(theme.fontSize)  document.body.style.fontSize = theme.fontSize;
+    if(theme.fontScale && theme.fontScale !== '1.0'){
+      const scale = parseFloat(theme.fontScale)||1;
+      document.querySelectorAll('h1,h2,h3,.hero-title,.sh').forEach(function(el){
+        const curr = parseFloat(getComputedStyle(el).fontSize)||16;
+        el.style.fontSize = (curr * scale) + 'px';
+      });
+    }
+    if(theme.siteBackground){
+      document.body.style.background = theme.siteBackground;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.documentElement.style.setProperty('--cream', 'transparent');
+    }
   }
 
   // ── TYPOGRAPHY ──
