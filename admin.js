@@ -796,11 +796,11 @@ function visSave(){
   var nm=ldRaw('nukala_navmenu')||{items:[]};
   if(!nm.items||!nm.items.length){
     // Build from PAGES defaults
-    nm.items=PAGES.map(function(p){return {href:p.file,label:p.label.replace(/^[^\w]*/,''),active:vis[p.id]!==false};});
+    nm.items=PAGES.map(function(p){return {href:p.href,label:p.label,active:vis[p.id]!==false};});
   } else {
     nm.items=nm.items.map(function(item){
       var pageId=Object.keys(vis).find(function(id){
-        return PAGES.find(function(p){return p.id===id&&p.file===item.href;});
+        return PAGES.find(function(p){return p.id===id&&p.href===item.href;});
       });
       if(pageId) item.active=vis[pageId]!==false;
       return item;
@@ -1264,13 +1264,16 @@ var DEFAULT_NAV_PAGES = [
 
 function getNavPages(){
   // Always returns pages in navmenu saved order, or DEFAULT order if none saved
+  // Filters out any pages no longer in DEFAULT_NAV_PAGES (e.g. removed achievements/videos)
   var saved = ldRaw('nukala_navmenu');
   var defMap = {};
   DEFAULT_NAV_PAGES.forEach(function(p){ defMap[p.href] = p; });
   var result = [];
   if(saved && saved.items && saved.items.length){
     saved.items.forEach(function(item){
-      var def = defMap[item.href]||{};
+      // Skip pages that are no longer in DEFAULT (removed pages)
+      if(!defMap[item.href]) return;
+      var def = defMap[item.href];
       result.push({href:item.href, label:item.label||def.label||item.href, locked:!!def.locked, active:item.active!==false});
     });
     // Add any pages in DEFAULT that are missing from saved navmenu
