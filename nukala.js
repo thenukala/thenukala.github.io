@@ -315,6 +315,99 @@
       var hiddenByVis     = vis[pageId] === false;
       li.style.display = (hiddenByNavMenu || hiddenByVis) ? 'none' : '';
     });
+    // Rebuild More menu after visibility changes
+    setTimeout(buildMoreMenu, 20);
+  }
+
+  // ══════════════════════════════════════
+  // 8. SMART NAV OVERFLOW — "More ▾" dropdown
+  // ══════════════════════════════════════
+  function buildMoreMenu(){
+    var nav = document.querySelector('nav');
+    if(!nav) return;
+    var ul = nav.querySelector('.nav-links');
+    if(!ul) return;
+
+    // Remove previous more wrap if any
+    var old = nav.querySelector('.nk-more-wrap');
+    if(old) old.remove();
+
+    // Get all visible li items
+    var lis = Array.from(ul.querySelectorAll('li')).filter(function(li){
+      return li.style.display !== 'none';
+    });
+    if(!lis.length) return;
+
+    // Measure available width for nav-links
+    var navW     = nav.offsetWidth;
+    var brandW   = (nav.querySelector('.nav-brand')||{offsetWidth:150}).offsetWidth;
+    // Right-side buttons (logout + nk-* buttons)
+    var rightW   = 0;
+    nav.querySelectorAll('.nav-logout, .nk-search-btn, .nk-dm, .nk-lang, .nk-burger').forEach(function(b){
+      if(b.offsetWidth) rightW += b.offsetWidth + 8;
+    });
+    var available = navW - brandW - rightW - 60; // 60px breathing room
+
+    // Temporarily reset hidden items so we can measure
+    lis.forEach(function(li){ li.style.visibility = 'hidden'; li.style.display = ''; });
+
+    // Measure cumulative width
+    var used = 0;
+    var overflowIdx = -1;
+    for(var i = 0; i < lis.length; i++){
+      used += lis[i].offsetWidth + 10; // 10 = gap
+      if(used > available){
+        overflowIdx = i;
+        break;
+      }
+    }
+    lis.forEach(function(li){ li.style.visibility = ''; });
+
+    if(overflowIdx === -1){
+      // Everything fits — no More menu needed
+      return;
+    }
+
+    // Hide overflow items from main nav
+    var overflowLis = lis.slice(overflowIdx);
+    overflowLis.forEach(function(li){ li.style.display = 'none'; });
+
+    // Build "More" wrap
+    var wrap = document.createElement('div');
+    wrap.className = 'nk-more-wrap';
+
+    var btn = document.createElement('button');
+    btn.className = 'nk-more-btn';
+    btn.innerHTML = 'More &#9660;';
+
+    var drop = document.createElement('div');
+    drop.className = 'nk-more-drop';
+    var currentPage = location.pathname.split('/').pop() || 'home.html';
+    overflowLis.forEach(function(li){
+      var a = li.querySelector('a');
+      if(!a) return;
+      var link = document.createElement('a');
+      link.href = a.href;
+      link.textContent = a.textContent;
+      if(a.getAttribute('href') === currentPage) link.className = 'active';
+      drop.appendChild(link);
+    });
+
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      drop.classList.toggle('open');
+    });
+    document.addEventListener('click', function(){
+      drop.classList.remove('open');
+    });
+
+    wrap.appendChild(btn);
+    wrap.appendChild(drop);
+
+    // Insert before the first right-side button
+    var firstRight = nav.querySelector('.nav-logout, .nk-search-btn');
+    if(firstRight) nav.insertBefore(wrap, firstRight);
+    else nav.appendChild(wrap);
   }
 
   function init(){
@@ -322,10 +415,26 @@
     buildMobileNav();
     applyFooter();
     applyNavNames();
+    // Run overflow menu after layout settles
+    requestAnimationFrame(function(){
+      setTimeout(buildMoreMenu, 50);
+    });
   }
   if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded', init);
   } else { init(); }
+
+  // Rebuild More menu on resize
+  var _moreResizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(_moreResizeTimer);
+    _moreResizeTimer = setTimeout(function(){
+      // Restore all hidden items first, then recalculate
+      var ul = document.querySelector('nav .nav-links');
+      if(ul) ul.querySelectorAll('li').forEach(function(li){ li.style.display = ''; });
+      applyNavNames();
+    }, 150);
+  });
 
   // ══════════════════════════════════════
   // 7. PAGE VISIBILITY
