@@ -1015,7 +1015,44 @@ function loadPeTab(tab){
   if(tab==='contact'){var cp=ldRaw('nukala_contactpage2')||{};document.getElementById('pe-cname').value=cp.contactName||'';document.getElementById('pe-cemail').value=cp.contactEmail||'';document.getElementById('pe-formspree').value=cp.formspree||'';document.getElementById('pe-droptions').value=(cp.dropdownOptions||['Add a family member','Submit a photo','Share a story','Other']).join('\n');}
   if(tab==='gallery'){var gp=ldRaw('nukala_gallerypage2')||{};document.getElementById('pe-galcats').value=(gp.categories||['All Photos','Family','Vintage','Celebrations','Travel','Other']).join('\n');}
   if(tab==='fonts'){var ty=ldRaw('nukala_typography')||{},s2=ld('settings');document.getElementById('pe-fonthead').value=ty.headFont||s2.headFont||'Cormorant Garamond';document.getElementById('pe-fontbody').value=ty.bodyFont||s2.bodyFont||'Jost';}
+  if(tab==='map'){
+    var ms=ldRaw('nukala_map_settings')||{};
+    var defType=ms.defaultType||'street';
+    document.querySelectorAll('input[name="defaultMapType"]').forEach(function(r){r.checked=(r.value===defType);});
+    document.getElementById('mapDefaultZoom').value=ms.zoom||'';
+    document.getElementById('mapCentLat').value=ms.lat||'';
+    document.getElementById('mapCentLng').value=ms.lng||'';
+    document.getElementById('mapColMale').value=ms.colMale||'#5c7a5c';
+    document.getElementById('mapColFemale').value=ms.colFemale||'#9060b0';
+    document.getElementById('mapColAncestor').value=ms.colAncestor||'#c9a84c';
+  }
 }
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MAP SETTINGS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.getElementById('saveMapTypeBtn').addEventListener('click', function(){
+  var ms = ldRaw('nukala_map_settings')||{};
+  var sel = document.querySelector('input[name="defaultMapType"]:checked');
+  if(sel) ms.defaultType = sel.value;
+  ms.zoom = document.getElementById('mapDefaultZoom').value.trim();
+  ms.lat  = document.getElementById('mapCentLat').value.trim();
+  ms.lng  = document.getElementById('mapCentLng').value.trim();
+  svRaw('nukala_map_settings', ms);
+  log('Map settings saved');
+  toast('✅ Map settings saved! Publish to Site to apply.');
+});
+
+document.getElementById('saveMapColoursBtn').addEventListener('click', function(){
+  var ms = ldRaw('nukala_map_settings')||{};
+  ms.colMale     = document.getElementById('mapColMale').value;
+  ms.colFemale   = document.getElementById('mapColFemale').value;
+  ms.colAncestor = document.getElementById('mapColAncestor').value;
+  svRaw('nukala_map_settings', ms);
+  log('Map marker colours saved');
+  toast('✅ Marker colours saved! Publish to Site to apply.');
+});
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ANALYTICS

@@ -552,6 +552,7 @@ opacity:0.04;pointer-events:none;z-index:0;}
           <button class="ptb" data-tab="contact">✉️ Contact</button>
           <button class="ptb" data-tab="gallery">🖼️ Gallery</button>
           <button class="ptb" data-tab="fonts">✍️ Fonts</button>
+          <button class="ptb" data-tab="map">🗺️ Map</button>
         </div>
         <div class="pts on" id="pt-theme">
           <div class="panel">
@@ -714,6 +715,71 @@ opacity:0.04;pointer-events:none;z-index:0;}
             </div>
             <button class="btn bg bsm" id="saveFontSizeBtn" style="margin-top:10px;">💾 Save Font Size</button>
           </div>
+        </div>
+      </div>
+
+      <div class="pts" id="pt-map">
+        <div class="panel">
+          <div class="pt">Map Type (Default)</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Choose which map style loads by default when family members open the Map page.</p>
+          <div style="display:flex;flex-direction:column;gap:10px;" id="mapTypeRadios">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;">
+              <input type="radio" name="defaultMapType" value="street"    style="accent-color:var(--sd);width:16px;height:16px;"/> &#128506;&#65039; Street — OpenStreetMap (default, always free)
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;">
+              <input type="radio" name="defaultMapType" value="satellite" style="accent-color:var(--sd);width:16px;height:16px;"/> &#128752;&#65039; Satellite — Esri aerial imagery
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;">
+              <input type="radio" name="defaultMapType" value="terrain"   style="accent-color:var(--sd);width:16px;height:16px;"/> &#9968;&#65039; Terrain — topographic style
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;">
+              <input type="radio" name="defaultMapType" value="dark"      style="accent-color:var(--sd);width:16px;height:16px;"/> &#9790;&#65039; Dark — dark mode map (CartoDB)
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.82rem;">
+              <input type="radio" name="defaultMapType" value="topo"      style="accent-color:var(--sd);width:16px;height:16px;"/> &#128208; Topo — humanitarian style (bright & clear)
+            </label>
+          </div>
+          <button class="btn bg bsm" id="saveMapTypeBtn" style="margin-top:14px;">&#128190; Save Map Settings</button>
+        </div>
+
+        <div class="panel" style="margin-top:16px;">
+          <div class="pt">Map Zoom &amp; Centre</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Set the initial zoom level and centre point of the map.</p>
+          <div class="fr">
+            <div class="fg"><label>Default Zoom (1–18, default 3)</label><input type="number" class="fi" id="mapDefaultZoom" min="1" max="18" placeholder="3"/></div>
+            <div class="fg"><label>Centre Latitude (default 20)</label><input type="text" class="fi" id="mapCentLat" placeholder="20"/></div>
+            <div class="fg"><label>Centre Longitude (default 78)</label><input type="text" class="fi" id="mapCentLng" placeholder="78"/></div>
+          </div>
+          <p style="font-size:.7rem;color:var(--tl);margin-top:6px;">Tip: India centre is lat 20, lng 78. Once members are added the map auto-fits to show all of them.</p>
+        </div>
+
+        <div class="panel" style="margin-top:16px;">
+          <div class="pt">Marker Colours</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Colours used for member pins on the map.</p>
+          <div class="fr">
+            <div class="fg">
+              <label>Male members</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" id="mapColMale" value="#5c7a5c" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/>
+                <span style="font-size:.74rem;color:var(--tl);">default: green</span>
+              </div>
+            </div>
+            <div class="fg">
+              <label>Female members</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" id="mapColFemale" value="#9060b0" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/>
+                <span style="font-size:.74rem;color:var(--tl);">default: purple</span>
+              </div>
+            </div>
+            <div class="fg">
+              <label>Ancestors</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" id="mapColAncestor" value="#c9a84c" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/>
+                <span style="font-size:.74rem;color:var(--tl);">default: gold</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn bg bsm" id="saveMapColoursBtn" style="margin-top:10px;">&#128190; Save Marker Colours</button>
         </div>
       </div>
 

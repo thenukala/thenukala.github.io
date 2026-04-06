@@ -79,7 +79,6 @@
       <button class="mtype-btn" data-mtype="satellite">&#128752; Satellite</button>
       <button class="mtype-btn" data-mtype="terrain">&#9968; Terrain</button>
       <button class="mtype-btn" data-mtype="dark">&#9790; Dark</button>
-      <button class="mtype-btn" data-mtype="watercolor">&#127912; Watercolour</button>
       <button class="mtype-btn" data-mtype="topo">&#128208; Topo</button>
     </div>
     <div id="familyMap"></div>
@@ -134,12 +133,27 @@
     satellite:{url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',attr:'&copy; Esri'},
     terrain:{url:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',attr:'&copy; OpenTopoMap'},
     dark:{url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',attr:'&copy; CartoDB'},
-    watercolor:{url:'https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg',attr:'&copy; Stadia Maps / Stamen Design'},
     topo:{url:'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',attr:'&copy; OpenStreetMap contributors'},
   };
 
-  var fmap=L.map('familyMap',{zoomControl:true,preferCanvas:true}).setView([20,78],3);
-  var curTile=L.tileLayer(TILES.street.url,{attribution:TILES.street.attr,maxZoom:18}).addTo(fmap);
+  // Read admin map settings
+  var mapSettings=load('nukala_map_settings')||{};
+  var defMapType=mapSettings.defaultType||'street';
+  var defZoom=parseInt(mapSettings.zoom)||3;
+  var defLat=parseFloat(mapSettings.lat)||20;
+  var defLng=parseFloat(mapSettings.lng)||78;
+  var colMale    =mapSettings.colMale||'#5c7a5c';
+  var colFemale  =mapSettings.colFemale||'#9060b0';
+  var colAncestor=mapSettings.colAncestor||'#c9a84c';
+
+  // Set active button for default map type
+  document.querySelectorAll('.mtype-btn').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-mtype')===defMapType);
+  });
+
+  var fmap=L.map('familyMap',{zoomControl:true,preferCanvas:true}).setView([defLat,defLng],defZoom);
+  var startTile=TILES[defMapType]||TILES.street;
+  var curTile=L.tileLayer(startTile.url,{attribution:startTile.attr,maxZoom:18}).addTo(fmap);
   setTimeout(function(){fmap.invalidateSize();},400);
   window.addEventListener('load',function(){fmap.invalidateSize();});
 
@@ -251,7 +265,7 @@
 
   var chips=document.getElementById('memberChips');
   if(!withCity.length){
-    chips.innerHTML='<div style="width:100%;padding:12px 0;font-size:.82rem;color:#aaa;">No members have city data yet. Add city in Admin > Contacts.</div>';
+    chips.innerHTML=''; // no data message shown in geo panel below
   } else {
     chips.innerHTML=withCity.map(function(m){
       var c=contacts[m.id];
@@ -267,7 +281,7 @@
         var gc=await geocity(c.city);
         if(gc){
           var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-          var col=m.ancestor?'#c9a84c':m.female?'#9060b0':'#5c7a5c';
+          var col=m.ancestor?colAncestor:m.female?colFemale:colMale;
           var mk=L.circleMarker([gc.lat,gc.lng],{radius:9,fillColor:col,color:'white',weight:2,opacity:1,fillOpacity:0.9}).addTo(fmap);
           mk.bindPopup('<strong>'+name+'</strong><br>'+(m.role||'')+(m.gen?'<br>Gen '+m.gen:'')+'<br>&#128205; '+(c.city||''));
           bounds.push([gc.lat,gc.lng]);
