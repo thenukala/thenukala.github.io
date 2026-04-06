@@ -1025,6 +1025,13 @@ function loadPeTab(tab){
     document.getElementById('mapColMale').value=ms.colMale||'#5c7a5c';
     document.getElementById('mapColFemale').value=ms.colFemale||'#9060b0';
     document.getElementById('mapColAncestor').value=ms.colAncestor||'#c9a84c';
+    // Visibility checkboxes
+    var vis=ms.vis||{};
+    document.getElementById('mapShowInteractiveMap').checked=vis.interactiveMap!==false;
+    document.getElementById('mapShowMemberChips').checked=vis.memberChips!==false;
+    document.getElementById('mapShowNearby').checked=vis.nearby!==false;
+    document.getElementById('mapShowGeoBreakdown').checked=vis.geoBreakdown!==false;
+    document.getElementById('mapShowContributeBar').checked=vis.contributeBar!==false;
   }
 }
 
@@ -1032,16 +1039,37 @@ function loadPeTab(tab){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // MAP SETTINGS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.getElementById('saveMapVisBtn').addEventListener('click', function(){
+  var ms = ldRaw('nukala_map_settings')||{};
+  ms.vis = {
+    interactiveMap: document.getElementById('mapShowInteractiveMap').checked,
+    memberChips:    document.getElementById('mapShowMemberChips').checked,
+    nearby:         document.getElementById('mapShowNearby').checked,
+    geoBreakdown:   document.getElementById('mapShowGeoBreakdown').checked,
+    contributeBar:  document.getElementById('mapShowContributeBar').checked,
+  };
+  svRaw('nukala_map_settings', ms);
+  log('Map visibility saved');
+  toast('✅ Map visibility saved! Publish to Site to apply.');
+});
+
 document.getElementById('saveMapTypeBtn').addEventListener('click', function(){
   var ms = ldRaw('nukala_map_settings')||{};
   var sel = document.querySelector('input[name="defaultMapType"]:checked');
   if(sel) ms.defaultType = sel.value;
+  svRaw('nukala_map_settings', ms);
+  log('Map type saved');
+  toast('✅ Default map style saved! Publish to Site to apply.');
+});
+
+document.getElementById('saveMapZoomBtn').addEventListener('click', function(){
+  var ms = ldRaw('nukala_map_settings')||{};
   ms.zoom = document.getElementById('mapDefaultZoom').value.trim();
   ms.lat  = document.getElementById('mapCentLat').value.trim();
   ms.lng  = document.getElementById('mapCentLng').value.trim();
   svRaw('nukala_map_settings', ms);
-  log('Map settings saved');
-  toast('✅ Map settings saved! Publish to Site to apply.');
+  log('Map zoom saved');
+  toast('✅ Zoom & centre saved! Publish to Site to apply.');
 });
 
 document.getElementById('saveMapColoursBtn').addEventListener('click', function(){

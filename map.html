@@ -39,6 +39,11 @@
     .mclinks{margin-top:5px;display:flex;flex-wrap:wrap;gap:8px;}
     .mclinks a,.mclinks span{font-size:.7rem;text-decoration:none;}
     .ndist{background:var(--sage-dark,#5c7a5c);color:white;border-radius:20px;padding:2px 10px;font-size:.7rem;font-weight:500;display:inline-block;margin-bottom:6px;}
+    .contribute-bar{background:linear-gradient(135deg,#f0f5f0,#faf8f4);border:1px solid var(--sage-light,#c8ddc8);border-radius:16px;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 auto 0;flex-wrap:wrap;max-width:1100px;}
+    .contribute-bar p{font-size:.88rem;color:var(--sage-dark,#5c7a5c);margin:0;line-height:1.5;}
+    .contribute-bar p strong{color:var(--sage-dark,#5c7a5c);}
+    .contribute-bar a{background:var(--sage-dark,#5c7a5c);color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:500;white-space:nowrap;}
+    .contribute-bar a:hover{opacity:.9;}
   </style>
 </head>
 <body>
@@ -74,7 +79,7 @@
     <p>See where the Nukala family lives across the world and find who is near you.</p>
   </div>
   <div class="content-area">
-    <div class="mtype-wrap">
+    <div class="mtype-wrap" id="mapTypeRow">
       <button class="mtype-btn on" data-mtype="street">&#128506; Street</button>
       <button class="mtype-btn" data-mtype="satellite">&#128752; Satellite</button>
       <button class="mtype-btn" data-mtype="terrain">&#9968; Terrain</button>
@@ -83,18 +88,24 @@
     </div>
     <div id="familyMap"></div>
     <div id="memberChips"></div>
-    <div class="mpanel">
+    <div class="mpanel" id="nearbyPanel">
       <div class="mpanel-title">&#128205; Family Near You</div>
       <p class="mpanel-sub">Find which family members live closest to you. Distances are straight-line (km).</p>
       <button class="btn-locate" id="nearbyBtn" onclick="tryNearby()">&#128205; Find Nearby Members</button>
       <div id="nearbySection"></div>
     </div>
-    <div class="mpanel">
+    <div class="mpanel" id="geoPanel">
       <div class="mpanel-title">&#127758; Family by Location</div>
       <p class="mpanel-sub">Click any city to see all family members there with photos and contact details.</p>
       <div id="geoStats"></div>
     </div>
   </div>
+
+  <div id="contributeWrap"><div class="contribute-bar fade-in">
+    <p><strong>Not on the map yet?</strong><br/>Share your city with the family admin and we'll add your location to the map.</p>
+    <a href="contact.html">+ Share My Location</a>
+  </div></div>
+
 </main>
 <footer>
   &copy; <span id="footerYear">2026</span>
@@ -145,6 +156,19 @@
   var colMale    =mapSettings.colMale||'#5c7a5c';
   var colFemale  =mapSettings.colFemale||'#9060b0';
   var colAncestor=mapSettings.colAncestor||'#c9a84c';
+  var mapVis=mapSettings.vis||{};
+
+  // Apply visibility settings
+  function applyVis(id, visible){
+    var el=document.getElementById(id);
+    if(el) el.style.display = visible===false ? 'none' : '';
+  }
+  applyVis('familyMap',       mapVis.interactiveMap);
+  applyVis('mapTypeRow',      mapVis.interactiveMap); // hide type switcher too if map hidden
+  applyVis('memberChips',     mapVis.memberChips);
+  applyVis('nearbyPanel',     mapVis.nearby);
+  applyVis('geoPanel',        mapVis.geoBreakdown);
+  applyVis('contributeWrap',  mapVis.contributeBar);
 
   // Set active button for default map type
   document.querySelectorAll('.mtype-btn').forEach(function(b){
@@ -189,7 +213,7 @@
   function renderGeo(){
     var el=document.getElementById('geoStats');
     if(!citySorted.length){
-      el.innerHTML='<p style="font-size:.8rem;color:#aaa;">No members have city info yet. Add city in Admin > Contacts.</p>';
+      el.innerHTML='<p style="font-size:.8rem;color:var(--text-light,#aaa);">No location data yet. Family members can share their city with the admin using the link below.</p>';
       return;
     }
     el.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">'
