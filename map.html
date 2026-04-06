@@ -153,9 +153,55 @@
   var defZoom=parseInt(mapSettings.zoom)||3;
   var defLat=parseFloat(mapSettings.lat)||20;
   var defLng=parseFloat(mapSettings.lng)||78;
-  var colMale    =mapSettings.colMale||'#5c7a5c';
-  var colFemale  =mapSettings.colFemale||'#9060b0';
-  var colAncestor=mapSettings.colAncestor||'#c9a84c';
+  // Load marker categories
+  var DEF_CATS=[
+    {id:'male',     label:'Male',     color:mapSettings.colMale||'#5c7a5c',    shape:'circle',  builtin:true},
+    {id:'female',   label:'Female',   color:mapSettings.colFemale||'#9060b0',  shape:'diamond', builtin:true},
+    {id:'ancestor', label:'Ancestor', color:mapSettings.colAncestor||'#c9a84c',shape:'star',    builtin:true},
+  ];
+  var mapCats = (mapSettings.categories && mapSettings.categories.length) ? mapSettings.categories : DEF_CATS;
+
+  function getCatForMember(m){
+    // Check custom categories first (by role match)
+    var custom = mapCats.filter(function(c){return !c.builtin;});
+    var role = (m.role||'').toLowerCase();
+    for(var i=0;i<custom.length;i++){
+      if(custom[i].label && role.indexOf(custom[i].label.toLowerCase())>-1) return custom[i];
+    }
+    // Built-in
+    if(m.ancestor) return mapCats.find(function(c){return c.id==='ancestor';})||DEF_CATS[2];
+    if(m.female)   return mapCats.find(function(c){return c.id==='female';})||DEF_CATS[1];
+    return mapCats.find(function(c){return c.id==='male';})||DEF_CATS[0];
+  }
+
+  function makeMarker(lat,lng,cat){
+    var col   = cat.color||'#5c7a5c';
+    var shape = cat.shape||'circle';
+    var size  = 22;
+    var svg;
+    if(shape==='diamond'){
+      svg='<svg width="'+size+'" height="'+size+'" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><polygon points="11,1 21,11 11,21 1,11" fill="'+col+'" stroke="white" stroke-width="2"/></svg>';
+    } else if(shape==='square'){
+      svg='<svg width="'+size+'" height="'+size+'" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="18" height="18" fill="'+col+'" stroke="white" stroke-width="2"/></svg>';
+    } else if(shape==='star'){
+      svg='<svg width="'+size+'" height="'+size+'" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><polygon points="11,1 13.5,8.5 21,8.5 15,13.5 17.5,21 11,16.5 4.5,21 7,13.5 1,8.5 8.5,8.5" fill="'+col+'" stroke="white" stroke-width="1.2"/></svg>';
+    } else if(shape==='triangle'){
+      svg='<svg width="'+size+'" height="'+size+'" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><polygon points="11,2 21,20 1,20" fill="'+col+'" stroke="white" stroke-width="2"/></svg>';
+    } else if(shape==='pentagon'){
+      svg='<svg width="'+size+'" height="'+size+'" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><polygon points="11,1 21,8 17,20 5,20 1,8" fill="'+col+'" stroke="white" stroke-width="2"/></svg>';
+    } else {
+      // circle (default)
+      svg='<svg width="'+size+'" height="'+size+'" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="9" fill="'+col+'" stroke="white" stroke-width="2"/></svg>';
+    }
+    var icon = L.divIcon({
+      html: svg,
+      className: '',
+      iconSize: [size, size],
+      iconAnchor: [size/2, size/2],
+      popupAnchor: [0, -(size/2)]
+    });
+    return L.marker([lat,lng],{icon:icon});
+  }
   var mapVis=mapSettings.vis||{};
 
   // Apply visibility settings
@@ -305,8 +351,8 @@
         var gc=await geocity(c.city);
         if(gc){
           var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-          var col=m.ancestor?colAncestor:m.female?colFemale:colMale;
-          var mk=L.circleMarker([gc.lat,gc.lng],{radius:9,fillColor:col,color:'white',weight:2,opacity:1,fillOpacity:0.9}).addTo(fmap);
+          var cat=getCatForMember(m);
+          var mk=makeMarker(gc.lat,gc.lng,cat).addTo(fmap);
           mk.bindPopup('<strong>'+name+'</strong><br>'+(m.role||'')+(m.gen?'<br>Gen '+m.gen:'')+'<br>&#128205; '+(c.city||''));
           bounds.push([gc.lat,gc.lng]);
         }

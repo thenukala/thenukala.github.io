@@ -716,8 +716,6 @@ opacity:0.04;pointer-events:none;z-index:0;}
             <button class="btn bg bsm" id="saveFontSizeBtn" style="margin-top:10px;">💾 Save Font Size</button>
           </div>
         </div>
-      </div>
-
       <div class="pts" id="pt-map">
 
         <!-- Map Section Visibility -->
@@ -791,17 +789,16 @@ opacity:0.04;pointer-events:none;z-index:0;}
           <button class="btn bg bsm" id="saveMapZoomBtn" style="margin-top:10px;">&#128190; Save Zoom &amp; Centre</button>
         </div>
 
-        <!-- Marker Colours -->
+        <!-- Marker Categories -->
         <div class="panel" style="margin-top:16px;">
-          <div class="pt">Marker Colours</div>
-          <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Colours used for member pins on the map.</p>
-          <div class="fr">
-            <div class="fg"><label>Male members</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="mapColMale" value="#5c7a5c" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/><span style="font-size:.74rem;color:var(--tl);">default: green</span></div></div>
-            <div class="fg"><label>Female members</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="mapColFemale" value="#9060b0" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/><span style="font-size:.74rem;color:var(--tl);">default: purple</span></div></div>
-            <div class="fg"><label>Ancestors</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="mapColAncestor" value="#c9a84c" style="width:42px;height:34px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;"/><span style="font-size:.74rem;color:var(--tl);">default: gold</span></div></div>
-          </div>
-          <button class="btn bg bsm" id="saveMapColoursBtn" style="margin-top:10px;">&#128190; Save Marker Colours</button>
+          <div class="pt">Marker Categories — Colours &amp; Shapes</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:14px;">Customise how each member category appears as a pin on the map. Add your own categories too.</p>
+          <div id="mapCatList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
+          <button class="btn bo bsm" id="mapAddCatBtn" style="margin-bottom:6px;">&#43; Add Category</button>
+          <p style="font-size:.7rem;color:var(--tl);margin-top:4px;">Each member&apos;s category is matched by their <strong>Role</strong> field or built-in type (male/female/ancestor). Custom categories match members whose Role contains the label you enter.</p>
+          <button class="btn bg bsm" id="saveMapColoursBtn" style="margin-top:12px;">&#128190; Save Marker Settings</button>
         </div>
+      </div>
       </div>
 
       <!-- PAGE NAMES -->

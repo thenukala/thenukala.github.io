@@ -1024,7 +1024,8 @@ function loadPeTab(tab){
     document.getElementById('mapCentLng').value=ms.lng||'';
     document.getElementById('mapColMale').value=ms.colMale||'#5c7a5c';
     document.getElementById('mapColFemale').value=ms.colFemale||'#9060b0';
-    document.getElementById('mapColAncestor').value=ms.colAncestor||'#c9a84c';
+    // Marker categories
+    renderMapCatList();
     // Visibility checkboxes
     var vis=ms.vis||{};
     document.getElementById('mapShowInteractiveMap').checked=vis.interactiveMap!==false;
@@ -1072,14 +1073,92 @@ document.getElementById('saveMapZoomBtn').addEventListener('click', function(){
   toast('✅ Zoom & centre saved! Publish to Site to apply.');
 });
 
-document.getElementById('saveMapColoursBtn').addEventListener('click', function(){
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MAP MARKER CATEGORIES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var DEFAULT_MAP_CATS = [
+  { id:'male',     label:'Male',     color:'#5c7a5c', shape:'circle',  builtin:true  },
+  { id:'female',   label:'Female',   color:'#9060b0', shape:'diamond', builtin:true  },
+  { id:'ancestor', label:'Ancestor', color:'#c9a84c', shape:'star',    builtin:true  },
+];
+
+var MAP_SHAPES = ['circle','diamond','square','star','triangle','pentagon'];
+
+function getMapCats(){
   var ms = ldRaw('nukala_map_settings')||{};
-  ms.colMale     = document.getElementById('mapColMale').value;
-  ms.colFemale   = document.getElementById('mapColFemale').value;
-  ms.colAncestor = document.getElementById('mapColAncestor').value;
+  return ms.categories || JSON.parse(JSON.stringify(DEFAULT_MAP_CATS));
+}
+
+function drawMapCatRow(cat, idx){
+  var shapeOpts = MAP_SHAPES.map(function(s){
+    return '<option value="'+s+'"'+(cat.shape===s?' selected':'')+'>'+s.charAt(0).toUpperCase()+s.slice(1)+'</option>';
+  }).join('');
+  return '<div class="map-cat-row" data-catidx="'+idx+'" style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--cream);border:1px solid var(--b);border-radius:10px;flex-wrap:wrap;">'
+    +'<input type="color" class="mcat-color" value="'+cat.color+'" title="Colour" style="width:38px;height:32px;border:1.5px solid var(--b);border-radius:7px;cursor:pointer;padding:2px;flex-shrink:0;"/>'
+    +'<input type="text" class="fi mcat-label" value="'+cat.label+'" placeholder="Category name"'+(cat.builtin?' readonly style="background:#f8f8f8;width:110px;"':' style="width:110px;"')+'/>'
+    +'<select class="fi mcat-shape" style="width:110px;">'+ shapeOpts +'</select>'
+    +'<span style="font-size:.7rem;color:var(--tl);flex:1;min-width:80px;">'+(cat.builtin?'Built-in (matches '+cat.label.toLowerCase()+' members)':'Matches members whose Role contains this label')+'</span>'
+    +(!cat.builtin?'<button class="btn bo bsm mcat-del" data-idx="'+idx+'" style="color:#c00;border-color:#c00;flex-shrink:0;">&#10005;</button>':'')
+    +'</div>';
+}
+
+function renderMapCatList(){
+  var cats = getMapCats();
+  var el = document.getElementById('mapCatList');
+  if(!el) return;
+  el.innerHTML = cats.map(function(cat, idx){ return drawMapCatRow(cat, idx); }).join('');
+  // Delete handlers
+  el.querySelectorAll('.mcat-del').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var idx = parseInt(this.getAttribute('data-idx'));
+      var cats = getMapCats();
+      cats.splice(idx, 1);
+      var ms = ldRaw('nukala_map_settings')||{};
+      ms.categories = cats;
+      svRaw('nukala_map_settings', ms);
+      renderMapCatList();
+    });
+  });
+}
+
+document.getElementById('mapAddCatBtn').addEventListener('click', function(){
+  var cats = getMapCats();
+  cats.push({ id:'custom_'+Date.now(), label:'', color:'#5c7a5c', shape:'circle', builtin:false });
+  var ms = ldRaw('nukala_map_settings')||{};
+  ms.categories = cats;
   svRaw('nukala_map_settings', ms);
-  log('Map marker colours saved');
-  toast('✅ Marker colours saved! Publish to Site to apply.');
+  renderMapCatList();
+  // Focus the new label input
+  var rows = document.querySelectorAll('.mcat-label');
+  if(rows.length) rows[rows.length-1].focus();
+});
+
+document.getElementById('saveMapColoursBtn').addEventListener('click', function(){
+  var rows = document.querySelectorAll('.map-cat-row');
+  var cats = getMapCats();
+  rows.forEach(function(row, i){
+    var color = row.querySelector('.mcat-color').value;
+    var label = row.querySelector('.mcat-label').value.trim();
+    var shape = row.querySelector('.mcat-shape').value;
+    if(cats[i]){
+      cats[i].color = color;
+      if(!cats[i].builtin && label) cats[i].label = label;
+      cats[i].shape = shape;
+    }
+  });
+  var ms = ldRaw('nukala_map_settings')||{};
+  ms.categories = cats;
+  // Also keep legacy keys for backward compat
+  cats.forEach(function(c){
+    if(c.id==='male')     ms.colMale=c.color;
+    if(c.id==='female')   ms.colFemale=c.color;
+    if(c.id==='ancestor') ms.colAncestor=c.color;
+  });
+  svRaw('nukala_map_settings', ms);
+  log('Map marker categories saved');
+  toast('&#x2705; Marker settings saved! Publish to Site to apply.');
+  renderMapCatList();
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
