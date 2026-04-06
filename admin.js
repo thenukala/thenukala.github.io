@@ -430,8 +430,8 @@ function renderRecs(){var list=lda('recipes'),el=document.getElementById('recLis
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ACHIEVEMENTS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-document.getElementById('addAchBtn').addEventListener('click', openAchM);
-document.getElementById('saveAchBtn').addEventListener('click', saveAch);
+if(document.getElementById('addAchBtn')) document.getElementById('addAchBtn').addEventListener('click', openAchM);
+if(document.getElementById('saveAchBtn')) document.getElementById('saveAchBtn').addEventListener('click', saveAch);
 
 function openAchM(){document.getElementById('achId').value='';document.getElementById('achMH').textContent='Add Achievement';['achTitle','achPerson','achYear','achIcon','achDesc'].forEach(function(id){document.getElementById(id).value='';});openM('achModal');}
 function editAch(i){var l=lda('achievements'),a=l[i];document.getElementById('achId').value=i;document.getElementById('achMH').textContent='Edit Achievement';document.getElementById('achTitle').value=a.title||'';document.getElementById('achPerson').value=a.person||'';document.getElementById('achYear').value=a.year||'';document.getElementById('achIcon').value=a.icon||'';document.getElementById('achDesc').value=a.desc||'';document.getElementById('achCat').value=a.cat||'Education';openM('achModal');}
@@ -442,8 +442,8 @@ function renderAchs(){var list=lda('achievements'),el=document.getElementById('a
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // VIDEOS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-document.getElementById('addVidBtn').addEventListener('click', openVidM);
-document.getElementById('saveVidBtn').addEventListener('click', saveVid);
+if(document.getElementById('addVidBtn')) document.getElementById('addVidBtn').addEventListener('click', openVidM);
+if(document.getElementById('saveVidBtn')) document.getElementById('saveVidBtn').addEventListener('click', saveVid);
 
 function openVidM(){document.getElementById('vidId').value='';document.getElementById('vidMH').textContent='Add Video';['vidTitle','vidUrl','vidDesc'].forEach(function(id){document.getElementById(id).value='';});openM('vidModal');}
 function editVid(i){var l=lda('videos'),v=l[i];document.getElementById('vidId').value=i;document.getElementById('vidMH').textContent='Edit Video';document.getElementById('vidTitle').value=v.title||'';document.getElementById('vidUrl').value=v.url||'';document.getElementById('vidDesc').value=v.desc||'';openM('vidModal');}
