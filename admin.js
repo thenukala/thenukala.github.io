@@ -79,8 +79,7 @@ document.getElementById('logoutBtn').addEventListener('click',function(){session
 var PAGE_LOADERS = {
   dash:renderDash, members:renderMembers, history:renderHist,
   gallery:renderGal, facts:renderFacts, events:renderEvts,
-  recipes:renderRecs,  videos:renderVids,
-  polls:renderPolls,
+  recipes:renderRecs, polls:renderPolls,
   stats:function(){},  map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,
   contacts:renderContacts, announce:renderAnn,
   pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme');}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
@@ -779,7 +778,7 @@ function renderVis(){
   PAGES.forEach(function(p){
     var on=saved[p.id]!==false,bg=on?'#5c7a5c':'#ccc',tx=on?'translateX(20px)':'translateX(0)';
     var bdg=on?'<span style="font-size:.68rem;font-weight:600;padding:2px 10px;border-radius:20px;background:#f0f5f0;color:#5c7a5c;">Enabled</span>':'<span style="font-size:.68rem;font-weight:600;padding:2px 10px;border-radius:20px;background:#faf0f0;color:#c0614a;">Disabled</span>';
-    html+='<div class="vr"><div style="display:flex;align-items:center;gap:12px;"><div class="vt"><input type="checkbox" id="v-'+p.id+'" '+(on?'checked ':' ')+(p.locked?'disabled ':' ')+'onchange="visChg(\''+p.id+'\',this.checked)"/><div id="vtr-'+p.id+'" class="vtr" style="background:'+bg+';"></div><div id="vth-'+p.id+'" class="vth" style="transform:'+tx+';"></div></div><div><div style="font-size:.84rem;font-weight:500;color:var(--td);">'+p.label+'</div><div style="font-size:.68rem;color:var(--tl);">'+p.file+(p.locked?' · Core page':'')+'</div></div></div>'+bdg+'</div>';
+    html+='<div class="vr"><div style="display:flex;align-items:center;gap:12px;"><div class="vt"><input type="checkbox" id="v-'+p.id+'" '+(on?'checked ':' ')+(p.locked?'disabled ':' ')+'onchange="visChg(\''+p.id+'\',this.checked)"/><div id="vtr-'+p.id+'" class="vtr" style="background:'+bg+';"></div><div id="vth-'+p.id+'" class="vth" style="transform:'+tx+';"></div></div><div><div style="font-size:.84rem;font-weight:500;color:var(--td);">'+p.label+'</div><div style="font-size:.68rem;color:var(--tl);">'+p.href+(p.locked?' · Core page':'')+'</div></div></div>'+bdg+'</div>';
   });
   el.innerHTML=html;visPreview();
 }
@@ -817,7 +816,7 @@ function visEnableAll(){PAGES.forEach(function(p){var cb=document.getElementById
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PAGE EDITOR
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var PAGE_TEXTS=[{key:'history',page:'History',file:'history.html',eye:'Our Story',title:'Nukala Family History',desc:'A journey through time.'},{key:'gallery',page:'Gallery',file:'gallery.html',eye:'Memories',title:'Photo Gallery',desc:'A visual archive.'},{key:'facts',page:'Facts',file:'facts.html',eye:'Did You Know?',title:'Interesting Family Facts',desc:'Fascinating milestones.'},{key:'tree',page:'Family Tree',file:'tree.html',eye:'Our Roots',title:'Nukala Family Tree',desc:'Click any leaf to discover.'},{key:'events',page:'Events',file:'events.html',eye:'Upcoming',title:'Family Events',desc:'Reunions and celebrations.'},{key:'recipes',page:'Recipes',file:'recipes.html',eye:'Traditional',title:'Family Recipes',desc:'Cherished recipes.'},{key:'achievements',page:'Achievements',file:'achievements.html',eye:'Pride of the Family',title:'Family Achievements',desc:'Degrees and awards.'},{key:'videos',page:'Videos',file:'videos.html',eye:'Memories in Motion',title:'Family Videos',desc:'Memorable moments.'},{key:'polls',page:'Polls',file:'polls.html',eye:'Have Your Say',title:'Family Polls',desc:'Every voice counts.'},{key:'stats',page:'Stats',file:'stats.html',eye:'By The Numbers',title:'Family Statistics',desc:'Fascinating insights.'},{key:'map',page:'Map',file:'map.html',eye:'Where We Are',title:'Family Map',desc:'See where we live.'},{key:'contact',page:'Contact',file:'contact.html',eye:'Contribute',title:'Get In Touch',desc:'Share a story or photo.'},{key:'join',page:'Join Tree',file:'join.html',eye:'Join the Family',title:'Join the Family Tree',desc:'Help us build the most complete Nukala family archive.'}];
+var PAGE_TEXTS=[{key:'history',page:'History',file:'history.html',eye:'Our Story',title:'Nukala Family History',desc:'A journey through time.'},{key:'gallery',page:'Gallery',file:'gallery.html',eye:'Memories',title:'Photo Gallery',desc:'A visual archive.'},{key:'facts',page:'Facts',file:'facts.html',eye:'Did You Know?',title:'Interesting Family Facts',desc:'Fascinating milestones.'},{key:'tree',page:'Family Tree',file:'tree.html',eye:'Our Roots',title:'Nukala Family Tree',desc:'Click any leaf to discover.'},{key:'events',page:'Events',file:'events.html',eye:'Upcoming',title:'Family Events',desc:'Reunions and celebrations.'},{key:'recipes',page:'Recipes',file:'recipes.html',eye:'Traditional',title:'Family Recipes',desc:'Cherished recipes.'},{key:'polls',page:'Polls',file:'polls.html',eye:'Have Your Say',title:'Family Polls',desc:'Every voice counts.'},{key:'stats',page:'Stats',file:'stats.html',eye:'By The Numbers',title:'Family Statistics',desc:'Fascinating insights.'},{key:'map',page:'Map',file:'map.html',eye:'Where We Are',title:'Family Map',desc:'See where we live.'},{key:'contact',page:'Contact',file:'contact.html',eye:'Contribute',title:'Get In Touch',desc:'Share a story or photo.'},{key:'join',page:'Join Tree',file:'join.html',eye:'Join the Family',title:'Join the Family Tree',desc:'Help us build the most complete Nukala family archive.'}];
 
 document.querySelectorAll('.ptb[data-tab]').forEach(function(btn){
   btn.addEventListener('click',function(){
@@ -1164,8 +1163,8 @@ document.getElementById('saveMapColoursBtn').addEventListener('click', function(
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ANALYTICS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var PNAMES={'home.html':'Home','tree.html':'Family Tree','gallery.html':'Gallery','history.html':'History','facts.html':'Facts','stats.html':'Stats','events.html':'Events','contact.html':'Contact','index.html':'Login','qr.html':'Share','map.html':'Map','polls.html':'Polls','recipes.html':'Recipes','videos.html':'Videos'};
-var PEMOJI={'home.html':'🏠','tree.html':'🌳','gallery.html':'🖼️','history.html':'📜','facts.html':'🌟','stats.html':'📊','events.html':'📆','contact.html':'✉️','index.html':'🔐','qr.html':'📱','map.html':'🗺️','polls.html':'🗳️','recipes.html':'🍛','videos.html':'🎥'};
+var PNAMES={'home.html':'Home','tree.html':'Family Tree','gallery.html':'Gallery','history.html':'History','facts.html':'Facts','stats.html':'Stats','events.html':'Events','contact.html':'Contact','index.html':'Login','qr.html':'Share','map.html':'Map','polls.html':'Polls','recipes.html':'Recipes'};
+var PEMOJI={'home.html':'🏠','tree.html':'🌳','gallery.html':'🖼️','history.html':'📜','facts.html':'🌟','stats.html':'📊','events.html':'📆','contact.html':'✉️','index.html':'🔐','qr.html':'📱','map.html':'🗺️','polls.html':'🗳️','recipes.html':'🍛'};
 
 document.getElementById('an-filter').addEventListener('change', renderAnalytics);
 document.getElementById('expVisBtn').addEventListener('click',function(){dlCsv([['IP','Country','City','ISP','Device','Browser','Visits','Pages','First','Last']].concat(lda('visitors').map(function(v){return[v.ip,v.country,v.city,v.isp,v.device,v.browser,v.visits,(v.pages||[]).join('|'),v.firstSeen,v.lastSeen];})),'nukala-visitors.csv');toast('Exported!');});
@@ -1247,22 +1246,20 @@ function expAll(){var data={};Object.keys(LS).forEach(function(k){data[k]=JSON.p
 // PAGE NAMES
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 var DEFAULT_NAV_PAGES = [
-  {href:'home.html',    label:'Home',          locked:true},
-  {href:'tree.html',    label:'Family Tree',   locked:true},
-  {href:'history.html', label:'History',       locked:false},
-  {href:'gallery.html', label:'Gallery',       locked:false},
-  {href:'facts.html',   label:'Facts',         locked:false},
-  {href:'stats.html',   label:'Stats',         locked:false},
-  {href:'events.html',  label:'Events',        locked:false},
-  {href:'map.html',     label:'Map',           locked:false},
-  {href:'polls.html',   label:'Polls',         locked:false},
-  {href:'recipes.html', label:'Recipes',       locked:false},
-  {href:'achievements.html', label:'Achievements', locked:false},
-  {href:'videos.html',  label:'Videos',        locked:false},
-  {href:'qr.html',      label:'QR Code', locked:false},
-  {href:'contact.html', label:'Contact',       locked:false},
-  {href:'join.html',    label:'Join Tree',     locked:false},
-  {href:'about.html',   label:'About',         locked:false},
+  {id:'home',     href:'home.html',    label:'Home',        locked:true},
+  {id:'tree',     href:'tree.html',    label:'Family Tree', locked:true},
+  {id:'history',  href:'history.html', label:'History',     locked:false},
+  {id:'gallery',  href:'gallery.html', label:'Gallery',     locked:false},
+  {id:'facts',    href:'facts.html',   label:'Facts',       locked:false},
+  {id:'stats',    href:'stats.html',   label:'Stats',       locked:false},
+  {id:'events',   href:'events.html',  label:'Events',      locked:false},
+  {id:'map',      href:'map.html',     label:'Map',         locked:false},
+  {id:'polls',    href:'polls.html',   label:'Polls',       locked:false},
+  {id:'recipes',  href:'recipes.html', label:'Recipes',     locked:false},
+  {id:'qr',       href:'qr.html',      label:'QR Code',    locked:false},
+  {id:'contact',  href:'contact.html', label:'Contact',     locked:false},
+  {id:'join',     href:'join.html',    label:'Join Tree',   locked:false},
+  {id:'about',    href:'about.html',   label:'About',       locked:false},
 ];
 
 function getNavPages(){

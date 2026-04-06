@@ -221,7 +221,6 @@ opacity:0.04;pointer-events:none;z-index:0;}
       <button class="ni" data-page="facts">🌟 Facts</button>
       <button class="ni" data-page="events">📆 Events</button>
       <button class="ni" data-page="recipes">🍛 Recipes</button>
-      <button class="ni" data-page="videos">🎥 Videos</button>
       <button class="ni" data-page="polls">🗳️ Polls</button>
       <button class="ni" data-page="stats">📊 Stats</button>
       <button class="ni" data-page="map">🗺️ Map</button>
@@ -413,22 +412,44 @@ opacity:0.04;pointer-events:none;z-index:0;}
         </div>
       </div>
 
+
       <!-- RECIPES -->
       <div class="page" id="page-recipes">
         <div class="sh">Family <em>Recipes</em></div>
-        <p class="ss">Add traditional family recipes.</p>
+        <p class="ss">Add traditional family recipes — ingredients, steps and stories.</p>
         <div class="div"></div>
         <button class="btn bg bsm" id="addRecBtn" style="margin-bottom:14px;">+ Add Recipe</button>
-        <div id="recList"></div>
-      </div>
-
-      <!-- VIDEOS -->
-      <div class="page" id="page-videos">
-        <div class="sh">Family <em>Videos</em></div>
-        <p class="ss">Add YouTube video links.</p>
-        <div class="div"></div>
-        <button class="btn bg bsm" id="addVidBtn" style="margin-bottom:14px;">+ Add Video</button>
-        <div id="vidList"></div>
+        <div class="gg" id="recGrid"></div>
+        <div class="modal" id="recModal">
+          <div class="modal-box">
+            <div class="modal-title">Recipe</div>
+            <input type="hidden" id="recId"/>
+            <input type="hidden" id="recMH"/>
+            <div class="fr">
+              <div class="fg"><label>Title *</label><input type="text" class="fi" id="recTitle" placeholder="e.g. Grandma's Biryani"/></div>
+              <div class="fg"><label>Category</label>
+                <select class="fi" id="recCat">
+                  <option value="Main Course">Main Course</option>
+                  <option value="Snack">Snack</option>
+                  <option value="Dessert">Dessert</option>
+                  <option value="Breakfast">Breakfast</option>
+                  <option value="Drink">Drink</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>Made By</label><input type="text" class="fi" id="recBy" placeholder="e.g. Grandma Nukala"/></div>
+              <div class="fg"><label>Prep Time</label><input type="text" class="fi" id="recTime" placeholder="e.g. 45 minutes"/></div>
+            </div>
+            <div class="fg"><label>Ingredients (one per line)</label><textarea class="fi" id="recIng" rows="5" style="resize:vertical;"></textarea></div>
+            <div class="fg"><label>Steps (one per line)</label><textarea class="fi" id="recSteps" rows="6" style="resize:vertical;"></textarea></div>
+            <div class="modal-actions">
+              <button class="btn bg" id="saveRecBtn">💾 Save Recipe</button>
+              <button class="btn bo" data-close="recModal">Cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- POLLS -->
