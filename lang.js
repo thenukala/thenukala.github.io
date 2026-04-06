@@ -211,7 +211,7 @@
     'home.html':'nav_home','tree.html':'nav_tree','history.html':'nav_history',
     'gallery.html':'nav_gallery','facts.html':'nav_facts','stats.html':'nav_stats',
     'events.html':'nav_events','map.html':'nav_map','polls.html':'nav_polls',
-    'recipes.html':'nav_recipes','achievements.html':'nav_achievements',
+    'recipes.html':'nav_recipes',
     'videos.html':'nav_videos','qr.html':'nav_share','contact.html':'nav_contact',
     'join.html':'nav_join','about.html':'nav_about'
   };
@@ -226,7 +226,6 @@
     'stats.html':   { eyebrow:'stats_eyebrow',p:'stats_sub', extra:'stats' },
     'events.html':  { eyebrow:'evts_eyebrow', p:'evts_sub',  extra:'events' },
     'recipes.html': { eyebrow:'rec_eyebrow',  p:'rec_sub',   extra:'recipes' },
-    'achievements.html':{ eyebrow:'ach_eyebrow',p:'ach_sub', extra:'achievements' },
     'videos.html':  { eyebrow:'vid_eyebrow',  p:'vid_sub',   extra:'videos' },
     'map.html':     { eyebrow:'map_eyebrow',  p:'map_sub',   extra:'map' },
     'polls.html':   { eyebrow:'poll_eyebrow', p:'poll_sub',  extra:'polls' },

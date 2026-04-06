@@ -2,7 +2,7 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // DATA HELPERS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var LS = {members:'nukala_tree_data',gallery:'nukala_gallery',history:'nukala_history',facts:'nukala_facts',events:'nukala_events',recipes:'nukala_recipes',achievements:'nukala_achievements',videos:'nukala_videos',polls:'nukala_polls',contacts:'nukala_contacts',settings:'nukala_settings',log:'nukala_log',pagevis:'nukala_page_vis',visits:'nukala_visits',visitors:'nukala_visitors',logins:'nukala_logins',sessions:'nukala_sessions',pagecounts:'nukala_page_counts',annLog:'nukala_ann_log'};
+var LS = {members:'nukala_tree_data',gallery:'nukala_gallery',history:'nukala_history',facts:'nukala_facts',events:'nukala_events',recipes:'nukala_recipes',videos:'nukala_videos',polls:'nukala_polls',contacts:'nukala_contacts',settings:'nukala_settings',log:'nukala_log',pagevis:'nukala_page_vis',visits:'nukala_visits',visitors:'nukala_visitors',logins:'nukala_logins',sessions:'nukala_sessions',pagecounts:'nukala_page_counts',annLog:'nukala_ann_log'};
 function ld(k){try{return JSON.parse(localStorage.getItem(LS[k]||k)||'{}');}catch(e){return {};}}
 function lda(k){try{return JSON.parse(localStorage.getItem(LS[k]||k)||'[]');}catch(e){return [];}}
 function sv(k,v){localStorage.setItem(LS[k]||k,JSON.stringify(v));}
@@ -79,7 +79,7 @@ document.getElementById('logoutBtn').addEventListener('click',function(){session
 var PAGE_LOADERS = {
   dash:renderDash, members:renderMembers, history:renderHist,
   gallery:renderGal, facts:renderFacts, events:renderEvts,
-  recipes:renderRecs, achievements:renderAchs, videos:renderVids,
+  recipes:renderRecs,  videos:renderVids,
   polls:renderPolls,
   stats:function(){},  map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,
   contacts:renderContacts, announce:renderAnn,
@@ -1164,8 +1164,8 @@ document.getElementById('saveMapColoursBtn').addEventListener('click', function(
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ANALYTICS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var PNAMES={'home.html':'Home','tree.html':'Family Tree','gallery.html':'Gallery','history.html':'History','facts.html':'Facts','stats.html':'Stats','events.html':'Events','contact.html':'Contact','index.html':'Login','qr.html':'Share','map.html':'Map','polls.html':'Polls','recipes.html':'Recipes','achievements.html':'Achievements','videos.html':'Videos'};
-var PEMOJI={'home.html':'🏠','tree.html':'🌳','gallery.html':'🖼️','history.html':'📜','facts.html':'🌟','stats.html':'📊','events.html':'📆','contact.html':'✉️','index.html':'🔐','qr.html':'📱','map.html':'🗺️','polls.html':'🗳️','recipes.html':'🍛','achievements.html':'🏆','videos.html':'🎥'};
+var PNAMES={'home.html':'Home','tree.html':'Family Tree','gallery.html':'Gallery','history.html':'History','facts.html':'Facts','stats.html':'Stats','events.html':'Events','contact.html':'Contact','index.html':'Login','qr.html':'Share','map.html':'Map','polls.html':'Polls','recipes.html':'Recipes','videos.html':'Videos'};
+var PEMOJI={'home.html':'🏠','tree.html':'🌳','gallery.html':'🖼️','history.html':'📜','facts.html':'🌟','stats.html':'📊','events.html':'📆','contact.html':'✉️','index.html':'🔐','qr.html':'📱','map.html':'🗺️','polls.html':'🗳️','recipes.html':'🍛','videos.html':'🎥'};
 
 document.getElementById('an-filter').addEventListener('change', renderAnalytics);
 document.getElementById('expVisBtn').addEventListener('click',function(){dlCsv([['IP','Country','City','ISP','Device','Browser','Visits','Pages','First','Last']].concat(lda('visitors').map(function(v){return[v.ip,v.country,v.city,v.isp,v.device,v.browser,v.visits,(v.pages||[]).join('|'),v.firstSeen,v.lastSeen];})),'nukala-visitors.csv');toast('Exported!');});
