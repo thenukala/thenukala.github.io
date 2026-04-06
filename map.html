@@ -64,7 +64,6 @@
     <li><a href="map.html">Map</a></li>
     <li><a href="polls.html">Polls</a></li>
     <li><a href="recipes.html">Recipes</a></li>
-    <li><a href="videos.html">Videos</a></li>
     <li><a href="qr.html">QR Code</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
@@ -384,7 +383,7 @@
   if(sw.footerSub){var fs=document.getElementById('footerSub');if(fs)fs.textContent=sw.footerSub;}
   if(sw.footerYear){var fy=document.getElementById('footerYear');if(fy)fy.textContent=sw.footerYear;}
   var nav=load('nukala_navmenu');
-  var DEF=[{href:'home.html',label:'Home'},{href:'tree.html',label:'Family Tree'},{href:'history.html',label:'History'},{href:'gallery.html',label:'Gallery'},{href:'facts.html',label:'Facts'},{href:'stats.html',label:'Stats'},{href:'events.html',label:'Events'},{href:'map.html',label:'Map'},{href:'polls.html',label:'Polls'},{href:'recipes.html',label:'Recipes'},{href:'videos.html',label:'Videos'},{href:'qr.html',label:'QR Code'},{href:'contact.html',label:'Contact'}];
+  var DEF=[{href:'home.html',label:'Home'},{href:'tree.html',label:'Family Tree'},{href:'history.html',label:'History'},{href:'gallery.html',label:'Gallery'},{href:'facts.html',label:'Facts'},{href:'stats.html',label:'Stats'},{href:'events.html',label:'Events'},{href:'map.html',label:'Map'},{href:'polls.html',label:'Polls'},{href:'recipes.html',label:'Recipes'},{href:'qr.html',label:'QR Code'},{href:'contact.html',label:'Contact'}];
   var pages=(nav&&nav.items&&nav.items.length)?nav.items.filter(function(i){return i.active!==false;}):DEF;
   var cur=location.pathname.split('/').pop()||'home.html';
   var ul=document.querySelector('nav .nav-links');

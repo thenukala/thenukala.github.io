@@ -212,7 +212,7 @@
     'gallery.html':'nav_gallery','facts.html':'nav_facts','stats.html':'nav_stats',
     'events.html':'nav_events','map.html':'nav_map','polls.html':'nav_polls',
     'recipes.html':'nav_recipes',
-    'videos.html':'nav_videos','qr.html':'nav_share','contact.html':'nav_contact',
+    'qr.html':'nav_share','contact.html':'nav_contact',
     'join.html':'nav_join','about.html':'nav_about'
   };
 

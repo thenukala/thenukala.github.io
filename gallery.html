@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gallery – Nukala Family Tree</title>
+  <title>Gallery &ndash; Nukala Family</title>
   <link rel="stylesheet" href="shared.css"/>
   <link rel="stylesheet" href="darkmode.css"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -13,72 +13,68 @@
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#5c7a5c"/>
   <link rel="icon" href="favicon.ico"/>
-  <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
-    .filter-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:36px; }
-    .filter-btn { padding:8px 18px; border-radius:20px; border:1.5px solid var(--border); background:white; font-family:'Jost',sans-serif; font-size:.78rem; font-weight:500; letter-spacing:.08em; color:var(--text-mid); cursor:pointer; transition:all .2s; }
-    .filter-btn:hover,.filter-btn.active { background:var(--sage-dark); color:white; border-color:var(--sage-dark); }
-
-    .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
-    .gallery-card { background:var(--warm-white); border:1px solid var(--border); border-radius:16px; overflow:hidden; cursor:pointer; transition:box-shadow .2s, transform .2s; }
-    .gallery-card:hover { box-shadow:0 8px 28px rgba(0,0,0,.1); transform:translateY(-3px); }
-    .gallery-img { width:100%; height:200px; object-fit:cover; display:block; }
-    .gallery-placeholder { width:100%; height:200px; background:linear-gradient(135deg,var(--sage-light),var(--gold-light)); display:flex; align-items:center; justify-content:center; font-size:48px; }
-    .gallery-card-body { padding:16px 18px; }
-    .gallery-card-title { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:600; color:var(--text-dark); margin-bottom:4px; }
-    .gallery-card-meta { font-size:.75rem; color:var(--text-light); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-    .gallery-tag { display:inline-block; background:var(--sage-light); color:var(--sage-dark); font-size:.65rem; font-weight:500; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border-radius:20px; }
-
-    .empty-gallery { text-align:center; padding:80px 20px; color:var(--text-light); }
-    .empty-gallery .ei { font-size:56px; margin-bottom:16px; }
-    .empty-gallery p { font-size:.88rem; line-height:1.7; }
-
+    .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px;}
+    .filter-btn{padding:8px 18px;border-radius:20px;border:1.5px solid var(--border);background:white;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.08em;color:var(--text-mid);cursor:pointer;transition:all .2s;}
+    .filter-btn:hover,.filter-btn.active{background:var(--sage-dark);color:white;border-color:var(--sage-dark);}
+    .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+    .gallery-card{background:var(--warm-white);border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .2s;}
+    .gallery-card:hover{box-shadow:0 8px 28px rgba(0,0,0,.1);transform:translateY(-3px);}
+    .gallery-img{width:100%;height:200px;object-fit:cover;display:block;}
+    .gallery-placeholder{width:100%;height:200px;background:linear-gradient(135deg,var(--sage-light),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:48px;}
+    .gallery-card-body{padding:16px 18px;}
+    .gallery-card-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--text-dark);margin-bottom:4px;}
+    .gallery-card-meta{font-size:.75rem;color:var(--text-light);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .gallery-tag{display:inline-block;background:var(--sage-light);color:var(--sage-dark);font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;}
+    .empty-gallery{text-align:center;padding:80px 20px;color:var(--text-light);}
+    .empty-gallery .ei{font-size:56px;margin-bottom:16px;}
     /* Lightbox */
-    .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(6px); padding:20px; }
-    .lightbox.open { display:flex; }
-    .lb-content { background:white; border-radius:20px; max-width:640px; width:100%; overflow:hidden; animation:fadeUp .3s ease; position:relative; }
-    .lb-img { width:100%; max-height:400px; object-fit:cover; display:block; }
-    .lb-placeholder { width:100%; height:280px; background:linear-gradient(135deg,var(--sage-light),var(--gold-light)); display:flex; align-items:center; justify-content:center; font-size:72px; }
-    .lb-body { padding:24px 28px; }
-    .lb-title { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:400; margin-bottom:8px; }
-    .lb-desc { font-size:.88rem; color:var(--text-mid); line-height:1.7; }
-    .lb-close { position:absolute; top:14px; right:14px; background:rgba(0,0,0,.5); border:none; color:white; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:20px;}
+    .lightbox.open{display:flex;}
+    .lb-content{background:white;border-radius:20px;max-width:640px;width:100%;overflow:hidden;animation:fadeUp .3s ease;position:relative;}
+    .lb-img{width:100%;max-height:400px;object-fit:cover;display:block;}
+    .lb-placeholder{width:100%;height:280px;background:linear-gradient(135deg,var(--sage-light),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:72px;}
+    .lb-body{padding:24px 28px;}
+    .lb-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin-bottom:8px;}
+    .lb-desc{font-size:.88rem;color:var(--text-mid);line-height:1.7;}
+    .lb-close{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.5);border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-  
-    .contribute-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid var(--sage-light,#c8ddc8); border-radius:16px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:36px; flex-wrap:wrap; }
-    .contribute-bar p { font-size:.88rem; color:var(--sage-dark,#5c7a5c); margin:0; line-height:1.5; }
-    .contribute-bar p strong { color:var(--text-dark,#2c2c2c); }
-    .contribute-bar a { display:inline-block; padding:10px 22px; border:1.5px solid var(--sage-dark,#5c7a5c); border-radius:10px; font-size:.78rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--sage-dark,#5c7a5c); text-decoration:none; white-space:nowrap; flex-shrink:0; transition:all .2s; }
-    .contribute-bar a:hover { background:var(--sage-dark,#5c7a5c); color:white; }
-    @media(max-width:600px){ .contribute-bar { flex-direction:column; align-items:flex-start; } .contribute-bar a { width:100%; text-align:center; box-sizing:border-box; } }
-    </style>
-
-    <style>
-      nav .nav-links { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
-      nav .nav-links::-webkit-scrollbar { display: none; }
-      nav .nav-links a { font-size: 0.7rem; white-space: nowrap; }
-    </style>
+    /* Video styles */
+    .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+    .video-card{background:var(--cream,#faf8f4);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+    .video-thumb{position:relative;background:#111;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}
+    .video-thumb-img{width:100%;height:100%;object-fit:cover;display:block;}
+    .video-thumb iframe{width:100%;height:100%;border:none;display:block;}
+    .video-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.3);}
+    .play-btn{width:52px;height:52px;background:rgba(255,255,255,.92);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#222;transition:transform .15s;}
+    .video-play:hover .play-btn{transform:scale(1.1);}
+    .video-body{padding:14px 16px;}
+    .video-title{font-size:.9rem;font-weight:500;color:var(--text-dark);}
+    .video-desc{font-size:.76rem;color:var(--text-light);margin-top:4px;line-height:1.5;}
+    .contribute-bar{background:linear-gradient(135deg,#f0f5f0,#faf8f4);border:1px solid var(--sage-light,#c8ddc8);border-radius:16px;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:36px;flex-wrap:wrap;}
+    .contribute-bar p{font-size:.88rem;color:var(--sage-dark,#5c7a5c);margin:0;line-height:1.5;}
+    .contribute-bar p strong{color:var(--text-dark,#2c2c2c);}
+    .contribute-bar a{display:inline-block;padding:10px 22px;border:1.5px solid var(--sage-dark,#5c7a5c);border-radius:10px;font-size:.78rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--sage-dark,#5c7a5c);text-decoration:none;white-space:nowrap;flex-shrink:0;transition:all .2s;}
+    .contribute-bar a:hover{background:var(--sage-dark,#5c7a5c);color:white;}
+    .video-section-title{font-family:"Cormorant Garamond",serif;font-size:1.15rem;font-weight:400;color:var(--text-dark);margin:0 0 20px;}
+  </style>
 </head>
 <body>
-  <div class="logo-watermark"></div>
-  <script>
-  // Always fetch fresh site-data.js (bypass cache) before page loads
-  try{
-    var _xhr=new XMLHttpRequest();
-    _xhr.open('GET','site-data.js?nocache='+Date.now(),false); // false = synchronous
-    _xhr.send();
-    if(_xhr.status===200) eval(_xhr.responseText);
-  }catch(e){}
+<script>
+  try{var _x=new XMLHttpRequest();_x.open('GET','site-data.js?nocache='+Date.now(),false);_x.send();if(_x.status===200)eval(_x.responseText);}catch(e){}
 </script>
-  <script src="auth.js"></script>
-  <nav>
-    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
+<script src="auth.js"></script>
+<nav>
+    <a class="nav-brand" href="home.html">
+      <img src="logo.png" alt="Logo"/>
+      <span class="nav-site-name" id="navSiteName">NUKALA</span>
+    </a>
         <ul class="nav-links">
       <li><a href="home.html">Home</a></li>
       <li><a href="tree.html">Family Tree</a></li>
       <li><a href="history.html">History</a></li>
-      <li><a href="gallery.html" class="active">Gallery</a></li>
-      <li><a href="facts.html">Facts</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="facts.html" class="active">Facts</a></li>
       <li><a href="stats.html">Stats</a></li>
       <li><a href="events.html">Events</a></li>
       <li><a href="map.html">Map</a></li>
@@ -91,87 +87,90 @@
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
   </nav>
+<main>
+  <div class="page-hero">
+    <p class="eyebrow">Memories</p>
+    <h1>The <em>Nukala</em> Gallery</h1>
+    <div class="hero-divider"></div>
+    <p>A visual archive of cherished moments, celebrations, photos and family videos across the years.</p>
+  </div>
 
-  <main>
-    <div class="page-hero">
-      <p class="eyebrow">Memories</p>
-      <h1>The <em>Nukala</em> Photo Gallery</h1>
-      <div class="hero-divider"></div>
-      <p>A visual archive of cherished moments, celebrations, and faces across the years.</p>
+  <div class="content-area">
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" onclick="filterGallery('all',this)" data-filter-key="all">All Photos</button>
+      <button class="filter-btn" onclick="filterGallery('family',this)" data-filter-key="family">Family</button>
+      <button class="filter-btn" onclick="filterGallery('vintage',this)" data-filter-key="vintage">Vintage</button>
+      <button class="filter-btn" onclick="filterGallery('celebrations',this)" data-filter-key="celebrations">Celebrations</button>
+      <button class="filter-btn" onclick="filterGallery('travel',this)" data-filter-key="travel">Travel</button>
+      <button class="filter-btn" onclick="filterGallery('other',this)" data-filter-key="other">Other</button>
+      <button class="filter-btn" onclick="filterGallery('videos',this)" data-filter-key="videos">&#127909; Videos</button>
     </div>
 
-    <div class="content-area">
-<div class="filter-bar" id="filterBar">
-        <button class="filter-btn active" onclick="filterGallery('all',this)" data-filter-key="filter-all">All Photos</button>
-        <button class="filter-btn" onclick="filterGallery('family',this)" data-filter-key="filter-family">Family</button>
-        <button class="filter-btn" onclick="filterGallery('vintage',this)" data-filter-key="filter-vintage">Vintage</button>
-        <button class="filter-btn" onclick="filterGallery('celebrations',this)" data-filter-key="filter-celebrations">Celebrations</button>
-        <button class="filter-btn" onclick="filterGallery('travel',this)" data-filter-key="filter-travel">Travel</button>
-        <button class="filter-btn" onclick="filterGallery('other',this)" data-filter-key="filter-other">Other</button>
-      </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
 
-      <div class="gallery-grid" id="galleryGrid"></div>
-    </div>
-  
-
-      <div class="contribute-bar fade-in">
-        <p><strong>Have a family photo to share?</strong><br/>Send us your cherished family photos and we'll add them to the archive.</p>
-        <a href="contact.html">+ Share a Photo</a>
-      </div>
-
-    </main>
-
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-    <div class="lb-content">
-      <button class="lb-close" onclick="closeLightbox()">✕</button>
-      <div id="lbImgWrap"></div>
-      <div class="lb-body">
-        <div class="lb-title" id="lbTitle"></div>
-        <div id="lbMeta" style="font-size:.72rem;color:var(--text-light);margin-bottom:8px;"></div>
-        <div class="lb-desc" id="lbDesc"></div>
-      </div>
+    <div id="videoSection" style="display:none;">
+      <div class="video-section-title">&#127909; Family Videos</div>
+      <div class="video-grid" id="videoGrid"></div>
     </div>
   </div>
 
-      
+  <div class="contribute-bar fade-in">
+    <p><strong>Have a family photo or video to share?</strong><br/>Send us cherished photos or a YouTube link and we'll add them to the archive.</p>
+    <a href="contact.html">+ Share a Photo or Video</a>
+  </div>
+</main>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lb-content">
+    <button class="lb-close" onclick="closeLightbox(event)">&#215;</button>
+    <div id="lbImgWrap"></div>
+    <div class="lb-body">
+      <div class="lb-title" id="lbTitle"></div>
+      <div class="gallery-card-meta" id="lbMeta" style="margin-bottom:8px;"></div>
+      <div class="lb-desc" id="lbDesc"></div>
+    </div>
+  </div>
+</div>
+<footer>
+    &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
+  </footer>
+
+<script>
     function loadArr(k){ return JSON.parse(localStorage.getItem(k)||'[]'); }
     function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
 
     let allPhotos = [];
     let currentFilter = 'all';
-
-    const catEmojis = { family:'👨‍👩‍👧‍👦', vintage:'📷', celebrations:'🎉', travel:'🌍', other:'🖼️' };
+    const catEmojis = {family:'&#128106;',vintage:'&#128247;',celebrations:'&#127881;',travel:'&#127757;',other:'&#128444;'};
 
     function initGallery(){
       allPhotos = loadArr('nukala_gallery');
       const s = load('nukala_settings')||{};
-      if(s.familyName) var _ff=document.getElementById('footerText');if(_ff)_ff.textContent=s.familyName?'The '+s.familyName+' Family':'The Nukala Family';
+      const fn = document.getElementById('footerText');
+      if(fn && s.familyName) fn.textContent = 'The '+s.familyName+' Family';
+      const nn = document.getElementById('navSiteName');
+      const hd = load('nukala_home')||{};
+      if(nn) nn.textContent = (hd.navName||s.familyName||'NUKALA').toUpperCase();
       renderGallery();
     }
 
     function renderGallery(){
       const grid = document.getElementById('galleryGrid');
       const filtered = currentFilter==='all' ? allPhotos : allPhotos.filter(p=>p.cat===currentFilter);
-
       if(!filtered.length){
-        grid.innerHTML = `<div class="empty-gallery" style="grid-column:1/-1;">
-          <div class="ei">🖼️</div>
-          <p>${allPhotos.length ? 'No photos in this category.' : 'No photos added yet.'}</p>
-        </div>`;
+        grid.innerHTML = '<div class="empty-gallery" style="grid-column:1/-1;"><div class="ei">&#128444;</div><p>'+
+          (allPhotos.length ? 'No photos in this category.' : 'No photos added yet.')+'</p></div>';
         return;
       }
-
       grid.innerHTML = filtered.map((p,i)=>`
         <div class="gallery-card fade-in" style="animation-delay:${i*0.05}s" onclick="openLightbox(${allPhotos.indexOf(p)})">
           ${p.url
-            ? `<img class="gallery-img" src="${p.url}" alt="${p.title}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
-               <div class="gallery-placeholder" style="display:none;">${catEmojis[p.cat]||'🖼️'}</div>`
-            : `<div class="gallery-placeholder">${catEmojis[p.cat]||'🖼️'}</div>`}
+            ? `<img class="gallery-img" src="${p.url}" alt="${p.title||''}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+               <div class="gallery-placeholder" style="display:none;">${catEmojis[p.cat]||'&#128444;'}</div>`
+            : `<div class="gallery-placeholder">${catEmojis[p.cat]||'&#128444;'}</div>`}
           <div class="gallery-card-body">
-            <div class="gallery-card-title">${p.title}</div>
+            <div class="gallery-card-title">${p.title||''}</div>
             <div class="gallery-card-meta">
               <span class="gallery-tag">${p.cat||'general'}</span>
               ${p.year?`<span>${p.year}</span>`:''}
@@ -181,21 +180,68 @@
         </div>`).join('');
     }
 
+    // ── VIDEO SUPPORT ──
+    function getYTId(url){
+      const m = url ? url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/) : null;
+      return m ? m[1] : null;
+    }
+
+    function renderVideos(){
+      const videos = loadArr('nukala_videos');
+      const grid   = document.getElementById('videoGrid');
+      if(!grid) return;
+      if(!videos.length){
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px 0;color:var(--text-light);"><div style="font-size:48px;margin-bottom:12px;">&#127909;</div><p>No videos added yet.</p></div>';
+        return;
+      }
+      grid.innerHTML = videos.map((v,i)=>{
+        const ytId  = getYTId(v.url);
+        const thumb = ytId
+          ? `<img class="video-thumb-img" src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" alt="${v.title||''}" onerror="this.src=''"/>
+             <div class="video-play" onclick="playVideo(${i},this)"><div class="play-btn">&#9654;</div></div>`
+          : `<div style="display:flex;align-items:center;justify-content:center;height:180px;background:#111;color:white;font-size:40px;">&#127909;</div>`;
+        return `<div class="video-card">
+          <div class="video-thumb" id="vthumb${i}">${thumb}</div>
+          <div class="video-body">
+            <div class="video-title">${v.title||''}</div>
+            ${v.desc?`<div class="video-desc">${v.desc}</div>`:''}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function playVideo(i, el){
+      const v = loadArr('nukala_videos')[i]; if(!v) return;
+      const ytId = getYTId(v.url); if(!ytId) return;
+      el.parentNode.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay;encrypted-media" allowfullscreen></iframe>`;
+    }
+    window.playVideo = playVideo;
+
     function filterGallery(cat, btn){
       currentFilter = cat;
       document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      renderGallery();
+      const galleryGrid  = document.getElementById('galleryGrid');
+      const videoSection = document.getElementById('videoSection');
+      if(cat === 'videos'){
+        galleryGrid.style.display  = 'none';
+        videoSection.style.display = '';
+        renderVideos();
+      } else {
+        galleryGrid.style.display  = '';
+        videoSection.style.display = 'none';
+        renderGallery();
+      }
     }
 
     function openLightbox(idx){
       const p = allPhotos[idx]; if(!p) return;
       document.getElementById('lbImgWrap').innerHTML = p.url
-        ? `<img class="lb-img" src="${p.url}" alt="${p.title}" onerror="this.style.display='none';this.parentNode.innerHTML='<div class=\\'lb-placeholder\\'>${catEmojis[p.cat]||'🖼️'}</div>'"/>`
-        : `<div class="lb-placeholder">${catEmojis[p.cat]||'🖼️'}</div>`;
-      document.getElementById('lbTitle').textContent = p.title;
-      document.getElementById('lbMeta').textContent = [p.cat, p.year].filter(Boolean).join(' · ');
-      document.getElementById('lbDesc').textContent = p.caption||'';
+        ? `<img class="lb-img" src="${p.url}" alt="${p.title||''}" onerror="this.style.display='none';this.parentNode.innerHTML='<div class=\\'lb-placeholder\\'>&#128444;</div>'"/>`
+        : `<div class="lb-placeholder">${catEmojis[p.cat]||'&#128444;'}</div>`;
+      document.getElementById('lbTitle').textContent = p.title||''
+      document.getElementById('lbMeta').textContent  = [p.cat, p.year].filter(Boolean).join(' · ');
+      document.getElementById('lbDesc').textContent  = p.caption||'';
       document.getElementById('lightbox').classList.add('open');
     }
 
@@ -204,14 +250,13 @@
         document.getElementById('lightbox').classList.remove('open');
       }
     }
+    window.closeLightbox = closeLightbox;
 
     initGallery();
-  </script>
-
-
-
+</script>
 
 <script>
+
 (function(){
   function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
 
@@ -407,174 +452,9 @@
   }
 
 })();
+
 </script>
-<script>
-(function(){
-  function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
-
-  // ── THEME ──
-  const theme = load('nukala_theme');
-  if(theme){
-    const r = document.documentElement;
-    if(theme.primary)   r.style.setProperty('--sage-dark', theme.primary);
-    if(theme.secondary) r.style.setProperty('--sage', theme.secondary);
-    if(theme.highlight) r.style.setProperty('--gold', theme.highlight);
-    if(theme.bg)        r.style.setProperty('--cream', theme.bg);
-    if(theme.text)      r.style.setProperty('--text-dark', theme.text);
-    if(theme.fontBody)  document.body.style.fontFamily = theme.fontBody+', sans-serif';
-  }
-
-  // ── TYPOGRAPHY ──
-  const typo = load('nukala_typography');
-  if(typo){
-    const style = document.createElement('style');
-    let css = '';
-    if(typo.heroSize) css += `.page-hero h1, .hero-title { font-size: ${typo.heroSize} !important; }`;
-    if(typo.navSize)  css += `.nav-links a { font-size: ${typo.navSize} !important; }`;
-    if(typo.bodySize) css += `body { font-size: ${typo.bodySize}; }`;
-    if(typo.radius)   css += `.card, .panel, .pcard { border-radius: ${typo.radius} !important; }`;
-    if(typo.maxWidth) css += `.content-area, .page-hero { max-width: ${typo.maxWidth} !important; }`;
-    if(typo.navLS)    css += `.nav-links a { letter-spacing: ${typo.navLS} !important; }`;
-    if(typo.btnRadius)css += `.btn, button.nav-logout { border-radius: ${typo.btnRadius} !important; }`;
-    if(css){ style.textContent = css; document.head.appendChild(style); }
-  }
-
-  // ── SITE WIDE ──
-  const sw = load('nukala_sitewide');
-  const hd = load('nukala_home');
-  const s  = load('nukala_settings');
-  const navName = (sw&&sw.navName) || (hd&&hd.navName) || (s&&s.familyName ? s.familyName.toUpperCase() : 'NUKALA');
-  document.querySelectorAll('.nav-site-name, #navSiteName').forEach(el=>el.textContent=navName);
-  const footerName = s&&s.familyName ? 'The '+s.familyName+' Family' : 'The Nukala Family';
-  document.querySelectorAll('#footerName,#footerFamilyName,#footerText').forEach(el=>el.textContent=footerName);
-  if(sw&&sw.footer){
-    document.querySelectorAll('footer strong').forEach(el=>el.textContent=sw.footer);
-  }
-
-  // ── NAV MENU ──
-  const navMenu = load('nukala_navmenu');
-  if(navMenu && navMenu.items){
-    const activeItems = navMenu.items.filter(i=>i.active!==false);
-    document.querySelectorAll('nav .nav-links').forEach(ul=>{
-      const currentPage = location.pathname.split('/').pop()||'home.html';
-      ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');
-    });
-  }
-
-  // ── NEW PAGES CONTENT ──
-  const np = load('nukala_newpages');
-  const currentPage = location.pathname.split('/').pop()||'home.html';
-  const pageKey = {
-    'events.html':'events','recipes.html':'recipes',
-    'videos.html':'videos','polls.html':'polls','stats.html':'stats',
-    'map.html':'map','facts.html':'facts','history.html':'history',
-    'gallery.html':'gallery','contact.html':'contact','tree.html':'tree'
-  }[currentPage];
-
-  if(np && pageKey && np[pageKey]){
-    const pd = np[pageKey];
-    // Eyebrow
-    const eyeEl = document.querySelector('.page-hero .eyebrow');
-    if(eyeEl && pd.eye) eyeEl.textContent = pd.eye;
-    // Title — rebuild with italic
-    const h1El = document.querySelector('.page-hero h1');
-    if(h1El && pd.title){
-      const em = pd.em || '';
-      if(em && pd.title.includes(em)){
-        h1El.innerHTML = pd.title.replace(em, `<em>${em}</em>`);
-      } else {
-        h1El.textContent = pd.title;
-      }
-    }
-    // Description
-    const descEl = document.querySelector('.page-hero p');
-    if(descEl && pd.desc) descEl.textContent = pd.desc;
-    // History quote
-    if(pageKey==='history' && pd.quote){
-      const q = document.querySelector('.history-intro');
-      if(q) q.textContent = pd.quote;
-    }
-    // Contact extras
-    if(pageKey==='contact'){
-      const h = document.querySelector('.contact-info h2');
-      if(h && pd.heading) h.innerHTML = pd.heading;
-      const p = document.querySelector('.contact-info > p');
-      if(p && pd.para) p.textContent = pd.para;
-    }
-    // Gallery title/desc
-    if(pageKey==='gallery'){
-      const gt = document.getElementById('galPageTitle');
-      const gd = document.getElementById('galPageDesc');
-      if(gt && pd.title) gt.textContent = pd.title;
-      if(gd && pd.desc) gd.textContent = pd.desc;
-    }
-  }
-
-  // ── HERO IMAGE ──
-  const hero = load('nukala_heropage');
-  if(hero && hero.homeImgUrl && currentPage==='home.html'){
-    const banner = document.querySelector('.hero-banner');
-    if(banner){
-      banner.style.backgroundImage = `url('${hero.homeImgUrl}')`;
-      banner.style.backgroundSize = 'cover';
-      banner.style.backgroundPosition = 'center';
-    }
-  }
-  // Per-page hero settings
-  if(hero){
-    const heroPageMap={'tree.html':0,'history.html':1,'gallery.html':2,'facts.html':3,'contact.html':4};
-    const heroIdx = heroPageMap[currentPage];
-    if(heroIdx !== undefined && hero['page'+heroIdx]){
-      const hpd = hero['page'+heroIdx];
-      const eyeEl = document.querySelector('.page-hero .eyebrow');
-      const h1El = document.querySelector('.page-hero h1');
-      const descEl = document.querySelector('.page-hero p');
-      // Only override if np didn't already set (np takes priority)
-      if(eyeEl && hpd.eye && !(np&&pageKey&&np[pageKey]&&np[pageKey].eye)) eyeEl.textContent = hpd.eye;
-      if(h1El && hpd.title && !(np&&pageKey&&np[pageKey]&&np[pageKey].title)) h1El.innerHTML = hpd.title;
-      if(descEl && hpd.desc && !(np&&pageKey&&np[pageKey]&&np[pageKey].desc)) descEl.textContent = hpd.desc;
-    }
-  }
-
-  // ── GALLERY FILTER CATEGORIES ──
-  const gp = load('nukala_gallerypage2');
-  if(gp && gp.cats && currentPage==='gallery.html'){
-    const filterBar = document.getElementById('filterBar');
-    if(filterBar){
-      filterBar.innerHTML = '<button class="filter-btn active" onclick="filterGallery(\'all\',this)">All Photos</button>' +
-        gp.cats.map(c=>`<button class="filter-btn" onclick="filterGallery('${c}',this)">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
-    }
-  }
-
-  // ── CONTACT DROPDOWN ──
-  const cp = load('nukala_contactpage2');
-  if(cp && cp.dropdownOpts && currentPage==='contact.html'){
-    const sel = document.getElementById('subject');
-    if(sel) sel.innerHTML = '<option value="">— Select a reason —</option>'+cp.dropdownOpts.map(o=>`<option>${o}</option>`).join('');
-  }
-  if(cp && cp.contactWays && currentPage==='contact.html'){
-    const cw = document.getElementById('contactWays');
-    if(cw) cw.innerHTML = cp.contactWays.map(w=>`<div class="contact-way"><div class="contact-way-icon">${w.icon}</div><div><div class="contact-way-title">${w.title}</div><div class="contact-way-desc">${w.desc}</div></div></div>`).join('');
-  }
-
-  // ── HOME QUICK CARDS ──
-  const hp2 = load('nukala_homepage2');
-  if(hp2 && hp2.quickCards && currentPage==='home.html'){
-    const qn = document.getElementById('quickNavCards');
-    if(qn) qn.innerHTML = hp2.quickCards.map(c=>`<a class="quick-card fade-in" href="${c.link}"><div class="quick-card-icon">${c.icon}</div><div class="quick-card-title">${c.title}</div><div class="quick-card-desc">${c.desc}</div><div class="quick-card-arrow">${c.arrow}</div></a>`).join('');
-  }
-  if(hp2 && hp2.updates && hp2.updates.length && currentPage==='home.html'){
-    const ul = document.getElementById('recentUpdatesList');
-    if(ul) ul.innerHTML = hp2.updates.map(u=>`<div class="update-item"><div class="update-dot"></div><div><div class="update-title">${u.title}</div><div class="update-date">${u.date||''}</div></div></div>`).join('');
-  }
-
-})();
-</script>
-  <script src="nukala.js"></script>
-  <script src="lang.js"></script>
-
-  <footer>
-    &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
-  </footer>
+<script src="nukala.js"></script>
+<script src="lang.js"></script>
 </body>
 </html>
