@@ -88,16 +88,21 @@
 
     /* Branch styles — organic curved paths */
     .branch-main {
-      stroke: #8aab8a; stroke-width: 3; fill: none;
+      stroke: var(--tc-main, #8aab8a); stroke-width: 3; fill: none;
       stroke-linecap: round; filter: drop-shadow(0 2px 4px rgba(92,122,92,0.15));
     }
     .branch-spouse {
-      stroke: #c9a84c; stroke-width: 2; fill: none;
+      stroke: var(--tc-spouse, #c9a84c); stroke-width: 2; fill: none;
       stroke-dasharray: 8,4; stroke-linecap: round; opacity: 0.8;
     }
     .branch-inlaw {
-      stroke: #b090d0; stroke-width: 1.5; fill: none;
+      stroke: var(--tc-female-branch, #c06090); stroke-width: 1.5; fill: none;
       stroke-dasharray: 4,4; stroke-linecap: round; opacity: 0.7;
+    }
+    /* Female branch — Nukala daughter married out */
+    .branch-female {
+      stroke: var(--tc-female-branch, #c06090); stroke-width: 2.5; fill: none;
+      stroke-dasharray: 10,5; stroke-linecap: round; opacity: 0.85;
     }
 
     /* Animated branch drawing */
@@ -162,15 +167,14 @@
     /* Card type variants */
     .pcard.ancestor {
       background: rgba(255,253,247,0.97);
-      border-color: rgba(201,168,76,0.4);
+      border-color: var(--tc-ancestor-border, rgba(201,168,76,0.4));
       box-shadow: 0 4px 16px rgba(201,168,76,0.1), 0 1px 4px rgba(0,0,0,0.04);
     }
     .pcard.ancestor:hover {
-      box-shadow: 0 16px 40px rgba(201,168,76,0.25), 0 4px 12px rgba(201,168,76,0.15);
-      border-color: rgba(201,168,76,0.7);
+      border-color: var(--tc-ancestor, rgba(201,168,76,0.7));
     }
-    .pcard.female { border-color: rgba(208,192,240,0.5); }
-    .pcard.female:hover { border-color: rgba(176,144,208,0.7); box-shadow: 0 16px 40px rgba(176,144,208,0.2); }
+    .pcard.female { border-color: var(--tc-female-border, rgba(208,192,240,0.5)); }
+    .pcard.female:hover { border-color: var(--tc-female, rgba(176,144,208,0.7)); box-shadow: 0 16px 40px rgba(176,144,208,0.2); }
     .pcard.deceased { opacity: 0.65; }
     .pcard.inlaw { border-color: rgba(208,192,240,0.4); background: rgba(253,248,255,0.97); }
     .pcard.selected {
@@ -190,9 +194,8 @@
       background: linear-gradient(135deg, var(--sage), var(--gold));
       z-index: 0;
     }
-    .pcard.female .pc-ring::before { background: linear-gradient(135deg, #d0a0e0, #9060b0); }
-    .pcard.ancestor .pc-ring::before { background: linear-gradient(135deg, var(--gold), #a07020); }
-    .pcard.inlaw .pc-ring::before { background: linear-gradient(135deg, #c0a0e0, #7050a0); }
+    .pcard.female .pc-ring::before { background: linear-gradient(135deg, var(--tc-female, #d0a0e0), var(--tc-female-dark, #9060b0)); }
+    .pcard.ancestor .pc-ring::before { background: linear-gradient(135deg, var(--tc-ancestor, #c9a84c), var(--tc-ancestor-dark, #a07020)); }
     .pcard.deceased .pc-ring::before { background: linear-gradient(135deg, #aaa, #888); }
 
     .pc-photo {
@@ -394,12 +397,12 @@
 <!-- Legend pill -->
       <div class="tree-legend">
         <span class="lg-title">Key</span>
-        <div class="lg-item"><div class="lg-dot" style="background:#fffdf7;border-color:#c9a84c;"></div>Ancestor</div>
-        <div class="lg-item"><div class="lg-dot" style="background:white;border-color:#8aab8a;"></div>Male</div>
-        <div class="lg-item"><div class="lg-dot" style="background:white;border-color:#d0c0f0;"></div>Female</div>
-        <div class="lg-item"><div class="lg-dot" style="background:#fdf8ff;border-color:#b090d0;"></div>In-law</div>
-        <div class="lg-item"><div class="lg-line" style="background:#8aab8a;"></div>Parent–Child</div>
-        <div class="lg-item"><div class="lg-dashed" style="border-color:#c9a84c;"></div>Spouse 💛</div>
+        <div class="lg-item"><div class="lg-dot" data-key="ancestor" style="background:#fffdf7;border-color:#c9a84c;"></div>Ancestor</div>
+        <div class="lg-item"><div class="lg-dot" data-key="male" style="background:white;border-color:#8aab8a;"></div>Male</div>
+        <div class="lg-item"><div class="lg-dot" data-key="female" style="background:white;border-color:#d0c0f0;"></div>Female</div>
+        <div class="lg-item"><div class="lg-line" data-key="main" style="background:#8aab8a;"></div>Parent–Child</div>
+        <div class="lg-item"><div class="lg-dashed" data-key="spouse" style="border-color:#c9a84c;"></div>Spouse &#128155;</div>
+        <div class="lg-item"><div class="lg-dashed" data-key="female-branch" style="border-color:#c06090;"></div>Female Branch &#128144;</div>
         <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
           <button class="tb-btn" onclick="toggleLines()" id="btnLines" style="padding:6px 12px;border-radius:20px;">🌿 Lines On</button>
         </div>
@@ -574,7 +577,9 @@
               const path=document.createElementNS('http://www.w3.org/2000/svg','path');
               const wobble=(Math.random()-0.5)*20;
               path.setAttribute('d',`M${pcx},${pcy} C${pcx+wobble},${midY-20} ${cx-wobble},${midY+20} ${cx},${pos.y}`);
-              path.setAttribute('class','branch-main branch-animated');
+              // In-law members get rose branch line; Nukala bloodline stays green
+              const lineClass = m.inlaw ? 'branch-female branch-animated' : 'branch-main branch-animated';
+              path.setAttribute('class', lineClass);
               path.style.animationDelay = (delay*0.1)+'s';
               svg.appendChild(path);
               // Node dot at junction
@@ -596,16 +601,18 @@
               const line=document.createElementNS('http://www.w3.org/2000/svg','line');
               const x1=pos.x+CW, y1=pos.y+CH/2;
               const x2=sp.x, y2=spcy;
+              // Female Nukala member marrying out → rose line; standard spouse → gold dashed
+              const isFemBranch = m.female && !m.inlaw;
               line.setAttribute('x1',x1); line.setAttribute('y1',y1);
               line.setAttribute('x2',x2); line.setAttribute('y2',y2);
-              line.setAttribute('class','branch-spouse');
+              line.setAttribute('class', isFemBranch ? 'branch-female' : 'branch-spouse');
               svg.appendChild(line);
-              // Floating heart
+              // Floating heart — rose for female branch, gold for standard spouse
               const heartX=(x1+x2)/2, heartY=(y1+y2)/2;
               const heart=document.createElement('div');
               heart.className='spouse-heart';
               heart.style.left=(heartX-10)+'px'; heart.style.top=(heartY-10)+'px';
-              heart.textContent='💛';
+              heart.textContent= isFemBranch ? '🌸' : '💛';
               cardsLayer.appendChild(heart);
             }
           }
@@ -633,7 +640,7 @@
         const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
         const shortName=name.length>18?name.substring(0,16)+'…':name;
         const dates=m.born?(m.born+(m.died?'–'+m.died:'')):'';
-        const classes=['pcard',m.female?'female':'',m.ancestor?'ancestor':'',m.deceased?'deceased':'',m.inlaw?'inlaw':'',m.id===selectedId?'selected':''].filter(Boolean).join(' ');
+        const classes=['pcard',m.female?'female':'',m.ancestor?'ancestor':'',m.deceased?'deceased':'',m.id===selectedId?'selected':''].filter(Boolean).join(' ');
 
         const card=document.createElement('div');
         card.className=classes;
@@ -761,301 +768,52 @@
     vp.addEventListener('touchstart',e=>{ if(e.touches.length===2) lastTD=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); });
     vp.addEventListener('touchmove',e=>{ if(e.touches.length===2){ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); if(d>lastTD+5) zoomIn(); else if(d<lastTD-5) zoomOut(); lastTD=d; }});
 
-    renderTree();
-
-    // Show download button if admin enabled it in Settings
-    (function(){
+    // ── Apply admin tree colour settings ──
+    (function applyTreeColours(){
       try{
-        var s = JSON.parse(localStorage.getItem('nukala_settings')||'{}');
-        if(s.showTreeDownload){
-          var b = document.getElementById('btnDownloadTree');
-          if(b) b.style.display = '';
-        }
+        var tc = JSON.parse(localStorage.getItem('nukala_tree_colours')||'{}');
+        var r = document.documentElement;
+        if(tc.ancestor)      { r.style.setProperty('--tc-ancestor',      tc.ancestor);
+                               r.style.setProperty('--tc-ancestor-dark', shadeColour(tc.ancestor,-30));
+                               r.style.setProperty('--tc-ancestor-border', hexToRgba(tc.ancestor,0.4)); }
+        if(tc.male)          { r.style.setProperty('--tc-male',          tc.male); }
+        if(tc.female)        { r.style.setProperty('--tc-female',        tc.female);
+                               r.style.setProperty('--tc-female-dark',   shadeColour(tc.female,-30));
+                               r.style.setProperty('--tc-female-border', hexToRgba(tc.female,0.45)); }
+        if(tc.mainLine)      { r.style.setProperty('--tc-main',          tc.mainLine); }
+        if(tc.spouseLine)    { r.style.setProperty('--tc-spouse',        tc.spouseLine); }
+        if(tc.femaleBranch)  { r.style.setProperty('--tc-female-branch', tc.femaleBranch); }
       }catch(e){}
     })();
 
-    // Auto-trigger download if opened from admin panel (?download=png or ?download=pdf)
-    (function(){
-      var params = new URLSearchParams(window.location.search);
-      var fmt = params.get('download');
-      if(fmt==='png'||fmt==='pdf'){
-        setTimeout(function(){ downloadTree(fmt); }, 2500);
-      }
+    function shadeColour(hex, pct){
+      var n=parseInt(hex.slice(1),16),r=Math.min(255,Math.max(0,(n>>16)+pct)),
+          g=Math.min(255,Math.max(0,((n>>8)&0xff)+pct)),
+          b=Math.min(255,Math.max(0,(n&0xff)+pct));
+      return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+    }
+    function hexToRgba(hex,a){
+      var n=parseInt(hex.slice(1),16);
+      return `rgba(${n>>16},${(n>>8)&0xff},${n&0xff},${a})`;
+    }
+
+    // ── Update key bar dots/lines to reflect current colours ──
+    (function updateKeyBar(){
+      try{
+        var tc = JSON.parse(localStorage.getItem('nukala_tree_colours')||'{}');
+        var ancestorDot = document.querySelector('.lg-dot[data-key="ancestor"]');
+        var maleDot     = document.querySelector('.lg-dot[data-key="male"]');
+        var femaleDot   = document.querySelector('.lg-dot[data-key="female"]');
+        var mainLine    = document.querySelector('.lg-line[data-key="main"]');
+        var spouseLine  = document.querySelector('.lg-dashed[data-key="spouse"]');
+        var femaleLine  = document.querySelector('.lg-dashed[data-key="female-branch"]');
+        if(ancestorDot && tc.ancestor)     ancestorDot.style.borderColor = tc.ancestor;
+        if(maleDot && tc.male)             maleDot.style.borderColor     = tc.male;
+        if(femaleDot && tc.female)         femaleDot.style.borderColor   = tc.female;
+        if(mainLine && tc.mainLine)        mainLine.style.background      = tc.mainLine;
+        if(spouseLine && tc.spouseLine)    spouseLine.style.borderColor   = tc.spouseLine;
+        if(femaleLine && tc.femaleBranch)  femaleLine.style.borderColor   = tc.femaleBranch;
+      }catch(e){}
     })();
-  </script>
 
-<script>
-(function(){
-  function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
-
-  // ── THEME ──
-  const theme = load('nukala_theme');
-  if(theme){
-    const r = document.documentElement;
-    if(theme.primary)   r.style.setProperty('--sage-dark', theme.primary);
-    if(theme.secondary) r.style.setProperty('--sage', theme.secondary);
-    if(theme.highlight) r.style.setProperty('--gold', theme.highlight);
-    if(theme.bg)        r.style.setProperty('--cream', theme.bg);
-    if(theme.text)      r.style.setProperty('--text-dark', theme.text);
-    if(theme.fontBody)  document.body.style.fontFamily = theme.fontBody+', sans-serif';
-    if(theme.fontSize)  document.body.style.fontSize = theme.fontSize;
-    if(theme.fontScale && theme.fontScale !== '1.0'){
-      const scale = parseFloat(theme.fontScale)||1;
-      document.querySelectorAll('h1,h2,h3,.hero-title,.sh').forEach(function(el){
-        const curr = parseFloat(getComputedStyle(el).fontSize)||16;
-        el.style.fontSize = (curr * scale) + 'px';
-      });
-    }
-    if(theme.siteBackground){
-      document.body.style.background = theme.siteBackground;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundAttachment = 'fixed';
-      document.documentElement.style.setProperty('--cream', 'transparent');
-    }
-  }
-
-  // ── TYPOGRAPHY ──
-  const typo = load('nukala_typography');
-  if(typo){
-    const style = document.createElement('style');
-    let css = '';
-    if(typo.heroSize) css += `.page-hero h1, .hero-title { font-size: ${typo.heroSize} !important; }`;
-    if(typo.navSize)  css += `.nav-links a { font-size: ${typo.navSize} !important; }`;
-    if(typo.bodySize) css += `body { font-size: ${typo.bodySize}; }`;
-    if(typo.radius)   css += `.card, .panel, .pcard { border-radius: ${typo.radius} !important; }`;
-    if(typo.maxWidth) css += `.content-area, .page-hero { max-width: ${typo.maxWidth} !important; }`;
-    if(typo.navLS)    css += `.nav-links a { letter-spacing: ${typo.navLS} !important; }`;
-    if(typo.btnRadius)css += `.btn, button.nav-logout { border-radius: ${typo.btnRadius} !important; }`;
-    if(css){ style.textContent = css; document.head.appendChild(style); }
-  }
-
-  // ── SITE WIDE ──
-  const sw = load('nukala_sitewide');
-  const hd = load('nukala_home');
-  const s  = load('nukala_settings');
-  const navName = (sw&&sw.navName) || (hd&&hd.navName) || (s&&s.familyName ? s.familyName.toUpperCase() : 'NUKALA');
-  document.querySelectorAll('.nav-site-name, #navSiteName').forEach(el=>el.textContent=navName);
-  const footerName = s&&s.familyName ? 'The '+s.familyName+' Family' : 'The Nukala Family';
-  document.querySelectorAll('#footerName,#footerFamilyName,#footerText').forEach(el=>el.textContent=footerName);
-  if(sw&&sw.footer){
-    document.querySelectorAll('footer strong').forEach(el=>el.textContent=sw.footer);
-  }
-
-  // ── NAV MENU ──
-  const navMenu = load('nukala_navmenu');
-  if(navMenu && navMenu.items){
-    const activeItems = navMenu.items.filter(i=>i.active!==false);
-    document.querySelectorAll('nav .nav-links').forEach(ul=>{
-      const currentPage = location.pathname.split('/').pop()||'home.html';
-      ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');
-      // Always ensure Join Tree appears in nav
-      if(!ul.querySelector('a[href="join.html"]')){
-        const li=document.createElement('li');
-        li.innerHTML=`<a href="join.html" ${currentPage==='join.html'?'class="active"':''}>Join Tree</a>`;
-        ul.appendChild(li);
-      }
-      if(!ul.querySelector('a[href="about.html"]')){
-        const li2=document.createElement('li');
-        li2.innerHTML=`<a href="about.html" ${currentPage==='about.html'?'class="active"':''}>About</a>`;
-        ul.appendChild(li2);
-      }
-    });
-  } else {
-    // No navmenu saved yet — ensure Join Tree still appears
-    document.querySelectorAll('nav .nav-links').forEach(ul=>{
-      const currentPage = location.pathname.split('/').pop()||'home.html';
-      if(!ul.querySelector('a[href="join.html"]')){
-        const li=document.createElement('li');
-        li.innerHTML=`<a href="join.html" ${currentPage==='join.html'?'class="active"':''}>Join Tree</a>`;
-        ul.appendChild(li);
-      }
-    });
-  }
-
-  // ── NEW PAGES CONTENT ──
-  const np = load('nukala_newpages');
-  const currentPage = location.pathname.split('/').pop()||'home.html';
-  const pageKey = {
-    'events.html':'events','recipes.html':'recipes',
-    'polls.html':'polls','stats.html':'stats',
-    'map.html':'map','facts.html':'facts','history.html':'history',
-    'gallery.html':'gallery','contact.html':'contact','tree.html':'tree'
-  }[currentPage];
-
-  if(np && pageKey && np[pageKey]){
-    const pd = np[pageKey];
-    // Eyebrow
-    const eyeEl = document.querySelector('.page-hero .eyebrow');
-    if(eyeEl && pd.eye) eyeEl.textContent = pd.eye;
-    // Title — rebuild with italic
-    const h1El = document.querySelector('.page-hero h1');
-    if(h1El && pd.title){
-      const em = pd.em || '';
-      if(em && pd.title.includes(em)){
-        h1El.innerHTML = pd.title.replace(em, `<em>${em}</em>`);
-      } else {
-        h1El.textContent = pd.title;
-      }
-    }
-    // Description
-    const descEl = document.querySelector('.page-hero p');
-    if(descEl && pd.desc) descEl.textContent = pd.desc;
-    // History quote
-    if(pageKey==='history' && pd.quote){
-      const q = document.querySelector('.history-intro');
-      if(q) q.textContent = pd.quote;
-    }
-    // Contact extras
-    if(pageKey==='contact'){
-      const h = document.querySelector('.contact-info h2');
-      if(h && pd.heading) h.innerHTML = pd.heading;
-      const p = document.querySelector('.contact-info > p');
-      if(p && pd.para) p.textContent = pd.para;
-    }
-    // Gallery title/desc
-    if(pageKey==='gallery'){
-      const gt = document.getElementById('galPageTitle');
-      const gd = document.getElementById('galPageDesc');
-      if(gt && pd.title) gt.textContent = pd.title;
-      if(gd && pd.desc) gd.textContent = pd.desc;
-    }
-  }
-
-  // ── HERO IMAGE ──
-  const hero = load('nukala_heropage');
-  if(hero && hero.homeImgUrl && currentPage==='home.html'){
-    const banner = document.querySelector('.hero-banner');
-    if(banner){
-      banner.style.backgroundImage = `url('${hero.homeImgUrl}')`;
-      banner.style.backgroundSize = 'cover';
-      banner.style.backgroundPosition = 'center';
-    }
-  }
-  // Per-page hero settings
-  if(hero){
-    const heroPageMap={'tree.html':0,'history.html':1,'gallery.html':2,'facts.html':3,'contact.html':4};
-    const heroIdx = heroPageMap[currentPage];
-    if(heroIdx !== undefined && hero['page'+heroIdx]){
-      const hpd = hero['page'+heroIdx];
-      const eyeEl = document.querySelector('.page-hero .eyebrow');
-      const h1El = document.querySelector('.page-hero h1');
-      const descEl = document.querySelector('.page-hero p');
-      // Only override if np didn't already set (np takes priority)
-      if(eyeEl && hpd.eye && !(np&&pageKey&&np[pageKey]&&np[pageKey].eye)) eyeEl.textContent = hpd.eye;
-      if(h1El && hpd.title && !(np&&pageKey&&np[pageKey]&&np[pageKey].title)) h1El.innerHTML = hpd.title;
-      if(descEl && hpd.desc && !(np&&pageKey&&np[pageKey]&&np[pageKey].desc)) descEl.textContent = hpd.desc;
-    }
-  }
-
-  // ── GALLERY FILTER CATEGORIES ──
-  const gp = load('nukala_gallerypage2');
-  if(gp && gp.cats && currentPage==='gallery.html'){
-    const filterBar = document.getElementById('filterBar');
-    if(filterBar){
-      filterBar.innerHTML = '<button class="filter-btn active" onclick="filterGallery(\'all\',this)">All Photos</button>' +
-        gp.cats.map(c=>`<button class="filter-btn" onclick="filterGallery('${c}',this)">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
-    }
-  }
-
-  // ── CONTACT DROPDOWN ──
-  const cp = load('nukala_contactpage2');
-  if(cp && cp.dropdownOpts && currentPage==='contact.html'){
-    const sel = document.getElementById('subject');
-    if(sel) sel.innerHTML = '<option value="">— Select a reason —</option>'+cp.dropdownOpts.map(o=>`<option>${o}</option>`).join('');
-  }
-  if(cp && cp.contactWays && currentPage==='contact.html'){
-    const cw = document.getElementById('contactWays');
-    if(cw) cw.innerHTML = cp.contactWays.map(w=>`<div class="contact-way"><div class="contact-way-icon">${w.icon}</div><div><div class="contact-way-title">${w.title}</div><div class="contact-way-desc">${w.desc}</div></div></div>`).join('');
-  }
-
-  // ── HOME QUICK CARDS ──
-  const hp2 = load('nukala_homepage2');
-  if(hp2 && hp2.quickCards && currentPage==='home.html'){
-    const qn = document.getElementById('quickNavCards');
-    if(qn) qn.innerHTML = hp2.quickCards.map(c=>`<a class="quick-card fade-in" href="${c.link}"><div class="quick-card-icon">${c.icon}</div><div class="quick-card-title">${c.title}</div><div class="quick-card-desc">${c.desc}</div><div class="quick-card-arrow">${c.arrow}</div></a>`).join('');
-  }
-  if(hp2 && hp2.updates && hp2.updates.length && currentPage==='home.html'){
-    const ul = document.getElementById('recentUpdatesList');
-    if(ul) ul.innerHTML = hp2.updates.map(u=>`<div class="update-item"><div class="update-dot"></div><div><div class="update-title">${u.title}</div><div class="update-date">${u.date||''}</div></div></div>`).join('');
-  }
-
-})();
-</script>
-  <script src="nukala.js"></script>
-  <script src="lang.js"></script>
-<script>
-  (function(){
-    var sw = JSON.parse(localStorage.getItem('nukala_sitewide')||'null')||{};
-    if(sw.treeQuote){var q=document.getElementById('treeQuote');if(q)q.textContent=sw.treeQuote;}
-    if(sw.treeQuoteAuthor){var qa=document.getElementById('treeQuoteAuthor');if(qa)qa.textContent='— '+sw.treeQuoteAuthor;}
-  })();
-</script>
-  <footer>
-    &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
-  </footer>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-  function downloadTree(format){
-    format = format || 'png';
-    var btn = document.getElementById('btnDownloadTree');
-    if(btn){ btn.textContent = '⏳ Capturing...'; btn.disabled = true; }
-
-    var canvas = document.getElementById('treeCanvas');
-    var vp     = document.getElementById('treeVp');
-
-    var prevTransform = canvas.style.transform;
-    canvas.style.transform = 'scale(1)';
-    var prevScroll = [vp.scrollLeft, vp.scrollTop];
-    vp.scrollLeft = 0; vp.scrollTop = 0;
-
-    var fullW = canvas.scrollWidth;
-    var fullH = canvas.scrollHeight;
-
-    html2canvas(canvas, {
-      backgroundColor: '#fdfaf4',
-      scale: 1.5,
-      width: fullW,
-      height: fullH,
-      scrollX: 0,
-      scrollY: 0,
-      useCORS: true,
-      logging: false
-    }).then(function(cvs){
-      canvas.style.transform = prevTransform;
-      vp.scrollLeft = prevScroll[0];
-      vp.scrollTop  = prevScroll[1];
-      if(btn){ btn.textContent = '📥 Download Image'; btn.disabled = false; }
-
-      var settings = {};
-      try{ settings = JSON.parse(localStorage.getItem('nukala_settings')||'{}'); }catch(e){}
-      var familyName = settings.familyName || 'Nukala';
-      var link = document.createElement('a');
-
-      if(format === 'pdf'){
-        var imgData = cvs.toDataURL('image/png');
-        var { jsPDF } = window.jspdf;
-        var orientation = fullW > fullH ? 'landscape' : 'portrait';
-        var pdf = new jsPDF({ orientation: orientation, unit: 'px', format: [fullW*0.75, fullH*0.75] });
-        pdf.addImage(imgData, 'PNG', 0, 0, fullW*0.75, fullH*0.75);
-        pdf.save(familyName+'-Family-Tree.pdf');
-      } else {
-        link.download = familyName+'-Family-Tree.png';
-        link.href = cvs.toDataURL('image/png');
-        link.click();
-      }
-
-      // If opened via admin download button, close tab after download
-      if(window.location.search.includes('download=')){
-        setTimeout(function(){ window.close(); }, 1000);
-      }
-    }).catch(function(){
-      canvas.style.transform = prevTransform;
-      if(btn){ btn.textContent = '📥 Download Image'; btn.disabled = false; }
-      alert('Capture failed. Try Fit to Screen first, then try again.');
-    });
-  }
-  </script>
-</body>
-</html>
+    renderTree();

@@ -82,7 +82,7 @@ var PAGE_LOADERS = {
   recipes:renderRecs, polls:renderPolls,
   stats:loadStatsAdmin, map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,
   contacts:renderContacts, announce:renderAnn,
-  pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme');}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
+  pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme'); if(document.querySelector('.ptb[data-tab="tree"]')) loadTreeColours();}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
 
 document.querySelectorAll('.ni[data-page]').forEach(function(btn){
@@ -1241,6 +1241,49 @@ document.getElementById('saveCustomStatsBtn').addEventListener('click', function
   log('Custom stats saved');
   toast('✅ Custom stats saved! Publish to Site to apply.');
   renderCustomStatsList();
+});
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// TREE COLOURS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var TREE_COLOUR_DEFAULTS = {
+  ancestor:     '#c9a84c',
+  male:         '#8aab8a',
+  female:       '#9060b0',
+  mainLine:     '#8aab8a',
+  spouseLine:   '#c9a84c',
+  femaleBranch: '#c06090'
+};
+
+function loadTreeColours(){
+  var tc = ldRaw('nukala_tree_colours') || {};
+  Object.keys(TREE_COLOUR_DEFAULTS).forEach(function(k){
+    var el = document.getElementById('tc-'+k);
+    if(el) el.value = tc[k] || TREE_COLOUR_DEFAULTS[k];
+  });
+}
+
+document.getElementById('saveTreeColoursBtn').addEventListener('click', function(){
+  var tc = {};
+  Object.keys(TREE_COLOUR_DEFAULTS).forEach(function(k){
+    var el = document.getElementById('tc-'+k);
+    if(el) tc[k] = el.value;
+  });
+  svRaw('nukala_tree_colours', tc);
+  log('Tree colours saved');
+  toast('\u2705 Tree colours saved! Publish to Site to apply.');
+});
+
+document.getElementById('resetTreeColoursBtn').addEventListener('click', function(){
+  svRaw('nukala_tree_colours', TREE_COLOUR_DEFAULTS);
+  loadTreeColours();
+  toast('\u2705 Reset to default colours! Publish to Site to apply.');
+});
+
+// Also hook into the ptb click for the tree tab
+document.querySelectorAll('.ptb[data-tab="tree"]').forEach(function(btn){
+  btn.addEventListener('click', loadTreeColours);
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
