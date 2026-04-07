@@ -80,7 +80,7 @@ var PAGE_LOADERS = {
   dash:renderDash, members:renderMembers, history:renderHist,
   gallery:renderGal, facts:renderFacts, events:renderEvts,
   recipes:renderRecs, polls:renderPolls,
-  stats:function(){},  map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,
+  stats:loadStatsAdmin, map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,
   contacts:renderContacts, announce:renderAnn,
   pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme');}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
@@ -1158,6 +1158,89 @@ document.getElementById('saveMapColoursBtn').addEventListener('click', function(
   log('Map marker categories saved');
   toast('&#x2705; Marker settings saved! Publish to Site to apply.');
   renderMapCatList();
+});
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// STATS PAGE ADMIN CONTROLS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var STAT_VIS_KEYS = ['total','gens','living','bybirth','families','female','male','photos','cities','genchart','connfamilies','locations','insights'];
+
+function loadStatsAdmin(){
+  // Load saved visibility
+  var sv = ldRaw('nukala_stats_vis')||{};
+  STAT_VIS_KEYS.forEach(function(k){
+    var el = document.getElementById('stv-'+k);
+    if(el) el.checked = sv[k] !== false;
+  });
+  // Load custom stats
+  renderCustomStatsList();
+}
+
+document.getElementById('saveStatsVisBtn').addEventListener('click', function(){
+  var sv = {};
+  STAT_VIS_KEYS.forEach(function(k){
+    var el = document.getElementById('stv-'+k);
+    sv[k] = el ? el.checked : true;
+  });
+  svRaw('nukala_stats_vis', sv);
+  log('Stats visibility saved');
+  toast('✅ Stats visibility saved! Publish to Site to apply.');
+});
+
+// Custom stats
+function renderCustomStatsList(){
+  var customs = ldRaw('nukala_custom_stats')||[];
+  var el = document.getElementById('customStatsList');
+  if(!el) return;
+  if(!customs.length){
+    el.innerHTML = '<div style="font-size:.78rem;color:var(--tl);padding:8px 0;">No custom stats yet. Click + Add Custom Stat below.</div>';
+    return;
+  }
+  el.innerHTML = customs.map(function(cs, i){
+    return '<div style="display:flex;gap:8px;align-items:center;padding:8px;background:var(--cream);border:1px solid var(--b);border-radius:10px;">'
+      +'<div style="font-size:1.2rem;width:30px;text-align:center;flex-shrink:0;">'
+        +'<input type="text" class="fi cs-icon" data-idx="'+i+'" value="'+(cs.icon||'📊')+'" style="width:36px;text-align:center;font-size:1.1rem;padding:4px;"/>'
+      +'</div>'
+      +'<input type="text" class="fi cs-label" data-idx="'+i+'" value="'+(cs.label||'')+'" placeholder="Label e.g. Years of Legacy" style="flex:1;"/>'
+      +'<input type="text" class="fi cs-value" data-idx="'+i+'" value="'+(cs.value||'')+'" placeholder="Value e.g. 100" style="width:80px;"/>'
+      +'<button class="btn bo bsm cs-del" data-idx="'+i+'" style="color:#c00;border-color:#c00;flex-shrink:0;">✕</button>'
+      +'</div>';
+  }).join('');
+  // Delete handlers
+  el.querySelectorAll('.cs-del').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var idx = parseInt(this.getAttribute('data-idx'));
+      var customs = ldRaw('nukala_custom_stats')||[];
+      customs.splice(idx, 1);
+      svRaw('nukala_custom_stats', customs);
+      renderCustomStatsList();
+    });
+  });
+}
+
+document.getElementById('addCustomStatBtn').addEventListener('click', function(){
+  var customs = ldRaw('nukala_custom_stats')||[];
+  customs.push({icon:'📊', label:'', value:''});
+  svRaw('nukala_custom_stats', customs);
+  renderCustomStatsList();
+  // Focus new label
+  var inputs = document.querySelectorAll('.cs-label');
+  if(inputs.length) inputs[inputs.length-1].focus();
+});
+
+document.getElementById('saveCustomStatsBtn').addEventListener('click', function(){
+  var customs = [];
+  document.querySelectorAll('#customStatsList > div').forEach(function(row){
+    var icon  = (row.querySelector('.cs-icon')||{}).value||'📊';
+    var label = (row.querySelector('.cs-label')||{}).value.trim();
+    var value = (row.querySelector('.cs-value')||{}).value.trim();
+    if(label) customs.push({icon:icon, label:label, value:value});
+  });
+  svRaw('nukala_custom_stats', customs);
+  log('Custom stats saved');
+  toast('✅ Custom stats saved! Publish to Site to apply.');
+  renderCustomStatsList();
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -289,12 +289,80 @@ opacity:0.04;pointer-events:none;z-index:0;}
       <!-- STATS PAGE INFO -->
       <div class="page" id="page-stats">
         <div class="sh">Stats <em>Page</em></div>
-        <p class="ss">The Stats page auto-generates family statistics from your members data.</p>
+        <p class="ss">Control which statistics are visible on the Stats page, and add custom stat cards.</p>
         <div class="div"></div>
+
         <div class="panel">
-          <div class="pt">About This Page</div>
-          <p style="font-size:.82rem;color:var(--tm);line-height:1.7;">Stats are calculated automatically from the Members you add. No manual editing needed — add more members to see richer statistics.</p>
-          <a href="stats.html" target="_blank" class="btn bo bsm" style="margin-top:12px;display:inline-block;text-decoration:none;">👁️ View Stats Page</a>
+          <div class="pt">Stat Cards — Show / Hide</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:14px;">Toggle which stat cards are visible to family members. All are auto-calculated from your Members data.</p>
+          <div style="display:flex;flex-direction:column;gap:12px;" id="statToggleList">
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-total" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🌳 Total Members</div><div style="font-size:.72rem;color:var(--tl);">Total count of everyone in the family tree</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-gens" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🏛️ Generations</div><div style="font-size:.72rem;color:var(--tl);">Number of distinct generations in the tree</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-living" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">💚 Living Members</div><div style="font-size:.72rem;color:var(--tl);">Members still living (no deceased flag)</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-bybirth" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">📖 Nukala by Birth</div><div style="font-size:.72rem;color:var(--tl);">Members who carry the family last name</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-families" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">👥 Connected Families</div><div style="font-size:.72rem;color:var(--tl);">Other family names tied through marriage</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-female" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">👩 Female Members</div><div style="font-size:.72rem;color:var(--tl);">Count of female members in the tree</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-male" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">👨 Male Members</div><div style="font-size:.72rem;color:var(--tl);">Count of male members in the tree</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-photos" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">📸 Have Photos</div><div style="font-size:.72rem;color:var(--tl);">Members who have a profile photo uploaded</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-cities" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🌍 Cities Worldwide</div><div style="font-size:.72rem;color:var(--tl);">Number of distinct cities family members live in</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-genchart" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">📊 Generation Bar Chart</div><div style="font-size:.72rem;color:var(--tl);">Bar chart showing member count per generation</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-connfamilies" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">👥 Connected Families Panel</div><div style="font-size:.72rem;color:var(--tl);">The full panel listing all connected family names</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-locations" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🌍 Where We Live Panel</div><div style="font-size:.72rem;color:var(--tl);">The city breakdown panel</div></div>
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-insights" checked/><span class="swt"></span></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🏆 Insight Cards</div><div style="font-size:.72rem;color:var(--tl);">Most children, oldest, and youngest member cards</div></div>
+            </label>
+          </div>
+          <button class="btn bg bsm" id="saveStatsVisBtn" style="margin-top:16px;">💾 Save Visibility</button>
+        </div>
+
+        <div class="panel" style="margin-top:16px;">
+          <div class="pt">Custom Stat Cards</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:14px;">Add your own stat cards with a custom label and value. These appear in the stats hero row alongside the auto-calculated ones.</p>
+          <div id="customStatsList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;"></div>
+          <button class="btn bo bsm" id="addCustomStatBtn">&#43; Add Custom Stat</button>
+          <p style="font-size:.7rem;color:var(--tl);margin-top:6px;">Example: "Years of Legacy · 100" or "Countries · 5"</p>
+          <button class="btn bg bsm" id="saveCustomStatsBtn" style="margin-top:12px;">💾 Save Custom Stats</button>
+        </div>
+
+        <div style="margin-top:16px;">
+          <a href="stats.html" target="_blank" class="btn bo bsm" style="text-decoration:none;">👁️ Preview Stats Page</a>
         </div>
       </div>
 
