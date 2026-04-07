@@ -1253,7 +1253,9 @@ var TREE_COLOUR_DEFAULTS = {
   female:       '#9060b0',
   mainLine:     '#8aab8a',
   spouseLine:   '#c9a84c',
-  femaleBranch: '#c06090'
+  femaleBranch: '#c06090',
+  spouseHeart:  '💛',
+  femaleHeart:  '🌸'
 };
 
 function loadTreeColours(){
