@@ -1021,9 +1021,7 @@ function loadPeTab(tab){
     document.getElementById('mapDefaultZoom').value=ms.zoom||'';
     document.getElementById('mapCentLat').value=ms.lat||'';
     document.getElementById('mapCentLng').value=ms.lng||'';
-    document.getElementById('mapColMale').value=ms.colMale||'#5c7a5c';
-    document.getElementById('mapColFemale').value=ms.colFemale||'#9060b0';
-    // Marker categories
+    // Marker categories (colour pickers now inside category rows)
     renderMapCatList();
     // Visibility checkboxes
     var vis=ms.vis||{};
