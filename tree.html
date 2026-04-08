@@ -531,7 +531,7 @@
     const _sw = load('nukala_sitewide');
     const navName = _sw.navName || _h.navName || (_s.familyName ? _s.familyName.toUpperCase() : 'NUKALA');
     document.getElementById('navSiteName').textContent = navName;
-    if(_s.familyName) var _fn=document.getElementById('footerText');if(_fn)_fn.textContent=s.familyName?'The '+s.familyName+' Family':'The Nukala Family';
+    if(_s.familyName) var _fn=document.getElementById('footerText');if(_fn)_fn.textContent=_s.familyName?'The '+_s.familyName+' Family':'The Nukala Family';
 
     // ═══════════════════════════════════
     // LAYOUT ENGINE
