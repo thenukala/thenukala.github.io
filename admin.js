@@ -1276,6 +1276,11 @@ function loadTreeColours(){
     var el = document.getElementById('tc-'+k);
     if(el) el.value = tc[k] || TREE_COLOUR_DEFAULTS[k];
   });
+  // Load mobile settings
+  var tm = ldRaw('nukala_tree_mobile')||{};
+  var af = document.getElementById('tm-autofit');   if(af) af.checked = tm.autoFit  !== false;
+  var cp = document.getElementById('tm-compact');   if(cp) cp.checked = tm.compact  !== false;
+  var lv = document.getElementById('tm-listview');  if(lv) lv.checked = tm.listView !== false;
 }
 
 document.getElementById('saveTreeColoursBtn').addEventListener('click', function(){
@@ -1292,7 +1297,18 @@ document.getElementById('saveTreeColoursBtn').addEventListener('click', function
 document.getElementById('resetTreeColoursBtn').addEventListener('click', function(){
   svRaw('nukala_tree_colours', TREE_COLOUR_DEFAULTS);
   loadTreeColours();
-  toast('\u2705 Reset to default colours! Publish to Site to apply.');
+  toast('✅ Reset to default colours! Publish to Site to apply.');
+});
+
+document.getElementById('saveMobileTreeBtn').addEventListener('click', function(){
+  var tm = {
+    autoFit:  document.getElementById('tm-autofit').checked,
+    compact:  document.getElementById('tm-compact').checked,
+    listView: document.getElementById('tm-listview').checked,
+  };
+  svRaw('nukala_tree_mobile', tm);
+  log('Tree mobile settings saved');
+  toast('✅ Mobile settings saved! Publish to Site to apply.');
 });
 
 // Also hook into the ptb click for the tree tab

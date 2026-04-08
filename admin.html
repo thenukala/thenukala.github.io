@@ -958,6 +958,38 @@ opacity:0.04;pointer-events:none;z-index:0;}
           <button class="btn bo bsm" id="resetTreeColoursBtn" style="margin-top:14px;margin-left:8px;">&#8635; Reset to Defaults</button>
         </div>
 
+        <!-- Mobile Experience -->
+        <div class="panel" style="margin-top:16px;">
+          <div class="pt">&#128241; Mobile Experience</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:16px;">Control how the Family Tree behaves on phones and small screens. Mix and match — all three can be on at once.</p>
+
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:14px;">
+            <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="tm-autofit" checked/><span class="swt"></span></div>
+            <div>
+              <div style="font-size:.83rem;font-weight:500;color:var(--td);">&#128247; Auto Fit on Load</div>
+              <div style="font-size:.72rem;color:var(--tl);">When a phone opens the tree, automatically zoom to fit all members on screen</div>
+            </div>
+          </label>
+
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:14px;">
+            <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="tm-compact" checked/><span class="swt"></span></div>
+            <div>
+              <div style="font-size:.83rem;font-weight:500;color:var(--td);">&#128208; Compact Cards on Mobile</div>
+              <div style="font-size:.72rem;color:var(--tl);">Shrink member cards on phones so more fit on screen without scrolling</div>
+            </div>
+          </label>
+
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:4px;">
+            <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="tm-listview" checked/><span class="swt"></span></div>
+            <div>
+              <div style="font-size:.83rem;font-weight:500;color:var(--td);">&#9776; List View Toggle Button</div>
+              <div style="font-size:.72rem;color:var(--tl);">Show a List / Tree toggle on mobile — tapping List switches to an expandable accordion grouped by generation. Tapping any name opens the full member panel.</div>
+            </div>
+          </label>
+
+          <button class="btn bg bsm" id="saveMobileTreeBtn" style="margin-top:16px;">&#128190; Save Mobile Settings</button>
+        </div>
+
       </div>
       </div><!-- /page-editor -->
 
@@ -1307,6 +1339,6 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=32579"></script>
+<script src="admin.js?v=71760"></script>
 </body>
 </html>
