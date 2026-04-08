@@ -55,7 +55,7 @@
 </head>
 <body>
 <script>
-  try{var _x=new XMLHttpRequest();_x.open('GET','site-data.js?nocache='+Date.now(),false);_x.send();if(_x.status===200)eval(_x.responseText);}catch(e){}
+  try{if(!sessionStorage.getItem('nukala_admin')){var _x=new XMLHttpRequest();_x.open('GET','site-data.js?nocache='+Date.now(),false);_x.send();if(_x.status===200)eval(_x.responseText);}}catch(e){}
 </script>
 <script src="auth.js"></script>
 <nav>

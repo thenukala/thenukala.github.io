@@ -169,12 +169,14 @@
 </head>
 <body>
 <script>
-  // Always fetch fresh site-data.js (bypass cache) before page loads
+  // Skip site-data.js if admin is previewing so live edits show immediately
   try{
-    var _xhr=new XMLHttpRequest();
-    _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
-    _xhr.send();
-    if(_xhr.status===200) eval(_xhr.responseText);
+    if(!sessionStorage.getItem('nukala_admin')){
+      var _xhr=new XMLHttpRequest();
+      _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
+      _xhr.send();
+      if(_xhr.status===200) eval(_xhr.responseText);
+    }
   }catch(e){}
 </script>
   <script src="auth.js"></script>

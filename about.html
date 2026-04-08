@@ -42,10 +42,12 @@
 <body>
 <script>
   try{
-    var _x=new XMLHttpRequest();
-    _x.open('GET','site-data.js?nocache='+Date.now(),false);
-    _x.send();
-    if(_x.status===200) eval(_x.responseText);
+    if(!sessionStorage.getItem('nukala_admin')){
+      var _x=new XMLHttpRequest();
+      _x.open('GET','site-data.js?nocache='+Date.now(),false);
+      _x.send();
+      if(_x.status===200) eval(_x.responseText);
+    }
   }catch(e){}
   // nukala_about_draft is never in site-data.js so admin previews survive
 </script>
