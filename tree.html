@@ -531,6 +531,22 @@
     const load = k => JSON.parse(localStorage.getItem(k)||'{}');
     const loadArr = k => JSON.parse(localStorage.getItem(k)||'[]');
 
+    // ── STARTUP DIAGNOSTIC ──
+    (function(){
+      try {
+        var raw = localStorage.getItem('nukala_tree_data');
+        var parsed = raw ? JSON.parse(raw) : null;
+        var count = parsed ? Object.keys(parsed).length : 0;
+        var diag = document.getElementById('treeDiag');
+        if(diag) {
+          diag.style.display = 'block';
+          diag.innerHTML = '&#128269; <b>Tree Debug:</b> localStorage has <b>' + count + '</b> member(s). ' +
+            'Raw data: ' + (raw ? raw.length + ' chars' : 'MISSING') + '. ' +
+            'Admin mode: ' + (sessionStorage.getItem('nukala_admin') || localStorage.getItem('nukala_admin_active') ? 'YES' : 'NO') + '.';
+        }
+      } catch(e) {}
+    })();
+
     // Apply settings
     const _s = load('nukala_settings');
     const _h = load('nukala_home');
