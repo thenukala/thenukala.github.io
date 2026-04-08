@@ -22,6 +22,7 @@ function doLogin(){
   var pw = document.getElementById('pwInput').value;
   if(pw === getAdminPass()){
     sessionStorage.setItem('nukala_admin','true');
+    localStorage.setItem('nukala_admin_active','true');
     showAdmin();
   } else {
     var err = document.getElementById('errMsg');
@@ -50,7 +51,7 @@ document.getElementById('pwInput').addEventListener('keydown', function(e){if(e.
 document.getElementById('pwInput').focus();
 
 // Auto-login if session exists
-if(sessionStorage.getItem('nukala_admin')==='true'){showAdmin();}
+if(sessionStorage.getItem('nukala_admin')==='true'||localStorage.getItem('nukala_admin_active')==='true'){sessionStorage.setItem('nukala_admin','true');showAdmin();}
 
 // Dark mode
 (function(){
@@ -71,7 +72,7 @@ if(sessionStorage.getItem('nukala_admin')==='true'){showAdmin();}
 })();
 
 // Wire up logout
-document.getElementById('logoutBtn').addEventListener('click',function(){sessionStorage.removeItem('nukala_admin');window.location.href='home.html';});
+document.getElementById('logoutBtn').addEventListener('click',function(){sessionStorage.removeItem('nukala_admin');localStorage.removeItem('nukala_admin_active');window.location.href='home.html';});
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // NAVIGATION

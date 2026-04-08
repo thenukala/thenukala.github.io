@@ -42,7 +42,7 @@
 <body>
 <script>
   try{
-    if(!sessionStorage.getItem('nukala_admin')){
+    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')){
       var _x=new XMLHttpRequest();
       _x.open('GET','site-data.js?nocache='+Date.now(),false);
       _x.send();

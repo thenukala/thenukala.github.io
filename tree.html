@@ -403,7 +403,7 @@
   <script>
   // Fetch site-data.js UNLESS admin is previewing (so live edits show immediately)
   try{
-    var _isAdminPreview = !!sessionStorage.getItem('nukala_admin');
+    var _isAdminPreview = !!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active'));
     if(!_isAdminPreview){
       var _xhr=new XMLHttpRequest();
       _xhr.open('GET','site-data.js?nocache='+Date.now(),false); // synchronous

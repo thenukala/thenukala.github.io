@@ -81,7 +81,7 @@
   <script>
   // Fetch site-data.js — skip if admin is previewing so live edits show immediately
   try{
-    if(!sessionStorage.getItem('nukala_admin')){
+    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')){
       var _xhr=new XMLHttpRequest();
       _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
       _xhr.send();
