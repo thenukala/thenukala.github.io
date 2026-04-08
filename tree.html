@@ -404,7 +404,10 @@
   // Fetch site-data.js UNLESS admin is previewing (so live edits show immediately)
   try{
     var _isAdminPreview = !!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active'));
-    if(!_isAdminPreview){
+    if(_isAdminPreview){
+      // Admin preview: ensure site auth is set so auth.js doesn't redirect
+      sessionStorage.setItem('nukala_auth','true');
+    } else {
       var _xhr=new XMLHttpRequest();
       _xhr.open('GET','site-data.js?nocache='+Date.now(),false); // synchronous
       _xhr.send();
@@ -577,13 +580,15 @@
     let showLines=true, zoom=1, selectedId=null;
 
     function renderTree(){
-      const members = load('nukala_tree_data');
+      const members = load('nukala_tree_data') || {};
       const list = Object.values(members);
       const cardsLayer = document.getElementById('cardsLayer');
       const svg = document.getElementById('branchSvg');
       cardsLayer.innerHTML=''; svg.innerHTML='';
 
       if(!list.length){
+        var _dbgRaw = localStorage.getItem('nukala_tree_data');
+        var _dbgCount = _dbgRaw ? Object.keys(JSON.parse(_dbgRaw)||{}).length : 0;
         cardsLayer.innerHTML=`<div class="empty-tree">
           <svg class="tree-svg" width="120" height="140" viewBox="0 0 120 140">
             <ellipse cx="60" cy="60" rx="50" ry="55" fill="rgba(138,171,138,0.15)" stroke="rgba(138,171,138,0.3)" stroke-width="2"/>
@@ -593,8 +598,8 @@
             <text x="60" y="70" text-anchor="middle" font-size="28" opacity="0.3">🌳</text>
           </svg>
           <h3>Your Family Tree Awaits</h3>
-          <p style="color:var(--text-light,#a0a0a0);font-size:.88rem;">Your family story starts here.</p>
-          
+          <p style="color:var(--text-light,#a0a0a0);font-size:.88rem;">Add members in the Admin panel to build your tree.</p>
+          <p style="color:var(--text-light,#aaa);font-size:.72rem;margin-top:8px;">Debug: localStorage has ${_dbgCount} member(s) under 'nukala_tree_data'</p>
         </div>`;
         svg.setAttribute('width','800'); svg.setAttribute('height','500');
         return;
@@ -739,7 +744,7 @@
     // SIDE PANEL
     // ═══════════════════════════════════
     function showPanel(id){
-      const members=load('nukala_tree_data');
+      const members=load('nukala_tree_data')||{};
       const raw=members[id]; if(!raw) return;
       // Merge contact details (phone, whatsapp, email, city stored in contacts)
       const contacts=load('nukala_contacts')||{};
@@ -924,7 +929,7 @@
 
     // ── List view renderer ──
     function renderListView(){
-      var members = load('nukala_tree_data');
+      var members = load('nukala_tree_data') || {};
       var list = Object.values(members);
       var el = document.getElementById('treeListView');
       if(!el) return;
