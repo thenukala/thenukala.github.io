@@ -1179,26 +1179,38 @@ document.getElementById('saveMapColoursBtn').addEventListener('click', function(
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 var STAT_VIS_KEYS = ['total','gens','living','bybirth','families','female','male','photos','cities','genchart','connfamilies','locations','insights'];
 
+var STAT_EMOJI_DEFAULTS = {
+  total:'🌳',gens:'🏛️',living:'💚',bybirth:'📖',families:'👥',
+  female:'👩',male:'👨',photos:'📸',cities:'🌍',genchart:'📊',
+  connfamilies:'👥',locations:'🌍',insights:'🏆'
+};
+
 function loadStatsAdmin(){
   // Load saved visibility
-  var sv = ldRaw('nukala_stats_vis')||{};
+  var sv  = ldRaw('nukala_stats_vis')||{};
+  var se  = ldRaw('nukala_stats_emoji')||{};
   STAT_VIS_KEYS.forEach(function(k){
-    var el = document.getElementById('stv-'+k);
-    if(el) el.checked = sv[k] !== false;
+    var vel = document.getElementById('stv-'+k);
+    if(vel) vel.checked = sv[k] !== false;
+    var eel = document.getElementById('ste-'+k);
+    if(eel) eel.value = se[k] || STAT_EMOJI_DEFAULTS[k] || '📊';
   });
   // Load custom stats
   renderCustomStatsList();
 }
 
 document.getElementById('saveStatsVisBtn').addEventListener('click', function(){
-  var sv = {};
+  var sv = {}, se = {};
   STAT_VIS_KEYS.forEach(function(k){
-    var el = document.getElementById('stv-'+k);
-    sv[k] = el ? el.checked : true;
+    var vel = document.getElementById('stv-'+k);
+    var eel = document.getElementById('ste-'+k);
+    sv[k] = vel ? vel.checked : true;
+    if(eel && eel.value.trim()) se[k] = eel.value.trim();
   });
   svRaw('nukala_stats_vis', sv);
+  svRaw('nukala_stats_emoji', se);
   log('Stats visibility saved');
-  toast('✅ Stats visibility saved! Publish to Site to apply.');
+  toast('✅ Stats visibility & emojis saved! Publish to Site to apply.');
 });
 
 // Custom stats
