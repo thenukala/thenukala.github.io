@@ -150,16 +150,18 @@
       var maxInGen=Math.max(...Object.values(byGen));
 
       // Build hero stat cards based on visibility settings
+      var se=JSON.parse(localStorage.getItem('nukala_stats_emoji')||'{}');
+      function em(k,def){return se[k]||def;}
       var heroCards='';
-      if(show('total'))      heroCards+=`<div class="stat-card"><div class="stat-icon">&#127819;</div><span class="stat-num">${members.length}</span><span class="stat-lbl">Total Members</span></div>`;
-      if(show('gens'))       heroCards+=`<div class="stat-card"><div class="stat-icon">&#127963;</div><span class="stat-num">${gens.length}</span><span class="stat-lbl">Generations</span></div>`;
-      if(show('living'))     heroCards+=`<div class="stat-card"><div class="stat-icon">&#128154;</div><span class="stat-num">${living.length}</span><span class="stat-lbl">Living Members</span></div>`;
-      if(show('bybirth'))    heroCards+=`<div class="stat-card"><div class="stat-icon">&#128218;</div><span class="stat-num">${sameLastName.length}</span><span class="stat-lbl">${settings.familyName||'Nukala'} by Birth</span></div>`;
-      if(show('families'))   heroCards+=`<div class="stat-card"><div class="stat-icon">&#128101;</div><span class="stat-num">${connectedFamilies.length}</span><span class="stat-lbl">Connected Families</span></div>`;
-      if(show('female'))     heroCards+=`<div class="stat-card"><div class="stat-icon">&#128105;</div><span class="stat-num">${female.length}</span><span class="stat-lbl">Female Members</span></div>`;
-      if(show('male'))       heroCards+=`<div class="stat-card"><div class="stat-icon">&#128104;</div><span class="stat-num">${members.length-female.length}</span><span class="stat-lbl">Male Members</span></div>`;
-      if(show('photos'))     heroCards+=`<div class="stat-card"><div class="stat-icon">&#128247;</div><span class="stat-num">${withPhoto.length}</span><span class="stat-lbl">Have Photos</span></div>`;
-      if(show('cities'))     heroCards+=`<div class="stat-card"><div class="stat-icon">&#127758;</div><span class="stat-num">${cities.length}</span><span class="stat-lbl">Cities Worldwide</span></div>`;
+      if(show('total'))      heroCards+=`<div class="stat-card"><div class="stat-icon">${em('total','🌳')}</div><span class="stat-num">${members.length}</span><span class="stat-lbl">Total Members</span></div>`;
+      if(show('gens'))       heroCards+=`<div class="stat-card"><div class="stat-icon">${em('gens','🏛️')}</div><span class="stat-num">${gens.length}</span><span class="stat-lbl">Generations</span></div>`;
+      if(show('living'))     heroCards+=`<div class="stat-card"><div class="stat-icon">${em('living','💚')}</div><span class="stat-num">${living.length}</span><span class="stat-lbl">Living Members</span></div>`;
+      if(show('bybirth'))    heroCards+=`<div class="stat-card"><div class="stat-icon">${em('bybirth','📖')}</div><span class="stat-num">${sameLastName.length}</span><span class="stat-lbl">${settings.familyName||'Nukala'} by Birth</span></div>`;
+      if(show('families'))   heroCards+=`<div class="stat-card"><div class="stat-icon">${em('families','👥')}</div><span class="stat-num">${connectedFamilies.length}</span><span class="stat-lbl">Connected Families</span></div>`;
+      if(show('female'))     heroCards+=`<div class="stat-card"><div class="stat-icon">${em('female','👩')}</div><span class="stat-num">${female.length}</span><span class="stat-lbl">Female Members</span></div>`;
+      if(show('male'))       heroCards+=`<div class="stat-card"><div class="stat-icon">${em('male','👨')}</div><span class="stat-num">${members.length-female.length}</span><span class="stat-lbl">Male Members</span></div>`;
+      if(show('photos'))     heroCards+=`<div class="stat-card"><div class="stat-icon">${em('photos','📸')}</div><span class="stat-num">${withPhoto.length}</span><span class="stat-lbl">Have Photos</span></div>`;
+      if(show('cities'))     heroCards+=`<div class="stat-card"><div class="stat-icon">${em('cities','🌍')}</div><span class="stat-num">${cities.length}</span><span class="stat-lbl">Cities Worldwide</span></div>`;
       // Custom stats
       customs.forEach(function(cs){
         if(cs.label) heroCards+=`<div class="stat-card"><div class="stat-icon">${cs.icon||'&#128202;'}</div><span class="stat-num">${cs.value||'–'}</span><span class="stat-lbl">${cs.label}</span></div>`;
