@@ -467,7 +467,12 @@ opacity:0.04;pointer-events:none;z-index:0;}
         <div class="div"></div>
         <div class="panel" style="margin-bottom:16px;">
           <div class="pt">📥 Download Family Tree</div>
-          <p style="font-size:.78rem;color:var(--tm);margin-bottom:14px;line-height:1.6;">Download a snapshot of the entire family tree as an image or PDF. The tree page will open, capture automatically, and download.</p>
+          <p style="font-size:.78rem;color:var(--tm);margin-bottom:10px;line-height:1.6;">Preview your tree live or download a snapshot.</p>
+          <div style="margin-bottom:14px;">
+            <button class="btn bg bsm" id="previewTreeBtn" style="background:var(--sd);color:white;border-color:var(--sd);">&#128065; Preview Tree Live</button>
+            <p style="font-size:.7rem;color:var(--tl);margin-top:6px;">Opens the Family Tree page showing your latest saved members — no publish needed.</p>
+          </div>
+          <p style="font-size:.78rem;color:var(--tm);margin-bottom:14px;line-height:1.6;">Download a snapshot as image or PDF:</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn bg bsm" onclick="downloadTreeFromAdmin('png')" style="display:flex;align-items:center;gap:6px;">🖼️ Download as Image (PNG)</button>
             <button class="btn bo bsm" onclick="downloadTreeFromAdmin('pdf')" style="display:flex;align-items:center;gap:6px;">📄 Download as PDF</button>
