@@ -768,8 +768,22 @@ function refreshWAList(){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PAGE VISIBILITY
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var PAGES=[{id:'home',label:'🏠 Home',file:'home.html',locked:true},{id:'tree',label:'🌳 Family Tree',file:'tree.html',locked:true},{id:'history',label:'📜 History',file:'history.html',locked:false},{id:'gallery',label:'🖼️ Gallery',file:'gallery.html',locked:false},{id:'facts',label:'🌟 Facts',file:'facts.html',locked:false},{id:'stats',label:'📊 Stats',file:'stats.html',locked:false},{id:'events',label:'📆 Events',file:'events.html',locked:false},{id:'map',label:'🗺️ Map',file:'map.html',locked:false},{id:'polls',label:'🗳️ Polls',file:'polls.html',locked:false},{id:'recipes',label:'🍛 Recipes',file:'recipes.html',locked:false},{id:'achievements',label:'🏆 Achievements',file:'achievements.html',locked:false},{id:'videos',label:'🎥 Videos',file:'videos.html',locked:false},{id:'qr',label:'📱 QR Code',file:'qr.html',locked:false},{id:'contact',label:'✉️ Contact',file:'contact.html',locked:true},{id:'join',label:'🌳 Join Tree',file:'join.html',locked:false},{id:'about',label:'ℹ️ About',file:'about.html',locked:false}];
-
+var PAGES = [
+  {id:'home',     href:'home.html',    label:'Home',        locked:true},
+  {id:'tree',     href:'tree.html',    label:'Family Tree', locked:true},
+  {id:'history',  href:'history.html', label:'History',     locked:false},
+  {id:'gallery',  href:'gallery.html', label:'Gallery',     locked:false},
+  {id:'facts',    href:'facts.html',   label:'Facts',       locked:false},
+  {id:'stats',    href:'stats.html',   label:'Stats',       locked:false},
+  {id:'events',   href:'events.html',  label:'Events',      locked:false},
+  {id:'map',      href:'map.html',     label:'Map',         locked:false},
+  {id:'polls',    href:'polls.html',   label:'Polls',       locked:false},
+  {id:'recipes',  href:'recipes.html', label:'Recipes',     locked:false},
+  {id:'qr',       href:'qr.html',      label:'QR Code',    locked:false},
+  {id:'contact',  href:'contact.html', label:'Contact',     locked:true},
+  {id:'join',     href:'join.html',    label:'Join Tree',   locked:false},
+  {id:'about',    href:'about.html',   label:'About',       locked:false},
+];
 document.getElementById('visSaveBtn').addEventListener('click', visSave);
 document.getElementById('visEnableAllBtn').addEventListener('click', visEnableAll);
 

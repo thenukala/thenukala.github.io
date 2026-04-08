@@ -254,6 +254,7 @@ nav {
 }
 /* Hide scrollbar but keep scroll */
 nav::-webkit-scrollbar, .nav-links::-webkit-scrollbar { display: none; }
+nav, .nav-links { -webkit-overflow-scrolling: touch; }
 
 
 /* ════════════════════════════════════════
@@ -396,6 +397,69 @@ nav::-webkit-scrollbar, .nav-links::-webkit-scrollbar { display: none; }
   .hero-title, .page-hero h1 { font-size: 1.7rem !important; }
   .gallery-grid { grid-template-columns: 1fr !important; }
   .hero-stats { flex-direction: column; gap: 12px !important; }
+}
+
+/* ════════════════════════════════════════
+   ADDITIONAL MOBILE FIXES
+   ════════════════════════════════════════ */
+
+/* Stats page — stat cards wrap nicely on mobile */
+@media (max-width: 768px) {
+  .stats-hero { flex-wrap: wrap !important; justify-content: center !important; gap: 12px !important; }
+  .stat-card { min-width: 120px !important; flex: 1 1 calc(45% - 12px) !important; }
+  .insight-grid { grid-template-columns: 1fr !important; }
+  .gen-bar-wrap { margin-bottom: 10px !important; }
+}
+
+/* Video grid on mobile */
+@media (max-width: 768px) {
+  .video-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Tree key bar wraps on mobile */
+@media (max-width: 768px) {
+  .tree-key { flex-wrap: wrap !important; gap: 8px !important; padding: 10px 14px !important; }
+  .lg-item { font-size: 0.7rem !important; }
+  .tree-toolbar { flex-wrap: wrap !important; gap: 6px !important; }
+}
+
+/* Form rows stack on mobile */
+@media (max-width: 768px) {
+  .fr { flex-direction: column !important; }
+  .fg { min-width: unset !important; width: 100% !important; }
+}
+
+/* Map panels stack on mobile */
+@media (max-width: 768px) {
+  .map-layout { flex-direction: column !important; }
+  .mpanel { margin-bottom: 16px !important; }
+  .city-chips { gap: 8px !important; }
+}
+
+/* Contribute bar stacks on mobile (already has its own but ensure) */
+@media (max-width: 600px) {
+  .contribute-bar { flex-direction: column !important; align-items: flex-start !important; }
+  .contribute-bar a { width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
+}
+
+/* Filter buttons wrap on mobile */
+@media (max-width: 768px) {
+  .filter-bar { gap: 6px !important; }
+  .filter-btn { padding: 6px 12px !important; font-size: 0.72rem !important; }
+}
+
+/* Admin panel — basic mobile support */
+@media (max-width: 768px) {
+  .admin-wrap { flex-direction: column !important; }
+  .admin-sidebar { width: 100% !important; height: auto !important; position: relative !important; }
+  .admin-main { padding: 16px !important; }
+  .panel { padding: 14px !important; }
+  .fr { flex-direction: column !important; }
+}
+
+/* QR code centering on mobile */
+@media (max-width: 768px) {
+  .qr-wrap { padding: 20px !important; }
 }
 
 /* Landscape mobile — a bit more space */
