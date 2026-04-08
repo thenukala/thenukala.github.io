@@ -130,6 +130,17 @@ document.getElementById('qAddHistory').addEventListener('click',function(){docum
 document.getElementById('qAddFact').addEventListener('click',function(){document.querySelector('.ni[data-page="facts"]').click();openFactM();});
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PREVIEW TREE BUTTON
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.getElementById('previewTreeBtn').addEventListener('click', function(){
+  // Ensure admin preview flags are set so tree.html skips site-data.js
+  localStorage.setItem('nukala_admin_active','true');
+  sessionStorage.setItem('nukala_admin','true');
+  sessionStorage.setItem('nukala_auth','true');
+  window.open('tree.html','_blank');
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // MEMBERS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.getElementById('addMemberBtn').addEventListener('click', openMemberM);
