@@ -295,59 +295,111 @@ opacity:0.04;pointer-events:none;z-index:0;}
         <div class="panel">
           <div class="pt">Stat Cards — Show / Hide</div>
           <p style="font-size:.75rem;color:var(--tl);margin-bottom:14px;">Toggle which stat cards are visible to family members. All are auto-calculated from your Members data.</p>
-          <div style="display:flex;flex-direction:column;gap:12px;" id="statToggleList">
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-total" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🌳 Total Members</div><div style="font-size:.72rem;color:var(--tl);">Total count of everyone in the family tree</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-gens" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🏛️ Generations</div><div style="font-size:.72rem;color:var(--tl);">Number of distinct generations in the tree</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-living" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">💚 Living Members</div><div style="font-size:.72rem;color:var(--tl);">Members still living (no deceased flag)</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-bybirth" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">📖 Nukala by Birth</div><div style="font-size:.72rem;color:var(--tl);">Members who carry the family last name</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-families" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">👥 Connected Families</div><div style="font-size:.72rem;color:var(--tl);">Other family names tied through marriage</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-female" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">👩 Female Members</div><div style="font-size:.72rem;color:var(--tl);">Count of female members in the tree</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-male" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">👨 Male Members</div><div style="font-size:.72rem;color:var(--tl);">Count of male members in the tree</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-photos" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">📸 Have Photos</div><div style="font-size:.72rem;color:var(--tl);">Members who have a profile photo uploaded</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-cities" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🌍 Cities Worldwide</div><div style="font-size:.72rem;color:var(--tl);">Number of distinct cities family members live in</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-genchart" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">📊 Generation Bar Chart</div><div style="font-size:.72rem;color:var(--tl);">Bar chart showing member count per generation</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-connfamilies" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">👥 Connected Families Panel</div><div style="font-size:.72rem;color:var(--tl);">The full panel listing all connected family names</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-locations" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🌍 Where We Live Panel</div><div style="font-size:.72rem;color:var(--tl);">The city breakdown panel</div></div>
-            </label>
-            <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-              <div class="sw" style="flex-shrink:0;margin-top:2px;"><input type="checkbox" id="stv-insights" checked/><span class="swt"></span></div>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--td);">🏆 Insight Cards</div><div style="font-size:.72rem;color:var(--tl);">Most children, oldest, and youngest member cards</div></div>
-            </label>
+          <div style="display:flex;flex-direction:column;" id="statToggleList">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-total" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-total" value="🌳" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Total Members</div>
+                <div style="font-size:.7rem;color:var(--tl);">Total count of everyone in the tree</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-gens" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-gens" value="🏛️" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Generations</div>
+                <div style="font-size:.7rem;color:var(--tl);">Number of distinct generations</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-living" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-living" value="💚" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Living Members</div>
+                <div style="font-size:.7rem;color:var(--tl);">Members still living</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-bybirth" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-bybirth" value="📖" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Nukala by Birth</div>
+                <div style="font-size:.7rem;color:var(--tl);">Members who carry the family last name</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-families" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-families" value="👥" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Connected Families</div>
+                <div style="font-size:.7rem;color:var(--tl);">Other family names through marriage</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-female" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-female" value="👩" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Female Members</div>
+                <div style="font-size:.7rem;color:var(--tl);">Count of female members</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-male" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-male" value="👨" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Male Members</div>
+                <div style="font-size:.7rem;color:var(--tl);">Count of male members</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-photos" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-photos" value="📸" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Have Photos</div>
+                <div style="font-size:.7rem;color:var(--tl);">Members with a profile photo</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-cities" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-cities" value="🌍" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Cities Worldwide</div>
+                <div style="font-size:.7rem;color:var(--tl);">Number of distinct cities</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-genchart" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-genchart" value="📊" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Generation Bar Chart</div>
+                <div style="font-size:.7rem;color:var(--tl);">Bar chart of members per generation</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-connfamilies" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-connfamilies" value="👥" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Connected Families Panel</div>
+                <div style="font-size:.7rem;color:var(--tl);">Full panel listing all family names</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-locations" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-locations" value="🌍" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Where We Live Panel</div>
+                <div style="font-size:.7rem;color:var(--tl);">City breakdown panel</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);">
+              <div class="sw" style="flex-shrink:0;"><input type="checkbox" id="stv-insights" checked/><span class="swt"></span></div>
+              <input type="text" id="ste-insights" value="🏆" style="width:40px;font-size:1.1rem;text-align:center;border:1.5px solid var(--b);border-radius:7px;padding:3px;flex-shrink:0;" maxlength="2" title="Emoji for this stat"/>
+              <div style="flex:1;">
+                <div style="font-size:.82rem;font-weight:500;color:var(--td);">Insight Cards</div>
+                <div style="font-size:.7rem;color:var(--tl);">Most children, oldest, youngest cards</div>
+              </div>
+            </div>
           </div>
           <button class="btn bg bsm" id="saveStatsVisBtn" style="margin-top:16px;">💾 Save Visibility</button>
         </div>
@@ -1339,6 +1391,6 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=29657"></script>
+<script src="admin.js?v=43944"></script>
 </body>
 </html>
