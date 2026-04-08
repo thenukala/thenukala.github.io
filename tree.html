@@ -476,6 +476,9 @@
         </div>
       </div>
 
+      <!-- Diagnostic banner (shown when tree is empty) -->
+      <div id="treeDiag" style="display:none;background:#fff8e1;border:2px solid #f59e0b;border-radius:10px;padding:12px 18px;margin-bottom:10px;font-size:.8rem;line-height:1.8;"></div>
+
       <!-- Tree viewport -->
       <div class="tree-viewport" id="treeVp">
         <div class="tree-canvas" id="treeCanvas">
@@ -580,35 +583,63 @@
     let showLines=true, zoom=1, selectedId=null;
 
     function renderTree(){
-      const members = load('nukala_tree_data') || {};
-      const list = Object.values(members);
+      // ── Diagnostic: show what data we can see ──
+      var _diag = document.getElementById('treeDiag');
+      var _rawData = localStorage.getItem('nukala_tree_data');
+      var _isAdmin = !!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active'));
+      var _sdSkipped = _isAdmin ? 'YES (admin mode)' : 'NO (visitor mode - site-data.js was loaded)';
+
+      var members;
+      try {
+        members = JSON.parse(_rawData) || {};
+      } catch(e) {
+        members = {};
+      }
+
+      var list = Object.values(members);
+
+      // Show diagnostic banner
+      if(_diag) {
+        var _diagInfo = [
+          '<b>Members in storage:</b> ' + list.length,
+          '<b>Raw data exists:</b> ' + (_rawData ? 'Yes (' + _rawData.length + ' chars)' : 'No/Empty'),
+          '<b>Admin preview mode:</b> ' + _isAdmin,
+          '<b>site-data.js skipped:</b> ' + _sdSkipped,
+        ].join(' &nbsp;|&nbsp; ');
+        _diag.innerHTML = '&#128269; ' + _diagInfo;
+        _diag.style.display = list.length > 0 ? 'none' : 'block';
+      }
+
       const cardsLayer = document.getElementById('cardsLayer');
       const svg = document.getElementById('branchSvg');
       cardsLayer.innerHTML=''; svg.innerHTML='';
 
       if(!list.length){
-        var _dbgRaw = localStorage.getItem('nukala_tree_data');
-        var _dbgCount = _dbgRaw ? Object.keys(JSON.parse(_dbgRaw)||{}).length : 0;
         cardsLayer.innerHTML=`<div class="empty-tree">
           <svg class="tree-svg" width="120" height="140" viewBox="0 0 120 140">
             <ellipse cx="60" cy="60" rx="50" ry="55" fill="rgba(138,171,138,0.15)" stroke="rgba(138,171,138,0.3)" stroke-width="2"/>
             <ellipse cx="38" cy="75" rx="28" ry="32" fill="rgba(138,171,138,0.12)" stroke="rgba(138,171,138,0.25)" stroke-width="1.5"/>
             <ellipse cx="82" cy="72" rx="30" ry="34" fill="rgba(138,171,138,0.12)" stroke="rgba(138,171,138,0.25)" stroke-width="1.5"/>
             <rect x="55" y="108" width="10" height="30" rx="5" fill="rgba(139,90,43,0.3)"/>
-            <text x="60" y="70" text-anchor="middle" font-size="28" opacity="0.3">🌳</text>
+            <text x="60" y="70" text-anchor="middle" font-size="28" opacity="0.3">&#127795;</text>
           </svg>
           <h3>Your Family Tree Awaits</h3>
-          <p style="color:var(--text-light,#a0a0a0);font-size:.88rem;">Add members in the Admin panel to build your tree.</p>
-          <p style="color:var(--text-light,#aaa);font-size:.72rem;margin-top:8px;">Debug: localStorage has ${_dbgCount} member(s) under 'nukala_tree_data'</p>
+          <p style="color:var(--text-light,#a0a0a0);font-size:.88rem;">Add members in Admin &#8594; Members to build your tree.</p>
         </div>`;
         svg.setAttribute('width','800'); svg.setAttribute('height','500');
         return;
       }
 
-      const positions = layoutTree(members);
+      var positions;
+      try {
+        positions = layoutTree(members);
+      } catch(e) {
+        cardsLayer.innerHTML = '<div style="padding:40px;color:red;text-align:center;">Layout error: '+e.message+'</div>';
+        return;
+      }
 
       // Canvas size
-      let maxX=0, maxY=0;
+      let maxX=800, maxY=500;
       Object.values(positions).forEach(p=>{ maxX=Math.max(maxX,p.x+CW+100); maxY=Math.max(maxY,p.y+CH+100); });
       svg.setAttribute('width',maxX); svg.setAttribute('height',maxY);
       document.getElementById('treeCanvas').style.width=maxX+'px';
@@ -630,29 +661,25 @@
       });
 
       if(showLines){
-        // Draw organic branch lines
         const drawnSpouses = new Set();
         let delay = 0;
         list.forEach(m=>{
           const pos=positions[m.id]; if(!pos) return;
           const cx=pos.x+CW/2;
 
-          // Parent-child branches (organic curves)
+          // Parent-child lines
           ['fatherId','motherId'].forEach(rel=>{
             if(m[rel] && positions[m[rel]]){
               const pp=positions[m[rel]];
               const pcx=pp.x+CW/2, pcy=pp.y+CH;
               const midY=pcy+(pos.y-pcy)/2;
-              // Organic S-curve
               const path=document.createElementNS('http://www.w3.org/2000/svg','path');
               const wobble=(Math.random()-0.5)*20;
               path.setAttribute('d',`M${pcx},${pcy} C${pcx+wobble},${midY-20} ${cx-wobble},${midY+20} ${cx},${pos.y}`);
-              // In-law members get rose branch line; Nukala bloodline stays green
               const lineClass = m.inlaw ? 'branch-female branch-animated' : 'branch-main branch-animated';
               path.setAttribute('class', lineClass);
               path.style.animationDelay = (delay*0.1)+'s';
               svg.appendChild(path);
-              // Node dot at junction
               const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
               dot.setAttribute('cx',cx); dot.setAttribute('cy',pos.y);
               dot.setAttribute('r','4'); dot.setAttribute('class','branch-node');
@@ -667,40 +694,21 @@
             if(!drawnSpouses.has(key)){
               drawnSpouses.add(key);
               const sp=positions[m.spouseId];
-              const spcx=sp.x+CW/2, spcy=sp.y+CH/2;
-              const line=document.createElementNS('http://www.w3.org/2000/svg','line');
               const x1=pos.x+CW, y1=pos.y+CH/2;
-              const x2=sp.x, y2=spcy;
-              // Female Nukala member marrying out → rose line; standard spouse → gold dashed
+              const x2=sp.x,    y2=sp.y+CH/2;
               const isFemBranch = m.female && !m.inlaw;
+              const line=document.createElementNS('http://www.w3.org/2000/svg','line');
               line.setAttribute('x1',x1); line.setAttribute('y1',y1);
               line.setAttribute('x2',x2); line.setAttribute('y2',y2);
               line.setAttribute('class', isFemBranch ? 'branch-female' : 'branch-spouse');
               svg.appendChild(line);
-              // Floating heart — rose for female branch, gold for standard spouse
               const heartX=(x1+x2)/2, heartY=(y1+y2)/2;
               const heart=document.createElement('div');
               heart.className='spouse-heart';
               heart.style.left=(heartX-10)+'px'; heart.style.top=(heartY-10)+'px';
-              var tc_h = JSON.parse(localStorage.getItem('nukala_tree_colours')||'{}');
-              heart.textContent = isFemBranch ? (tc_h.femaleHeart||'🌸') : (tc_h.spouseHeart||'💛');
+              try{ var tc_h=JSON.parse(localStorage.getItem('nukala_tree_colours')||'{}'); heart.textContent=isFemBranch?(tc_h.femaleHeart||'&#127800;'):(tc_h.spouseHeart||'&#128155;'); }catch(e){ heart.textContent=isFemBranch?'&#127800;':'&#128155;'; }
               cardsLayer.appendChild(heart);
             }
-          }
-
-          // In-law lines
-          if(m.inlaw){
-            ['fatherId','motherId'].forEach(rel=>{
-              if(m[rel] && positions[m[rel]]){
-                const pp=positions[m[rel]];
-                const pcx=pp.x+CW/2, pcy=pp.y+CH;
-                const midY=pcy+(pos.y-pcy)/2;
-                const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-                path.setAttribute('d',`M${pcx},${pcy} Q${(pcx+cx)/2},${midY} ${cx},${pos.y}`);
-                path.setAttribute('class','branch-inlaw');
-                svg.appendChild(path);
-              }
-            });
           }
         });
       }
@@ -710,7 +718,7 @@
         const pos=positions[m.id]; if(!pos) return;
         const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
         const shortName=name.length>18?name.substring(0,16)+'…':name;
-        const dates=m.born?(m.born+(m.died?'–'+m.died:'')):'';
+        const dates=m.born?(m.born+(m.died?'–'+m.died:'')):' ';
         const classes=['pcard',m.female?'female':'',m.ancestor?'ancestor':'',m.deceased?'deceased':'',m.id===selectedId?'selected':''].filter(Boolean).join(' ');
 
         const card=document.createElement('div');
@@ -719,17 +727,16 @@
         card.style.width=CW+'px'; card.style.boxSizing='border-box';
         card.style.animationDelay=(Math.random()*0.3)+'s';
 
-        // Photo with gradient ring
         let photoInner='';
         if(m.photo){
-          photoInner=`<img src="${m.photo}" alt="${name}" onerror="this.parentNode.innerHTML='${m.female?'👩':m.ancestor?'👴':'👨'}'"/>`;
+          photoInner=`<img src="${m.photo}" alt="${name}" onerror="this.style.display='none'"/>`;
         } else {
-          photoInner=m.female?'👩':m.ancestor?'👴':'👨';
+          photoInner=m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
         }
 
         card.innerHTML=`
           <div class="pc-ring">
-            <div class="pc-photo">${photoInner}${m.deceased?'<div class="pc-deceased-badge">✝</div>':''}</div>
+            <div class="pc-photo">${photoInner}${m.deceased?'<div class="pc-deceased-badge">&#10013;</div>':''}</div>
           </div>
           <div class="pc-name">${shortName}</div>
           <div class="pc-role">${m.role||'–'}</div>
