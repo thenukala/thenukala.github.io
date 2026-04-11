@@ -66,7 +66,7 @@
   <script>
   // Fetch site-data.js — skip if admin is previewing so live edits show immediately
   try{
-    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')){
+    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')&&!localStorage.getItem('nukala_preview_mode')){
       var _xhr=new XMLHttpRequest();
       _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
       _xhr.send();
@@ -78,7 +78,8 @@
   <nav>
     <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/><span class="nav-site-name" id="navSiteName">NUKALA</span></a>
         <ul class="nav-links">
-      <li><a href="home.html">Home</a></li>
+      <li><a href="home.html">Home</a>
+        <a href="members.html">Family Members</a></li>
       <li><a href="tree.html">Family Tree</a></li>
       <li><a href="history.html">History</a></li>
       <li><a href="gallery.html">Gallery</a></li>

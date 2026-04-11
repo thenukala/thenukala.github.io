@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Nukala"/>
+  <link rel="apple-touch-icon" href="icons/icon-152x152.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#5c7a5c"/>
+  <link rel="icon" href="favicon.ico"/>
+  <title>Family Members – Nukala Family</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="darkmode.css"/>
+  <style>
+    /* ── View toggle ── */
+    .view-toggle { display:flex; gap:8px; margin-bottom:20px; }
+    .vt-btn { flex:1; padding:10px; border-radius:12px; border:1.5px solid var(--border,#e8e2d8); background:white; font-size:.8rem; font-weight:500; cursor:pointer; transition:all .2s; color:var(--text-dark); }
+    .vt-btn.active { background:#5c7a5c; color:white; border-color:#5c7a5c; }
+
+    /* ── Search / filter ── */
+    .search-bar { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+    .search-bar input { flex:1; min-width:180px; padding:10px 14px; border:1.5px solid var(--border,#e8e2d8); border-radius:12px; font-size:.85rem; background:var(--warm-white,#faf8f4); color:var(--text-dark); }
+    .search-bar select { padding:10px 14px; border:1.5px solid var(--border,#e8e2d8); border-radius:12px; font-size:.82rem; background:var(--warm-white,#faf8f4); color:var(--text-dark); }
+
+    /* ── Stats bar ── */
+    .members-stats { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
+    .ms-card { background:rgba(255,255,255,0.8); border:1px solid var(--border,#e8e2d8); border-radius:12px; padding:12px 18px; text-align:center; flex:1; min-width:100px; }
+    .ms-num { font-size:1.4rem; font-weight:700; color:#5c7a5c; font-family:'Cormorant Garamond',serif; }
+    .ms-lbl { font-size:.68rem; color:#aaa; letter-spacing:.08em; text-transform:uppercase; }
+
+    /* ── Generation accordion ── */
+    .gen-section { margin-bottom:16px; }
+    .gen-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:linear-gradient(135deg,rgba(92,122,92,.08),rgba(92,122,92,.04)); border:1px solid rgba(92,122,92,.2); border-radius:14px; cursor:pointer; user-select:none; }
+    .gen-header h3 { font-size:.85rem; font-weight:600; color:#5c7a5c; margin:0; letter-spacing:.04em; }
+    .gen-header .gh-count { font-size:.72rem; color:#aaa; }
+    .gen-arrow { color:#5c7a5c; transition:transform .2s; font-size:.9rem; }
+    .gen-header.collapsed .gen-arrow { transform:rotate(-90deg); }
+    .gen-body { margin-top:8px; }
+    .gen-body.hidden { display:none; }
+
+    /* ── Card grid ── */
+    .members-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; }
+    .member-card { background:rgba(255,255,255,0.95); border:1.5px solid rgba(232,226,216,0.8); border-radius:20px; padding:20px 14px 16px; text-align:center; cursor:pointer; transition:all .25s; box-shadow:0 4px 16px rgba(0,0,0,.05); }
+    .member-card:hover { transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,0,0,.1); }
+    .member-card.female { border-color:rgba(208,192,240,.5); }
+    .member-card.ancestor { background:rgba(255,253,247,.97); border-color:rgba(201,168,76,.3); }
+    .mc-avatar { width:68px; height:68px; border-radius:50%; margin:0 auto 12px; background:linear-gradient(135deg,#8aab8a,#5c7a5c); padding:3px; position:relative; }
+    .member-card.female .mc-avatar { background:linear-gradient(135deg,#d0a0e0,#9060b0); }
+    .member-card.ancestor .mc-avatar { background:linear-gradient(135deg,#c9a84c,#a07020); }
+    .mc-inner { width:100%; height:100%; border-radius:50%; background:#f5f3ee; display:flex; align-items:center; justify-content:center; font-size:1.6rem; overflow:hidden; }
+    .mc-inner img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+    .mc-deceased { position:absolute; bottom:0; right:0; width:20px; height:20px; background:#888; color:white; border-radius:50%; font-size:.55rem; display:flex; align-items:center; justify-content:center; border:2px solid white; }
+    .mc-name { font-size:.9rem; font-weight:600; color:var(--text-dark,#2c2c2c); margin-bottom:4px; font-family:'Cormorant Garamond',serif; }
+    .mc-role { font-size:.68rem; color:#8aab8a; letter-spacing:.06em; text-transform:uppercase; margin-bottom:4px; }
+    .mc-meta { font-size:.65rem; color:#aaa; }
+    .mc-gen-badge { display:inline-block; background:rgba(92,122,92,.1); color:#5c7a5c; border-radius:20px; padding:2px 8px; font-size:.62rem; font-weight:600; margin-top:6px; }
+
+    /* ── List view ── */
+    .members-list { display:flex; flex-direction:column; gap:8px; }
+    .member-row { display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.95); border:1px solid rgba(232,226,216,0.8); border-radius:14px; padding:12px 16px; cursor:pointer; transition:all .2s; }
+    .member-row:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateX(4px); }
+    .mr-avatar { width:44px; height:44px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#8aab8a,#5c7a5c); padding:2px; }
+    .member-row.female .mr-avatar { background:linear-gradient(135deg,#d0a0e0,#9060b0); }
+    .member-row.ancestor .mr-avatar { background:linear-gradient(135deg,#c9a84c,#a07020); }
+    .mr-inner { width:100%; height:100%; border-radius:50%; background:#f5f3ee; display:flex; align-items:center; justify-content:center; font-size:1.1rem; overflow:hidden; }
+    .mr-inner img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+    .mr-info { flex:1; min-width:0; }
+    .mr-name { font-size:.88rem; font-weight:600; color:var(--text-dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .mr-sub { font-size:.72rem; color:#aaa; }
+    .mr-gen { font-size:.65rem; background:rgba(92,122,92,.1); color:#5c7a5c; border-radius:10px; padding:2px 8px; flex-shrink:0; }
+    .mr-arrow { color:#5c7a5c; font-size:1rem; flex-shrink:0; }
+
+    /* ── Empty state ── */
+    .empty-members { text-align:center; padding:80px 20px; color:#aaa; }
+    .empty-members h3 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:#5c7a5c; margin:12px 0 8px; }
+
+    /* ── Side panel (reused from tree) ── */
+    .side-panel { position:fixed; top:0; right:-420px; width:380px; height:100vh; background:white; box-shadow:-8px 0 40px rgba(0,0,0,.15); z-index:300; transition:right .3s; overflow-y:auto; padding:28px 24px; }
+    .side-panel.open { right:0; }
+    .sp-close { position:absolute; top:16px; right:16px; background:#f5f3ee; border:none; border-radius:50%; width:32px; height:32px; font-size:1rem; cursor:pointer; }
+    .sp-photo-wrap { width:80px; height:80px; border-radius:50%; margin:0 auto 12px; background:linear-gradient(135deg,#8aab8a,#5c7a5c); padding:3px; }
+    .sp-photo-inner { width:100%; height:100%; border-radius:50%; background:#f5f3ee; display:flex; align-items:center; justify-content:center; font-size:2rem; overflow:hidden; }
+    .sp-photo-inner img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+    .sp-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; text-align:center; margin-bottom:4px; color:var(--text-dark); }
+    .sp-role { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:#8aab8a; text-align:center; margin-bottom:16px; }
+    .sp-div { border-top:1px solid #f0ede8; margin:12px 0; }
+    .sp-row { display:flex; gap:12px; margin-bottom:8px; font-size:.82rem; }
+    .sp-lbl { color:#aaa; min-width:70px; font-size:.75rem; }
+    .sp-val { color:var(--text-dark); }
+    .sp-chip { display:inline-block; background:#f0f5f0; border:1px solid #c8ddc8; border-radius:20px; padding:4px 12px; font-size:.75rem; color:#5c7a5c; margin:3px; cursor:pointer; }
+    .sp-chip:hover { background:#5c7a5c; color:white; }
+
+    @media(max-width:768px){
+      .members-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+      .side-panel { width:100%; right:-100%; }
+    }
+    @media(max-width:380px){
+      .members-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+<script>
+  // Fetch site-data.js — skip if admin is previewing so live edits show immediately
+  try{
+    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')&&!localStorage.getItem('nukala_preview_mode')){
+      var _xhr=new XMLHttpRequest();
+      _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
+      _xhr.send();
+      if(_xhr.status===200) eval(_xhr.responseText);
+    }
+  }catch(e){}
+</script>
+<script src="auth.js"></script>
+<div class="logo-watermark"></div>
+
+<nav>
+    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
+        <ul class="nav-links">
+      <li><a href="home.html">Home</a>
+        <a href="members.html" class="active">Family Members</a></li>
+      <li><a href="tree.html">Family Tree</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="facts.html">Facts</a></li>
+      <li><a href="stats.html">Stats</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="map.html">Map</a></li>
+      <li><a href="polls.html">Polls</a></li>
+      <li><a href="recipes.html">Recipes</a></li>
+          <li><a href="qr.html">QR Code</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="join.html">Join Tree</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="nav-logout" onclick="logout()">Sign Out</button>
+  </nav>
+
+<main>
+  <div class="page-hero">
+    <p class="eyebrow">Our Family</p>
+    <h1>The <em>Nukala</em> Family Members</h1>
+    <div class="hero-divider"></div>
+    <p>Every leaf of our family tree. Tap any member to see their full story.</p>
+  </div>
+
+  <div class="content-area">
+    <!-- Stats bar -->
+    <div class="members-stats" id="membersStats"></div>
+
+    <!-- Search and filter -->
+    <div class="search-bar">
+      <input type="text" id="memberSearch" placeholder="&#128269; Search by name, role, city..." oninput="filterMembers()"/>
+      <select id="genFilter" onchange="filterMembers()">
+        <option value="">All Generations</option>
+      </select>
+      <select id="genderFilter" onchange="filterMembers()">
+        <option value="">All Members</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="ancestor">Ancestors</option>
+        <option value="living">Living</option>
+        <option value="deceased">Deceased</option>
+      </select>
+    </div>
+
+    <!-- View toggle -->
+    <div class="view-toggle">
+      <button class="vt-btn active" id="vtGrid" onclick="setView('grid')">&#9638; Card View</button>
+      <button class="vt-btn" id="vtList" onclick="setView('list')">&#9776; List View</button>
+      <button class="vt-btn" id="vtGen" onclick="setView('gen')">&#127963; By Generation</button>
+    </div>
+
+    <!-- Members container -->
+    <div id="membersContainer"></div>
+  </div>
+</main>
+
+<!-- Side panel -->
+<div class="side-panel" id="sidePanel">
+  <button class="sp-close" onclick="closePanel()">&#215;</button>
+  <div id="spPhotoWrap"></div>
+  <div class="sp-name" id="spName"></div>
+  <div class="sp-role" id="spRole"></div>
+  <div id="spBody"></div>
+</div>
+
+<footer>
+    &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
+  </footer>
+
+<script>
+// ── DATA ──
+function mLoad(k){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):({}); }catch(e){ return {}; } }
+
+// ── STATE ──
+var _view = 'grid';
+var _allMembers = [];
+var _filtered = [];
+var _genLabels = {
+  1:'Great-Great-Grandparents', 2:'Great-Grandparents', 3:'Grandparents',
+  4:'Parents & Aunts/Uncles', 5:'Your Generation', 6:'Children',
+  7:'Grandchildren', 8:'Great-Grandchildren'
+};
+
+function setView(v){
+  _view = v;
+  ['grid','list','gen'].forEach(function(x){
+    document.getElementById('vt'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active', x===v);
+  });
+  renderMembers(_filtered);
+}
+
+// ── INIT ──
+function init(){
+  var members = mLoad('nukala_tree_data');
+  _allMembers = Object.values(members);
+
+  // Stats bar
+  var living = _allMembers.filter(function(m){ return !m.deceased; });
+  var gens = [...new Set(_allMembers.map(function(m){ return m.gen; }).filter(Boolean))];
+  var withPhoto = _allMembers.filter(function(m){ return m.photo; });
+  var statsEl = document.getElementById('membersStats');
+  statsEl.innerHTML = [
+    {n:_allMembers.length, l:'Total Members'},
+    {n:living.length, l:'Living'},
+    {n:gens.length, l:'Generations'},
+    {n:withPhoto.length, l:'With Photos'}
+  ].map(function(s){ return '<div class="ms-card"><div class="ms-num">'+s.n+'</div><div class="ms-lbl">'+s.l+'</div></div>'; }).join('');
+
+  // Generation filter options
+  var genSel = document.getElementById('genFilter');
+  gens.sort(function(a,b){ return parseInt(a)-parseInt(b); }).forEach(function(g){
+    var opt = document.createElement('option');
+    opt.value = g;
+    opt.textContent = 'Gen '+g+(_genLabels[g]?' — '+_genLabels[g]:'');
+    genSel.appendChild(opt);
+  });
+
+  _filtered = _allMembers.slice();
+  renderMembers(_filtered);
+}
+
+function filterMembers(){
+  var search = document.getElementById('memberSearch').value.toLowerCase().trim();
+  var gen = document.getElementById('genFilter').value;
+  var gender = document.getElementById('genderFilter').value;
+  _filtered = _allMembers.filter(function(m){
+    var name = ([m.firstName,m.lastName,m.role,m.city].filter(Boolean).join(' ')).toLowerCase();
+    if(search && name.indexOf(search)===-1) return false;
+    if(gen && String(m.gen)!==gen) return false;
+    if(gender==='male' && m.female) return false;
+    if(gender==='female' && !m.female) return false;
+    if(gender==='ancestor' && !m.ancestor) return false;
+    if(gender==='living' && m.deceased) return false;
+    if(gender==='deceased' && !m.deceased) return false;
+    return true;
+  });
+  renderMembers(_filtered);
+}
+
+// ── RENDER ──
+function renderMembers(list){
+  var el = document.getElementById('membersContainer');
+  if(!_allMembers.length){
+    el.innerHTML = '<div class="empty-members"><div style="font-size:48px;margin-bottom:12px;">&#128101;</div><h3>No Members Yet</h3><p>Add members in the Admin panel to see them here.</p><a href="tree.html" style="display:inline-block;margin-top:16px;background:#5c7a5c;color:white;padding:10px 20px;border-radius:10px;text-decoration:none;">&#127795; View Family Tree</a></div>';
+    return;
+  }
+  if(!list.length){
+    el.innerHTML = '<div class="empty-members"><div style="font-size:48px;">&#128269;</div><h3>No Results</h3><p>Try a different search or filter.</p></div>';
+    return;
+  }
+  if(_view==='grid') renderGrid(list, el);
+  else if(_view==='list') renderList(list, el);
+  else renderByGen(list, el);
+}
+
+function avatarHtml(m, size, cls){
+  var name = [m.firstName,m.lastName].filter(Boolean).join(' ')||'?';
+  var emoji = m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
+  var photo = m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.style.display='none'">':emoji;
+  return '<div class="'+cls+'" style="width:'+size+'px;height:'+size+'px;border-radius:50%;padding:2px;background:linear-gradient(135deg,'+(m.ancestor?'#c9a84c,#a07020':m.female?'#d0a0e0,#9060b0':'#8aab8a,#5c7a5c')+')">'
+    +'<div style="width:100%;height:100%;border-radius:50%;background:#f5f3ee;display:flex;align-items:center;justify-content:center;font-size:'+(size*0.4)+'px;overflow:hidden;">'+photo+'</div>'
+    +(m.deceased?'<div style="position:absolute;bottom:0;right:0;width:18px;height:18px;background:#888;color:white;border-radius:50%;font-size:.5rem;display:flex;align-items:center;justify-content:center;border:2px solid white;">&#10013;</div>':'')
+    +'</div>';
+}
+
+function renderGrid(list, el){
+  el.innerHTML = '<div class="members-grid">'+list.map(function(m){
+    var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+    var cls='member-card'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
+    return '<div class="'+cls+'" onclick="showPanel(''+m.id+'')"><div style="position:relative;width:68px;margin:0 auto 12px;">'+avatarHtml(m,68,'')+'</div><div class="mc-name">'+name+'</div><div class="mc-role">'+(m.role||'')+'</div><div class="mc-meta">'+(m.city||'')+(m.born?' · b.'+m.born:'')+'</div>'+(m.gen?'<div class="mc-gen-badge">Gen '+m.gen+'</div>':'')+'</div>';
+  }).join('')+'</div>';
+}
+
+function renderList(list, el){
+  el.innerHTML = '<div class="members-list">'+list.map(function(m){
+    var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+    var cls='member-row'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
+    var photo=m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.style.display='none'">':(m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;');
+    return '<div class="'+cls+'" onclick="showPanel(''+m.id+'')"><div class="mr-avatar"><div class="mr-inner">'+photo+'</div></div><div class="mr-info"><div class="mr-name">'+name+'</div><div class="mr-sub">'+(m.role||'–')+(m.city?' · '+m.city:'')+'</div></div>'+(m.gen?'<div class="mr-gen">Gen '+m.gen+'</div>':'')+'<div class="mr-arrow">&#8250;</div></div>';
+  }).join('')+'</div>';
+}
+
+function renderByGen(list, el){
+  var byGen={};
+  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g])byGen[g]=[]; byGen[g].push(m); });
+  var gens=Object.keys(byGen).map(Number).sort(function(a,b){return a-b;});
+  el.innerHTML = gens.map(function(gen){
+    var rows=byGen[gen];
+    var title='Generation '+gen+(_genLabels[gen]?' &middot; '+_genLabels[gen]:'');
+    var cards=rows.map(function(m){
+      var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+      var cls='member-card'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
+      return '<div class="'+cls+'" onclick="showPanel(''+m.id+'')"><div style="position:relative;width:68px;margin:0 auto 12px;">'+avatarHtml(m,68,'')+'</div><div class="mc-name">'+name+'</div><div class="mc-role">'+(m.role||'')+'</div></div>';
+    }).join('');
+    return '<div class="gen-section"><div class="gen-header" onclick="toggleGen(this)"><h3>'+title+'</h3><div style="display:flex;align-items:center;gap:10px;"><span class="gh-count">'+rows.length+' member'+(rows.length!==1?'s':'')+'</span><span class="gen-arrow">&#9660;</span></div></div><div class="gen-body"><div class="members-grid">'+cards+'</div></div></div>';
+  }).join('');
+}
+
+function toggleGen(h){
+  h.classList.toggle('collapsed');
+  var body=h.nextElementSibling;
+  if(body) body.classList.toggle('hidden');
+}
+
+// ── SIDE PANEL ──
+function showPanel(id){
+  var members=mLoad('nukala_tree_data');
+  var m=members[id]; if(!m) return;
+  var all=Object.values(members);
+  var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+  var father=m.fatherId?members[m.fatherId]:null;
+  var mother=m.motherId?members[m.motherId]:null;
+  var spouse=m.spouseId?members[m.spouseId]:null;
+  var children=all.filter(function(x){return x.fatherId===id||x.motherId===id;});
+  var photo=m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.textContent=''+(m.female?'&#128105;':'&#128104;')+''">':'<span style="font-size:2.2rem;">'+(m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;')+'</span>';
+  document.getElementById('spPhotoWrap').innerHTML='<div class="sp-photo-wrap"><div class="sp-photo-inner">'+photo+'</div></div>';
+  document.getElementById('spName').textContent=name;
+  document.getElementById('spRole').textContent=(m.role||'–')+(m.gen?' · Gen '+m.gen:'');
+  function chip(p,lbl){ if(!p) return ''; var n=[p.firstName,p.lastName].filter(Boolean).join(' '); return '<span class="sp-chip" onclick="showPanel(''+p.id+'')">'+lbl+': '+n+'</span>'; }
+  var rels=[chip(father,'Father'),chip(mother,'Mother'),chip(spouse,'Spouse')].concat(children.map(function(c){return chip(c,'Child');})).filter(Boolean).join('');
+  document.getElementById('spBody').innerHTML=
+    (m.born?'<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">'+m.born+'</div></div>':'')+
+    (m.died?'<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">'+m.died+'</div></div>':'')+
+    (m.city?'<div class="sp-row"><div class="sp-lbl">&#128205; City</div><div class="sp-val">'+m.city+'</div></div>':'')+
+    (m.occ?'<div class="sp-row"><div class="sp-lbl">Work</div><div class="sp-val">'+m.occ+'</div></div>':'')+
+    (m.phone?'<div class="sp-row"><div class="sp-lbl">&#128222; Phone</div><div class="sp-val"><a href="tel:'+m.phone+'" style="color:inherit;">'+m.phone+'</a></div></div>':'')+
+    (m.whatsapp?'<div class="sp-row"><div class="sp-lbl">&#128172; WA</div><div class="sp-val"><a href="https://wa.me/'+m.whatsapp.replace(/[^0-9]/g,'')+'" target="_blank" style="color:#5c7a5c;">Chat</a></div></div>':'')+
+    (m.email?'<div class="sp-row"><div class="sp-lbl">&#9993; Email</div><div class="sp-val">'+m.email+'</div></div>':'')+
+    (m.notes?'<div class="sp-div"></div><div style="font-size:.82rem;color:#666;line-height:1.6;font-style:italic;">'+m.notes+'</div>':'')+
+    (rels?'<div class="sp-div"></div><div style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:#aaa;margin-bottom:8px;">Family Connections</div>'+rels:'');
+  document.getElementById('sidePanel').classList.add('open');
+}
+
+function closePanel(){ document.getElementById('sidePanel').classList.remove('open'); }
+
+// ── SETTINGS ──
+(function(){
+  var s=mLoad('nukala_settings'),h=mLoad('nukala_home'),sw=mLoad('nukala_sitewide');
+  var nn=document.getElementById('navSiteName');
+  if(nn) nn.textContent=(sw.navName||h.navName||(s.familyName?s.familyName.toUpperCase():'NUKALA'));
+  var fn=document.getElementById('footerText');
+  if(fn&&s.familyName) fn.textContent='The '+s.familyName+' Family';
+})();
+
+init();
+</script>
+
+<script>
+
+(function(){
+  function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
+
+  // ── THEME ──
+  const theme = load('nukala_theme');
+  if(theme){
+    const r = document.documentElement;
+    if(theme.primary)   r.style.setProperty('--sage-dark', theme.primary);
+    if(theme.secondary) r.style.setProperty('--sage', theme.secondary);
+    if(theme.highlight) r.style.setProperty('--gold', theme.highlight);
+    if(theme.bg)        r.style.setProperty('--cream', theme.bg);
+    if(theme.text)      r.style.setProperty('--text-dark', theme.text);
+    if(theme.fontBody)  document.body.style.fontFamily = theme.fontBody+', sans-serif';
+    if(theme.fontSize)  document.body.style.fontSize = theme.fontSize;
+    if(theme.fontScale && theme.fontScale !== '1.0'){
+      const scale = parseFloat(theme.fontScale)||1;
+      document.querySelectorAll('h1,h2,h3,.hero-title,.sh').forEach(function(el){
+        const curr = parseFloat(getComputedStyle(el).fontSize)||16;
+        el.style.fontSize = (curr * scale) + 'px';
+      });
+    }
+    if(theme.siteBackground){
+      document.body.style.background = theme.siteBackground;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.documentElement.style.setProperty('--cream', 'transparent');
+    }
+  }
+
+  // ── TYPOGRAPHY ──
+  const typo = load('nukala_typography');
+  if(typo){
+    const style = document.createElement('style');
+    let css = '';
+    if(typo.heroSize) css += `.page-hero h1, .hero-title { font-size: ${typo.heroSize} !important; }`;
+    if(typo.navSize)  css += `.nav-links a { font-size: ${typo.navSize} !important; }`;
+    if(typo.bodySize) css += `body { font-size: ${typo.bodySize}; }`;
+    if(typo.radius)   css += `.card, .panel, .pcard { border-radius: ${typo.radius} !important; }`;
+    if(typo.maxWidth) css += `.content-area, .page-hero { max-width: ${typo.maxWidth} !important; }`;
+    if(typo.navLS)    css += `.nav-links a { letter-spacing: ${typo.navLS} !important; }`;
+    if(typo.btnRadius)css += `.btn, button.nav-logout { border-radius: ${typo.btnRadius} !important; }`;
+    if(css){ style.textContent = css; document.head.appendChild(style); }
+  }
+
+  // ── SITE WIDE ──
+  const sw = load('nukala_sitewide');
+  const hd = load('nukala_home');
+  const s  = load('nukala_settings');
+  const navName = (sw&&sw.navName) || (hd&&hd.navName) || (s&&s.familyName ? s.familyName.toUpperCase() : 'NUKALA');
+  document.querySelectorAll('.nav-site-name, #navSiteName').forEach(el=>el.textContent=navName);
+  const footerName = s&&s.familyName ? 'The '+s.familyName+' Family' : 'The Nukala Family';
+  document.querySelectorAll('#footerName,#footerFamilyName,#footerText').forEach(el=>el.textContent=footerName);
+  if(sw&&sw.footer){
+    document.querySelectorAll('footer strong').forEach(el=>el.textContent=sw.footer);
+  }
+
+  // ── NAV MENU ──
+  const navMenu = load('nukala_navmenu');
+  if(navMenu && navMenu.items){
+    const activeItems = navMenu.items.filter(i=>i.active!==false);
+    document.querySelectorAll('nav .nav-links').forEach(ul=>{
+      const currentPage = location.pathname.split('/').pop()||'home.html';
+      ul.innerHTML = activeItems.map(item=>`<li><a href="${item.href}" ${currentPage===item.href?'class="active"':''}>${item.label}</a></li>`).join('');
+      // Always ensure Join Tree appears in nav
+      if(!ul.querySelector('a[href="join.html"]')){
+        const li=document.createElement('li');
+        li.innerHTML=`<a href="join.html" ${currentPage==='join.html'?'class="active"':''}>Join Tree</a>`;
+        ul.appendChild(li);
+      }
+      if(!ul.querySelector('a[href="about.html"]')){
+        const li2=document.createElement('li');
+        li2.innerHTML=`<a href="about.html" ${currentPage==='about.html'?'class="active"':''}>About</a>`;
+        ul.appendChild(li2);
+      }
+    });
+  } else {
+    // No navmenu saved yet — ensure Join Tree still appears
+    document.querySelectorAll('nav .nav-links').forEach(ul=>{
+      const currentPage = location.pathname.split('/').pop()||'home.html';
+      if(!ul.querySelector('a[href="join.html"]')){
+        const li=document.createElement('li');
+        li.innerHTML=`<a href="join.html" ${currentPage==='join.html'?'class="active"':''}>Join Tree</a>`;
+        ul.appendChild(li);
+      }
+    });
+  }
+
+  // ── NEW PAGES CONTENT ──
+  const np = load('nukala_newpages');
+  const currentPage = location.pathname.split('/').pop()||'home.html';
+  const pageKey = {
+    'events.html':'events','recipes.html':'recipes',
+    'polls.html':'polls','stats.html':'stats',
+    'map.html':'map','facts.html':'facts','history.html':'history',
+    'gallery.html':'gallery','contact.html':'contact','tree.html':'tree'
+  }[currentPage];
+
+  if(np && pageKey && np[pageKey]){
+    const pd = np[pageKey];
+    // Eyebrow
+    const eyeEl = document.querySelector('.page-hero .eyebrow');
+    if(eyeEl && pd.eye) eyeEl.textContent = pd.eye;
+    // Title — rebuild with italic
+    const h1El = document.querySelector('.page-hero h1');
+    if(h1El && pd.title){
+      const em = pd.em || '';
+      if(em && pd.title.includes(em)){
+        h1El.innerHTML = pd.title.replace(em, `<em>${em}</em>`);
+      } else {
+        h1El.textContent = pd.title;
+      }
+    }
+    // Description
+    const descEl = document.querySelector('.page-hero p');
+    if(descEl && pd.desc) descEl.textContent = pd.desc;
+    // History quote
+    if(pageKey==='history' && pd.quote){
+      const q = document.querySelector('.history-intro');
+      if(q) q.textContent = pd.quote;
+    }
+    // Contact extras
+    if(pageKey==='contact'){
+      const h = document.querySelector('.contact-info h2');
+      if(h && pd.heading) h.innerHTML = pd.heading;
+      const p = document.querySelector('.contact-info > p');
+      if(p && pd.para) p.textContent = pd.para;
+    }
+    // Gallery title/desc
+    if(pageKey==='gallery'){
+      const gt = document.getElementById('galPageTitle');
+      const gd = document.getElementById('galPageDesc');
+      if(gt && pd.title) gt.textContent = pd.title;
+      if(gd && pd.desc) gd.textContent = pd.desc;
+    }
+  }
+
+  // ── HERO IMAGE ──
+  const hero = load('nukala_heropage');
+  if(hero && hero.homeImgUrl && currentPage==='home.html'){
+    const banner = document.querySelector('.hero-banner');
+    if(banner){
+      banner.style.backgroundImage = `url('${hero.homeImgUrl}')`;
+      banner.style.backgroundSize = 'cover';
+      banner.style.backgroundPosition = 'center';
+    }
+  }
+  // Per-page hero settings
+  if(hero){
+    const heroPageMap={'tree.html':0,'history.html':1,'gallery.html':2,'facts.html':3,'contact.html':4};
+    const heroIdx = heroPageMap[currentPage];
+    if(heroIdx !== undefined && hero['page'+heroIdx]){
+      const hpd = hero['page'+heroIdx];
+      const eyeEl = document.querySelector('.page-hero .eyebrow');
+      const h1El = document.querySelector('.page-hero h1');
+      const descEl = document.querySelector('.page-hero p');
+      // Only override if np didn't already set (np takes priority)
+      if(eyeEl && hpd.eye && !(np&&pageKey&&np[pageKey]&&np[pageKey].eye)) eyeEl.textContent = hpd.eye;
+      if(h1El && hpd.title && !(np&&pageKey&&np[pageKey]&&np[pageKey].title)) h1El.innerHTML = hpd.title;
+      if(descEl && hpd.desc && !(np&&pageKey&&np[pageKey]&&np[pageKey].desc)) descEl.textContent = hpd.desc;
+    }
+  }
+
+  // ── GALLERY FILTER CATEGORIES ──
+  const gp = load('nukala_gallerypage2');
+  if(gp && gp.cats && currentPage==='gallery.html'){
+    const filterBar = document.getElementById('filterBar');
+    if(filterBar){
+      filterBar.innerHTML = '<button class="filter-btn active" onclick="filterGallery(\'all\',this)">All Photos</button>' +
+        gp.cats.map(c=>`<button class="filter-btn" onclick="filterGallery('${c}',this)">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
+    }
+  }
+
+  // ── CONTACT DROPDOWN ──
+  const cp = load('nukala_contactpage2');
+  if(cp && cp.dropdownOpts && currentPage==='contact.html'){
+    const sel = document.getElementById('subject');
+    if(sel) sel.innerHTML = '<option value="">— Select a reason —</option>'+cp.dropdownOpts.map(o=>`<option>${o}</option>`).join('');
+  }
+  if(cp && cp.contactWays && currentPage==='contact.html'){
+    const cw = document.getElementById('contactWays');
+    if(cw) cw.innerHTML = cp.contactWays.map(w=>`<div class="contact-way"><div class="contact-way-icon">${w.icon}</div><div><div class="contact-way-title">${w.title}</div><div class="contact-way-desc">${w.desc}</div></div></div>`).join('');
+  }
+
+  // ── HOME QUICK CARDS ──
+  const hp2 = load('nukala_homepage2');
+  if(hp2 && hp2.quickCards && currentPage==='home.html'){
+    const qn = document.getElementById('quickNavCards');
+    if(qn) qn.innerHTML = hp2.quickCards.map(c=>`<a class="quick-card fade-in" href="${c.link}"><div class="quick-card-icon">${c.icon}</div><div class="quick-card-title">${c.title}</div><div class="quick-card-desc">${c.desc}</div><div class="quick-card-arrow">${c.arrow}</div></a>`).join('');
+  }
+  // Recent Updates removed — see Admin panel log
+
+})();
+
+</script>
+<script src="nukala.js"></script>
+<script src="lang.js"></script>
+</body>
+</html>
