@@ -1228,7 +1228,20 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <h2 id="mmH">Add Member</h2><p class="msub">Fill in details. Only First Name is required.</p>
   <input type="hidden" id="mmId"/>
   <div class="pu" id="mmPU"><div id="mmPH" style="font-size:.82rem;color:var(--tm);">📷 Click to upload photo</div><img id="mmPrev" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid var(--b);display:none;" alt=""/><input type="file" id="mmFile" accept="image/*" style="display:none;"/></div>
-  <div class="fg"><label>Photo URL (optional)</label><input type="text" class="fi" id="mmPhotoUrl" placeholder="https://..."/></div>
+  <div class="fg"><label>Photo</label>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="btn bo bsm" id="mmUploadBtn" style="flex-shrink:0;">&#128247; Upload from Device</button>
+        <input type="file" id="mmFile2" accept="image/*" style="display:none;"/>
+      </div>
+      <input type="text" class="fi" id="mmPhotoUrl" placeholder="Or paste image URL: https://..."/>
+      <div id="mmPhotoPreview" style="display:none;margin-top:4px;">
+        <img id="mmPrevImg2" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--b);"/>
+        <button type="button" class="btn bo bsm" id="mmClearPhoto" style="margin-left:8px;font-size:.7rem;">&#10005; Clear</button>
+      </div>
+      <p style="font-size:.7rem;color:var(--tl);margin:0;">Upload converts to base64 (stored in browser). For best results use <a href="https://imgbb.com" target="_blank" style="color:var(--sd);">imgbb.com</a> to host and paste the URL.</p>
+    </div>
+  </div>
   <div class="fr"><div class="fg"><label>First Name *</label><input type="text" class="fi" id="mmFirst" placeholder="e.g. Ramu"/></div><div class="fg"><label>Last Name</label><input type="text" class="fi" id="mmLast" placeholder="e.g. Nukala"/></div></div>
   <div class="fg"><label>Relationship</label><select class="fi" id="mmRole"><option value="">— Select —</option><optgroup label="Ancestors"><option>Great-Great-Grandfather</option><option>Great-Great-Grandmother</option><option>Great-Grandfather</option><option>Great-Grandmother</option></optgroup><optgroup label="Grandparents"><option>Grandfather</option><option>Grandmother</option></optgroup><optgroup label="Parents"><option>Father</option><option>Mother</option><option>Uncle</option><option>Aunt</option></optgroup><optgroup label="Your Generation"><option>You</option><option>Wife</option><option>Husband</option><option>Spouse</option><option>Brother</option><option>Sister</option><option>Cousin</option><option>Brother-in-law</option><option>Sister-in-law</option></optgroup><optgroup label="In-laws"><option>Father-in-law</option><option>Mother-in-law</option></optgroup><optgroup label="Children"><option>Son</option><option>Daughter</option><option>Nephew</option><option>Niece</option><option>Son-in-law</option><option>Daughter-in-law</option></optgroup><optgroup label="Grandchildren"><option>Grandson</option><option>Granddaughter</option></optgroup><option value="other">Other...</option></select></div>
   <div class="fg" id="mmCRG" style="display:none;"><label>Custom Role</label><input type="text" class="fi" id="mmCRole"/></div>
@@ -1396,6 +1409,6 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=86148"></script>
+<script src="admin.js?v=27755"></script>
 </body>
 </html>

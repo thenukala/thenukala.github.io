@@ -1,6 +1,6 @@
 // Nukala Family Tree - Service Worker v4
 // Strategy: Network-first for HTML and JS data files, cache-first for static assets
-const CACHE_NAME = 'nukala-v4';
+const CACHE_NAME = 'nukala-v5';
 
 // Static assets that rarely change - cache these
 const STATIC_ASSETS = [
@@ -11,7 +11,7 @@ const STATIC_ASSETS = [
 
 // Files that must ALWAYS be fresh (never serve from cache)
 const ALWAYS_FRESH = [
-  'site-data.js',
+  'site-data.js', 'admin.js', 'sw.js',
   'home.html', 'tree.html', 'join.html', 'history.html', 'gallery.html',
   'facts.html', 'stats.html', 'events.html', 'recipes.html',
   'achievements.html', 'videos.html', 'polls.html', 'map.html',

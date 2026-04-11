@@ -148,6 +148,39 @@ document.getElementById('mGenF').addEventListener('change', renderMembers);
 document.getElementById('mSrch').addEventListener('input', renderMembers);
 document.getElementById('mmRole').addEventListener('change', function(){document.getElementById('mmCRG').style.display=this.value==='other'?'block':'none';});
 document.getElementById('mmPU').addEventListener('click',function(){document.getElementById('mmFile').click();});
+
+// ── Device photo upload (member modal) ──
+document.getElementById('mmUploadBtn').addEventListener('click',function(){
+  document.getElementById('mmFile2').click();
+});
+document.getElementById('mmFile2').addEventListener('change',function(){
+  var file=this.files&&this.files[0];
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var dataUrl=e.target.result;
+    document.getElementById('mmPhotoUrl').value=dataUrl;
+    var prev=document.getElementById('mmPrevImg2');
+    var wrap=document.getElementById('mmPhotoPreview');
+    if(prev){ prev.src=dataUrl; }
+    if(wrap){ wrap.style.display='flex'; wrap.style.alignItems='center'; }
+    // Also update the existing preview if present
+    var existPrev=document.getElementById('mmPrev');
+    if(existPrev){ existPrev.src=dataUrl; existPrev.style.display='block'; }
+    var existPH=document.getElementById('mmPH');
+    if(existPH) existPH.style.display='none';
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById('mmClearPhoto').addEventListener('click',function(){
+  document.getElementById('mmPhotoUrl').value='';
+  document.getElementById('mmPhotoPreview').style.display='none';
+  document.getElementById('mmFile2').value='';
+  var existPrev=document.getElementById('mmPrev');
+  if(existPrev){ existPrev.src=''; existPrev.style.display='none'; }
+  var existPH=document.getElementById('mmPH');
+  if(existPH) existPH.style.display='flex';
+});
 document.getElementById('mmFile').addEventListener('change',function(){if(!this.files||!this.files[0])return;var r=new FileReader();r.onload=function(e){document.getElementById('mmPrev').src=e.target.result;document.getElementById('mmPrev').style.display='block';document.getElementById('mmPH').style.display='none';};r.readAsDataURL(this.files[0]);});
 document.getElementById('mmPhotoUrl').addEventListener('input',function(){if(this.value){document.getElementById('mmPrev').src=this.value;document.getElementById('mmPrev').style.display='block';document.getElementById('mmPH').style.display='none';}});
 document.getElementById('saveMemberBtn').addEventListener('click', saveMember);

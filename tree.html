@@ -13,414 +13,113 @@
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#5c7a5c"/>
   <link rel="icon" href="favicon.ico"/>
-  <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
-    /* ── PAGE BACKGROUND ── */
-    .tree-page-bg {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 60% 40% at 10% 90%, rgba(92,122,92,0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 60% at 90% 10%, rgba(201,168,76,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 80% 80% at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 100%);
-    }
-
-    /* Decorative floating leaves */
-    .leaf-decor {
-      position: fixed; pointer-events: none; z-index: 0; opacity: 0.04;
-      font-size: 120px; animation: leafFloat 8s ease-in-out infinite;
-    }
-    .leaf-decor:nth-child(1){ top: 5%; right: 3%; animation-delay: 0s; font-size: 80px; }
-    .leaf-decor:nth-child(2){ bottom: 8%; left: 2%; animation-delay: 3s; font-size: 100px; }
-    .leaf-decor:nth-child(3){ top: 40%; right: 1%; animation-delay: 5s; font-size: 60px; }
-    @keyframes leafFloat { 0%,100%{ transform:rotate(-5deg) scale(1); } 50%{ transform:rotate(5deg) scale(1.05); } }
-
-    /* ── TOOLBAR ── */
-    .tree-toolbar {
-      display: flex; align-items: center; gap: 8px;
-      flex-wrap: wrap; margin-bottom: 14px;
-      position: relative; z-index: 2;
-    }
-    .tb-btn {
-      padding: 8px 14px; border-radius: 20px;
-      border: 1.5px solid var(--border); background: rgba(255,255,255,0.9);
-      font-family: 'Jost', sans-serif; font-size: 0.73rem; font-weight: 500;
-      color: var(--text-mid); cursor: pointer; transition: all 0.2s;
-      backdrop-filter: blur(8px);
-    }
-    .tb-btn:hover, .tb-btn.active {
-      background: var(--sage-dark); color: white; border-color: var(--sage-dark);
-      box-shadow: 0 4px 12px rgba(92,122,92,0.3);
-    }
-    .zoom-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-    .z-btn {
-      width: 32px; height: 32px; border-radius: 50%;
-      border: 1.5px solid var(--border); background: rgba(255,255,255,0.9);
-      font-size: 1rem; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; color: var(--text-mid); transition: all 0.2s;
-    }
-    .z-btn:hover { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
-    .z-label { font-size: 0.73rem; color: var(--text-mid); min-width: 38px; text-align: center; }
-
-    /* ── TREE VIEWPORT ── */
+    /* Tree layout */
     .tree-viewport {
-      width: 100%; overflow: auto;
-      border-radius: 24px; min-height: 560px;
-      position: relative; cursor: grab; user-select: none;
-      background:
-        linear-gradient(160deg, #f0f5f0 0%, #faf8f4 40%, #fdf9f0 100%);
-      border: 1px solid rgba(138,171,138,0.3);
-      box-shadow:
-        inset 0 2px 20px rgba(138,171,138,0.06),
-        0 8px 40px rgba(0,0,0,0.06);
+      width:100%; overflow:auto; border-radius:20px; min-height:560px;
+      position:relative; cursor:grab; user-select:none;
+      background:linear-gradient(160deg,#f0f5f0 0%,#faf8f4 40%,#fdf9f0 100%);
+      border:1px solid rgba(138,171,138,0.3);
+      box-shadow:inset 0 2px 20px rgba(138,171,138,0.06),0 8px 40px rgba(0,0,0,0.06);
     }
-    .tree-viewport:active { cursor: grabbing; }
-    .tree-canvas {
-      position: relative; display: inline-block;
-      transform-origin: top left; transition: transform 0.15s;
-      padding: 80px 80px 100px;
-    }
-
-    /* SVG organic branches */
-    #branchSvg {
-      position: absolute; top: 0; left: 0;
-      pointer-events: none; overflow: visible;
-    }
-
-    /* Branch styles — organic curved paths */
-    .branch-main {
-      stroke: var(--tc-main, #8aab8a); stroke-width: 3; fill: none;
-      stroke-linecap: round; filter: drop-shadow(0 2px 4px rgba(92,122,92,0.15));
-    }
-
-    /* ── LIST VIEW ── */
-    #treeListView { display:none; padding:0 16px 24px; }
-    .tlv-gen { margin-bottom:18px; }
-    .tlv-gen-title {
-      font-size:.7rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
-      color:var(--sage-dark,#5c7a5c); padding:8px 0 6px;
-      border-bottom:1.5px solid var(--border,#e8e2d8); margin-bottom:10px;
-      display:flex; align-items:center; justify-content:space-between; cursor:pointer;
-    }
-    .tlv-gen-title .tlv-arrow { transition:transform .2s; }
-    .tlv-gen-title.collapsed .tlv-arrow { transform:rotate(-90deg); }
-    .tlv-members { display:flex; flex-wrap:wrap; gap:8px; }
-    .tlv-members.collapsed { display:none; }
-    .tlv-card {
-      display:flex; align-items:center; gap:10px;
-      padding:10px 14px; border-radius:12px;
-      background:var(--warm-white,#faf8f4); border:1px solid var(--border,#e8e2d8);
-      cursor:pointer; transition:box-shadow .15s; min-width:160px; flex:1;
-    }
-    .tlv-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
-    .tlv-avatar {
-      width:38px; height:38px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:1.2rem; flex-shrink:0;
-      border:2px solid var(--sage-light,#c8ddc8);
-    }
-    .tlv-avatar img { width:100%; height:100%; border-radius:50%; object-fit:cover; }
-    .tlv-avatar.female { border-color:var(--tc-female,#d0c0f0); }
-    .tlv-avatar.ancestor { border-color:var(--tc-ancestor,#c9a84c); background:rgba(201,168,76,.08); }
-    .tlv-info { flex:1; min-width:0; }
-    .tlv-name { font-size:.83rem; font-weight:500; color:var(--text-dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .tlv-role { font-size:.7rem; color:var(--text-light); }
-    .tlv-arrow-r { color:var(--sage-dark,#5c7a5c); font-size:.8rem; flex-shrink:0; }
-
-    /* ── MOBILE VIEW TOGGLE BUTTON ── */
-    #mobileViewToggle {
-      display:none; position:fixed; bottom:20px; right:20px; z-index:500;
-      background:var(--sage-dark,#5c7a5c); color:white;
-      border:none; border-radius:50px; padding:10px 18px;
-      font-size:.78rem; font-weight:600; letter-spacing:.06em;
-      box-shadow:0 4px 20px rgba(0,0,0,.2); cursor:pointer;
-      transition:transform .15s, box-shadow .15s;
-    }
-    #mobileViewToggle:active { transform:scale(.96); }
-
-    @media (max-width: 768px) {
-      #mobileViewToggle { display:flex; align-items:center; gap:6px; }
-    }
-    .branch-spouse {
-      stroke: var(--tc-spouse, #c9a84c); stroke-width: 2; fill: none;
-      stroke-dasharray: 8,4; stroke-linecap: round; opacity: 0.8;
-    }
-    .branch-inlaw {
-      stroke: var(--tc-female-branch, #c06090); stroke-width: 1.5; fill: none;
-      stroke-dasharray: 4,4; stroke-linecap: round; opacity: 0.7;
-    }
-    /* Female branch — Nukala daughter married out */
-    .branch-female {
-      stroke: var(--tc-female-branch, #c06090); stroke-width: 2.5; fill: none;
-      stroke-dasharray: 10,5; stroke-linecap: round; opacity: 0.85;
-    }
-
-    /* Animated branch drawing */
-    .branch-animated {
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000;
-      animation: drawBranch 1.5s ease forwards;
-    }
-    @keyframes drawBranch {
-      to { stroke-dashoffset: 0; }
-    }
-
-    /* Branch node dot */
-    .branch-node {
-      fill: white; stroke: #8aab8a; stroke-width: 2;
-    }
-
-    /* ── GENERATION LABELS ── */
-    .gen-ribbon {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: linear-gradient(135deg, rgba(92,122,92,0.9), rgba(138,171,138,0.9));
-      color: white; font-size: 0.64rem; font-weight: 600;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      padding: 5px 14px; border-radius: 20px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 12px rgba(92,122,92,0.25);
-      position: absolute; left: 0; white-space: nowrap;
-    }
-
-    /* ── PERSON CARD — Redesigned ── */
+    .tree-viewport:active { cursor:grabbing; }
+    .tree-canvas { position:relative; display:inline-block; transform-origin:top left; transition:transform 0.15s; padding:80px 80px 100px; }
+    /* Person cards */
     .pcard {
-      position: absolute; width: 148px;
-      background: rgba(255,255,255,0.95);
-      border: 1.5px solid rgba(232,226,216,0.8);
-      border-radius: 20px; padding: 14px 12px 12px;
-      text-align: center; cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow:
-        0 4px 16px rgba(0,0,0,0.06),
-        0 1px 4px rgba(0,0,0,0.04);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      position:absolute; width:148px;
+      background:rgba(255,255,255,0.95);
+      border:1.5px solid rgba(232,226,216,0.8);
+      border-radius:20px; padding:14px 12px 12px;
+      text-align:center; cursor:pointer;
+      transition:all 0.3s; box-shadow:0 4px 16px rgba(0,0,0,0.06);
     }
-
-    .pcard::before {
-      content: '';
-      position: absolute;
-      inset: 0; border-radius: 20px;
-      background: linear-gradient(160deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 100%);
-      pointer-events: none;
-    }
-
-    .pcard:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow:
-        0 16px 40px rgba(92,122,92,0.2),
-        0 4px 12px rgba(92,122,92,0.1);
-      border-color: rgba(138,171,138,0.6);
-      z-index: 10;
-    }
-
-    /* Card type variants */
-    .pcard.ancestor {
-      background: rgba(255,253,247,0.97);
-      border-color: var(--tc-ancestor-border, rgba(201,168,76,0.4));
-      box-shadow: 0 4px 16px rgba(201,168,76,0.1), 0 1px 4px rgba(0,0,0,0.04);
-    }
-    .pcard.ancestor:hover {
-      border-color: var(--tc-ancestor, rgba(201,168,76,0.7));
-    }
-    .pcard.female { border-color: var(--tc-female-border, rgba(208,192,240,0.5)); }
-    .pcard.female:hover { border-color: var(--tc-female, rgba(176,144,208,0.7)); box-shadow: 0 16px 40px rgba(176,144,208,0.2); }
-    .pcard.deceased { opacity: 0.65; }
-    .pcard.inlaw { border-color: rgba(208,192,240,0.4); background: rgba(253,248,255,0.97); }
-    .pcard.selected {
-      border-color: var(--sage-dark) !important;
-      box-shadow: 0 0 0 3px rgba(92,122,92,0.2), 0 16px 40px rgba(92,122,92,0.2) !important;
-    }
-
-    /* Photo ring */
-    .pc-ring {
-      width: 60px; height: 60px; border-radius: 50%;
-      margin: 0 auto 8px; position: relative;
-    }
-    .pc-ring::before {
-      content: '';
-      position: absolute; inset: -3px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--sage), var(--gold));
-      z-index: 0;
-    }
-    .pcard.female .pc-ring::before { background: linear-gradient(135deg, var(--tc-female, #d0a0e0), var(--tc-female-dark, #9060b0)); }
-    .pcard.ancestor .pc-ring::before { background: linear-gradient(135deg, var(--tc-ancestor, #c9a84c), var(--tc-ancestor-dark, #a07020)); }
-    .pcard.deceased .pc-ring::before { background: linear-gradient(135deg, #aaa, #888); }
-
-    .pc-photo {
-      width: 100%; height: 100%; border-radius: 50%;
-      position: relative; z-index: 1;
-      background: var(--sage-light);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; overflow: hidden;
-      border: 2px solid white;
-    }
-    .pcard.female .pc-photo { background: #f0e8f8; }
-    .pcard.ancestor .pc-photo { background: var(--gold-light); }
-    .pcard.inlaw .pc-photo { background: #f0e8f8; }
-    .pcard.deceased .pc-photo { filter: grayscale(0.5); background: #e8e8e8; }
-
-    .pc-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    .pc-deceased-badge {
-      position: absolute; bottom: -1px; right: -1px; z-index: 2;
-      width: 16px; height: 16px; background: #888;
-      border-radius: 50%; border: 2px solid white;
-      font-size: 8px; display: flex; align-items: center; justify-content: center; color: white;
-    }
-
-    .pc-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.88rem; font-weight: 600;
-      color: var(--text-dark); line-height: 1.2; margin-bottom: 2px;
-    }
-    .pc-role {
-      font-size: 0.58rem; font-weight: 600; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--sage-dark); margin-bottom: 1px;
-    }
-    .pcard.female .pc-role { color: #9060b0; }
-    .pcard.ancestor .pc-role { color: #a07020; }
-    .pcard.inlaw .pc-role { color: #7050a0; }
-    .pc-dates { font-size: 0.58rem; color: var(--text-light); }
-
-    /* Spouse heart badge */
-    .spouse-heart {
-      position: absolute; z-index: 5;
-      font-size: 14px; pointer-events: none;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-      animation: heartBeat 2s ease-in-out infinite;
-    }
-    @keyframes heartBeat {
-      0%,100%{ transform: scale(1); }
-      50%{ transform: scale(1.2); }
-    }
-
-    /* ── LEGEND ── */
-    .tree-legend {
-      display: flex; gap: 12px; flex-wrap: wrap;
-      margin-bottom: 14px; padding: 10px 16px;
-      background: rgba(255,255,255,0.85); border: 1px solid var(--border);
-      border-radius: 40px; align-items: center;
-      backdrop-filter: blur(12px); position: relative; z-index: 2;
-    }
-    .lg-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); }
-    .lg-item { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: var(--text-mid); }
-    .lg-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid; flex-shrink: 0; }
-    .lg-line { width: 20px; height: 2.5px; border-radius: 2px; flex-shrink: 0; }
-    .lg-dashed { width: 20px; height: 0; border-top: 2px dashed; flex-shrink: 0; }
-
-    /* ── SIDE PANEL ── */
-    .side-panel {
-      position: fixed; right: -400px; top: var(--nav-height);
-      width: 370px; height: calc(100vh - var(--nav-height));
-      background: rgba(255,255,255,0.97); border-left: 1px solid var(--border);
-      padding: 0; z-index: 50; overflow: hidden;
-      transition: right 0.35s cubic-bezier(0.16,1,0.3,1);
-      backdrop-filter: blur(20px);
-      box-shadow: -8px 0 40px rgba(0,0,0,0.08);
-    }
-    .side-panel.open { right: 0; }
-
-    .sp-header {
-      padding: 28px 24px 20px;
-      background: linear-gradient(135deg, #f0f5f0, #fdfaf4);
-      border-bottom: 1px solid var(--border);
-      position: relative; text-align: center;
-    }
-    .sp-close {
-      position: absolute; top: 14px; right: 14px;
-      background: white; border: 1px solid var(--border); font-size: 0.9rem;
-      cursor: pointer; color: var(--text-light); width: 28px; height: 28px;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
-    }
-    .sp-close:hover { background: var(--red); color: white; border-color: var(--red); }
-
-    .sp-photo-wrap {
-      width: 80px; height: 80px; border-radius: 50%;
-      margin: 0 auto 12px; position: relative;
-    }
-    .sp-photo-wrap::before {
-      content: ''; position: absolute; inset: -3px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--sage), var(--gold));
-    }
-    .sp-photo-inner {
-      width: 100%; height: 100%; border-radius: 50%;
-      position: relative; z-index: 1;
-      background: var(--sage-light); display: flex;
-      align-items: center; justify-content: center;
-      font-size: 32px; overflow: hidden; border: 3px solid white;
-    }
-    .sp-photo-inner img { width: 100%; height: 100%; object-fit: cover; }
-
-    .sp-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 2px; }
-    .sp-role { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage-dark); }
-
-    .sp-body { padding: 20px 24px; overflow-y: auto; height: calc(100% - 200px); }
-    .sp-row { display: flex; gap: 10px; margin-bottom: 9px; }
-    .sp-lbl { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); min-width: 80px; padding-top: 2px; flex-shrink: 0; }
-    .sp-val { font-size: 0.84rem; color: var(--text-dark); line-height: 1.5; }
-    .sp-div { height: 1px; background: var(--border); margin: 12px 0; }
-    .sp-notes { background: var(--cream); border-radius: 12px; padding: 12px 14px; font-size: 0.8rem; color: var(--text-mid); line-height: 1.7; font-style: italic; border-left: 3px solid var(--sage-light); }
-    .sp-rel-title { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); margin: 14px 0 8px; }
-    .sp-chip { display: inline-flex; align-items: center; gap: 5px; background: white; border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; margin: 3px 3px 0 0; font-size: 0.72rem; color: var(--text-dark); cursor: pointer; transition: all 0.2s; }
-    .sp-chip:hover { background: var(--sage-light); border-color: var(--sage); transform: translateY(-1px); }
-    .sp-edit-btn { display: block; width: 100%; padding: 11px; background: linear-gradient(135deg,var(--sage-dark),var(--sage)); color: white; border: none; border-radius: 12px; font-family: 'Jost',sans-serif; font-size: 0.76rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; margin-top: 16px; transition: all 0.2s; }
-    .sp-edit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(92,122,92,0.3); }
-
+    .pcard:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.12); }
+    .pcard.selected { box-shadow:0 0 0 3px #5c7a5c; }
+    .pcard.female { border-color:rgba(208,192,240,0.6); }
+    .pcard.ancestor { background:rgba(255,253,247,0.97); border-color:rgba(201,168,76,0.4); }
+    .pcard.deceased { opacity:0.65; }
+    .pc-ring { width:56px; height:56px; border-radius:50%; margin:0 auto 8px; position:relative; }
+    .pc-ring::before { content:''; position:absolute; inset:-3px; border-radius:50%; background:linear-gradient(135deg,#8aab8a,#5c7a5c); z-index:0; }
+    .pcard.female .pc-ring::before { background:linear-gradient(135deg,#d0a0e0,#9060b0); }
+    .pcard.ancestor .pc-ring::before { background:linear-gradient(135deg,#c9a84c,#a07020); }
+    .pc-photo { width:100%; height:100%; border-radius:50%; position:relative; z-index:1; overflow:hidden; background:white; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
+    .pc-photo img { width:100%; height:100%; object-fit:cover; }
+    .pc-name { font-family:'Cormorant Garamond',serif; font-size:.82rem; font-weight:600; color:#2c2c2c; margin-bottom:2px; }
+    .pc-role { font-size:.65rem; color:#8a9a8a; letter-spacing:.06em; text-transform:uppercase; }
+    .pc-dates { font-size:.62rem; color:#aaa; margin-top:2px; }
+    /* SVG lines */
+    .branch-main { stroke:#8aab8a; stroke-width:3; fill:none; stroke-linecap:round; }
+    .branch-spouse { stroke:#c9a84c; stroke-width:2; fill:none; stroke-dasharray:8,4; stroke-linecap:round; opacity:0.8; }
+    .branch-female { stroke:#c06090; stroke-width:2.5; fill:none; stroke-dasharray:10,5; stroke-linecap:round; opacity:0.85; }
+    .branch-node { fill:white; stroke:#8aab8a; stroke-width:2; }
+    .branch-animated { stroke-dasharray:1000; stroke-dashoffset:1000; animation:drawBranch 1.5s ease forwards; }
+    @keyframes drawBranch { to { stroke-dashoffset:0; } }
+    .spouse-heart { position:absolute; font-size:14px; pointer-events:none; z-index:10; }
+    /* Gen ribbon */
+    .gen-ribbon { position:absolute; left:0; background:rgba(138,171,138,0.12); border-radius:0 20px 20px 0; padding:4px 12px 4px 16px; font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#5c7a5c; white-space:nowrap; }
     /* Empty state */
-    .empty-tree { text-align: center; padding: 80px 40px; }
-    .empty-tree .tree-svg { margin: 0 auto 24px; display: block; }
-    .empty-tree h3 { font-family: 'Cormorant Garamond',serif; font-size: 1.5rem; font-weight: 300; color: var(--text-dark); margin-bottom: 10px; }
-    .empty-tree p { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; margin-bottom: 24px; }
-    .empty-tree a { display: inline-block; padding: 12px 24px; background: var(--sage-dark); color: white; border-radius: 12px; text-decoration: none; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s; }
-    .empty-tree a:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(92,122,92,0.3); }
-
-    .notice { background: rgba(240,245,240,0.9); border: 1px solid var(--sage-light); border-radius: 14px; padding: 12px 18px; font-size: 0.77rem; color: var(--sage-dark); margin-bottom: 14px; line-height: 1.6; position: relative; z-index: 2; backdrop-filter: blur(8px); }
-  
-    .contribute-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid var(--sage-light,#c8ddc8); border-radius:16px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:36px; flex-wrap:wrap; }
-    .contribute-bar p { font-size:.88rem; color:var(--sage-dark,#5c7a5c); margin:0; line-height:1.5; }
-    .contribute-bar p strong { color:var(--text-dark,#2c2c2c); }
-    .contribute-bar a { display:inline-block; padding:10px 22px; border:1.5px solid var(--sage-dark,#5c7a5c); border-radius:10px; font-size:.78rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--sage-dark,#5c7a5c); text-decoration:none; white-space:nowrap; flex-shrink:0; transition:all .2s; }
-    .contribute-bar a:hover { background:var(--sage-dark,#5c7a5c); color:white; }
-    @media(max-width:600px){ .contribute-bar { flex-direction:column; align-items:flex-start; } .contribute-bar a { width:100%; text-align:center; box-sizing:border-box; } }
-    </style>
-
-    <style>
-      nav .nav-links { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
-      nav .nav-links::-webkit-scrollbar { display: none; }
-      nav .nav-links a { font-size: 0.7rem; white-space: nowrap; }
-    </style>
+    .empty-tree { text-align:center; padding:80px 40px; color:#aaa; }
+    .empty-tree h3 { font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:#5c7a5c; margin:16px 0 8px; }
+    /* Side panel */
+    .side-panel { position:fixed; top:0; right:-420px; width:380px; height:100vh; background:white; box-shadow:-8px 0 40px rgba(0,0,0,0.15); z-index:300; transition:right 0.3s; overflow-y:auto; padding:28px 24px; }
+    .side-panel.open { right:0; }
+    .sp-close { position:absolute; top:16px; right:16px; background:#f5f3ee; border:none; border-radius:50%; width:32px; height:32px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .sp-photo-wrap { width:80px; height:80px; border-radius:50%; margin:0 auto 12px; background:linear-gradient(135deg,#8aab8a,#5c7a5c); padding:3px; }
+    .sp-photo-inner { width:100%; height:100%; border-radius:50%; background:#f5f3ee; display:flex; align-items:center; justify-content:center; font-size:2rem; overflow:hidden; }
+    .sp-photo-inner img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+    .sp-name { font-family:'Cormorant Garamond',serif; font-size:1.5rem; text-align:center; margin-bottom:4px; }
+    .sp-role { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:#8aab8a; text-align:center; margin-bottom:16px; }
+    .sp-div { border-top:1px solid #f0ede8; margin:12px 0; }
+    .sp-row { display:flex; gap:12px; margin-bottom:8px; font-size:.82rem; }
+    .sp-lbl { color:#aaa; min-width:70px; font-size:.75rem; }
+    .sp-val { color:#2c2c2c; }
+    .sp-rel-title { font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:#aaa; margin-bottom:8px; }
+    .sp-chip { display:inline-block; background:#f0f5f0; border:1px solid #c8ddc8; border-radius:20px; padding:4px 12px; font-size:.75rem; color:#5c7a5c; margin:3px; cursor:pointer; }
+    .sp-chip:hover { background:#5c7a5c; color:white; }
+    .sp-notes { font-size:.82rem; color:#666; line-height:1.6; font-style:italic; }
+    /* Toolbar & key */
+    .tree-key { display:flex; align-items:center; gap:16px; padding:10px 18px; background:rgba(255,255,255,0.8); border:1px solid rgba(232,226,216,0.8); border-radius:40px; margin-bottom:8px; flex-wrap:wrap; font-size:.72rem; color:#666; }
+    .lg-item { display:flex; align-items:center; gap:6px; }
+    .lg-dot { width:12px; height:12px; border-radius:50%; border:2px solid #8aab8a; background:white; flex-shrink:0; }
+    .lg-line { width:24px; height:3px; background:#8aab8a; border-radius:2px; }
+    .lg-dashed { width:24px; height:0; border-top:2px dashed #c9a84c; }
+    .tree-toolbar { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+    .tb-btn { background:white; border:1px solid #e8e2d8; border-radius:20px; padding:6px 14px; font-size:.75rem; cursor:pointer; transition:all 0.2s; }
+    .tb-btn:hover,.tb-btn.active { background:#5c7a5c; color:white; border-color:#5c7a5c; }
+    .zoom-wrap { display:flex; align-items:center; gap:6px; margin-left:auto; }
+    .z-btn { width:28px; height:28px; border-radius:50%; border:1px solid #e8e2d8; background:white; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .z-label { font-size:.75rem; color:#666; min-width:36px; text-align:center; }
+    /* Quote bar */
+    .tree-quote { text-align:center; padding:20px; color:#aaa; font-style:italic; font-size:.85rem; }
+    /* Contribute bar */
+    .contribute-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid #c8ddc8; border-radius:16px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-top:16px; }
+    .contribute-bar p { font-size:.88rem; color:#5c7a5c; margin:0; line-height:1.5; }
+    .contribute-bar a { background:#5c7a5c; color:white; padding:10px 20px; border-radius:10px; text-decoration:none; font-size:.82rem; font-weight:500; }
+    @media(max-width:768px){
+      .side-panel{width:100%;right:-100%;}
+      .tree-key{gap:8px;padding:8px 12px;}
+      .tree-viewport{min-height:400px;}
+    }
+  </style>
 </head>
 <body>
-  <!-- Decorative background -->
-  <div class="tree-page-bg"></div>
-  <div class="leaf-decor">🍃</div>
-  <div class="leaf-decor">🌿</div>
-  <div class="leaf-decor">🍂</div>
-
-  <div class="logo-watermark"></div>
-  <script>
-  // Fetch site-data.js UNLESS admin is previewing (so live edits show immediately)
+<script>
+  // Skip site-data.js if admin is previewing
   try{
-    var _isAdminPreview = !!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active'));
-    if(_isAdminPreview){
-      // Admin preview: ensure site auth is set so auth.js doesn't redirect
-      sessionStorage.setItem('nukala_auth','true');
-    } else {
-      var _xhr=new XMLHttpRequest();
-      _xhr.open('GET','site-data.js?nocache='+Date.now(),false); // synchronous
-      _xhr.send();
-      if(_xhr.status===200) eval(_xhr.responseText);
+    var _adm=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active'));
+    if(_adm){ sessionStorage.setItem('nukala_auth','true'); }
+    else {
+      var _x=new XMLHttpRequest();
+      _x.open('GET','site-data.js?nocache='+Date.now(),false);
+      _x.send();
+      if(_x.status===200) eval(_x.responseText);
     }
   }catch(e){}
 </script>
-  <script src="auth.js"></script>
-  <nav>
-    <a class="nav-brand" href="home.html">
-      <img src="logo.png" alt="Logo"/>
-      <span class="nav-site-name" id="navSiteName">NUKALA</span>
-    </a>
+<script src="auth.js"></script>
+<div class="logo-watermark"></div>
+<nav>
+    <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
         <ul class="nav-links">
       <li><a href="home.html">Home</a></li>
       <li><a href="tree.html" class="active">Family Tree</a></li>
@@ -439,608 +138,274 @@
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
   </nav>
-
-  <main style="position:relative;z-index:1;">
-    <div class="page-hero">
-      <p class="eyebrow">Our Roots</p>
-      <h1>The <em>Nukala</em> Family Tree</h1>
-      <div class="hero-divider"></div>
-      <p>Click any leaf to discover the story within. Lines trace the branches of our family across generations.</p>
-    </div>
-
-    <div class="content-area">
-<!-- Legend pill -->
-      <div class="tree-legend">
-        <span class="lg-title">Key</span>
-        <div class="lg-item"><div class="lg-dot" data-key="ancestor" style="background:#fffdf7;border-color:#c9a84c;"></div>Ancestor</div>
-        <div class="lg-item"><div class="lg-dot" data-key="male" style="background:white;border-color:#8aab8a;"></div>Male</div>
-        <div class="lg-item"><div class="lg-dot" data-key="female" style="background:white;border-color:#d0c0f0;"></div>Female</div>
-        <div class="lg-item"><div class="lg-line" data-key="main" style="background:#8aab8a;"></div>Parent–Child</div>
-        <div class="lg-item"><div class="lg-dashed" data-key="spouse" style="border-color:#c9a84c;"></div>Spouse &#128155;</div>
-        <div class="lg-item"><div class="lg-dashed" data-key="female-branch" style="border-color:#c06090;"></div>Female Branch &#128144;</div>
-        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-          <button class="tb-btn" onclick="toggleLines()" id="btnLines" style="padding:6px 12px;border-radius:20px;">🌿 Lines On</button>
-        </div>
-      </div>
-
-      <!-- Toolbar -->
-      <div class="tree-toolbar">
-        <button class="tb-btn" onclick="fitToScreen()" data-translate="btn-fit">⊡ Fit to Screen</button>
-        <button class="tb-btn" id="btnDownloadTree" onclick="downloadTree()" style="display:none;background:linear-gradient(135deg,var(--sage-dark),var(--sage));color:white;border-color:var(--sage-dark);">📥 Download Image</button>
-        
-        <button class="tb-btn" onclick="resetView()" data-translate="btn-reset">↺ Reset View</button>
-        <div class="zoom-wrap">
-          <button class="z-btn" onclick="zoomOut()">−</button>
-          <span class="z-label" id="zoomLbl">100%</span>
-          <button class="z-btn" onclick="zoomIn()">+</button>
-        </div>
-      </div>
-
-      <!-- Diagnostic banner (shown when tree is empty) -->
-      <div id="treeDiag" style="display:none;background:#fff8e1;border:2px solid #f59e0b;border-radius:10px;padding:12px 18px;margin-bottom:10px;font-size:.8rem;line-height:1.8;"></div>
-
-      <!-- Tree viewport -->
-      <div class="tree-viewport" id="treeVp">
-        <div class="tree-canvas" id="treeCanvas">
-          <svg id="branchSvg" width="1" height="1"></svg>
-          <div id="cardsLayer"></div>
-        </div>
-      </div>
-
-      <div style="margin-top:18px;text-align:center;padding:18px 28px;background:rgba(92,122,92,0.06);border-radius:14px;border:1px solid rgba(92,122,92,0.15);">
-        <p id="treeQuote" style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;font-weight:400;color:var(--text-mid);font-style:italic;line-height:1.7;margin:0;">"Family, like branches on a tree, we all grow in different directions yet our roots remain as one."</p>
-        <p id="treeQuoteAuthor" style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-light);margin-top:8px;">— The Nukala Family</p>
-      </div>
-
-    </div>
-  
-
-      <div class="contribute-bar fade-in">
-        <p><strong>Know a family member missing from the tree?</strong><br/>Share details and we'll add them to the family tree.</p>
-        <a href="contact.html">+ Submit a Member</a>
-      </div>
-
-      <!-- Mobile List View -->
-      <div id="treeListView"></div>
-
-    </main>
-
-    <!-- Mobile View Toggle Button (floating) -->
-    <button id="mobileViewToggle" onclick="toggleMobileView()">
-      <span id="mobileViewIcon">&#9776;</span>
-      <span id="mobileViewLabel">List View</span>
-    </button>
-
-  <!-- Side Panel -->
-  <div class="side-panel" id="sidePanel">
-    <div class="sp-header">
-      <button class="sp-close" onclick="closePanel()">✕</button>
-      <div id="spPhotoWrap"></div>
-      <div id="spName" class="sp-name"></div>
-      <div id="spRole" class="sp-role"></div>
-    </div>
-    <div class="sp-body" id="spBody"></div>
+<main>
+  <div class="page-hero">
+    <p class="eyebrow" data-translate="tree-eyebrow">Our Roots</p>
+    <h1>The <em>Nukala</em> Family Tree</h1>
+    <div class="hero-divider"></div>
+    <p>Click any leaf to discover the story within. Lines trace the branches of our family across generations.</p>
   </div>
 
-  
+  <div class="content-area">
+    <!-- Key bar -->
+    <div class="tree-key">
+      <span style="font-size:.65rem;font-weight:700;letter-spacing:.12em;color:#aaa;">KEY</span>
+      <div class="lg-item"><div class="lg-dot" data-key="ancestor" style="border-color:#c9a84c;background:#fffdf7;"></div>Ancestor</div>
+      <div class="lg-item"><div class="lg-dot" data-key="male" style="border-color:#8aab8a;"></div>Male</div>
+      <div class="lg-item"><div class="lg-dot" data-key="female" style="border-color:#d0c0f0;"></div>Female</div>
+      <div class="lg-item"><div class="lg-line" data-key="main"></div>Parent–Child</div>
+      <div class="lg-item"><div class="lg-dashed" data-key="spouse"></div>Spouse &#128155;</div>
+      <div class="lg-item"><div class="lg-dashed" data-key="female-branch" style="border-color:#c06090;"></div>Female Branch &#127800;</div>
+      <div style="margin-left:auto;">
+        <button class="tb-btn active" onclick="toggleLines()" id="btnLines">&#127807; Lines On</button>
+      </div>
+    </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // ═══════════════════════════════════
-    // DATA
-    // ═══════════════════════════════════
-    const load = k => JSON.parse(localStorage.getItem(k)||'{}');
-    const loadArr = k => JSON.parse(localStorage.getItem(k)||'[]');
+    <!-- Toolbar -->
+    <div class="tree-toolbar">
+      <button class="tb-btn" onclick="fitToScreen()">&#8861; Fit to Screen</button>
+      <button class="tb-btn" onclick="resetView()">&#8635; Reset View</button>
+      <div class="zoom-wrap">
+        <button class="z-btn" onclick="zoomOut()">&#8722;</button>
+        <span class="z-label" id="zoomLbl">100%</span>
+        <button class="z-btn" onclick="zoomIn()">&#43;</button>
+      </div>
+    </div>
 
-    // ── STARTUP DIAGNOSTIC ──
-    (function(){
-      try {
-        var raw = localStorage.getItem('nukala_tree_data');
-        var parsed = raw ? JSON.parse(raw) : null;
-        var count = parsed ? Object.keys(parsed).length : 0;
-        var diag = document.getElementById('treeDiag');
-        if(diag) {
-          diag.style.display = 'block';
-          diag.innerHTML = '&#128269; <b>Tree Debug:</b> localStorage has <b>' + count + '</b> member(s). ' +
-            'Raw data: ' + (raw ? raw.length + ' chars' : 'MISSING') + '. ' +
-            'Admin mode: ' + (sessionStorage.getItem('nukala_admin') || localStorage.getItem('nukala_admin_active') ? 'YES' : 'NO') + '.';
-        }
-      } catch(e) {}
-    })();
+    <!-- Tree viewport -->
+    <div class="tree-viewport" id="treeVp">
+      <div class="tree-canvas" id="treeCanvas">
+        <svg id="branchSvg" width="1" height="1" style="position:absolute;top:0;left:0;pointer-events:none;"></svg>
+        <div id="cardsLayer"></div>
+      </div>
+    </div>
+  </div>
 
-    // Apply settings
-    const _s = load('nukala_settings');
-    const _h = load('nukala_home');
-    const _sw = load('nukala_sitewide');
-    const navName = _sw.navName || _h.navName || (_s.familyName ? _s.familyName.toUpperCase() : 'NUKALA');
-    document.getElementById('navSiteName').textContent = navName;
-    if(_s.familyName) var _fn=document.getElementById('footerText');if(_fn)_fn.textContent=_s.familyName?'The '+_s.familyName+' Family':'The Nukala Family';
+  <div class="contribute-bar fade-in">
+    <p><strong>Know a family member missing from the tree?</strong><br/>Share details and we'll add them to the family tree.</p>
+    <a href="contact.html">+ Submit a Member</a>
+  </div>
+</main>
 
-    // ═══════════════════════════════════
-    // LAYOUT ENGINE
-    // ═══════════════════════════════════
-    // Card dimensions — may be overridden for mobile compact mode
-    var CW = (window._CW_MOBILE && window.innerWidth<=768) ? window._CW_MOBILE : 148;
-    var CH = (window._CH_MOBILE && window.innerWidth<=768) ? window._CH_MOBILE : 130;
-    var HG = (window._HG_MOBILE && window.innerWidth<=768) ? window._HG_MOBILE : 44;
-    var VG = (window._VG_MOBILE && window.innerWidth<=768) ? window._VG_MOBILE : 100;
-
-    function layoutTree(members){
-      const list = Object.values(members);
-      if(!list.length) return {};
-      const byGen = {};
-      list.forEach(m=>{ const g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
-      const positions = {};
-      const gens = Object.keys(byGen).map(Number).sort((a,b)=>a-b);
-      gens.forEach((gen,gi)=>{
-        const row = sortRow(byGen[gen], members);
-        const totalW = row.length*CW + (row.length-1)*HG;
-        const startX = Math.max(100, 700 - totalW/2);
-        const y = 60 + gi*(CH+VG);
-        row.forEach((m,i)=>{ positions[m.id]={x:startX+i*(CW+HG),y}; });
-      });
-      return positions;
-    }
-
-    function sortRow(row, members){
-      const placed = new Set(), result = [];
-      row.forEach(m=>{
-        if(placed.has(m.id)) return;
-        result.push(m); placed.add(m.id);
-        if(m.spouseId && members[m.spouseId] && row.find(r=>r.id===m.spouseId) && !placed.has(m.spouseId)){
-          result.push(members[m.spouseId]); placed.add(m.spouseId);
-        }
-      });
-      return result;
-    }
-
-    // ═══════════════════════════════════
-    // RENDER
-    // ═══════════════════════════════════
-    let showLines=true, zoom=1, selectedId=null;
-
-    function renderTree(){
-      // ── Diagnostic: show what data we can see ──
-      var _diag = document.getElementById('treeDiag');
-      var _rawData = localStorage.getItem('nukala_tree_data');
-      var _isAdmin = !!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active'));
-      var _sdSkipped = _isAdmin ? 'YES (admin mode)' : 'NO (visitor mode - site-data.js was loaded)';
-
-      var members;
-      try {
-        members = JSON.parse(_rawData) || {};
-      } catch(e) {
-        members = {};
-      }
-
-      var list = Object.values(members);
-
-      // Show diagnostic banner
-      if(_diag) {
-        var _diagInfo = [
-          '<b>Members in storage:</b> ' + list.length,
-          '<b>Raw data exists:</b> ' + (_rawData ? 'Yes (' + _rawData.length + ' chars)' : 'No/Empty'),
-          '<b>Admin preview mode:</b> ' + _isAdmin,
-          '<b>site-data.js skipped:</b> ' + _sdSkipped,
-        ].join(' &nbsp;|&nbsp; ');
-        _diag.innerHTML = '&#128269; ' + _diagInfo;
-        _diag.style.display = list.length > 0 ? 'none' : 'block';
-      }
-
-      const cardsLayer = document.getElementById('cardsLayer');
-      const svg = document.getElementById('branchSvg');
-      cardsLayer.innerHTML=''; svg.innerHTML='';
-
-      if(!list.length){
-        cardsLayer.innerHTML=`<div class="empty-tree">
-          <svg class="tree-svg" width="120" height="140" viewBox="0 0 120 140">
-            <ellipse cx="60" cy="60" rx="50" ry="55" fill="rgba(138,171,138,0.15)" stroke="rgba(138,171,138,0.3)" stroke-width="2"/>
-            <ellipse cx="38" cy="75" rx="28" ry="32" fill="rgba(138,171,138,0.12)" stroke="rgba(138,171,138,0.25)" stroke-width="1.5"/>
-            <ellipse cx="82" cy="72" rx="30" ry="34" fill="rgba(138,171,138,0.12)" stroke="rgba(138,171,138,0.25)" stroke-width="1.5"/>
-            <rect x="55" y="108" width="10" height="30" rx="5" fill="rgba(139,90,43,0.3)"/>
-            <text x="60" y="70" text-anchor="middle" font-size="28" opacity="0.3">&#127795;</text>
-          </svg>
-          <h3>Your Family Tree Awaits</h3>
-          <p style="color:var(--text-light,#a0a0a0);font-size:.88rem;">Add members in Admin &#8594; Members to build your tree.</p>
-        </div>`;
-        svg.setAttribute('width','800'); svg.setAttribute('height','500');
-        return;
-      }
-
-      var positions;
-      try {
-        positions = layoutTree(members);
-      } catch(e) {
-        cardsLayer.innerHTML = '<div style="padding:40px;color:red;text-align:center;">Layout error: '+e.message+'</div>';
-        return;
-      }
-
-      // Canvas size
-      let maxX=800, maxY=500;
-      Object.values(positions).forEach(p=>{ maxX=Math.max(maxX,p.x+CW+100); maxY=Math.max(maxY,p.y+CH+100); });
-      svg.setAttribute('width',maxX); svg.setAttribute('height',maxY);
-      document.getElementById('treeCanvas').style.width=maxX+'px';
-      document.getElementById('treeCanvas').style.height=maxY+'px';
-
-      // Generation ribbons
-      const byGen={};
-      list.forEach(m=>{ const g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
-      const genNames={1:'Great-Great-Grandparents',2:'Great-Grandparents',3:'Grandparents',4:'Parents & Aunts/Uncles',5:'Your Generation',6:'Children',7:'Grandchildren',8:'Great-Grandchildren'};
-      const gens=Object.keys(byGen).map(Number).sort((a,b)=>a-b);
-      gens.forEach((gen,gi)=>{
-        const y = 60 + gi*(CH+VG);
-        const ribbon = document.createElement('div');
-        ribbon.className = 'gen-ribbon';
-        ribbon.style.top = (y+CH/2-12)+'px';
-        ribbon.style.left = '0px';
-        ribbon.innerHTML = `Gen ${gen}${genNames[gen]?' · '+genNames[gen]:''}`;
-        cardsLayer.appendChild(ribbon);
-      });
-
-      if(showLines){
-        const drawnSpouses = new Set();
-        let delay = 0;
-        list.forEach(m=>{
-          const pos=positions[m.id]; if(!pos) return;
-          const cx=pos.x+CW/2;
-
-          // Parent-child lines
-          ['fatherId','motherId'].forEach(rel=>{
-            if(m[rel] && positions[m[rel]]){
-              const pp=positions[m[rel]];
-              const pcx=pp.x+CW/2, pcy=pp.y+CH;
-              const midY=pcy+(pos.y-pcy)/2;
-              const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-              const wobble=(Math.random()-0.5)*20;
-              path.setAttribute('d',`M${pcx},${pcy} C${pcx+wobble},${midY-20} ${cx-wobble},${midY+20} ${cx},${pos.y}`);
-              const lineClass = m.inlaw ? 'branch-female branch-animated' : 'branch-main branch-animated';
-              path.setAttribute('class', lineClass);
-              path.style.animationDelay = (delay*0.1)+'s';
-              svg.appendChild(path);
-              const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-              dot.setAttribute('cx',cx); dot.setAttribute('cy',pos.y);
-              dot.setAttribute('r','4'); dot.setAttribute('class','branch-node');
-              svg.appendChild(dot);
-              delay++;
-            }
-          });
-
-          // Spouse lines
-          if(m.spouseId && positions[m.spouseId]){
-            const key=[m.id,m.spouseId].sort().join('-');
-            if(!drawnSpouses.has(key)){
-              drawnSpouses.add(key);
-              const sp=positions[m.spouseId];
-              const x1=pos.x+CW, y1=pos.y+CH/2;
-              const x2=sp.x,    y2=sp.y+CH/2;
-              const isFemBranch = m.female && !m.inlaw;
-              const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-              line.setAttribute('x1',x1); line.setAttribute('y1',y1);
-              line.setAttribute('x2',x2); line.setAttribute('y2',y2);
-              line.setAttribute('class', isFemBranch ? 'branch-female' : 'branch-spouse');
-              svg.appendChild(line);
-              const heartX=(x1+x2)/2, heartY=(y1+y2)/2;
-              const heart=document.createElement('div');
-              heart.className='spouse-heart';
-              heart.style.left=(heartX-10)+'px'; heart.style.top=(heartY-10)+'px';
-              try{ var tc_h=JSON.parse(localStorage.getItem('nukala_tree_colours')||'{}'); heart.textContent=isFemBranch?(tc_h.femaleHeart||'&#127800;'):(tc_h.spouseHeart||'&#128155;'); }catch(e){ heart.textContent=isFemBranch?'&#127800;':'&#128155;'; }
-              cardsLayer.appendChild(heart);
-            }
-          }
-        });
-      }
-
-      // Render person cards
-      list.forEach(m=>{
-        const pos=positions[m.id]; if(!pos) return;
-        const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
-        const shortName=name.length>18?name.substring(0,16)+'…':name;
-        const dates=m.born?(m.born+(m.died?'–'+m.died:'')):' ';
-        const classes=['pcard',m.female?'female':'',m.ancestor?'ancestor':'',m.deceased?'deceased':'',m.id===selectedId?'selected':''].filter(Boolean).join(' ');
-
-        const card=document.createElement('div');
-        card.className=classes;
-        card.style.left=pos.x+'px'; card.style.top=pos.y+'px';
-        card.style.width=CW+'px'; card.style.boxSizing='border-box';
-        card.style.animationDelay=(Math.random()*0.3)+'s';
-
-        let photoInner='';
-        if(m.photo){
-          photoInner=`<img src="${m.photo}" alt="${name}" onerror="this.style.display='none'"/>`;
-        } else {
-          photoInner=m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
-        }
-
-        card.innerHTML=`
-          <div class="pc-ring">
-            <div class="pc-photo">${photoInner}${m.deceased?'<div class="pc-deceased-badge">&#10013;</div>':''}</div>
-          </div>
-          <div class="pc-name">${shortName}</div>
-          <div class="pc-role">${m.role||'–'}</div>
-          <div class="pc-dates">${dates}</div>
-        `;
-        card.addEventListener('click',()=>showPanel(m.id));
-        cardsLayer.appendChild(card);
-      });
-    }
-
-    // ═══════════════════════════════════
-    // SIDE PANEL
-    // ═══════════════════════════════════
-    function showPanel(id){
-      const members=load('nukala_tree_data')||{};
-      const raw=members[id]; if(!raw) return;
-      // Merge contact details (phone, whatsapp, email, city stored in contacts)
-      const contacts=load('nukala_contacts')||{};
-      const contact=contacts[id]||{};
-      const m=Object.assign({}, raw, {
-        phone: raw.phone||contact.phone||'',
-        whatsapp: raw.whatsapp||contact.whatsapp||'',
-        email: raw.email||contact.email||'',
-        city: raw.city||contact.city||''
-      });
-      selectedId=id; renderTree();
-
-      const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
-      const all=Object.values(members);
-      const father=m.fatherId?members[m.fatherId]:null;
-      const mother=m.motherId?members[m.motherId]:null;
-      const spouse=m.spouseId?members[m.spouseId]:null;
-      const children=all.filter(x=>x.fatherId===id||x.motherId===id);
-      const siblings=all.filter(x=>x.id!==id&&((m.fatherId&&x.fatherId===m.fatherId)||(m.motherId&&x.motherId===m.motherId)));
-
-      // Photo
-      const photoEmoji=m.female?'👩':m.ancestor?'👴':'👨';
-      const photoBg=m.female?'background:#f0e8f8':m.ancestor?'background:var(--gold-light)':m.inlaw?'background:#f0e8f8':'';
-      const ringStyle=m.female?'background:linear-gradient(135deg,#d0a0e0,#9060b0)':m.ancestor?'background:linear-gradient(135deg,var(--gold),#a07020)':m.inlaw?'background:linear-gradient(135deg,#c0a0e0,#7050a0)':'';
-
-      document.getElementById('spPhotoWrap').innerHTML=`
-        <div class="sp-photo-wrap" style="${ringStyle?'--ring:'+ringStyle:''}">
-          <style>.sp-photo-wrap::before{${ringStyle||'background:linear-gradient(135deg,var(--sage),var(--gold))'}}
-    </style>
-          <div class="sp-photo-inner" style="${photoBg}">
-            ${m.photo?`<img src="${m.photo}" alt="${name}" onerror="this.parentNode.innerHTML='${photoEmoji}'"/>`:`<span style="font-size:32px;">${photoEmoji}</span>`}
-          </div>
-        </div>`;
-      document.getElementById('spName').textContent=name;
-      document.getElementById('spRole').textContent=(m.role||'–')+(m.gen?' · Gen '+m.gen:'');
-
-      const chip=(p,lbl)=>{
-        if(!p) return '';
-        const n=[p.firstName,p.lastName].filter(Boolean).join(' ');
-        return `<span class="sp-chip" onclick="showPanel('${p.id}')">${lbl}: ${n}</span>`;
-      };
-      const rels=[father?chip(father,'Father'):'',mother?chip(mother,'Mother'):'',spouse?chip(spouse,'Spouse'):'',
-        ...children.map(c=>chip(c,'Child')),...siblings.map(s=>chip(s,'Sibling'))].filter(Boolean).join('');
-
-      document.getElementById('spBody').innerHTML=`
-        ${m.born?`<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">${m.born}</div></div>`:''}
-        ${m.died?`<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">${m.died}</div></div>`:''}
-        ${m.place?`<div class="sp-row"><div class="sp-lbl">Birthplace</div><div class="sp-val">${m.place}</div></div>`:''}
-        ${(m.occ||m.occupation)?`<div class="sp-row"><div class="sp-lbl">Occupation</div><div class="sp-val">${m.occ||m.occupation}</div></div>`:''}
-        ${m.city?`<div class="sp-row"><div class="sp-lbl">📍 Lives In</div><div class="sp-val">${m.city}</div></div>`:''}
-        ${m.phone?`<div class="sp-row"><div class="sp-lbl">📞 Phone</div><div class="sp-val"><a href="tel:${m.phone}" style="color:inherit;">${m.phone}</a></div></div>`:''}
-        ${m.whatsapp?`<div class="sp-row"><div class="sp-lbl">💬 WhatsApp</div><div class="sp-val"><a href="https://wa.me/${m.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:var(--sage-dark);">Chat on WhatsApp</a></div></div>`:''}
-        ${m.email?`<div class="sp-row"><div class="sp-lbl">✉️ Email</div><div class="sp-val"><a href="javascript:void(0)" onclick="navigator.clipboard&&navigator.clipboard.writeText('${m.email}')" style="color:var(--sage-dark);">${m.email}</a></div></div>`:''}
-        ${m.notes?`<div class="sp-div"></div><div class="sp-notes">${m.notes}</div>`:''}
-        ${rels?`<div class="sp-div"></div><div class="sp-rel-title">Family Connections</div>${rels}`:`<div class="sp-div"></div><div style="font-size:.72rem;color:var(--text-light);text-align:center;padding:8px 0;">No family connections linked yet.<br>Set Father/Mother/Spouse in Admin → Members.</div>`}
-        
-      `;
-      document.getElementById('sidePanel').classList.add('open');
-    }
-
-    function closePanel(){ selectedId=null; document.getElementById('sidePanel').classList.remove('open'); renderTree(); }
-
-    // ═══════════════════════════════════
-    // CONTROLS
-    // ═══════════════════════════════════
-    function toggleLines(){
-      showLines=!showLines;
-      document.getElementById('btnLines').textContent=showLines?'🌿 Lines On':'🌿 Lines Off';
-      document.getElementById('btnLines').classList.toggle('active',showLines);
-      renderTree();
-    }
-
-    function zoomIn()   { zoom=Math.min(zoom+0.1,2.5); applyZoom(); }
-    function zoomOut()  { zoom=Math.max(zoom-0.1,0.3); applyZoom(); }
-    function applyZoom(){ document.getElementById('treeCanvas').style.transform=`scale(${zoom})`; document.getElementById('zoomLbl').textContent=Math.round(zoom*100)+'%'; }
-    function resetView(){ zoom=1; applyZoom(); document.getElementById('treeVp').scrollTo(0,0); }
-    function fitToScreen(){
-      const vp=document.getElementById('treeVp'), canvas=document.getElementById('treeCanvas');
-      zoom=Math.min(vp.clientWidth/canvas.scrollWidth, vp.clientHeight/canvas.scrollHeight,1)*0.88;
-      applyZoom();
-    }
-
-    // Drag pan
-    let drag=false,dx,dy,sx,sy;
-    const vp=document.getElementById('treeVp');
-    vp.addEventListener('mousedown',e=>{ if(e.target.closest('.pcard,.gen-ribbon,.spouse-heart')) return; drag=true; dx=e.clientX; dy=e.clientY; sx=vp.scrollLeft; sy=vp.scrollTop; });
-    window.addEventListener('mousemove',e=>{ if(!drag) return; vp.scrollLeft=sx-(e.clientX-dx); vp.scrollTop=sy-(e.clientY-dy); });
-    window.addEventListener('mouseup',()=>drag=false);
-    vp.addEventListener('wheel',e=>{ e.preventDefault(); e.deltaY<0?zoomIn():zoomOut(); },{passive:false});
-
-    // Touch
-    let lastTD=0;
-    vp.addEventListener('touchstart',e=>{ if(e.touches.length===2) lastTD=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); });
-    vp.addEventListener('touchmove',e=>{ if(e.touches.length===2){ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); if(d>lastTD+5) zoomIn(); else if(d<lastTD-5) zoomOut(); lastTD=d; }});
-
-    // ── Apply admin tree colour settings ──
-    (function applyTreeColours(){
-      try{
-        var tc = JSON.parse(localStorage.getItem('nukala_tree_colours')||'{}');
-        var r = document.documentElement;
-        if(tc.ancestor)      { r.style.setProperty('--tc-ancestor',      tc.ancestor);
-                               r.style.setProperty('--tc-ancestor-dark', shadeColour(tc.ancestor,-30));
-                               r.style.setProperty('--tc-ancestor-border', hexToRgba(tc.ancestor,0.4)); }
-        if(tc.male)          { r.style.setProperty('--tc-male',          tc.male); }
-        if(tc.female)        { r.style.setProperty('--tc-female',        tc.female);
-                               r.style.setProperty('--tc-female-dark',   shadeColour(tc.female,-30));
-                               r.style.setProperty('--tc-female-border', hexToRgba(tc.female,0.45)); }
-        if(tc.mainLine)      { r.style.setProperty('--tc-main',          tc.mainLine); }
-        if(tc.spouseLine)    { r.style.setProperty('--tc-spouse',        tc.spouseLine); }
-        if(tc.femaleBranch)  { r.style.setProperty('--tc-female-branch', tc.femaleBranch); }
-      }catch(e){}
-    })();
-
-    function shadeColour(hex, pct){
-      var n=parseInt(hex.slice(1),16),r=Math.min(255,Math.max(0,(n>>16)+pct)),
-          g=Math.min(255,Math.max(0,((n>>8)&0xff)+pct)),
-          b=Math.min(255,Math.max(0,(n&0xff)+pct));
-      return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
-    }
-    function hexToRgba(hex,a){
-      var n=parseInt(hex.slice(1),16);
-      return `rgba(${n>>16},${(n>>8)&0xff},${n&0xff},${a})`;
-    }
-
-    // ── Update key bar dots/lines to reflect current colours ──
-    (function updateKeyBar(){
-      try{
-        var tc = JSON.parse(localStorage.getItem('nukala_tree_colours')||'{}');
-        var ancestorDot = document.querySelector('.lg-dot[data-key="ancestor"]');
-        var maleDot     = document.querySelector('.lg-dot[data-key="male"]');
-        var femaleDot   = document.querySelector('.lg-dot[data-key="female"]');
-        var mainLine    = document.querySelector('.lg-line[data-key="main"]');
-        var spouseLine  = document.querySelector('.lg-dashed[data-key="spouse"]');
-        var femaleLine  = document.querySelector('.lg-dashed[data-key="female-branch"]');
-        if(ancestorDot && tc.ancestor)     ancestorDot.style.borderColor = tc.ancestor;
-        if(maleDot && tc.male)             maleDot.style.borderColor     = tc.male;
-        if(femaleDot && tc.female)         femaleDot.style.borderColor   = tc.female;
-        if(mainLine && tc.mainLine)        mainLine.style.background      = tc.mainLine;
-        if(spouseLine && tc.spouseLine)    spouseLine.style.borderColor   = tc.spouseLine;
-        if(femaleLine && tc.femaleBranch)  femaleLine.style.borderColor   = tc.femaleBranch;
-      }catch(e){}
-    })();
-
-    renderTree();
-
-    // ═══════════════════════════════════
-    // MOBILE EXPERIENCE
-    // ═══════════════════════════════════
-    var _mobileView = 'tree'; // 'tree' or 'list'
-    var _mobileSettings = (function(){
-      try{ return JSON.parse(localStorage.getItem('nukala_tree_mobile')||'{}'); }catch(e){ return {}; }
-    })();
-    var _isMobile = window.innerWidth <= 768;
-
-    // ── Option 1: Auto Fit on mobile load ──
-    if(_isMobile && _mobileSettings.autoFit !== false){
-      requestAnimationFrame(function(){
-        setTimeout(fitToScreen, 300);
-      });
-    }
-
-    // ── Option 2: Compact cards on mobile ──
-    if(_isMobile && _mobileSettings.compact !== false){
-      // Override CW/CH — need to re-render with smaller values
-      window._CW_MOBILE = 100;
-      window._CH_MOBILE = 88;
-      window._HG_MOBILE = 28;
-      window._VG_MOBILE = 70;
-      renderTree(); // re-render with compact sizes
-    }
-
-    // ── Option 3: List view button ──
-    (function(){
-      var btn = document.getElementById('mobileViewToggle');
-      if(!btn) return;
-      if(!_isMobile || _mobileSettings.listView === false){
-        btn.style.display = 'none';
-        return;
-      }
-      btn.style.display = '';
-    })();
-
-    // ── List view renderer ──
-    function renderListView(){
-      var members = load('nukala_tree_data') || {};
-      var list = Object.values(members);
-      var el = document.getElementById('treeListView');
-      if(!el) return;
-
-      if(!list.length){
-        el.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--text-light);"><div style="font-size:3rem;margin-bottom:12px;">🌳</div><p>No members added yet.</p></div>';
-        return;
-      }
-
-      var byGen = {};
-      list.forEach(function(m){ var g=parseInt(m.gen)||99; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
-      var genNames = {1:'Great-Great-Grandparents',2:'Great-Grandparents',3:'Grandparents',4:'Parents & Aunts/Uncles',5:'Your Generation',6:'Children',7:'Grandchildren',8:'Great-Grandchildren'};
-      var gens = Object.keys(byGen).map(Number).sort(function(a,b){return a-b;});
-
-      el.innerHTML = gens.map(function(gen){
-        var membersInGen = byGen[gen];
-        var title = 'Gen '+gen+(genNames[gen]?' &middot; '+genNames[gen]:'');
-        var cards = membersInGen.map(function(m){
-          var name = [m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
-          var avatarClass = m.ancestor?'ancestor':m.female?'female':'';
-          var avatarContent = m.photo
-            ? '<img src="'+m.photo+'" alt="'+name+'" onerror="this.parentNode.textContent=''+(m.female?'👩':m.ancestor?'👴':'👨')+''">'
-            : (m.female?'👩':m.ancestor?'👴':'👨');
-          return '<div class="tlv-card" onclick="showPanel(''+m.id+'')">'
-            +'<div class="tlv-avatar '+avatarClass+'">'+avatarContent+'</div>'
-            +'<div class="tlv-info">'
-              +'<div class="tlv-name">'+name+'</div>'
-              +'<div class="tlv-role">'+(m.role||'–')+'</div>'
-            +'</div>'
-            +'<div class="tlv-arrow-r">›</div>'
-            +'</div>';
-        }).join('');
-        return '<div class="tlv-gen">'
-          +'<div class="tlv-gen-title" onclick="tlvToggle(this)">'
-            +title
-            +'<span class="tlv-arrow">&#9660;</span>'
-          +'</div>'
-          +'<div class="tlv-members">'+cards+'</div>'
-          +'</div>';
-      }).join('');
-    }
-
-    function tlvToggle(titleEl){
-      titleEl.classList.toggle('collapsed');
-      var membersDiv = titleEl.nextElementSibling;
-      if(membersDiv) membersDiv.classList.toggle('collapsed');
-    }
-
-    function toggleMobileView(){
-      var vp = document.getElementById('treeVp');
-      var sp = document.getElementById('sidePanel');
-      var lv = document.getElementById('treeListView');
-      var btn = document.getElementById('mobileViewToggle');
-      var icon = document.getElementById('mobileViewIcon');
-      var label = document.getElementById('mobileViewLabel');
-      var toolbar = document.querySelector('.tree-toolbar');
-      var key = document.querySelector('.tree-key');
-      if(_mobileView === 'tree'){
-        // Switch to list
-        _mobileView = 'list';
-        if(vp) vp.style.display = 'none';
-        if(toolbar) toolbar.style.display = 'none';
-        if(key) key.style.opacity = '0.4';
-        renderListView();
-        if(lv) lv.style.display = 'block';
-        if(icon) icon.textContent = '🌳';
-        if(label) label.textContent = 'Tree View';
-        if(btn) btn.style.background = '#c06090';
-      } else {
-        // Switch to tree
-        _mobileView = 'tree';
-        if(vp) vp.style.display = '';
-        if(toolbar) toolbar.style.display = '';
-        if(key) key.style.opacity = '';
-        if(lv){ lv.style.display = 'none'; lv.innerHTML = ''; }
-        if(icon) icon.innerHTML = '&#9776;';
-        if(label) label.textContent = 'List View';
-        if(btn) btn.style.background = 'var(--sage-dark,#5c7a5c)';
-      }
-    }
-
-    </script>
-
-  <footer>
+<!-- Side panel -->
+<div class="side-panel" id="sidePanel">
+  <button class="sp-close" onclick="closePanel()">&#215;</button>
+  <div id="spPhotoWrap"></div>
+  <div class="sp-name" id="spName"></div>
+  <div class="sp-role" id="spRole"></div>
+  <div id="spBody"></div>
+</div>
+<footer>
     &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
   </footer>
 
-  <script>
+<script>
+// ── TREE DATA ──
+function tLoad(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+
+// ── SETTINGS ──
+(function(){
+  var s=tLoad('nukala_settings'), h=tLoad('nukala_home'), sw=tLoad('nukala_sitewide');
+  var nn=document.getElementById('navSiteName');
+  if(nn) nn.textContent=(sw.navName||h.navName||(s.familyName?s.familyName.toUpperCase():'NUKALA'));
+  var fn=document.getElementById('footerText');
+  if(fn&&s.familyName) fn.textContent='The '+s.familyName+' Family';
+})();
+
+// ── CONSTANTS ──
+var CW=148, CH=130, HG=44, VG=100;
+
+// ── LAYOUT ──
+function layoutTree(members){
+  var list=Object.values(members);
+  if(!list.length) return {};
+  var byGen={};
+  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
+  var positions={};
+  var gens=Object.keys(byGen).map(Number).sort(function(a,b){return a-b;});
+  gens.forEach(function(gen,gi){
+    var row=sortRow(byGen[gen],members);
+    var totalW=row.length*CW+(row.length-1)*HG;
+    var startX=Math.max(100,700-totalW/2);
+    var y=60+gi*(CH+VG);
+    row.forEach(function(m,i){ positions[m.id]={x:startX+i*(CW+HG),y:y}; });
+  });
+  return positions;
+}
+
+function sortRow(row,members){
+  var placed={}, result=[];
+  row.forEach(function(m){
+    if(placed[m.id]) return;
+    result.push(m); placed[m.id]=true;
+    if(m.spouseId&&members[m.spouseId]&&row.find(function(r){return r.id===m.spouseId;})&&!placed[m.spouseId]){
+      result.push(members[m.spouseId]); placed[m.spouseId]=true;
+    }
+  });
+  return result;
+}
+
+// ── STATE ──
+var showLines=true, zoom=1, selectedId=null;
+
+// ── RENDER TREE ──
+function renderTree(){
+  var members=tLoad('nukala_tree_data');
+  var list=Object.values(members);
+  var cardsLayer=document.getElementById('cardsLayer');
+  var svg=document.getElementById('branchSvg');
+  if(!cardsLayer||!svg) return;
+  cardsLayer.innerHTML=''; svg.innerHTML='';
+
+  if(!list.length){
+    cardsLayer.innerHTML='<div class="empty-tree"><div style="font-size:48px;margin-bottom:16px;">&#127795;</div><h3>Your Family Tree Awaits</h3><p>Add members in Admin &rarr; Members to build your tree.</p></div>';
+    svg.setAttribute('width','800'); svg.setAttribute('height','500');
+    return;
+  }
+
+  var positions=layoutTree(members);
+  var maxX=800, maxY=500;
+  Object.values(positions).forEach(function(p){ maxX=Math.max(maxX,p.x+CW+100); maxY=Math.max(maxY,p.y+CH+100); });
+  svg.setAttribute('width',maxX); svg.setAttribute('height',maxY);
+  svg.style.width=maxX+'px'; svg.style.height=maxY+'px';
+  document.getElementById('treeCanvas').style.width=maxX+'px';
+  document.getElementById('treeCanvas').style.height=maxY+'px';
+
+  // Generation ribbons
+  var byGen={};
+  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
+  var genNames={1:'Great-Great-Grandparents',2:'Great-Grandparents',3:'Grandparents',4:'Parents & Aunts/Uncles',5:'Your Generation',6:'Children',7:'Grandchildren',8:'Great-Grandchildren'};
+  Object.keys(byGen).map(Number).sort(function(a,b){return a-b;}).forEach(function(gen,gi){
+    var y=60+gi*(CH+VG);
+    var r=document.createElement('div');
+    r.className='gen-ribbon';
+    r.style.top=(y+CH/2-12)+'px';
+    r.innerHTML='Gen '+gen+(genNames[gen]?' &middot; '+genNames[gen]:'');
+    cardsLayer.appendChild(r);
+  });
+
+  // Lines
+  if(showLines){
+    var drawnSpouses={};
+    list.forEach(function(m){
+      var pos=positions[m.id]; if(!pos) return;
+      var cx=pos.x+CW/2;
+      // Parent-child
+      ['fatherId','motherId'].forEach(function(rel){
+        if(m[rel]&&positions[m[rel]]){
+          var pp=positions[m[rel]];
+          var pcx=pp.x+CW/2, pcy=pp.y+CH;
+          var midY=pcy+(pos.y-pcy)/2;
+          var path=document.createElementNS('http://www.w3.org/2000/svg','path');
+          var w=(Math.random()-0.5)*20;
+          path.setAttribute('d','M'+pcx+','+pcy+' C'+(pcx+w)+','+(midY-20)+' '+(cx-w)+','+(midY+20)+' '+cx+','+pos.y);
+          path.setAttribute('class',m.inlaw?'branch-female':'branch-main');
+          svg.appendChild(path);
+          var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+          dot.setAttribute('cx',cx); dot.setAttribute('cy',pos.y);
+          dot.setAttribute('r','4'); dot.setAttribute('class','branch-node');
+          svg.appendChild(dot);
+        }
+      });
+      // Spouse
+      if(m.spouseId&&positions[m.spouseId]){
+        var key=[m.id,m.spouseId].sort().join('-');
+        if(!drawnSpouses[key]){
+          drawnSpouses[key]=true;
+          var sp=positions[m.spouseId];
+          var x1=pos.x+CW, y1=pos.y+CH/2, x2=sp.x, y2=sp.y+CH/2;
+          var isFem=m.female&&!m.inlaw;
+          var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+          line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+          line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+          line.setAttribute('class',isFem?'branch-female':'branch-spouse');
+          svg.appendChild(line);
+          var heart=document.createElement('div');
+          heart.className='spouse-heart';
+          heart.style.left=((x1+x2)/2-10)+'px';
+          heart.style.top=((y1+y2)/2-10)+'px';
+          heart.textContent=isFem?'\uD83C\uDF38':'\uD83D\uDC9B';
+          cardsLayer.appendChild(heart);
+        }
+      }
+    });
+  }
+
+  // Cards
+  list.forEach(function(m){
+    var pos=positions[m.id]; if(!pos) return;
+    var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+    var short=name.length>18?name.substring(0,16)+'\u2026':name;
+    var cls=['pcard',m.female?'female':'',m.ancestor?'ancestor':'',m.deceased?'deceased':'',m.id===selectedId?'selected':''].filter(Boolean).join(' ');
+    var card=document.createElement('div');
+    card.className=cls;
+    card.style.left=pos.x+'px'; card.style.top=pos.y+'px';
+    var photo=m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.style.display=\'none\'">':(m.female?'\uD83D\uDC69':m.ancestor?'\uD83D\uDC74':'\uD83D\uDC68');
+    card.innerHTML='<div class="pc-ring"><div class="pc-photo">'+photo+(m.deceased?'<div style="position:absolute;bottom:0;right:0;font-size:.6rem;background:#888;color:white;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;">\u271D</div>':'')+'</div></div><div class="pc-name">'+short+'</div><div class="pc-role">'+(m.role||'&ndash;')+'</div><div class="pc-dates">'+(m.born?m.born+(m.died?'&ndash;'+m.died:''):'')+'</div>';
+    card.addEventListener('click',function(){ showPanel(m.id); });
+    cardsLayer.appendChild(card);
+  });
+}
+
+// ── SIDE PANEL ──
+function showPanel(id){
+  var members=tLoad('nukala_tree_data');
+  var m=members[id]; if(!m) return;
+  var contacts=tLoad('nukala_contacts')||{};
+  var c=contacts[id]||{};
+  m=Object.assign({},m,{phone:m.phone||c.phone||'',whatsapp:m.whatsapp||c.whatsapp||'',email:m.email||c.email||'',city:m.city||c.city||''});
+  selectedId=id; renderTree();
+  var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+  var all=Object.values(members);
+  var father=m.fatherId?members[m.fatherId]:null;
+  var mother=m.motherId?members[m.motherId]:null;
+  var spouse=m.spouseId?members[m.spouseId]:null;
+  var children=all.filter(function(x){return x.fatherId===id||x.motherId===id;});
+  var siblings=all.filter(function(x){return x.id!==id&&((m.fatherId&&x.fatherId===m.fatherId)||(m.motherId&&x.motherId===m.motherId));});
+  document.getElementById('spPhotoWrap').innerHTML='<div class="sp-photo-wrap"><div class="sp-photo-inner">'+(m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.textContent=\''+(m.female?'\uD83D\uDC69':'\uD83D\uDC68')+'\'">':'<span style="font-size:2rem;">'+(m.female?'\uD83D\uDC69':m.ancestor?'\uD83D\uDC74':'\uD83D\uDC68')+'</span>')+'</div></div>';
+  document.getElementById('spName').textContent=name;
+  document.getElementById('spRole').textContent=(m.role||'–')+(m.gen?' · Gen '+m.gen:'');
+  function chip(p,lbl){ if(!p) return ''; var n=[p.firstName,p.lastName].filter(Boolean).join(' '); return '<span class="sp-chip" onclick="showPanel(\''+p.id+'\')">'+lbl+': '+n+'</span>'; }
+  var rels=[father?chip(father,'Father'):'',mother?chip(mother,'Mother'):'',spouse?chip(spouse,'Spouse'):''].concat(children.map(function(ch){return chip(ch,'Child');})).concat(siblings.map(function(sb){return chip(sb,'Sibling');})).filter(Boolean).join('');
+  document.getElementById('spBody').innerHTML=
+    (m.born?'<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">'+m.born+'</div></div>':'')+
+    (m.died?'<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">'+m.died+'</div></div>':'')+
+    (m.city?'<div class="sp-row"><div class="sp-lbl">\uD83D\uDCCD City</div><div class="sp-val">'+m.city+'</div></div>':'')+
+    (m.phone?'<div class="sp-row"><div class="sp-lbl">\uD83D\uDCDE Phone</div><div class="sp-val"><a href="tel:'+m.phone+'" style="color:inherit;">'+m.phone+'</a></div></div>':'')+
+    (m.whatsapp?'<div class="sp-row"><div class="sp-lbl">\uD83D\uDCAC WA</div><div class="sp-val"><a href="https://wa.me/'+m.whatsapp.replace(/[^0-9]/g,'')+'" target="_blank" style="color:#5c7a5c;">Chat</a></div></div>':'')+
+    (m.email?'<div class="sp-row"><div class="sp-lbl">\u2709\uFE0F Email</div><div class="sp-val">'+m.email+'</div></div>':'')+
+    (m.notes?'<div class="sp-div"></div><div class="sp-notes">'+m.notes+'</div>':'')+
+    (rels?'<div class="sp-div"></div><div class="sp-rel-title">Family Connections</div>'+rels:'');
+  document.getElementById('sidePanel').classList.add('open');
+}
+function closePanel(){ selectedId=null; document.getElementById('sidePanel').classList.remove('open'); renderTree(); }
+
+// ── CONTROLS ──
+function toggleLines(){ showLines=!showLines; var b=document.getElementById('btnLines'); b.textContent=showLines?'\uD83C\uDF3F Lines On':'\uD83C\uDF3F Lines Off'; b.classList.toggle('active',showLines); renderTree(); }
+function zoomIn(){ zoom=Math.min(zoom+0.1,2.5); applyZoom(); }
+function zoomOut(){ zoom=Math.max(zoom-0.1,0.3); applyZoom(); }
+function applyZoom(){ document.getElementById('treeCanvas').style.transform='scale('+zoom+')'; document.getElementById('zoomLbl').textContent=Math.round(zoom*100)+'%'; }
+function resetView(){ zoom=1; applyZoom(); document.getElementById('treeVp').scrollTo(0,0); }
+function fitToScreen(){ var vp=document.getElementById('treeVp'),canvas=document.getElementById('treeCanvas'); zoom=Math.min(vp.clientWidth/canvas.scrollWidth,vp.clientHeight/canvas.scrollHeight,1)*0.88; applyZoom(); }
+
+// ── DRAG PAN ──
+(function(){
+  var drag=false,dx,dy,sx,sy;
+  var vp=document.getElementById('treeVp');
+  vp.addEventListener('mousedown',function(e){ if(e.target.closest('.pcard,.gen-ribbon,.spouse-heart')) return; drag=true; dx=e.clientX; dy=e.clientY; sx=vp.scrollLeft; sy=vp.scrollTop; });
+  window.addEventListener('mousemove',function(e){ if(!drag) return; vp.scrollLeft=sx-(e.clientX-dx); vp.scrollTop=sy-(e.clientY-dy); });
+  window.addEventListener('mouseup',function(){ drag=false; });
+  vp.addEventListener('wheel',function(e){ e.preventDefault(); e.deltaY<0?zoomIn():zoomOut(); },{passive:false});
+  var lastD=0;
+  vp.addEventListener('touchstart',function(e){ if(e.touches.length===2) lastD=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); });
+  vp.addEventListener('touchmove',function(e){ if(e.touches.length===2){ var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); if(d>lastD+5)zoomIn(); else if(d<lastD-5)zoomOut(); lastD=d; }});
+})();
+
+// ── INIT ──
+renderTree();
+</script>
+
+<script>
 
 (function(){
   function load(k){ return JSON.parse(localStorage.getItem(k)||'null'); }
@@ -1235,8 +600,8 @@
 
 })();
 
-  </script>
-  <script src="nukala.js"></script>
-  <script src="lang.js"></script>
+</script>
+<script src="nukala.js"></script>
+<script src="lang.js"></script>
 </body>
 </html>
