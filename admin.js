@@ -1,4 +1,5 @@
 
+// admin.js v3962 — Nukala Family CMS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // DATA HELPERS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -973,8 +974,8 @@ function refreshWAList(){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 var PAGES = [
   {id:'home',     href:'home.html',    label:'Home',        locked:true},
-  {id:'members',  href:'members.html', label:'Family Members', locked:false},
   {id:'tree',     href:'tree.html',    label:'Family Tree', locked:true},
+  {id:'members',  href:'members.html', label:'Family Members', locked:false},
   {id:'history',  href:'history.html', label:'History',     locked:false},
   {id:'gallery',  href:'gallery.html', label:'Gallery',     locked:false},
   {id:'facts',    href:'facts.html',   label:'Facts',       locked:false},
@@ -1619,8 +1620,8 @@ function expAll(){var data={};Object.keys(LS).forEach(function(k){data[k]=JSON.p
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 var DEFAULT_NAV_PAGES = [
   {id:'home',     href:'home.html',    label:'Home',        locked:true},
-  {id:'members',  href:'members.html', label:'Family Members', locked:false},
   {id:'tree',     href:'tree.html',    label:'Family Tree', locked:true},
+  {id:'members',  href:'members.html', label:'Family Members', locked:false},
   {id:'history',  href:'history.html', label:'History',     locked:false},
   {id:'gallery',  href:'gallery.html', label:'Gallery',     locked:false},
   {id:'facts',    href:'facts.html',   label:'Facts',       locked:false},
