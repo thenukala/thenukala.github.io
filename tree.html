@@ -127,13 +127,12 @@
 </head>
 <body>
 <script>
-  // Set auth if admin so auth.js doesn't redirect
-  if(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active')){
-    sessionStorage.setItem('nukala_auth','true');
-  }
-  // Fetch site-data.js — skip if admin is previewing so live edits show immediately
+  // Set auth if previewing so auth.js doesn't redirect
+  var _preview=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_preview_mode'));
+  if(_preview){ sessionStorage.setItem('nukala_auth','true'); }
+  // Fetch site-data.js — skip if previewing so live edits show immediately
   try{
-    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')){
+    if(!_preview){
       var _xhr=new XMLHttpRequest();
       _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
       _xhr.send();
