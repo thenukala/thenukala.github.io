@@ -50,8 +50,8 @@ document.getElementById('loginBtn').addEventListener('click', doLogin);
 document.getElementById('pwInput').addEventListener('keydown', function(e){if(e.key==='Enter')doLogin();});
 document.getElementById('pwInput').focus();
 
-// Auto-login if session exists
-if(sessionStorage.getItem('nukala_admin')==='true'){showAdmin();}
+// No auto-restore — password required on every admin.html load
+// (sessionStorage used only within same tab for page navigation)
 
 // Dark mode
 (function(){
@@ -188,7 +188,34 @@ wireImageUpload('recImgUploadBtn', 'recImgFile', 'recImg', 'recImgPrev', 'recImg
 wireImageUpload('evtImgUploadBtn', 'evtImgFile', 'evtImg', 'evtImgPrev', 'evtImgWrap');
 
 // 8. Polls modal
-wireImageUpload('pollImgUploadBtn', 'pollImgFile', 'pollImg', 'pollImgPrev', 'pollImgWrap');
+wireImageUpload('pollImgUploadBtn', 'pollImgFile', 'pollImg', null, null);
+
+// 7b. Events modal - re-wire (was missing before)
+wireImageUpload('evtImgUploadBtn', 'evtImgFile', 'evtImg', null, null);
+
+// 11. Login page background photo upload
+(function(){
+  var btn = document.getElementById('lpeBgUploadBtn');
+  var inp = document.getElementById('lpeBgFileInput');
+  if(!btn||!inp) return;
+  btn.addEventListener('click', function(){ inp.click(); });
+  inp.addEventListener('change', function(){
+    var file = this.files&&this.files[0]; if(!file) return;
+    if(file.size > 500*1024){ toast('⚠️ Image is '+Math.round(file.size/1024)+'KB — large backgrounds may slow load.'); }
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var dataUrl = e.target.result;
+      var urlVal = "url('"+dataUrl+"')";
+      var custom = document.getElementById('lpe-bg-custom');
+      var hidden = document.getElementById('lpe-bg');
+      var preview = document.getElementById('lpe-theme-preview');
+      if(custom) custom.value = urlVal;
+      if(hidden) hidden.value = urlVal;
+      if(preview){ preview.style.background = urlVal; preview.style.backgroundSize='cover'; preview.textContent=''; }
+    };
+    reader.readAsDataURL(file);
+  });
+})();
 
 // 9. Gallery video upload
 (function(){
@@ -235,10 +262,11 @@ window.galSwitchType = function(type){
 // PREVIEW TREE BUTTON
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.getElementById('previewTreeBtn').addEventListener('click', function(){
-  // Set preview flag (tree.html checks this to skip site-data.js)
   sessionStorage.setItem('nukala_admin','true');
   sessionStorage.setItem('nukala_auth','true');
   localStorage.setItem('nukala_preview_mode','true');
+  // Auto-clear preview flag after 30 mins
+  setTimeout(function(){ localStorage.removeItem('nukala_preview_mode'); }, 30*60*1000);
   window.open('tree.html','_blank');
 });
 
@@ -945,6 +973,7 @@ function refreshWAList(){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 var PAGES = [
   {id:'home',     href:'home.html',    label:'Home',        locked:true},
+  {id:'members',  href:'members.html', label:'Family Members', locked:false},
   {id:'tree',     href:'tree.html',    label:'Family Tree', locked:true},
   {id:'history',  href:'history.html', label:'History',     locked:false},
   {id:'gallery',  href:'gallery.html', label:'Gallery',     locked:false},
@@ -1590,6 +1619,7 @@ function expAll(){var data={};Object.keys(LS).forEach(function(k){data[k]=JSON.p
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 var DEFAULT_NAV_PAGES = [
   {id:'home',     href:'home.html',    label:'Home',        locked:true},
+  {id:'members',  href:'members.html', label:'Family Members', locked:false},
   {id:'tree',     href:'tree.html',    label:'Family Tree', locked:true},
   {id:'history',  href:'history.html', label:'History',     locked:false},
   {id:'gallery',  href:'gallery.html', label:'Gallery',     locked:false},
