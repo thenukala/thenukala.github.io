@@ -127,17 +127,18 @@
 </head>
 <body>
 <script>
-  // Always load site-data.js so published data shows for everyone
-  // Admin preview: also set auth so auth.js doesn't redirect
+  // Set auth if admin so auth.js doesn't redirect
+  if(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active')){
+    sessionStorage.setItem('nukala_auth','true');
+  }
+  // Fetch site-data.js — skip if admin is previewing so live edits show immediately
   try{
-    var _adm=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active'));
-    if(_adm){ sessionStorage.setItem('nukala_auth','true'); }
-    // Always load site-data.js - if admin has newer local data it still shows
-    // because renderTree reads localStorage which was just enriched by site-data.js
-    var _x=new XMLHttpRequest();
-    _x.open('GET','site-data.js?nocache='+Date.now(),false);
-    _x.send();
-    if(_x.status===200) eval(_x.responseText);
+    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')){
+      var _xhr=new XMLHttpRequest();
+      _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
+      _xhr.send();
+      if(_xhr.status===200) eval(_xhr.responseText);
+    }
   }catch(e){}
 </script>
 <script src="auth.js"></script>
@@ -282,7 +283,7 @@ var showLines=true, zoom=1, selectedId=null;
 
 // ── RENDER TREE ──
 function renderTree(){
-  var members=tLoad('nukala_tree_data');
+  var raw=localStorage.getItem('nukala_tree_data'); var members=raw?JSON.parse(raw):{};
   var list=Object.values(members);
   var cardsLayer=document.getElementById('cardsLayer');
   var svg=document.getElementById('branchSvg');
