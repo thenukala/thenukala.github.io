@@ -100,6 +100,25 @@
       .tree-key{gap:8px;padding:8px 12px;}
       .tree-viewport{min-height:400px;}
     }
+    /* ── List View ── */
+    #treeListView{display:none;padding:0 4px 24px;}
+    .tlv-gen{margin-bottom:20px;}
+    .tlv-gen-title{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#5c7a5c;padding:8px 0 8px;border-bottom:1.5px solid #e8e2d8;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+    .tlv-arrow{transition:transform .2s;}
+    .tlv-gen-title.collapsed .tlv-arrow{transform:rotate(-90deg);}
+    .tlv-members{display:flex;flex-wrap:wrap;gap:8px;}
+    .tlv-members.hidden{display:none;}
+    .tlv-card{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.95);border:1px solid #e8e2d8;cursor:pointer;flex:1;min-width:150px;transition:box-shadow .15s;}
+    .tlv-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);}
+    .tlv-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;border:2px solid #c8ddc8;overflow:hidden;background:#f5f3ee;}
+    .tlv-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .tlv-avatar.female{border-color:#d0c0f0;}
+    .tlv-avatar.ancestor{border-color:#c9a84c;}
+    .tlv-name{font-size:.83rem;font-weight:500;color:#2c2c2c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .tlv-role{font-size:.7rem;color:#aaa;}
+    /* ── Floating toggle button (mobile only) ── */
+    #mobileViewBtn{display:none;position:fixed;bottom:20px;right:20px;z-index:500;background:#5c7a5c;color:white;border:none;border-radius:50px;padding:10px 18px;font-size:.78rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.2);cursor:pointer;}
+    @media(max-width:768px){#mobileViewBtn{display:flex;align-items:center;gap:6px;}}
   </style>
 </head>
 <body>
@@ -180,6 +199,9 @@
       </div>
     </div>
   </div>
+
+  <!-- List View Container (mobile) -->
+  <div id="treeListView"></div>
 
   <div class="contribute-bar fade-in">
     <p><strong>Know a family member missing from the tree?</strong><br/>Share details and we'll add them to the family tree.</p>
@@ -408,6 +430,62 @@ function fitToScreen(){ var vp=document.getElementById('treeVp'),canvas=document
 
 // ── INIT ──
 renderTree();
+
+// ── MOBILE LIST VIEW ──
+var _view = 'tree';
+
+function renderListView(){
+  var members = tLoad('nukala_tree_data');
+  var list = Object.values(members);
+  var el = document.getElementById('treeListView');
+  if(!el) return;
+  if(!list.length){
+    el.innerHTML = '<div style="text-align:center;padding:48px 20px;color:#aaa;"><div style="font-size:3rem;">&#127795;</div><p>No members yet.</p></div>';
+    return;
+  }
+  var byGen = {};
+  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
+  var genLabels = {1:'Great-Great-Grandparents',2:'Great-Grandparents',3:'Grandparents',4:'Parents & Aunts/Uncles',5:'Your Generation',6:'Children',7:'Grandchildren',8:'Great-Grandchildren'};
+  var gens = Object.keys(byGen).map(Number).sort(function(a,b){return a-b;});
+  el.innerHTML = gens.map(function(gen){
+    var rows = byGen[gen].map(function(m){
+      var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+      var ac=m.ancestor?'ancestor':m.female?'female':'';
+      var av=m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.style.display='none'">':(m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;');
+      return '<div class="tlv-card" onclick="showPanel(''+m.id+'')"><div class="tlv-avatar '+ac+'">'+av+'</div><div style="flex:1;min-width:0;"><div class="tlv-name">'+name+'</div><div class="tlv-role">'+(m.role||'')+'</div></div><span style="color:#5c7a5c;">&#8250;</span></div>';
+    }).join('');
+    var title='Generation '+gen+(genLabels[gen]?' &middot; '+genLabels[gen]:'');
+    return '<div class="tlv-gen"><div class="tlv-gen-title" onclick="tlvToggle(this)">'+title+'<span class="tlv-arrow">&#9660;</span></div><div class="tlv-members">'+rows+'</div></div>';
+  }).join('');
+}
+
+function tlvToggle(h){
+  h.classList.toggle('collapsed');
+  var m=h.nextElementSibling;
+  if(m) m.classList.toggle('hidden');
+}
+
+function toggleMobileView(){
+  var vp=document.getElementById('treeVp');
+  var lv=document.getElementById('treeListView');
+  var btn=document.getElementById('mobileViewBtn');
+  var tb=document.querySelector('.tree-toolbar');
+  if(_view==='tree'){
+    _view='list';
+    if(vp) vp.style.display='none';
+    if(tb) tb.style.display='none';
+    renderListView();
+    if(lv) lv.style.display='block';
+    if(btn){btn.innerHTML='&#127795; Tree View';btn.style.background='#9060b0';}
+  } else {
+    _view='tree';
+    if(vp) vp.style.display='';
+    if(tb) tb.style.display='';
+    if(lv){lv.style.display='none';lv.innerHTML='';}
+    if(btn){btn.innerHTML='&#9776; List View';btn.style.background='#5c7a5c';}
+  }
+}
+
 </script>
 
 <script>
@@ -606,6 +684,9 @@ renderTree();
 })();
 
 </script>
+<!-- Mobile List/Tree toggle button -->
+<button id="mobileViewBtn" onclick="toggleMobileView()">&#9776; List View</button>
+
 <script src="nukala.js"></script>
 <script src="lang.js"></script>
 </body>
