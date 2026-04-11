@@ -130,6 +130,52 @@ document.getElementById('qAddHistory').addEventListener('click',function(){docum
 document.getElementById('qAddFact').addEventListener('click',function(){document.querySelector('.ni[data-page="facts"]').click();openFactM();});
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SHARED PHOTO UPLOAD HELPER
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function wireImageUpload(btnId, fileInputId, urlFieldId, previewImgId, previewWrapId){
+  var btn       = document.getElementById(btnId);
+  var fileInput = document.getElementById(fileInputId);
+  var urlField  = document.getElementById(urlFieldId);
+  if(!btn || !fileInput) return;
+
+  btn.addEventListener('click', function(){ fileInput.click(); });
+
+  fileInput.addEventListener('change', function(){
+    var file = this.files && this.files[0];
+    if(!file) return;
+    // Check size - warn if > 500KB (base64 inflates ~33%)
+    if(file.size > 500*1024){
+      toast('⚠️ Image is ' + Math.round(file.size/1024) + 'KB — large images slow the site. Consider resizing first.');
+    }
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var dataUrl = e.target.result;
+      if(urlField) urlField.value = dataUrl;
+      // Update preview if provided
+      if(previewImgId){
+        var prev = document.getElementById(previewImgId);
+        if(prev){ prev.src = dataUrl; prev.style.display = 'block'; }
+      }
+      if(previewWrapId){
+        var wrap = document.getElementById(previewWrapId);
+        if(wrap){ wrap.style.display = 'flex'; wrap.style.alignItems = 'center'; }
+      }
+      // Trigger any existing oninput on the url field
+      if(urlField) urlField.dispatchEvent(new Event('input'));
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Wire up all image upload buttons
+// 1. Members modal (mmPhotoUrl) - already has custom handler, skip
+// 2. Gallery modal
+wireImageUpload('galUploadBtn', 'galFileInput', 'galUrl', 'galPrevImg', null);
+
+// 3. Hero Background (Page Editor > Home tab)
+wireImageUpload('herobgUploadBtn', 'herobgFileInput', 'pe-herobg', null, null);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PREVIEW TREE BUTTON
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.getElementById('previewTreeBtn').addEventListener('click', function(){
