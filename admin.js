@@ -259,6 +259,69 @@ window.galSwitchType = function(type){
   document.getElementById('galMH').textContent = isPhoto?'Add Photo':'Add Video';
 };
 
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MEMBERS PAGE SETTINGS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var MP_DEFAULTS = {
+  title:'The Nukala Family Members',
+  subtitle:'Every leaf of our family tree. Tap any member to see their full story.',
+  defaultView:'grid', cardSize:'normal',
+  showFilter:true, showViewToggle:true,
+  statTotal:true, statLiving:true, statGens:true, statPhotos:true,
+  color:'#5c7a5c', herobg:'',
+  gen1:'Great-Great-Grandparents', gen2:'Great-Grandparents', gen3:'Grandparents',
+  gen4:'Parents & Aunts/Uncles', gen5:'Your Generation',
+  gen6:'Children', gen7:'Grandchildren', gen8:'Great-Grandchildren'
+};
+
+function loadMembersPageSettings(){
+  var s = ldRaw('nukala_members_page') || {};
+  var d = MP_DEFAULTS;
+  function gv(k){ return s[k]!==undefined ? s[k] : d[k]; }
+  var ids = ['title','subtitle','defaultView','cardSize','color','herobg',
+             'gen1','gen2','gen3','gen4','gen5','gen6','gen7','gen8'];
+  ids.forEach(function(k){
+    var el = document.getElementById('mp-'+k);
+    if(el) el.value = gv(k)||'';
+  });
+  document.getElementById('mp-color-hex').value = gv('color')||'#5c7a5c';
+  var chks = {total:'statTotal',living:'statLiving',gens:'statGens',
+              photos:'statPhotos',showfilter:'showFilter',showviewtoggle:'showViewToggle'};
+  Object.keys(chks).forEach(function(k){
+    var el = document.getElementById('mp-'+k);
+    if(el) el.checked = gv(chks[k]) !== false;
+  });
+}
+
+document.getElementById('saveMembersPageBtn').addEventListener('click', function(){
+  var s = {};
+  ['title','subtitle','defaultView','cardSize','color','herobg',
+   'gen1','gen2','gen3','gen4','gen5','gen6','gen7','gen8'].forEach(function(k){
+    var el = document.getElementById('mp-'+k);
+    if(el) s[k] = el.value.trim();
+  });
+  s.statTotal    = document.getElementById('mp-stat-total').checked;
+  s.statLiving   = document.getElementById('mp-stat-living').checked;
+  s.statGens     = document.getElementById('mp-stat-gens').checked;
+  s.statPhotos   = document.getElementById('mp-stat-photos').checked;
+  s.showFilter   = document.getElementById('mp-showfilter').checked;
+  s.showViewToggle = document.getElementById('mp-showviewtoggle').checked;
+  svRaw('nukala_members_page', s);
+  log('Members page settings saved');
+  toast('\u2705 Members page settings saved! Publish to apply.');
+});
+
+document.getElementById('previewMembersBtn').addEventListener('click', function(){
+  sessionStorage.setItem('nukala_admin','true');
+  sessionStorage.setItem('nukala_auth','true');
+  localStorage.setItem('nukala_preview_mode','true');
+  setTimeout(function(){ localStorage.removeItem('nukala_preview_mode'); }, 30*60*1000);
+  window.open('members.html','_blank');
+});
+
+wireImageUpload('mpBgUploadBtn', 'mpBgFileInput', 'mp-herobg', null, null);
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PREVIEW TREE BUTTON
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
