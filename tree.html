@@ -1,7 +1,11 @@
 <!DOCTYPE html>
+<!-- tree.html v2895 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Family Tree – Nukala Family</title>
   <link rel="stylesheet" href="shared.css"/>
@@ -123,16 +127,17 @@
 </head>
 <body>
 <script>
-  // Skip site-data.js if admin is previewing
+  // Always load site-data.js so published data shows for everyone
+  // Admin preview: also set auth so auth.js doesn't redirect
   try{
     var _adm=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active'));
     if(_adm){ sessionStorage.setItem('nukala_auth','true'); }
-    else {
-      var _x=new XMLHttpRequest();
-      _x.open('GET','site-data.js?nocache='+Date.now(),false);
-      _x.send();
-      if(_x.status===200) eval(_x.responseText);
-    }
+    // Always load site-data.js - if admin has newer local data it still shows
+    // because renderTree reads localStorage which was just enriched by site-data.js
+    var _x=new XMLHttpRequest();
+    _x.open('GET','site-data.js?nocache='+Date.now(),false);
+    _x.send();
+    if(_x.status===200) eval(_x.responseText);
   }catch(e){}
 </script>
 <script src="auth.js"></script>
