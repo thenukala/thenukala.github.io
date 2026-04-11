@@ -776,7 +776,12 @@ opacity:0.04;pointer-events:none;z-index:0;}
             <div class="pt">Hero Section</div>
             <div class="fg"><label>Title</label><input type="text" class="fi" id="pe-htitle" placeholder="The Nukala Family Archive"/></div>
             <div class="fg"><label>Tagline</label><input type="text" class="fi" id="pe-htagline" placeholder="A private space..."/></div>
-            <div class="fg"><label>Hero Background Image URL</label><input type="text" class="fi" id="pe-herobg" placeholder="https://... leave blank for gradient"/></div>
+            <div class="fg"><label>Hero Background Image</label>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <button type="button" class="btn bo bsm" id="herobgUploadBtn" style="flex-shrink:0;">&#128247; Upload</button>
+                <input type="file" id="herobgFileInput" accept="image/*" style="display:none;"/>
+                <input type="text" class="fi" id="pe-herobg" placeholder="Or paste URL... leave blank for gradient" style="flex:1;min-width:180px;"/>
+              </div></div>
           </div>
           <div class="panel">
             <div class="pt">Stats Bar</div>
@@ -1279,7 +1284,15 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <h2 id="galMH">Add Photo</h2><p class="msub">Upload to imgbb.com (free) and paste the URL.</p>
   <input type="hidden" id="galId"/>
   <div class="fg"><label>Title *</label><input type="text" class="fi" id="galTitle" placeholder="e.g. Family Reunion 1995"/></div>
-  <div class="fg"><label>Image URL</label><input type="text" class="fi" id="galUrl" placeholder="https://..."/></div>
+  <div class="fg"><label>Image</label>
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button type="button" class="btn bo bsm" id="galUploadBtn" style="flex-shrink:0;">&#128247; Upload from Device</button>
+      <input type="file" id="galFileInput" accept="image/*" style="display:none;"/>
+      <span style="font-size:.72rem;color:var(--tl);">or</span>
+      <input type="text" class="fi" id="galUrl" placeholder="Paste image URL..." style="flex:1;"/>
+    </div>
+  </div></div>
   <div id="galPrevDiv" style="display:none;margin-bottom:10px;"><img id="galPrevImg" style="width:100%;height:140px;object-fit:cover;border-radius:9px;" alt=""/></div>
   <div class="fr"><div class="fg"><label>Category</label><select class="fi" id="galCat"><option value="family">Family</option><option value="vintage">Vintage</option><option value="celebrations">Celebrations</option><option value="travel">Travel</option><option value="other">Other</option></select></div><div class="fg"><label>Year</label><input type="text" class="fi" id="galYear" placeholder="e.g. 1995"/></div></div>
   <div class="fg"><label>Caption</label><textarea class="fi" id="galCaption" rows="2" style="resize:vertical;"></textarea></div>
@@ -1409,6 +1422,6 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=27755"></script>
+<script src="admin.js?v=97143"></script>
 </body>
 </html>
