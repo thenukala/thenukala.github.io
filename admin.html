@@ -186,9 +186,34 @@ opacity:0.04;pointer-events:none;z-index:0;}
     <label for="pwInput">Admin Password</label>
     <input type="password" id="pwInput" placeholder="Enter admin password" autocomplete="current-password"/>
     <div class="errMsg" id="errMsg" style="display:none;">Incorrect password. Please try again.</div>
-    <button class="loginBtn" id="loginBtn">Enter Admin Panel →</button>
-    <a href="home.html">← Back to Website</a>
+    <button class="loginBtn" id="loginBtn" onclick="doAdminLogin()">Enter Admin Panel →</button>
+    <a href="home.html">&#8592; Back to Website</a>
   </div>
+
+<script>
+// Inline login — works even if admin.js fails to load
+function doAdminLogin(){
+  var pw = document.getElementById('pwInput').value;
+  var correct = localStorage.getItem('nukala_admin_pass') || 'nukala_admin_2024';
+  if(pw === correct){
+    sessionStorage.setItem('nukala_admin','true');
+    localStorage.setItem('nukala_admin_active','true');
+    document.getElementById('loginPage').style.display='none';
+    document.getElementById('adminPage').style.display='block';
+    if(typeof initAdmin === 'function') initAdmin();
+  } else {
+    var e = document.getElementById('errMsg');
+    e.textContent = 'Incorrect password. Try: nukala_admin_2024';
+    e.style.display = 'block';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+document.getElementById('pwInput').addEventListener('keydown', function(e){
+  if(e.key==='Enter') doAdminLogin();
+});
+document.getElementById('pwInput').focus();
+</script>
 </div>
 
 <!-- ADMIN PAGE -->
@@ -490,6 +515,102 @@ opacity:0.04;pointer-events:none;z-index:0;}
         </div>
         <div class="sb">🔍<input type="text" placeholder="Search members..." id="mSrch"/></div>
         <div class="grid" id="membersGrid"></div>
+
+        <!-- FAMILY MEMBERS PAGE SETTINGS -->
+        <div class="panel" style="margin-top:20px;">
+          <div class="pt">&#127968; Family Members Page Settings</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:14px;">Customize how the Family Members page looks and behaves for visitors.</p>
+
+          <div class="fg"><label>Page Title</label>
+            <input type="text" class="fi" id="mp-title" placeholder="The Nukala Family Members"/>
+          </div>
+          <div class="fg"><label>Page Subtitle</label>
+            <input type="text" class="fi" id="mp-subtitle" placeholder="Every leaf of our family tree..."/>
+          </div>
+
+          <div class="fg"><label>Default View</label>
+            <select class="fi" id="mp-defaultview">
+              <option value="grid">&#9638; Card View (Grid)</option>
+              <option value="list">&#9776; List View</option>
+              <option value="gen">&#127963; By Generation</option>
+            </select>
+          </div>
+
+          <div class="fg"><label>Card Size</label>
+            <select class="fi" id="mp-cardsize">
+              <option value="normal">Normal (190px min)</option>
+              <option value="large">Large (220px min)</option>
+              <option value="small">Compact (150px min)</option>
+            </select>
+          </div>
+
+          <div class="fg"><label>Show Stats Bar</label>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;">
+                <input type="checkbox" id="mp-stat-total" checked/> Total Members
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;">
+                <input type="checkbox" id="mp-stat-living" checked/> Living
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;">
+                <input type="checkbox" id="mp-stat-gens" checked/> Generations
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;">
+                <input type="checkbox" id="mp-stat-photos" checked/> With Photos
+              </label>
+            </div>
+          </div>
+
+          <div class="fg"><label>Show Filter Bar</label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <div class="sw"><input type="checkbox" id="mp-showfilter" checked/><span class="swt"></span></div>
+              <span style="font-size:.8rem;">Show search + generation + gender filters</span>
+            </label>
+          </div>
+
+          <div class="fg"><label>Show View Toggle</label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <div class="sw"><input type="checkbox" id="mp-showviewtoggle" checked/><span class="swt"></span></div>
+              <span style="font-size:.8rem;">Allow visitors to switch between Card / List / Generation views</span>
+            </label>
+          </div>
+
+          <div class="fg"><label>Accent Colour</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="color" id="mp-color" value="#5c7a5c" style="width:42px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;"/>
+              <input type="text" class="fi" id="mp-color-hex" value="#5c7a5c" placeholder="#5c7a5c" style="flex:1;" oninput="document.getElementById('mp-color').value=this.value"/>
+            </div>
+          </div>
+
+          <div class="fg"><label>Page Header Background</label>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:8px;align-items:center;">
+                <button type="button" class="btn bo bsm" id="mpBgUploadBtn">&#128247; Upload Photo</button>
+                <input type="file" id="mpBgFileInput" accept="image/*" style="display:none;"/>
+                <input type="text" class="fi" id="mp-herobg" placeholder="Or paste image URL... leave blank for gradient" style="flex:1;"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="fg"><label>Generation Labels</label>
+            <p style="font-size:.7rem;color:var(--tl);margin-bottom:6px;">Customise the label shown for each generation on the By Generation view.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+              <input type="text" class="fi" id="mp-gen1" placeholder="Gen 1 — e.g. Great-Great-Grandparents" style="font-size:.75rem;"/>
+              <input type="text" class="fi" id="mp-gen2" placeholder="Gen 2 — e.g. Great-Grandparents" style="font-size:.75rem;"/>
+              <input type="text" class="fi" id="mp-gen3" placeholder="Gen 3 — e.g. Grandparents" style="font-size:.75rem;"/>
+              <input type="text" class="fi" id="mp-gen4" placeholder="Gen 4 — e.g. Parents &amp; Aunts/Uncles" style="font-size:.75rem;"/>
+              <input type="text" class="fi" id="mp-gen5" placeholder="Gen 5 — e.g. Your Generation" style="font-size:.75rem;"/>
+              <input type="text" class="fi" id="mp-gen6" placeholder="Gen 6 — e.g. Children" style="font-size:.75rem;"/>
+              <input type="text" class="fi" id="mp-gen7" placeholder="Gen 7 — e.g. Grandchildren" style="font-size:.75rem;"/>
+              <input type="text" class="fi" id="mp-gen8" placeholder="Gen 8 — e.g. Great-Grandchildren" style="font-size:.75rem;"/>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:4px;">
+            <button class="btn bg bsm" id="saveMembersPageBtn">&#128190; Save Members Page Settings</button>
+            <button class="btn bo bsm" id="previewMembersBtn">&#128065; Preview Members Page</button>
+          </div>
+        </div>
       </div>
 
       <!-- HISTORY -->
@@ -1506,6 +1627,6 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=91773"></script>
+<script src="admin.js?v=62067"></script>
 </body>
 </html>
