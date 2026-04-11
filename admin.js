@@ -636,7 +636,7 @@ function abDrawSections(sections){
         +'<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:6px;">'
         +'<input type="text" class="fi" placeholder="Name *" value="'+((p.name||'').replace(/"/g,'&quot;'))+'" style="padding:6px 10px;" oninput="abUpdate('+si+','+pi+',\'name\',this.value)"/>'
         +'<input type="text" class="fi" placeholder="Role / Title" value="'+((p.role||'').replace(/"/g,'&quot;'))+'" style="padding:6px 10px;" oninput="abUpdate('+si+','+pi+',\'role\',this.value)"/>'
-        +'<input type="text" class="fi" placeholder="Photo URL (optional)" value="'+((p.photo||'').replace(/"/g,'&quot;'))+'" style="padding:6px 10px;grid-column:1/-1;" oninput="abUpdate('+si+','+pi+',\'photo\',this.value)"/>'
+        +'<div style="grid-column:1/-1;display:flex;gap:6px;align-items:center;">'+'<button type="button" class="btn bo bsm" onclick="abTriggerUpload('+si+','+pi+')" style="flex-shrink:0;white-space:nowrap;">&#128247; Upload</button>'+'<input type="text" class="fi" id="ab-photo-'+si+'-'+pi+'" placeholder="Photo URL (optional)" value="'+((p.photo||'').replace(/"/g,'&quot;'))+'" style="flex:1;padding:6px 10px;" oninput="abUpdate('+si+','+pi+',\'photo\',this.value)"/>'+'</div>'
         +'<input type="text" class="fi" placeholder="Short note (optional)" value="'+((p.note||'').replace(/"/g,'&quot;'))+'" style="padding:6px 10px;grid-column:1/-1;" oninput="abUpdate('+si+','+pi+',\'note\',this.value)"/>'
         +'</div>'
         +'<button class="ab abr" onclick="abRemovePerson('+si+','+pi+')" style="flex-shrink:0;margin-top:2px;">🗑️</button>'
@@ -661,6 +661,34 @@ function abGetData(){
   if(!_abData) _abData = ldRaw('nukala_about_draft')||ldRaw('nukala_about')||{sections:[]};
   return _abData;
 }
+
+// ── About page photo upload ──
+// Single hidden file input reused for all person rows
+(function(){
+  var _inp = document.createElement('input');
+  _inp.type = 'file'; _inp.accept = 'image/*';
+  _inp.style.display = 'none'; _inp.id = 'abPhotoFileGlobal';
+  document.body.appendChild(_inp);
+  var _si, _pi;
+  window.abTriggerUpload = function(si, pi){
+    _si = si; _pi = pi; _inp.value = ''; _inp.click();
+  };
+  _inp.addEventListener('change', function(){
+    var file = this.files && this.files[0]; if(!file) return;
+    if(file.size > 500*1024) toast('⚠️ Image is '+Math.round(file.size/1024)+'KB — consider resizing first.');
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var url = e.target.result;
+      // Update the data model
+      abUpdate(_si, _pi, 'photo', url);
+      // Update the visible input field
+      var fieldId = 'ab-photo-'+_si+'-'+_pi;
+      var field = document.getElementById(fieldId);
+      if(field) field.value = url;
+    };
+    reader.readAsDataURL(file);
+  });
+})();
 
 function abAddSection(){
   var d = abGetData();
