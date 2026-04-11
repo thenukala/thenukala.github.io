@@ -754,7 +754,11 @@ opacity:0.04;pointer-events:none;z-index:0;}
               <button class="btn bsm bg-preset-btn" data-bg="dark"      style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1.5px solid #333;color:white;">🌙 Dark</button>
             </div>
             <div class="fg">
-              <label>Custom Background (colour picker, gradient, or image URL)</label>
+              <label>Custom Background (colour, gradient, or photo)</label>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+                <button type="button" class="btn bo bsm" id="lpeBgUploadBtn" style="flex-shrink:0;">&#128247; Upload Photo</button>
+                <input type="file" id="lpeBgFileInput" accept="image/*" style="display:none;"/>
+              </div>
               <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
                 <input type="color" id="bgColorPicker" value="#faf8f4" style="width:42px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;flex-shrink:0;" oninput="document.getElementById('bgCustomInput').value=this.value;document.getElementById('bgPreview').style.background=this.value;document.getElementById('bgPreview').textContent='';" title="Pick a colour"/>
                 <input type="text" class="fi" id="bgCustomInput" placeholder="e.g. #f5f0e8 or url('https://...') or linear-gradient(135deg,#fff,#eee)" oninput="if(this.value.match(/^#[0-9a-fA-F]{6}$/))document.getElementById('bgColorPicker').value=this.value;document.getElementById('bgPreview').style.background=this.value;document.getElementById('bgPreview').textContent='';"/>
@@ -1384,6 +1388,13 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <div class="fr"><div class="fg"><label>Date</label><input type="date" class="fi" id="evtDate"/></div><div class="fg"><label>Type</label><select class="fi" id="evtType"><option>Reunion</option><option>Birthday</option><option>Anniversary</option><option>Wedding</option><option>Festival</option><option>Other</option></select></div></div>
   <div class="fg"><label>Location</label><input type="text" class="fi" id="evtLoc"/></div>
   <div class="fg"><label>Description</label><textarea class="fi" id="evtDesc" rows="3" style="resize:vertical;"></textarea></div>
+  <div class="fg"><label>Photo (optional)</label>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button type="button" class="btn bo bsm" id="evtImgUploadBtn">&#128247; Upload</button>
+      <input type="file" id="evtImgFile" accept="image/*" style="display:none;"/>
+      <input type="text" class="fi" id="evtImg" placeholder="Or paste image URL..." style="flex:1;"/>
+    </div>
+  </div>
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveEvtBtn">💾 Save</button><button class="btn bo" data-close="evtModal">Cancel</button></div>
 </div></div>
 
@@ -1424,6 +1435,13 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <h2>Create Poll</h2>
   <div class="fg"><label>Question *</label><input type="text" class="fi" id="pollQ" placeholder="e.g. Where should our next reunion be?"/></div>
   <div class="fg"><label>Options (one per line)</label><textarea class="fi" id="pollOpts" rows="5" style="resize:vertical;" placeholder="Hyderabad&#10;Chennai&#10;Bangalore"></textarea></div>
+  <div class="fg"><label>Photo (optional)</label>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button type="button" class="btn bo bsm" id="pollImgUploadBtn">&#128247; Upload</button>
+      <input type="file" id="pollImgFile" accept="image/*" style="display:none;"/>
+      <input type="text" class="fi" id="pollImg" placeholder="Or paste image URL..." style="flex:1;"/>
+    </div>
+  </div>
   <div class="mft"><button class="btn bg" style="flex:1;" id="savePollBtn">💾 Create</button><button class="btn bo" data-close="pollModal">Cancel</button></div>
 </div></div>
 
@@ -1488,6 +1506,6 @@ opacity:0.04;pointer-events:none;z-index:0;}
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=10851"></script>
+<script src="admin.js?v=83343"></script>
 </body>
 </html>
