@@ -1496,7 +1496,24 @@ function loadPeTab(tab){
   if(tab==='home'){var hd=ldRaw('nukala_home')||{},hp=ldRaw('nukala_heropage')||{};document.getElementById('pe-htitle').value=hd.heroTitle||'';document.getElementById('pe-htagline').value=hd.heroTagline||'';document.getElementById('pe-herobg').value=hp.homeImgUrl||'';document.getElementById('pe-s1num').value=hd.stat1num||'';document.getElementById('pe-s1lbl').value=hd.stat1lbl||'';document.getElementById('pe-s2num').value=hd.stat2num||'';document.getElementById('pe-s2lbl').value=hd.stat2lbl||'';document.getElementById('pe-s3num').value=hd.stat3num||'';document.getElementById('pe-s3lbl').value=hd.stat3lbl||'';document.getElementById('pe-abouttitle').value=hd.aboutTitle||'';document.getElementById('pe-about1').value=hd.about1||'';document.getElementById('pe-about2').value=hd.about2||'';document.getElementById('pe-about3').value=hd.about3||'';}
   if(tab==='pages'){var np=ldRaw('nukala_newpages')||{};document.getElementById('pageTextsEditor').innerHTML=PAGE_TEXTS.map(function(pg){var d=np[pg.key]||{};return '<div class="panel" style="margin-bottom:12px;"><div class="pt">'+pg.page+' ('+pg.file+')</div><div class="fr"><div class="fg"><label>Eyebrow Text</label><input type="text" class="fi" id="np-'+pg.key+'-eye" placeholder="'+pg.eye+'" value="'+(d.eye||'').replace(/"/g,'&quot;')+'"/></div><div class="fg"><label>Page Title</label><input type="text" class="fi" id="np-'+pg.key+'-title" placeholder="'+pg.title+'" value="'+(d.title||'').replace(/"/g,'&quot;')+'"/></div></div><div class="fg"><label>Description</label><input type="text" class="fi" id="np-'+pg.key+'-desc" placeholder="'+pg.desc+'" value="'+(d.desc||'').replace(/"/g,'&quot;')+'"/></div></div>';}).join('');}
   if(tab==='contact'){var cp=ldRaw('nukala_contactpage2')||{};document.getElementById('pe-cname').value=cp.contactName||'';document.getElementById('pe-cemail').value=cp.contactEmail||'';document.getElementById('pe-formspree').value=cp.formspree||'';document.getElementById('pe-droptions').value=(cp.dropdownOptions||['Add a family member','Submit a photo','Share a story','Other']).join('\n');}
-  if(tab==='gallery'){var gp=ldRaw('nukala_gallerypage2')||{};document.getElementById('pe-galcats').value=(gp.categories||['All Photos','Family','Vintage','Celebrations','Travel','Other']).join('\n');}
+  if(tab==='gallery'){
+    var gp=ldRaw('nukala_page_gallery')||ldRaw('nukala_gallerypage2')||{};
+    function setPe(id,val){ var el=document.getElementById(id); if(el) el.value=val||''; }
+    function setChk(id,val,def){ var el=document.getElementById(id); if(el) el.checked=(val===undefined?def:val); }
+    setPe('pe-gallery-title', gp.title);
+    setPe('pe-gallery-sub',   gp.sub);
+    setPe('pe-gallery-bg',    gp.bg);
+    var defCatEl=document.getElementById('pe-gal-defaultcat'); if(defCatEl&&gp.defaultcat) defCatEl.value=gp.defaultcat;
+    setChk('pe-gal-showvideos', gp.showvideos, true);
+    var cl=gp.catLabels||{};
+    setPe('pe-gal-cat-all',          cl.all);
+    setPe('pe-gal-cat-family',       cl.family);
+    setPe('pe-gal-cat-vintage',      cl.vintage);
+    setPe('pe-gal-cat-celebrations', cl.celebrations);
+    setPe('pe-gal-cat-travel',       cl.travel);
+    setPe('pe-gal-cat-other',        cl.other);
+    setPe('pe-gal-cat-videos',       cl.videos);
+  }
   if(tab==='fonts'){var ty=ldRaw('nukala_typography')||{},s2=ld('settings');document.getElementById('pe-fonthead').value=ty.headFont||s2.headFont||'Cormorant Garamond';document.getElementById('pe-fontbody').value=ty.bodyFont||s2.bodyFont||'Jost';}
   if(tab==='map'){
     var ms=ldRaw('nukala_map_settings')||{};
@@ -1515,6 +1532,41 @@ function loadPeTab(tab){
     document.getElementById('mapShowGeoBreakdown').checked=vis.geoBreakdown!==false;
     document.getElementById('mapShowContributeBar').checked=vis.contributeBar!==false;
   }
+  if(tab==='facts'){
+    var fp=ldRaw('nukala_facts_page')||ldRaw('nukala_page_facts')||{};
+    function setFP(id,val){ var el=document.getElementById(id); if(el) el.value=val||''; }
+    function setFC(id,val,def){ var el=document.getElementById(id); if(el) el.checked=(val===undefined?def:val); }
+    setFP('pe-facts-title', fp.title); setFP('pe-facts-sub', fp.sub); setFP('pe-facts-bg', fp.bg);
+    setFC('pe-facts-showYear', fp.showYear, true);
+    setFC('pe-facts-timeline', fp.timeline, true);
+    var fc=fp.cats||{};
+    setFC('pe-facts-cat-achievement', fc.achievement, true);
+    setFC('pe-facts-cat-milestone',   fc.milestone,   true);
+    setFC('pe-facts-cat-tradition',   fc.tradition,   true);
+    setFC('pe-facts-cat-record',      fc.record,      true);
+    setFC('pe-facts-cat-funfact',     fc.funfact,     true);
+    var fl=fp.catLabels||{};
+    setFP('pe-facts-cat-all-label',          fl.all);
+    setFP('pe-facts-cat-achievement-label',  fl.achievement);
+    setFP('pe-facts-cat-milestone-label',    fl.milestone);
+    setFP('pe-facts-cat-tradition-label',    fl.tradition);
+    setFP('pe-facts-cat-record-label',       fl.record);
+    setFP('pe-facts-cat-funfact-label',      fl.funfact);
+  }
+  // Load per-page settings for other page tabs
+  var pageTabs=['members','history','events','polls','recipes','stats','about','join'];
+  pageTabs.forEach(function(pid){
+    if(tab===pid){
+      var pd=ldRaw('nukala_page_'+pid)||{};
+      ['title','sub','eyebrow','bg'].forEach(function(f){
+        var el=document.getElementById('pe-'+pid+'-'+f); if(el) el.value=pd[f]||'';
+      });
+      ['stats','insights'].forEach(function(c){
+        var el=document.getElementById('pe-'+pid+'-'+c); if(el) el.checked=pd[c]!==false;
+      });
+      var vEl=document.getElementById('pe-'+pid+'-view'); if(vEl&&pd.view) vEl.value=pd.view;
+    }
+  });
 }
 
 

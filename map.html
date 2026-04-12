@@ -336,7 +336,7 @@
     var res=[];
     for(var i=0;i<withCity.length;i++){
       var m=withCity[i];
-      var city=contacts[m.id].city;
+      var c_nb=contacts[m.id]||{}; var city=(c_nb.city||m.city||'').trim(); if(!city) continue;
       var c=await geocity(city);
       if(c)res.push({m:m,ct:contacts[m.id],dist:hav(uLat,uLng,c.lat,c.lng),city:city});
     }
@@ -356,22 +356,25 @@
     chips.innerHTML=''; // no data message shown in geo panel below
   } else {
     chips.innerHTML=withCity.map(function(m){
-      var c=contacts[m.id];
+      var c=(contacts[m.id]||{});
       var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
       var av=m.photo?'<img src="'+m.photo+'" alt="'+name+'">':'&#128100;';
-      return '<div class="mchip"><div class="mchip-av">'+av+'</div><div style="line-height:1.3;"><div style="font-weight:500;">'+name+'</div><div style="font-size:.67rem;color:#aaa;">&#128205; '+(c.city||'')+'</div></div></div>';
+      var mCity=(c&&c.city)||m.city||'';
+      return '<div class="mchip"><div class="mchip-av">'+av+'</div><div style="line-height:1.3;"><div style="font-weight:500;">'+name+'</div><div style="font-size:.67rem;color:#aaa;">&#128205; '+mCity+'</div></div></div>';
     }).join('');
     (async function(){
       var bounds=[];
       for(var i=0;i<withCity.length;i++){
         var m=withCity[i];
-        var c=contacts[m.id];
-        var gc=await geocity(c.city);
+        var c=contacts[m.id]||{};
+        var cityName=(c.city||m.city||'').trim();
+        if(!cityName) continue;
+        var gc=await geocity(cityName);
         if(gc){
           var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
           var cat=getCatForMember(m);
           var mk=makeMarker(gc.lat,gc.lng,cat).addTo(fmap);
-          mk.bindPopup('<strong>'+name+'</strong><br>'+(m.role||'')+(m.gen?'<br>Gen '+m.gen:'')+'<br>&#128205; '+(c.city||''));
+          mk.bindPopup('<strong>'+name+'</strong><br>'+(m.role||'')+(m.gen?'<br>Gen '+m.gen:'')+'<br>&#128205; '+cityName);
           bounds.push([gc.lat,gc.lng]);
         }
       }
