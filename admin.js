@@ -3,6 +3,19 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // DATA HELPERS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Global error trap - shows any JS error on screen after login
+window.addEventListener('error', function(e){
+  var banner = document.getElementById('jsErrorBanner');
+  if(!banner){
+    banner = document.createElement('div');
+    banner.id = 'jsErrorBanner';
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#c0614a;color:white;padding:12px 20px;font-size:.8rem;font-family:monospace;';
+    document.body.appendChild(banner);
+  }
+  banner.textContent = '❌ JS Error: ' + e.message + ' (line ' + e.lineno + ')';
+});
+
 var LS = {members:'nukala_tree_data',gallery:'nukala_gallery',history:'nukala_history',facts:'nukala_facts',events:'nukala_events',recipes:'nukala_recipes',videos:'nukala_videos',polls:'nukala_polls',contacts:'nukala_contacts',settings:'nukala_settings',log:'nukala_log',pagevis:'nukala_page_vis',visits:'nukala_visits',visitors:'nukala_visitors',logins:'nukala_logins',sessions:'nukala_sessions',pagecounts:'nukala_page_counts',annLog:'nukala_ann_log'};
 function ld(k){try{return JSON.parse(localStorage.getItem(LS[k]||k)||'{}');}catch(e){return {};}}
 function lda(k){try{return JSON.parse(localStorage.getItem(LS[k]||k)||'[]');}catch(e){return [];}}
@@ -42,7 +55,38 @@ function showAdmin(){
 
 function initAdmin(){
   var s=ld('settings');
-  if(s&&s.familyName) document.getElementById('siteName').textContent=s.familyName;
+  if(s&&s.familyName){
+    var sn=document.getElementById('siteName');
+    if(sn) sn.textContent=s.familyName;
+  }
+  // Re-wire nav in case it wasn't registered at load time
+  document.querySelectorAll('.ni[data-page]').forEach(function(btn){
+    btn.onclick = function(){
+      var pg = this.getAttribute('data-page');
+      document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('on');});
+      this.classList.add('on');
+      document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
+      var el=document.getElementById('page-'+pg);
+      if(el) el.classList.add('on');
+      if(PAGE_LOADERS[pg]) PAGE_LOADERS[pg]();
+    };
+  });
+  // Modal close buttons
+  document.querySelectorAll('[data-close]').forEach(function(btn){
+    btn.onclick = function(){closeM(this.getAttribute('data-close'));};
+  });
+  // Tab buttons
+  document.querySelectorAll('.ptb[data-tab]').forEach(function(btn){
+    btn.onclick = function(){
+      var tab=this.getAttribute('data-tab');
+      document.querySelectorAll('.ptb').forEach(function(b){b.classList.remove('on');});
+      this.classList.add('on');
+      document.querySelectorAll('.pt-panel').forEach(function(p){p.classList.remove('on');});
+      var tp=document.getElementById('pt-'+tab);
+      if(tp) tp.classList.add('on');
+      if(tab==='tree') loadTreeColours();
+    };
+  });
   renderDash();
 }
 
@@ -52,7 +96,12 @@ document.getElementById('pwInput').addEventListener('keydown', function(e){if(e.
 document.getElementById('pwInput').focus();
 
 // No auto-restore — password required on every admin.html load
-// (sessionStorage used only within same tab for page navigation)
+// If inline login already fired before admin.js loaded, init now
+if(typeof _adminLoggedIn !== 'undefined' && _adminLoggedIn){
+  var _warn = document.getElementById('jsLoadWarn');
+  if(_warn) _warn.remove();
+  initAdmin();
+}
 
 // Dark mode
 (function(){
@@ -471,7 +520,7 @@ document.getElementById('galUrl').addEventListener('input',function(){if(this.va
 
 function openGalM(){document.getElementById('galId').value='';document.getElementById('galMH').textContent='Add Photo';['galTitle','galUrl','galYear','galCaption'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('galPrevDiv').style.display='none';openM('galModal');}
 function editGal(i){var l=lda('gallery'),g=l[i];document.getElementById('galId').value=i;document.getElementById('galMH').textContent='Edit Photo';document.getElementById('galTitle').value=g.title||'';document.getElementById('galUrl').value=g.url||'';document.getElementById('galYear').value=g.year||'';document.getElementById('galCaption').value=g.caption||'';document.getElementById('galCat').value=g.cat||'family';if(g.url){document.getElementById('galPrevImg').src=g.url;document.getElementById('galPrevDiv').style.display='block';}openM('galModal');}
-function saveGal(){var ti=document.getElementById('galTitle').value.trim();if(!ti){alert('Title required.');return;}var l=lda('gallery'),i=document.getElementById('galId').value,var _gt=document.getElementById('galType')?document.getElementById('galType').value:'photo';var _gv=document.getElementById('galVideoUrl')?document.getElementById('galVideoUrl').value.trim():'';obj={title:ti,type:_gt,url:_gt==='photo'?document.getElementById('galUrl').value.trim():_gv,videoUrl:_gv,year:document.getElementById('galYear').value.trim(),caption:document.getElementById('galCaption').value.trim(),cat:document.getElementById('galCat').value};if(i!=='')l[parseInt(i)]=obj;else l.push(obj);sv('gallery',l);closeM('galModal');renderGal();log('Gallery: '+ti);toast('Saved!');}
+function saveGal(){var ti=document.getElementById('galTitle').value.trim();if(!ti){alert('Title required.');return;}var l=lda('gallery');var i=document.getElementById('galId').value;var _gt=document.getElementById('galType')?document.getElementById('galType').value:'photo';var _gv=document.getElementById('galVideoUrl')?document.getElementById('galVideoUrl').value.trim():'';var obj={title:ti,type:_gt,url:_gt==='photo'?document.getElementById('galUrl').value.trim():_gv,videoUrl:_gv,year:document.getElementById('galYear').value.trim(),caption:document.getElementById('galCaption').value.trim(),cat:document.getElementById('galCat').value};if(i!=='')l[parseInt(i)]=obj;else l.push(obj);sv('gallery',l);closeM('galModal');renderGal();log('Gallery: '+ti);toast('Saved!');}
 function delGal(i){if(!confirm('Delete?'))return;var l=lda('gallery');l.splice(i,1);sv('gallery',l);renderGal();toast('Deleted.');}
 function renderGal(){var list=lda('gallery'),el=document.getElementById('galGrid');if(!list.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--tl);">No photos yet.</div>';return;}el.innerHTML=list.map(function(g,i){var img=g.url?'<img src="'+g.url+'" alt="'+g.title+'" onerror="this.parentElement.innerHTML=\'<div class=gip>🖼️</div>\'">':'<div class="gip">🖼️</div>';return '<div class="gi">'+img+'<div class="git">'+g.title+'</div><div class="gia"><button class="ab" onclick="editGal('+i+')">✏️</button><button class="ab abr" onclick="delGal('+i+')">🗑️</button></div></div>';}).join('');}
 
