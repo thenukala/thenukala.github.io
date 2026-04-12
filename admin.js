@@ -1785,6 +1785,14 @@ function renderPageNames(){
   _drawPageNames();
 }
 
+function renderPageNamesPreview(pages){
+  var el = document.getElementById('pnPreview');
+  if(!el || !pages) return;
+  el.innerHTML = pages.map(function(p){
+    return '<span style="padding:4px 10px;border-radius:20px;font-size:.71rem;font-weight:500;background:#c8ddc8;color:#5c7a5c;display:inline-block;margin:2px;">'+p.label+'</span>';
+  }).join('');
+}
+
 function _drawPageNames(){
   var pages = _pnPages;
   var el = document.getElementById('pageNamesEditor');
