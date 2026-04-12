@@ -992,21 +992,94 @@ document.getElementById('pwInput').focus();
         </div>
         <div class="pts" id="pt-gallery">
           <div class="panel">
-            <div class="pt">Filter Categories (one per line)</div>
-            <textarea class="fi" id="pe-galcats" rows="8" style="resize:vertical;" placeholder="All Photos&#10;Family&#10;Vintage&#10;Celebrations&#10;Travel&#10;Other"></textarea>
-            <button class="btn bg bsm" id="saveGalPageBtn" style="margin-top:10px;">💾 Save</button>
+            <div class="pt">&#128064; Gallery Page Header</div>
+            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-gallery-title" placeholder="Family Gallery"/></div>
+            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-gallery-sub" placeholder="Moments captured in time. Click any photo to view."/></div>
+            <div class="fg"><label>Hero Background</label>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+                <button type="button" class="btn bo bsm" id="pe-gallery-bgUploadBtn">&#128247; Upload Photo</button>
+                <input type="file" id="pe-gallery-bgFile" accept="image/*" style="display:none;"/>
+              </div>
+              <input type="text" class="fi" id="pe-gallery-bg" placeholder="Image URL or CSS colour"/>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="pt">&#127991; Category Tab Names</div>
+            <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Rename the category filter tabs shown on the Gallery page. Leave blank to keep the default.</p>
+            <div class="fr">
+              <div class="fg"><label>&#128247; All Photos tab</label><input type="text" class="fi" id="pe-gal-cat-all" placeholder="All Photos"/></div>
+              <div class="fg"><label>&#128101; Family tab</label><input type="text" class="fi" id="pe-gal-cat-family" placeholder="Family"/></div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>&#128254; Vintage tab</label><input type="text" class="fi" id="pe-gal-cat-vintage" placeholder="Vintage"/></div>
+              <div class="fg"><label>&#127881; Celebrations tab</label><input type="text" class="fi" id="pe-gal-cat-celebrations" placeholder="Celebrations"/></div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>&#9992; Travel tab</label><input type="text" class="fi" id="pe-gal-cat-travel" placeholder="Travel"/></div>
+              <div class="fg"><label>&#127800; Other tab</label><input type="text" class="fi" id="pe-gal-cat-other" placeholder="Other"/></div>
+            </div>
+            <div class="fg"><label>&#127909; Videos tab</label><input type="text" class="fi" id="pe-gal-cat-videos" placeholder="Videos"/></div>
+          </div>
+          <div class="panel">
+            <div class="pt">&#9881; Gallery Display Options</div>
+            <div class="fg"><label>Default Category shown on load</label>
+              <select class="fi" id="pe-gal-defaultcat">
+                <option value="all">All Photos</option>
+                <option value="family">Family</option>
+                <option value="vintage">Vintage</option>
+                <option value="celebrations">Celebrations</option>
+                <option value="travel">Travel</option>
+                <option value="other">Other</option>
+                <option value="video">Videos</option>
+              </select>
+            </div>
+            <div class="fg"><label>Show Video tab</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-gal-showvideos" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show the Videos tab in Gallery filter</span></label>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin:4px 0 0 0;">
+            <button class="btn bg bsm" id="saveGalPageBtn">&#128190; Save Gallery Settings</button>
+            <button class="btn bo bsm" id="previewGalPageBtn">&#128065; Preview Gallery</button>
           </div>
         </div>
         <div class="pt-panel" id="pt-facts">
           <div class="panel">
-            <div class="pt">Facts &amp; Achievements Page</div>
+            <div class="pt">&#128064; Facts &amp; Achievements Page Header</div>
+            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-facts-title" placeholder="Family Facts &amp; Achievements"/></div>
+            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-facts-sub" placeholder="Milestones, traditions and records of our family."/></div>
+            <div class="fg"><label>Hero Background</label>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+                <button type="button" class="btn bo bsm" id="pe-facts-bgUploadBtn">&#128247; Upload Photo</button>
+                <input type="file" id="pe-facts-bgFile" accept="image/*" style="display:none;"/>
+              </div>
+              <input type="text" class="fi" id="pe-facts-bg" placeholder="Image URL or colour"/>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="pt">&#127991; Category Tab Names</div>
+            <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Rename the filter tabs shown on the Facts page. Leave blank for defaults.</p>
+            <div class="fr">
+              <div class="fg"><label>&#127775; All tab</label><input type="text" class="fi" id="pe-facts-cat-all-label" placeholder="All"/></div>
+              <div class="fg"><label>&#127942; Achievement tab</label><input type="text" class="fi" id="pe-facts-cat-achievement-label" placeholder="Achievement"/></div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>&#127963; Milestone tab</label><input type="text" class="fi" id="pe-facts-cat-milestone-label" placeholder="Milestone"/></div>
+              <div class="fg"><label>&#127808; Tradition tab</label><input type="text" class="fi" id="pe-facts-cat-tradition-label" placeholder="Tradition"/></div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>&#128218; Record tab</label><input type="text" class="fi" id="pe-facts-cat-record-label" placeholder="Record"/></div>
+              <div class="fg"><label>&#128512; Fun Fact tab</label><input type="text" class="fi" id="pe-facts-cat-funfact-label" placeholder="Fun Fact"/></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="pt">&#9881; Display Options</div>
             <div class="fg"><label>Show Year Badge on Cards</label>
               <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-facts-showYear" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show year on fact cards</span></label>
             </div>
             <div class="fg"><label>Enable Timeline View (sorted by year)</label>
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-facts-timeline" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show &#128197; Timeline tab on facts page</span></label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-facts-timeline" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show &#128197; Timeline filter tab on facts page</span></label>
             </div>
-            <div class="fg"><label>Show Category Filters</label>
+            <div class="fg"><label>Show / Hide Category Filters</label>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
                 <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-achievement" checked/> Achievements</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-milestone" checked/> Milestones</label>
@@ -1015,10 +1088,10 @@ document.getElementById('pwInput').focus();
                 <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-funfact" checked/> Fun Facts</label>
               </div>
             </div>
-            <div style="display:flex;gap:8px;margin-top:10px;">
-              <button class="btn bg bsm" id="saveFactsPageBtn">&#128190; Save Facts Settings</button>
-              <button class="btn bo bsm" id="previewFactsPageBtn2">&#128065; Preview Facts</button>
-            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin:4px 0 0 0;">
+            <button class="btn bg bsm" id="saveFactsPageBtn">&#128190; Save Facts Settings</button>
+            <button class="btn bo bsm" id="previewFactsPageBtn2">&#128065; Preview Facts</button>
           </div>
         </div>
         <div class="pts" id="pt-fonts">
@@ -1459,7 +1532,12 @@ document.getElementById('pwInput').focus();
           </div>
           <div id="lpe-custom-bg-wrap" style="display:none;">
             <div class="fg">
-              <label>Custom Background (colour picker, gradient, or image URL)</label>
+              <label>Custom Background (photo, colour, or gradient)</label>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+                <button type="button" class="btn bo bsm" id="lpeBgUploadBtn">&#128247; Upload Photo</button>
+                <input type="file" id="lpeBgFileInput" accept="image/*" style="display:none;"/>
+                <span style="font-size:.72rem;color:var(--tl);">Choose a photo for the login background</span>
+              </div>
               <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
                 <input type="color" id="lpe-bg-picker" value="#f4f2ee" style="width:42px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;flex-shrink:0;" oninput="document.getElementById('lpe-bg-custom').value=this.value;document.getElementById('lpe-bg').value=this.value;var p=document.getElementById('lpe-theme-preview');if(p){p.style.background=this.value;p.textContent='';}" title="Pick a colour"/>
                 <input type="text" class="fi" id="lpe-bg-custom" placeholder="e.g. #f4f2ee or linear-gradient(...) or url('https://...')" oninput="if(this.value.match(/^#[0-9a-fA-F]{6}$/))document.getElementById('lpe-bg-picker').value=this.value;document.getElementById('lpe-bg').value=this.value;var p=document.getElementById('lpe-theme-preview');if(p){p.style.background=this.value;p.textContent='';}"/>
@@ -1827,6 +1905,6 @@ document.getElementById('pwInput').focus();
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=36637"></script>
+<script src="admin.js?v=14223"></script>
 </body>
 </html>

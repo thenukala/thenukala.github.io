@@ -880,7 +880,7 @@ document.getElementById('addPollBtn').addEventListener('click', openPollM);
 document.getElementById('savePollBtn').addEventListener('click', savePoll);
 
 function openPollM(){['pollQ','pollOpts'].forEach(function(id){document.getElementById(id).value='';});openM('pollModal');}
-function savePoll(){var q=document.getElementById('pollQ').value.trim(),opts=document.getElementById('pollOpts').value.split('\n').map(function(o){return o.trim();}).filter(Boolean);if(!q||opts.length<2){alert('Question and 2+ options required.');return;}var l=lda('polls');var _pi=document.getElementById('pollImg')?document.getElementById('pollImg').value.trim():'';l.push({question:q,options:opts,img:_pi,votes:{}});sv('polls',l);closeM('pollModal');renderPolls();toast('Poll created!');}
+function savePoll(){var q=document.getElementById('pollQ').value.trim(),opts=document.getElementById('pollOpts').value.split('\n').map(function(o){return o.trim();}).filter(Boolean);if(!q||opts.length<2){alert('Question and 2+ options required.');return;}var l=lda('polls');var _pi=document.getElementById('pollImg')?document.getElementById('pollImg').value.trim():'';l.push({question:q,options:opts,img:_pi,votes:new Array(opts.length).fill(0)});sv('polls',l);closeM('pollModal');renderPolls();toast('Poll created!');}
 function resetPoll(i){var l=lda('polls');l[i].votes={};sv('polls',l);renderPolls();toast('Votes reset.');}
 function delPoll(i){if(!confirm('Delete?'))return;var l=lda('polls');l.splice(i,1);sv('polls',l);renderPolls();toast('Deleted.');}
 function renderPolls(){var list=lda('polls'),el=document.getElementById('pollList');if(!el)return;if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No polls yet.</div>';return;}el.innerHTML=list.map(function(p,i){var opts=p.options.map(function(o){return o+(p.votes&&p.votes[o]?' ('+p.votes[o]+')':'');}).join(', ');return '<div class="li"><div class="ly" style="font-size:1.2rem;">🗳️</div><div class="lb"><div class="lt">'+p.question+'</div><div class="ld">'+opts+'</div><div class="la"><button class="ab" onclick="resetPoll('+i+')">↺ Reset</button><button class="ab abr" onclick="delPoll('+i+')">🗑️</button></div></div></div>';}).join('');}
@@ -1454,9 +1454,28 @@ document.getElementById('saveContactBtn').addEventListener('click',function(){
   svRaw('nukala_contactpage2',cp);log('Contact page saved');toast('Contact page saved!');
 });
 document.getElementById('saveGalPageBtn').addEventListener('click',function(){
-  var gp={categories:document.getElementById('pe-galcats').value.split('\n').map(function(c){return c.trim();}).filter(Boolean)};
-  svRaw('nukala_gallerypage2',gp);toast('Gallery categories saved!');
+  var el = function(id){ return document.getElementById(id); };
+  var s = {
+    title:     (el('pe-gallery-title')||{}).value||'',
+    sub:       (el('pe-gallery-sub')||{}).value||'',
+    bg:        (el('pe-gallery-bg')||{}).value||'',
+    defaultcat:(el('pe-gal-defaultcat')||{}).value||'all',
+    showvideos: el('pe-gal-showvideos') ? el('pe-gal-showvideos').checked : true,
+    catLabels: {
+      all:          (el('pe-gal-cat-all')||{}).value||'',
+      family:       (el('pe-gal-cat-family')||{}).value||'',
+      vintage:      (el('pe-gal-cat-vintage')||{}).value||'',
+      celebrations: (el('pe-gal-cat-celebrations')||{}).value||'',
+      travel:       (el('pe-gal-cat-travel')||{}).value||'',
+      other:        (el('pe-gal-cat-other')||{}).value||'',
+      videos:       (el('pe-gal-cat-videos')||{}).value||''
+    }
+  };
+  svRaw('nukala_page_gallery', s);
+  svRaw('nukala_gallerypage2', s);
+  toast('\u2705 Gallery page settings saved! Click Publish to apply.');
 });
+;
 document.getElementById('saveFontsBtn').addEventListener('click',function(){
   var typo={headFont:document.getElementById('pe-fonthead').value,bodyFont:document.getElementById('pe-fontbody').value};
   svRaw('nukala_typography',typo);var s=ld('settings');s.headFont=typo.headFont;s.bodyFont=typo.bodyFont;sv('settings',s);toast('Fonts saved!');
@@ -2304,3 +2323,31 @@ document.getElementById('addWishBtn').addEventListener('click', openWishM);
 
 // renderDashWishes is called directly inside renderDash
 
+
+
+// Gallery page editor - bg upload + preview
+(function(){
+  var bgBtn=document.getElementById('pe-gallery-bgUploadBtn'), bgInp=document.getElementById('pe-gallery-bgFile');
+  if(bgBtn&&bgInp){
+    bgBtn.addEventListener('click',function(){bgInp.click();});
+    bgInp.addEventListener('change',function(){
+      var f=this.files&&this.files[0]; if(!f) return;
+      var r=new FileReader(); r.onload=function(e){var el=document.getElementById('pe-gallery-bg');if(el)el.value="url('"+e.target.result+"')";};r.readAsDataURL(f);
+    });
+  }
+  var pBtn=document.getElementById('previewGalPageBtn');
+  if(pBtn) pBtn.addEventListener('click',function(){
+    sessionStorage.setItem('nukala_admin','true');sessionStorage.setItem('nukala_auth','true');
+    localStorage.setItem('nukala_preview_mode','true');
+    setTimeout(function(){localStorage.removeItem('nukala_preview_mode');},30*60*1000);
+    window.open('gallery.html','_blank');
+  });
+  var factsBtn=document.getElementById('pe-facts-bgUploadBtn'), factsInp=document.getElementById('pe-facts-bgFile');
+  if(factsBtn&&factsInp){
+    factsBtn.addEventListener('click',function(){factsInp.click();});
+    factsInp.addEventListener('change',function(){
+      var f=this.files&&this.files[0]; if(!f) return;
+      var r=new FileReader(); r.onload=function(e){var el=document.getElementById('pe-facts-bg');if(el)el.value="url('"+e.target.result+"')";};r.readAsDataURL(f);
+    });
+  }
+})();
