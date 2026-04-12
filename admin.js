@@ -371,6 +371,66 @@ document.getElementById('previewMembersBtn').addEventListener('click', function(
 
 wireImageUpload('mpBgUploadBtn', 'mpBgFileInput', 'mp-herobg', null, null);
 
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// FACTS PAGE SETTINGS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(function(){
+  var sfBtn = document.getElementById('saveFactsPageBtn');
+  if(sfBtn) sfBtn.addEventListener('click', function(){
+    var s = {
+      showYear: document.getElementById('pe-facts-showYear') ? document.getElementById('pe-facts-showYear').checked : true,
+      timeline: document.getElementById('pe-facts-timeline') ? document.getElementById('pe-facts-timeline').checked : true,
+      cats: {
+        achievement: document.getElementById('pe-facts-cat-achievement') ? document.getElementById('pe-facts-cat-achievement').checked : true,
+        milestone:   document.getElementById('pe-facts-cat-milestone') ? document.getElementById('pe-facts-cat-milestone').checked : true,
+        tradition:   document.getElementById('pe-facts-cat-tradition') ? document.getElementById('pe-facts-cat-tradition').checked : true,
+        record:      document.getElementById('pe-facts-cat-record') ? document.getElementById('pe-facts-cat-record').checked : true,
+        funfact:     document.getElementById('pe-facts-cat-funfact') ? document.getElementById('pe-facts-cat-funfact').checked : true
+      }
+    };
+    svRaw('nukala_facts_page', s);
+    toast('✅ Facts page settings saved! Click Publish to apply.');
+  });
+  var pfBtn = document.getElementById('previewFactsPageBtn2');
+  if(pfBtn) pfBtn.addEventListener('click', function(){
+    sessionStorage.setItem('nukala_admin','true');
+    sessionStorage.setItem('nukala_auth','true');
+    localStorage.setItem('nukala_preview_mode','true');
+    setTimeout(function(){ localStorage.removeItem('nukala_preview_mode'); }, 30*60*1000);
+    window.open('facts.html','_blank');
+  });
+})();
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PREVIEW BUTTONS FOR ALL PAGES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(function(){
+  var pages = [
+    {btn:'previewPollsBtn', page:'polls.html'},
+    {btn:'previewMapBtn',   page:'map.html'},
+    {btn:'previewGalBtn',   page:'gallery.html'},
+    {btn:'previewEvtsBtn',  page:'events.html'},
+    {btn:'previewFactsBtn', page:'facts.html'},
+    {btn:'previewHistBtn',  page:'history.html'},
+    {btn:'previewStatsBtn', page:'stats.html'},
+    {btn:'previewRecBtn',   page:'recipes.html'},
+    {btn:'previewContactBtn',page:'contact.html'},
+    {btn:'previewAboutBtn', page:'about.html'},
+  ];
+  function openPreview(page){
+    sessionStorage.setItem('nukala_admin','true');
+    sessionStorage.setItem('nukala_auth','true');
+    localStorage.setItem('nukala_preview_mode','true');
+    setTimeout(function(){ localStorage.removeItem('nukala_preview_mode'); }, 30*60*1000);
+    window.open(page,'_blank');
+  }
+  pages.forEach(function(p){
+    var btn = document.getElementById(p.btn);
+    if(btn) btn.addEventListener('click', function(){ openPreview(p.page); });
+  });
+})();
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PREVIEW TREE BUTTON
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -509,7 +569,7 @@ function openHistM(){document.getElementById('histId').value='';document.getElem
 function editHist(i){var l=lda('history'),h=l[i];document.getElementById('histId').value=i;document.getElementById('histMH').textContent='Edit Event';document.getElementById('histYear').value=h.year||'';document.getElementById('histTitle').value=h.title||'';document.getElementById('histDesc').value=h.desc||'';document.getElementById('histTag').value=h.tag||document.getElementById('histTag').options[0].value;var _hiEl=document.getElementById('histImg');if(_hiEl){_hiEl.value=h.img||'';var _hw=document.getElementById('histImgWrap');if(h.img){document.getElementById('histImgPrev').src=h.img;if(_hw)_hw.style.display='flex';}else{if(_hw)_hw.style.display='none';}}openM('histModal');}
 function saveHist(){var yr=document.getElementById('histYear').value.trim(),ti=document.getElementById('histTitle').value.trim();if(!yr||!ti){alert('Year and Title required.');return;}var l=lda('history'),i=document.getElementById('histId').value,obj={year:yr,title:ti,desc:document.getElementById('histDesc').value.trim(),tag:document.getElementById('histTag').value,img:(document.getElementById('histImg')?document.getElementById('histImg').value.trim():'')};if(i!=='')l[parseInt(i)]=obj;else l.push(obj);l.sort(function(a,b){return(parseInt(a.year)||0)-(parseInt(b.year)||0);});sv('history',l);closeM('histModal');renderHist();log('History: '+ti);toast('Saved!');}
 function delHist(i){if(!confirm('Delete?'))return;var l=lda('history');l.splice(i,1);sv('history',l);renderHist();toast('Deleted.');}
-function renderHist(){var list=lda('history'),el=document.getElementById('histList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No history events yet.</div>';return;}el.innerHTML=list.map(function(h,i){return '<div class="li"><div class="ly">'+h.year+'</div><div class="lb"><div class="lt">'+h.title+'</div><div class="ld">'+(h.tag||'')+(h.desc?' · '+h.desc:'')+'</div><div class="la"><button class="ab" onclick="editHist('+i+')">✏️ Edit</button><button class="ab abr" onclick="delHist('+i+')">🗑️</button></div></div></div>';}).join('');}
+function renderHist(){var list=lda('history'),el=document.getElementById('histList');if(!el)return;if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No history events yet.</div>';return;}el.innerHTML=list.map(function(h,i){return '<div class="li"><div class="ly">'+h.year+'</div><div class="lb"><div class="lt">'+h.title+'</div><div class="ld">'+(h.tag||'')+(h.desc?' · '+h.desc:'')+'</div><div class="la"><button class="ab" onclick="editHist('+i+')">✏️ Edit</button><button class="ab abr" onclick="delHist('+i+')">🗑️</button></div></div></div>';}).join('');}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // GALLERY
@@ -522,7 +582,7 @@ function openGalM(){document.getElementById('galId').value='';document.getElemen
 function editGal(i){var l=lda('gallery'),g=l[i];document.getElementById('galId').value=i;document.getElementById('galMH').textContent='Edit Photo';document.getElementById('galTitle').value=g.title||'';document.getElementById('galUrl').value=g.url||'';document.getElementById('galYear').value=g.year||'';document.getElementById('galCaption').value=g.caption||'';document.getElementById('galCat').value=g.cat||'family';if(g.url){document.getElementById('galPrevImg').src=g.url;document.getElementById('galPrevDiv').style.display='block';}openM('galModal');}
 function saveGal(){var ti=document.getElementById('galTitle').value.trim();if(!ti){alert('Title required.');return;}var l=lda('gallery');var i=document.getElementById('galId').value;var _gt=document.getElementById('galType')?document.getElementById('galType').value:'photo';var _gv=document.getElementById('galVideoUrl')?document.getElementById('galVideoUrl').value.trim():'';var obj={title:ti,type:_gt,url:_gt==='photo'?document.getElementById('galUrl').value.trim():_gv,videoUrl:_gv,year:document.getElementById('galYear').value.trim(),caption:document.getElementById('galCaption').value.trim(),cat:document.getElementById('galCat').value};if(i!=='')l[parseInt(i)]=obj;else l.push(obj);sv('gallery',l);closeM('galModal');renderGal();log('Gallery: '+ti);toast('Saved!');}
 function delGal(i){if(!confirm('Delete?'))return;var l=lda('gallery');l.splice(i,1);sv('gallery',l);renderGal();toast('Deleted.');}
-function renderGal(){var list=lda('gallery'),el=document.getElementById('galGrid');if(!list.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--tl);">No photos yet.</div>';return;}el.innerHTML=list.map(function(g,i){var img=g.url?'<img src="'+g.url+'" alt="'+g.title+'" onerror="this.parentElement.innerHTML=\'<div class=gip>🖼️</div>\'">':'<div class="gip">🖼️</div>';return '<div class="gi">'+img+'<div class="git">'+g.title+'</div><div class="gia"><button class="ab" onclick="editGal('+i+')">✏️</button><button class="ab abr" onclick="delGal('+i+')">🗑️</button></div></div>';}).join('');}
+function renderGal(){var list=lda('gallery'),el=document.getElementById('galGrid');if(!el)return;if(!list.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--tl);">No photos yet.</div>';return;}el.innerHTML=list.map(function(g,i){var img=g.url?'<img src="'+g.url+'" alt="'+g.title+'" onerror="this.parentElement.innerHTML=\'<div class=gip>🖼️</div>\'">':'<div class="gip">🖼️</div>';return '<div class="gi">'+img+'<div class="git">'+g.title+'</div><div class="gia"><button class="ab" onclick="editGal('+i+')">✏️</button><button class="ab abr" onclick="delGal('+i+')">🗑️</button></div></div>';}).join('');}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // FACTS
@@ -532,9 +592,9 @@ document.getElementById('saveFactBtn').addEventListener('click', saveFact);
 
 function openFactM(){document.getElementById('factId').value='';document.getElementById('factMH').textContent='Add Fact';['factTitle','factDesc','factIcon','factPerson','factYear'].forEach(function(id){document.getElementById(id).value='';});openM('factModal');}
 function editFact(i){var l=lda('facts'),f=l[i];document.getElementById('factId').value=i;document.getElementById('factMH').textContent='Edit Fact';document.getElementById('factTitle').value=f.title||'';document.getElementById('factDesc').value=f.desc||'';document.getElementById('factIcon').value=f.icon||'';document.getElementById('factPerson').value=f.person||'';document.getElementById('factYear').value=f.year||'';document.getElementById('factCat').value=f.cat||'Achievement';var _fiEl=document.getElementById('factImg');if(_fiEl){_fiEl.value=f.img||'';var _fw=document.getElementById('factImgWrap');if(f.img){document.getElementById('factImgPrev').src=f.img;if(_fw)_fw.style.display='flex';}else{if(_fw)_fw.style.display='none';}}openM('factModal');}
-function saveFact(){var ti=document.getElementById('factTitle').value.trim();if(!ti){alert('Title required.');return;}var l=lda('facts'),i=document.getElementById('factId').value,obj={title:ti,desc:document.getElementById('factDesc').value.trim(),icon:document.getElementById('factIcon').value.trim(),person:document.getElementById('factPerson').value.trim(),year:document.getElementById('factYear').value.trim(),cat:document.getElementById('factCat').value,img:(document.getElementById('factImg')?document.getElementById('factImg').value.trim():'')};if(i!=='')l[parseInt(i)]=obj;else l.push(obj);sv('facts',l);closeM('factModal');renderFacts();log('Fact: '+ti);toast('Saved!');}
+function saveFact(){var ti=document.getElementById('factTitle').value.trim();if(!ti){alert('Title required.');return;}var l=lda('facts'),i=document.getElementById('factId').value,obj={title:ti,desc:document.getElementById('factDesc').value.trim(),icon:document.getElementById('factIcon').value.trim(),person:document.getElementById('factPerson').value.trim(),year:document.getElementById('factYear').value.trim(),category:document.getElementById('factCat').value,img:(document.getElementById('factImg')?document.getElementById('factImg').value.trim():'')};if(i!=='')l[parseInt(i)]=obj;else l.push(obj);sv('facts',l);closeM('factModal');renderFacts();log('Fact: '+ti);toast('Saved!');}
 function delFact(i){if(!confirm('Delete?'))return;var l=lda('facts');l.splice(i,1);sv('facts',l);renderFacts();toast('Deleted.');}
-function renderFacts(){var list=lda('facts'),el=document.getElementById('factsList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No facts yet.</div>';return;}el.innerHTML=list.map(function(f,i){return '<div class="li"><div class="ly" style="font-size:1.4rem;">'+(f.icon||'🌟')+'</div><div class="lb"><div class="lt">'+f.title+'</div><div class="ld">'+(f.cat||'')+(f.person?' · '+f.person:'')+(f.year?' · '+f.year:'')+(f.desc?'<br>'+f.desc:'')+'</div><div class="la"><button class="ab" onclick="editFact('+i+')">✏️</button><button class="ab abr" onclick="delFact('+i+')">🗑️</button></div></div></div>';}).join('');}
+function renderFacts(){var list=lda('facts'),el=document.getElementById('factsList');if(!el)return;if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No facts yet.</div>';return;}el.innerHTML=list.map(function(f,i){return '<div class="li"><div class="ly" style="font-size:1.4rem;">'+(f.icon||'🌟')+'</div><div class="lb"><div class="lt">'+f.title+'</div><div class="ld">'+(f.cat||'')+(f.person?' · '+f.person:'')+(f.year?' · '+f.year:'')+(f.desc?'<br>'+f.desc:'')+'</div><div class="la"><button class="ab" onclick="editFact('+i+')">✏️</button><button class="ab abr" onclick="delFact('+i+')">🗑️</button></div></div></div>';}).join('');}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // EVENTS
@@ -547,7 +607,7 @@ function editEvt(i){var l=lda('events'),e=l[i];document.getElementById('evtId').
 function saveEvt(){var ti=document.getElementById('evtTitle').value.trim();if(!ti){alert('Title required.');return;}var l=lda('events'),i=document.getElementById('evtId').value,obj={title:ti,date:document.getElementById('evtDate').value,loc:document.getElementById('evtLoc').value.trim(),desc:document.getElementById('evtDesc').value.trim(),type:document.getElementById('evtType').value,img:document.getElementById('evtImg')?document.getElementById('evtImg').value.trim():''};if(i!=='')l[parseInt(i)]=obj;else l.push(obj);sv('events',l);closeM('evtModal');renderEvts();toast('Saved!');}
 function delEvt(i){if(!confirm('Delete?'))return;var l=lda('events');l.splice(i,1);sv('events',l);renderEvts();toast('Deleted.');}
 function renderEvts(){
-  var list=lda('events'), el=document.getElementById('evtList');
+  var list=lda('events'), el=document.getElementById('evtList');if(!el)return;
   document.getElementById('evtReminderPanel').style.display='none';
   if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No events yet.</div>';return;}
   var today = new Date(); today.setHours(0,0,0,0);
@@ -713,7 +773,7 @@ function openRecM(){document.getElementById('recId').value='';document.getElemen
 function editRec(i){var l=lda('recipes'),r=l[i];document.getElementById('recId').value=i;document.getElementById('recMH').textContent='Edit Recipe';document.getElementById('recTitle').value=r.title||'';document.getElementById('recBy').value=r.by||'';document.getElementById('recTime').value=r.time||'';document.getElementById('recIng').value=(r.ingredients||[]).join('\n');document.getElementById('recSteps').value=(r.steps||[]).join('\n');document.getElementById('recCat').value=r.cat||'Curry';var _riEl=document.getElementById('recImg');if(_riEl){_riEl.value=r.img||'';var _rw=document.getElementById('recImgWrap');if(r.img){document.getElementById('recImgPrev').src=r.img;if(_rw)_rw.style.display='flex';}else{if(_rw)_rw.style.display='none';}}openM('recModal');}
 function saveRec(){var ti=document.getElementById('recTitle').value.trim();if(!ti){alert('Name required.');return;}var l=lda('recipes'),i=document.getElementById('recId').value,obj={title:ti,cat:document.getElementById('recCat').value,by:document.getElementById('recBy').value.trim(),time:document.getElementById('recTime').value.trim(),ingredients:document.getElementById('recIng').value.split('\n').filter(function(x){return x.trim();}),steps:document.getElementById('recSteps').value.split('\n').filter(function(x){return x.trim();}),img:(document.getElementById('recImg')?document.getElementById('recImg').value.trim():''),video:(document.getElementById('recVideo')?document.getElementById('recVideo').value.trim():'')};if(i!=='')l[parseInt(i)]=obj;else l.push(obj);sv('recipes',l);closeM('recModal');renderRecs();toast('Saved!');}
 function delRec(i){if(!confirm('Delete?'))return;var l=lda('recipes');l.splice(i,1);sv('recipes',l);renderRecs();toast('Deleted.');}
-function renderRecs(){var list=lda('recipes'),el=document.getElementById('recList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No recipes yet.</div>';return;}el.innerHTML=list.map(function(r,i){return '<div class="li"><div class="ly" style="font-size:1.2rem;">🍛</div><div class="lb"><div class="lt">'+r.title+'</div><div class="ld">'+(r.cat||'')+(r.by?' · By: '+r.by:'')+(r.time?' · '+r.time:'')+'</div><div class="la"><button class="ab" onclick="editRec('+i+')">✏️</button><button class="ab abr" onclick="delRec('+i+')">🗑️</button></div></div></div>';}).join('');}
+function renderRecs(){var list=lda('recipes'),el=document.getElementById('recList');if(!el)return;if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No recipes yet.</div>';return;}el.innerHTML=list.map(function(r,i){return '<div class="li"><div class="ly" style="font-size:1.2rem;">🍛</div><div class="lb"><div class="lt">'+r.title+'</div><div class="ld">'+(r.cat||'')+(r.by?' · By: '+r.by:'')+(r.time?' · '+r.time:'')+'</div><div class="la"><button class="ab" onclick="editRec('+i+')">✏️</button><button class="ab abr" onclick="delRec('+i+')">🗑️</button></div></div></div>';}).join('');}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ACHIEVEMENTS
@@ -749,7 +809,7 @@ function openPollM(){['pollQ','pollOpts'].forEach(function(id){document.getEleme
 function savePoll(){var q=document.getElementById('pollQ').value.trim(),opts=document.getElementById('pollOpts').value.split('\n').map(function(o){return o.trim();}).filter(Boolean);if(!q||opts.length<2){alert('Question and 2+ options required.');return;}var l=lda('polls');var _pi=document.getElementById('pollImg')?document.getElementById('pollImg').value.trim():'';l.push({question:q,options:opts,img:_pi,votes:{}});sv('polls',l);closeM('pollModal');renderPolls();toast('Poll created!');}
 function resetPoll(i){var l=lda('polls');l[i].votes={};sv('polls',l);renderPolls();toast('Votes reset.');}
 function delPoll(i){if(!confirm('Delete?'))return;var l=lda('polls');l.splice(i,1);sv('polls',l);renderPolls();toast('Deleted.');}
-function renderPolls(){var list=lda('polls'),el=document.getElementById('pollList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No polls yet.</div>';return;}el.innerHTML=list.map(function(p,i){var opts=p.options.map(function(o){return o+(p.votes&&p.votes[o]?' ('+p.votes[o]+')':'');}).join(', ');return '<div class="li"><div class="ly" style="font-size:1.2rem;">🗳️</div><div class="lb"><div class="lt">'+p.question+'</div><div class="ld">'+opts+'</div><div class="la"><button class="ab" onclick="resetPoll('+i+')">↺ Reset</button><button class="ab abr" onclick="delPoll('+i+')">🗑️</button></div></div></div>';}).join('');}
+function renderPolls(){var list=lda('polls'),el=document.getElementById('pollList');if(!el)return;if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tl);">No polls yet.</div>';return;}el.innerHTML=list.map(function(p,i){var opts=p.options.map(function(o){return o+(p.votes&&p.votes[o]?' ('+p.votes[o]+')':'');}).join(', ');return '<div class="li"><div class="ly" style="font-size:1.2rem;">🗳️</div><div class="lb"><div class="lt">'+p.question+'</div><div class="ld">'+opts+'</div><div class="la"><button class="ab" onclick="resetPoll('+i+')">↺ Reset</button><button class="ab abr" onclick="delPoll('+i+')">🗑️</button></div></div></div>';}).join('');}
 
 
 
@@ -1022,7 +1082,7 @@ document.getElementById('sendWAGroupBtn').addEventListener('click', function(){
   toast('WhatsApp opened — pick your family group and tap Send!');
 });
 function renderAnn(){
-  var logs=lda('annLog'),el=document.getElementById('annLog');
+  var logs=lda('annLog'),el=document.getElementById('annLog');if(!el)return;
   el.innerHTML=logs.length?logs.slice(-10).reverse().map(function(l){return '<div style="padding:4px 0;border-bottom:1px solid var(--b);font-size:.78rem;color:var(--tm);">'+l+'</div>';}).join(''):'No announcements sent yet.';
   refreshWAList();
 }
