@@ -1,15 +1,8 @@
 <!DOCTYPE html>
-<!-- tree.html v2895 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-  <meta http-equiv="Pragma" content="no-cache"/>
-  <meta http-equiv="Expires" content="0"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Family Tree – Nukala Family</title>
-  <link rel="stylesheet" href="shared.css"/>
-  <link rel="stylesheet" href="darkmode.css"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="Nukala"/>
@@ -17,126 +10,94 @@
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#5c7a5c"/>
   <link rel="icon" href="favicon.ico"/>
+  <title>Family Tree – Nukala Family</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="darkmode.css"/>
   <style>
-    /* Tree layout */
-    .tree-viewport {
-      width:100%; overflow:auto; border-radius:20px; min-height:560px;
-      position:relative; cursor:grab; user-select:none;
-      background:linear-gradient(160deg,#f0f5f0 0%,#faf8f4 40%,#fdf9f0 100%);
-      border:1px solid rgba(138,171,138,0.3);
-      box-shadow:inset 0 2px 20px rgba(138,171,138,0.06),0 8px 40px rgba(0,0,0,0.06);
-    }
-    .tree-viewport:active { cursor:grabbing; }
-    .tree-canvas { position:relative; display:inline-block; transform-origin:top left; transition:transform 0.15s; padding:80px 80px 100px; }
-    /* Person cards */
-    .pcard {
-      position:absolute; width:148px;
-      background:rgba(255,255,255,0.95);
-      border:1.5px solid rgba(232,226,216,0.8);
-      border-radius:20px; padding:14px 12px 12px;
-      text-align:center; cursor:pointer;
-      transition:all 0.3s; box-shadow:0 4px 16px rgba(0,0,0,0.06);
-    }
-    .pcard:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.12); }
-    .pcard.selected { box-shadow:0 0 0 3px #5c7a5c; }
-    .pcard.female { border-color:rgba(208,192,240,0.6); }
-    .pcard.ancestor { background:rgba(255,253,247,0.97); border-color:rgba(201,168,76,0.4); }
-    .pcard.deceased { opacity:0.65; }
-    .pc-ring { width:56px; height:56px; border-radius:50%; margin:0 auto 8px; position:relative; }
-    .pc-ring::before { content:''; position:absolute; inset:-3px; border-radius:50%; background:linear-gradient(135deg,#8aab8a,#5c7a5c); z-index:0; }
-    .pcard.female .pc-ring::before { background:linear-gradient(135deg,#d0a0e0,#9060b0); }
-    .pcard.ancestor .pc-ring::before { background:linear-gradient(135deg,#c9a84c,#a07020); }
-    .pc-photo { width:100%; height:100%; border-radius:50%; position:relative; z-index:1; overflow:hidden; background:white; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
-    .pc-photo img { width:100%; height:100%; object-fit:cover; }
-    .pc-name { font-family:'Cormorant Garamond',serif; font-size:.82rem; font-weight:600; color:#2c2c2c; margin-bottom:2px; }
-    .pc-role { font-size:.65rem; color:#8a9a8a; letter-spacing:.06em; text-transform:uppercase; }
-    .pc-dates { font-size:.62rem; color:#aaa; margin-top:2px; }
-    /* SVG lines */
-    .branch-main { stroke:#8aab8a; stroke-width:3; fill:none; stroke-linecap:round; }
-    .branch-spouse { stroke:#c9a84c; stroke-width:2; fill:none; stroke-dasharray:8,4; stroke-linecap:round; opacity:0.8; }
-    .branch-female { stroke:#c06090; stroke-width:2.5; fill:none; stroke-dasharray:10,5; stroke-linecap:round; opacity:0.85; }
-    .branch-node { fill:white; stroke:#8aab8a; stroke-width:2; }
-    .branch-animated { stroke-dasharray:1000; stroke-dashoffset:1000; animation:drawBranch 1.5s ease forwards; }
-    @keyframes drawBranch { to { stroke-dashoffset:0; } }
-    .spouse-heart { position:absolute; font-size:14px; pointer-events:none; z-index:10; }
-    /* Gen ribbon */
-    .gen-ribbon { position:absolute; left:0; background:rgba(138,171,138,0.12); border-radius:0 20px 20px 0; padding:4px 12px 4px 16px; font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#5c7a5c; white-space:nowrap; }
-    /* Empty state */
-    .empty-tree { text-align:center; padding:80px 40px; color:#aaa; }
-    .empty-tree h3 { font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:#5c7a5c; margin:16px 0 8px; }
-    /* Side panel */
-    .side-panel { position:fixed; top:0; right:-420px; width:380px; height:100vh; background:white; box-shadow:-8px 0 40px rgba(0,0,0,0.15); z-index:300; transition:right 0.3s; overflow-y:auto; padding:28px 24px; }
-    .side-panel.open { right:0; }
-    .sp-close { position:absolute; top:16px; right:16px; background:#f5f3ee; border:none; border-radius:50%; width:32px; height:32px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-    .sp-photo-wrap { width:80px; height:80px; border-radius:50%; margin:0 auto 12px; background:linear-gradient(135deg,#8aab8a,#5c7a5c); padding:3px; }
-    .sp-photo-inner { width:100%; height:100%; border-radius:50%; background:#f5f3ee; display:flex; align-items:center; justify-content:center; font-size:2rem; overflow:hidden; }
-    .sp-photo-inner img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-    .sp-name { font-family:'Cormorant Garamond',serif; font-size:1.5rem; text-align:center; margin-bottom:4px; }
-    .sp-role { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:#8aab8a; text-align:center; margin-bottom:16px; }
-    .sp-div { border-top:1px solid #f0ede8; margin:12px 0; }
-    .sp-row { display:flex; gap:12px; margin-bottom:8px; font-size:.82rem; }
-    .sp-lbl { color:#aaa; min-width:70px; font-size:.75rem; }
-    .sp-val { color:#2c2c2c; }
-    .sp-rel-title { font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:#aaa; margin-bottom:8px; }
-    .sp-chip { display:inline-block; background:#f0f5f0; border:1px solid #c8ddc8; border-radius:20px; padding:4px 12px; font-size:.75rem; color:#5c7a5c; margin:3px; cursor:pointer; }
-    .sp-chip:hover { background:#5c7a5c; color:white; }
-    .sp-notes { font-size:.82rem; color:#666; line-height:1.6; font-style:italic; }
-    /* Toolbar & key */
-    .tree-key { display:flex; align-items:center; gap:16px; padding:10px 18px; background:rgba(255,255,255,0.8); border:1px solid rgba(232,226,216,0.8); border-radius:40px; margin-bottom:8px; flex-wrap:wrap; font-size:.72rem; color:#666; }
-    .lg-item { display:flex; align-items:center; gap:6px; }
-    .lg-dot { width:12px; height:12px; border-radius:50%; border:2px solid #8aab8a; background:white; flex-shrink:0; }
-    .lg-line { width:24px; height:3px; background:#8aab8a; border-radius:2px; }
-    .lg-dashed { width:24px; height:0; border-top:2px dashed #c9a84c; }
-    .tree-toolbar { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
-    .tb-btn { background:white; border:1px solid #e8e2d8; border-radius:20px; padding:6px 14px; font-size:.75rem; cursor:pointer; transition:all 0.2s; }
-    .tb-btn:hover,.tb-btn.active { background:#5c7a5c; color:white; border-color:#5c7a5c; }
-    .zoom-wrap { display:flex; align-items:center; gap:6px; margin-left:auto; }
-    .z-btn { width:28px; height:28px; border-radius:50%; border:1px solid #e8e2d8; background:white; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-    .z-label { font-size:.75rem; color:#666; min-width:36px; text-align:center; }
-    /* Quote bar */
-    .tree-quote { text-align:center; padding:20px; color:#aaa; font-style:italic; font-size:.85rem; }
-    /* Contribute bar */
-    .contribute-bar { background:linear-gradient(135deg,#f0f5f0,#faf8f4); border:1px solid #c8ddc8; border-radius:16px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-top:16px; }
-    .contribute-bar p { font-size:.88rem; color:#5c7a5c; margin:0; line-height:1.5; }
-    .contribute-bar a { background:#5c7a5c; color:white; padding:10px 20px; border-radius:10px; text-decoration:none; font-size:.82rem; font-weight:500; }
+    .tree-viewport{width:100%;overflow:auto;border-radius:20px;min-height:560px;position:relative;cursor:grab;user-select:none;background:linear-gradient(160deg,#f0f5f0 0%,#faf8f4 40%,#fdf9f0 100%);border:1px solid rgba(138,171,138,0.3);box-shadow:inset 0 2px 20px rgba(138,171,138,0.06),0 8px 40px rgba(0,0,0,0.06);}
+    .tree-viewport:active{cursor:grabbing;}
+    .tree-canvas{position:relative;display:inline-block;transform-origin:top left;transition:transform 0.15s;padding:80px 80px 100px;}
+    .pcard{position:absolute;width:148px;background:rgba(255,255,255,0.95);border:1.5px solid rgba(232,226,216,0.8);border-radius:20px;padding:14px 12px 12px;text-align:center;cursor:pointer;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);box-shadow:0 4px 16px rgba(0,0,0,0.06),0 1px 4px rgba(0,0,0,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+    .pcard:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 32px rgba(0,0,0,0.12);}
+    .pcard.selected{box-shadow:0 0 0 3px var(--tc-male,#5c7a5c),0 8px 24px rgba(0,0,0,0.1);}
+    .pcard.female{border-color:rgba(208,192,240,0.6);}
+    .pcard.ancestor{background:rgba(255,253,247,0.97);border-color:rgba(201,168,76,0.4);}
+    .pcard.deceased{opacity:0.65;}
+    .pcard.inlaw{border-style:dashed;}
+    .pc-ring{width:56px;height:56px;border-radius:50%;margin:0 auto 8px;position:relative;}
+    .pc-ring::before{content:'';position:absolute;inset:-3px;border-radius:50%;background:linear-gradient(135deg,#8aab8a,#5c7a5c);z-index:0;}
+    .pcard.female .pc-ring::before{background:linear-gradient(135deg,#d0a0e0,#9060b0);}
+    .pcard.ancestor .pc-ring::before{background:linear-gradient(135deg,#c9a84c,#a07020);}
+    .pcard.inlaw .pc-ring::before{background:linear-gradient(135deg,#c0a0e0,#7050a0);}
+    .pc-photo{width:100%;height:100%;border-radius:50%;position:relative;z-index:1;overflow:hidden;background:white;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+    .pc-photo img{width:100%;height:100%;object-fit:cover;}
+    .pc-deceased-badge{position:absolute;bottom:0;right:-2px;background:#888;color:white;border-radius:50%;width:16px;height:16px;font-size:.55rem;display:flex;align-items:center;justify-content:center;border:1.5px solid white;}
+    .pc-name{font-family:'Cormorant Garamond',serif;font-size:.82rem;font-weight:600;color:var(--text-dark,#2c2c2c);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .pc-role{font-size:.65rem;color:var(--text-light,#a0a0a0);letter-spacing:.06em;text-transform:uppercase;}
+    .pc-dates{font-size:.6rem;color:var(--text-light,#bbb);margin-top:2px;}
+    .branch-main{stroke:var(--tc-main,#8aab8a);stroke-width:3;fill:none;stroke-linecap:round;filter:drop-shadow(0 2px 4px rgba(92,122,92,0.15));}
+    .branch-spouse{stroke:var(--tc-spouse,#c9a84c);stroke-width:2;fill:none;stroke-dasharray:8,4;stroke-linecap:round;opacity:0.8;}
+    .branch-female{stroke:var(--tc-female-branch,#c06090);stroke-width:2.5;fill:none;stroke-dasharray:10,5;stroke-linecap:round;opacity:0.85;}
+    .branch-inlaw{stroke:#9060b0;stroke-width:2;fill:none;stroke-dasharray:6,4;stroke-linecap:round;opacity:0.6;}
+    .branch-node{fill:white;stroke:var(--tc-main,#8aab8a);stroke-width:2;}
+    .branch-animated{stroke-dasharray:1000;stroke-dashoffset:1000;animation:drawBranch 1.5s ease forwards;}
+    @keyframes drawBranch{to{stroke-dashoffset:0;}}
+    .spouse-heart{position:absolute;font-size:14px;pointer-events:none;z-index:10;}
+    .gen-ribbon{position:absolute;left:0;background:rgba(138,171,138,0.12);border-radius:0 20px 20px 0;padding:4px 12px 4px 16px;font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#5c7a5c;white-space:nowrap;z-index:5;}
+    .empty-tree{text-align:center;padding:80px 40px;color:var(--text-light,#aaa);}
+    .empty-tree h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#5c7a5c;margin:16px 0 8px;}
+    .side-panel{position:fixed;top:0;right:-420px;width:380px;height:100vh;background:white;box-shadow:-8px 0 40px rgba(0,0,0,0.15);z-index:300;transition:right 0.3s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;padding:28px 24px;}
+    .side-panel.open{right:0;}
+    [data-theme=dark] .side-panel{background:#1a1a1a;}
+    .sp-close{position:absolute;top:16px;right:16px;background:#f5f3ee;border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#666;}
+    .sp-photo-wrap{width:80px;height:80px;border-radius:50%;margin:0 auto 12px;position:relative;}
+    .sp-photo-wrap::before{content:'';position:absolute;inset:-3px;border-radius:50%;background:linear-gradient(135deg,#8aab8a,#c9a84c);}
+    .sp-photo-inner{width:100%;height:100%;border-radius:50%;position:relative;z-index:1;overflow:hidden;background:#f5f3ee;display:flex;align-items:center;justify-content:center;}
+    .sp-photo-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .sp-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;text-align:center;margin-bottom:4px;color:var(--text-dark,#2c2c2c);}
+    .sp-role{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#8aab8a;text-align:center;margin-bottom:16px;}
+    .sp-div{border-top:1px solid var(--border,#f0ede8);margin:12px 0;}
+    .sp-row{display:flex;gap:12px;margin-bottom:8px;font-size:.82rem;}
+    .sp-lbl{color:var(--text-light,#aaa);min-width:70px;font-size:.75rem;flex-shrink:0;}
+    .sp-val{color:var(--text-dark,#2c2c2c);}
+    .sp-rel-title{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light,#aaa);margin-bottom:8px;}
+    .sp-chip{display:inline-block;background:var(--cream,#f0f5f0);border:1px solid var(--sage-light,#c8ddc8);border-radius:20px;padding:4px 12px;font-size:.75rem;color:#5c7a5c;margin:3px;cursor:pointer;transition:all 0.15s;}
+    .sp-chip:hover{background:#5c7a5c;color:white;}
+    .sp-notes{font-size:.82rem;color:#666;line-height:1.6;font-style:italic;}
+    .tree-key{display:flex;align-items:center;gap:16px;padding:10px 18px;background:rgba(255,255,255,0.8);border:1px solid rgba(232,226,216,0.8);border-radius:40px;margin-bottom:8px;flex-wrap:wrap;font-size:.72rem;color:#666;backdrop-filter:blur(8px);}
+    .lg-item{display:flex;align-items:center;gap:6px;}
+    .lg-dot{width:12px;height:12px;border-radius:50%;border:2px solid #8aab8a;background:white;flex-shrink:0;}
+    .lg-line{width:24px;height:3px;background:#8aab8a;border-radius:2px;}
+    .lg-dashed{width:24px;height:0;border-top:2px dashed #c9a84c;}
+    .tree-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+    .tb-btn{background:white;border:1px solid var(--border,#e8e2d8);border-radius:20px;padding:6px 14px;font-size:.75rem;cursor:pointer;transition:all 0.2s;color:var(--text-dark,#333);}
+    .tb-btn:hover,.tb-btn.active{background:#5c7a5c;color:white;border-color:#5c7a5c;}
+    .zoom-wrap{display:flex;align-items:center;gap:6px;margin-left:auto;}
+    .z-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border,#e8e2d8);background:white;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-dark);}
+    .z-label{font-size:.75rem;color:#666;min-width:36px;text-align:center;}
+    .tree-quote-box{background:rgba(255,255,255,0.7);border:1px solid rgba(138,171,138,0.2);border-radius:16px;padding:20px 28px;text-align:center;margin-top:16px;backdrop-filter:blur(8px);}
+    .contribute-bar{background:linear-gradient(135deg,#f0f5f0,#faf8f4);border:1px solid #c8ddc8;border-radius:16px;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:16px;}
+    .contribute-bar p{font-size:.88rem;color:#5c7a5c;margin:0;line-height:1.5;}
+    .contribute-bar a{background:#5c7a5c;color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:500;}
     @media(max-width:768px){
       .side-panel{width:100%;right:-100%;}
-      .tree-key{gap:8px;padding:8px 12px;}
+      .tree-key{gap:8px;padding:8px 12px;font-size:.68rem;}
       .tree-viewport{min-height:400px;}
+      .tree-toolbar{gap:6px;}
     }
-    /* ── List View ── */
-    #treeListView{display:none;padding:0 4px 24px;}
-    .tlv-gen{margin-bottom:20px;}
-    .tlv-gen-title{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#5c7a5c;padding:8px 0 8px;border-bottom:1.5px solid #e8e2d8;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
-    .tlv-arrow{transition:transform .2s;}
-    .tlv-gen-title.collapsed .tlv-arrow{transform:rotate(-90deg);}
-    .tlv-members{display:flex;flex-wrap:wrap;gap:8px;}
-    .tlv-members.hidden{display:none;}
-    .tlv-card{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.95);border:1px solid #e8e2d8;cursor:pointer;flex:1;min-width:150px;transition:box-shadow .15s;}
-    .tlv-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);}
-    .tlv-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;border:2px solid #c8ddc8;overflow:hidden;background:#f5f3ee;}
-    .tlv-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-    .tlv-avatar.female{border-color:#d0c0f0;}
-    .tlv-avatar.ancestor{border-color:#c9a84c;}
-    .tlv-name{font-size:.83rem;font-weight:500;color:#2c2c2c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .tlv-role{font-size:.7rem;color:#aaa;}
-    /* ── Floating toggle button (mobile only) ── */
-    #mobileViewBtn{display:none;position:fixed;bottom:20px;right:20px;z-index:500;background:#5c7a5c;color:white;border:none;border-radius:50px;padding:10px 18px;font-size:.78rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.2);cursor:pointer;}
-    @media(max-width:768px){#mobileViewBtn{display:flex;align-items:center;gap:6px;}}
   </style>
 </head>
 <body>
 <script>
-  // Set auth if previewing so auth.js doesn't redirect
-  var _preview=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_preview_mode'));
-  if(_preview){ sessionStorage.setItem('nukala_auth','true'); }
-  // Fetch site-data.js — skip if previewing so live edits show immediately
+  // Skip site-data.js if admin is previewing
+  var _prev=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_preview_mode'));
+  if(_prev){ sessionStorage.setItem('nukala_auth','true'); }
   try{
-    if(!_preview){
-      var _xhr=new XMLHttpRequest();
-      _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
-      _xhr.send();
-      if(_xhr.status===200) eval(_xhr.responseText);
+    if(!_prev){
+      var _x=new XMLHttpRequest();
+      _x.open('GET','site-data.js?nocache='+Date.now(),false);
+      _x.send();
+      if(_x.status===200) eval(_x.responseText);
     }
   }catch(e){}
 </script>
@@ -171,22 +132,20 @@
     <div class="hero-divider"></div>
     <p>Click any leaf to discover the story within. Lines trace the branches of our family across generations.</p>
   </div>
-
   <div class="content-area">
     <!-- Key bar -->
     <div class="tree-key">
       <span style="font-size:.65rem;font-weight:700;letter-spacing:.12em;color:#aaa;">KEY</span>
-      <div class="lg-item"><div class="lg-dot" data-key="ancestor" style="border-color:#c9a84c;background:#fffdf7;"></div>Ancestor</div>
-      <div class="lg-item"><div class="lg-dot" data-key="male" style="border-color:#8aab8a;"></div>Male</div>
-      <div class="lg-item"><div class="lg-dot" data-key="female" style="border-color:#d0c0f0;"></div>Female</div>
-      <div class="lg-item"><div class="lg-line" data-key="main"></div>Parent–Child</div>
+      <div class="lg-item"><div class="lg-dot" data-key="ancestor" style="border-color:var(--tc-ancestor,#c9a84c);background:#fffdf7;"></div>Ancestor</div>
+      <div class="lg-item"><div class="lg-dot" data-key="male" style="border-color:var(--tc-male,#8aab8a);"></div>Male</div>
+      <div class="lg-item"><div class="lg-dot" data-key="female" style="border-color:var(--tc-female,#d0c0f0);"></div>Female</div>
+      <div class="lg-item"><div class="lg-line" data-key="main"></div>Parent&#8212;Child</div>
       <div class="lg-item"><div class="lg-dashed" data-key="spouse"></div>Spouse &#128155;</div>
-      <div class="lg-item"><div class="lg-dashed" data-key="female-branch" style="border-color:#c06090;"></div>Female Branch &#127800;</div>
-      <div style="margin-left:auto;">
+      <div class="lg-item"><div class="lg-dashed" data-key="female-branch" style="border-color:var(--tc-female-branch,#c06090);"></div>Female Branch &#127800;</div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
         <button class="tb-btn active" onclick="toggleLines()" id="btnLines">&#127807; Lines On</button>
       </div>
     </div>
-
     <!-- Toolbar -->
     <div class="tree-toolbar">
       <button class="tb-btn" onclick="fitToScreen()">&#8861; Fit to Screen</button>
@@ -194,30 +153,26 @@
       <div class="zoom-wrap">
         <button class="z-btn" onclick="zoomOut()">&#8722;</button>
         <span class="z-label" id="zoomLbl">100%</span>
-        <button class="z-btn" onclick="zoomIn()">&#43;</button>
+        <button class="z-btn" onclick="zoomIn()">+</button>
       </div>
     </div>
-
     <!-- Tree viewport -->
     <div class="tree-viewport" id="treeVp">
       <div class="tree-canvas" id="treeCanvas">
-        <svg id="branchSvg" width="1" height="1" style="position:absolute;top:0;left:0;pointer-events:none;"></svg>
+        <svg id="branchSvg" width="1" height="1" style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;"></svg>
         <div id="cardsLayer"></div>
       </div>
     </div>
-  </div>
-
-  <!-- List View Container (mobile) -->
-  <div id="treeListView"></div>
-
-  <div class="tree-quote">
-    <p id="treeQuoteText" style="font-size:1.05rem;font-weight:400;color:var(--text-mid);font-style:italic;line-height:1.7;margin:0;">"Family, like branches on a tree, we all grow in different directions yet our roots remain as one."</p>
-    <p id="treeQuoteAuthor" style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-light);margin-top:8px;">— The Nukala Family</p>
-  </div>
-
-  <div class="contribute-bar fade-in">
-    <p><strong>Know a family member missing from the tree?</strong><br/>Share details and we'll add them to the family tree.</p>
-    <a href="contact.html">+ Submit a Member</a>
+    <!-- Quote -->
+    <div class="tree-quote-box">
+      <p id="treeQuoteText" style="font-size:1.05rem;font-weight:400;color:var(--text-mid,#666);font-style:italic;line-height:1.7;margin:0;">"Family, like branches on a tree, we all grow in different directions yet our roots remain as one."</p>
+      <p id="treeQuoteAuthor" style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-light,#aaa);margin-top:8px;">&#8212; The Nukala Family</p>
+    </div>
+    <!-- Contribute -->
+    <div class="contribute-bar fade-in">
+      <p><strong>Know a family member missing from the tree?</strong><br/>Share details and we'll add them to the family tree.</p>
+      <a href="contact.html">+ Submit a Member</a>
+    </div>
   </div>
 </main>
 
@@ -229,272 +184,216 @@
   <div class="sp-role" id="spRole"></div>
   <div id="spBody"></div>
 </div>
+
 <footer>
     &copy; <span id="footerYear">2026</span> <strong id="footerText">The Nukala Family</strong> · <span id="footerSub">Private &amp; Password Protected · Made with 🌳 &amp; love</span>
   </footer>
 
 <script>
-// ── TREE DATA ──
-function tLoad(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+    // ── DATA ──
+    const load = k => { try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } };
 
-// ── SETTINGS ──
-(function(){
-  var s=tLoad('nukala_settings'), h=tLoad('nukala_home'), sw=tLoad('nukala_sitewide');
-  var nn=document.getElementById('navSiteName');
-  if(nn) nn.textContent=(sw.navName||h.navName||(s.familyName?s.familyName.toUpperCase():'NUKALA'));
-  var fn=document.getElementById('footerText');
-  if(fn&&s.familyName) fn.textContent='The '+s.familyName+' Family';
-})();
+    // ── SETTINGS ──
+    (function(){
+      const _s=load('nukala_settings'), _h=load('nukala_home'), _sw=load('nukala_sitewide');
+      const navName=_sw.navName||_h.navName||(_s.familyName?_s.familyName.toUpperCase():'NUKALA');
+      const nn=document.getElementById('navSiteName'); if(nn) nn.textContent=navName;
+      const fn=document.getElementById('footerText'); if(fn&&_s.familyName) fn.textContent='The '+_s.familyName+' Family';
+    })();
 
-// ── CONSTANTS ──
-var CW=148, CH=130, HG=44, VG=100;
+    // ── LAYOUT ENGINE ──
+    const CW=148, CH=130, HG=44, VG=100;
 
-// ── LAYOUT ──
-function layoutTree(members){
-  var list=Object.values(members);
-  if(!list.length) return {};
-  var byGen={};
-  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
-  var positions={};
-  var gens=Object.keys(byGen).map(Number).sort(function(a,b){return a-b;});
-  gens.forEach(function(gen,gi){
-    var row=sortRow(byGen[gen],members);
-    var totalW=row.length*CW+(row.length-1)*HG;
-    var startX=Math.max(100,700-totalW/2);
-    var y=60+gi*(CH+VG);
-    row.forEach(function(m,i){ positions[m.id]={x:startX+i*(CW+HG),y:y}; });
-  });
-  return positions;
-}
-
-function sortRow(row,members){
-  var placed={}, result=[];
-  row.forEach(function(m){
-    if(placed[m.id]) return;
-    result.push(m); placed[m.id]=true;
-    if(m.spouseId&&members[m.spouseId]&&row.find(function(r){return r.id===m.spouseId;})&&!placed[m.spouseId]){
-      result.push(members[m.spouseId]); placed[m.spouseId]=true;
+    function layoutTree(members){
+      const list=Object.values(members);
+      if(!list.length) return {};
+      const byGen={};
+      list.forEach(m=>{ const g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
+      const positions={};
+      const gens=Object.keys(byGen).map(Number).sort((a,b)=>a-b);
+      gens.forEach((gen,gi)=>{
+        const row=sortRow(byGen[gen],members);
+        const totalW=row.length*CW+(row.length-1)*HG;
+        const startX=Math.max(100,700-totalW/2);
+        const y=60+gi*(CH+VG);
+        row.forEach((m,i)=>{ positions[m.id]={x:startX+i*(CW+HG),y}; });
+      });
+      return positions;
     }
-  });
-  return result;
-}
 
-// ── STATE ──
-var showLines=true, zoom=1, selectedId=null;
-
-// ── RENDER TREE ──
-function renderTree(){
-  var raw=localStorage.getItem('nukala_tree_data'); var members=raw?JSON.parse(raw):{};
-  var list=Object.values(members);
-  var cardsLayer=document.getElementById('cardsLayer');
-  var svg=document.getElementById('branchSvg');
-  if(!cardsLayer||!svg) return;
-  cardsLayer.innerHTML=''; svg.innerHTML='';
-
-  if(!list.length){
-    cardsLayer.innerHTML='<div class="empty-tree"><div style="font-size:48px;margin-bottom:16px;">&#127795;</div><h3>Your Family Tree Awaits</h3><p>Add members in Admin &rarr; Members to build your tree.</p></div>';
-    svg.setAttribute('width','800'); svg.setAttribute('height','500');
-    return;
-  }
-
-  var positions=layoutTree(members);
-  var maxX=800, maxY=500;
-  Object.values(positions).forEach(function(p){ maxX=Math.max(maxX,p.x+CW+100); maxY=Math.max(maxY,p.y+CH+100); });
-  svg.setAttribute('width',maxX); svg.setAttribute('height',maxY);
-  svg.style.width=maxX+'px'; svg.style.height=maxY+'px';
-  document.getElementById('treeCanvas').style.width=maxX+'px';
-  document.getElementById('treeCanvas').style.height=maxY+'px';
-
-  // Generation ribbons
-  var byGen={};
-  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
-  var genNames={1:'Great-Great-Grandparents',2:'Great-Grandparents',3:'Grandparents',4:'Parents & Aunts/Uncles',5:'Your Generation',6:'Children',7:'Grandchildren',8:'Great-Grandchildren'};
-  Object.keys(byGen).map(Number).sort(function(a,b){return a-b;}).forEach(function(gen,gi){
-    var y=60+gi*(CH+VG);
-    var r=document.createElement('div');
-    r.className='gen-ribbon';
-    r.style.top=(y+CH/2-12)+'px';
-    r.innerHTML='Gen '+gen+(genNames[gen]?' &middot; '+genNames[gen]:'');
-    cardsLayer.appendChild(r);
-  });
-
-  // Lines
-  if(showLines){
-    var drawnSpouses={};
-    list.forEach(function(m){
-      var pos=positions[m.id]; if(!pos) return;
-      var cx=pos.x+CW/2;
-      // Parent-child
-      ['fatherId','motherId'].forEach(function(rel){
-        if(m[rel]&&positions[m[rel]]){
-          var pp=positions[m[rel]];
-          var pcx=pp.x+CW/2, pcy=pp.y+CH;
-          var midY=pcy+(pos.y-pcy)/2;
-          var path=document.createElementNS('http://www.w3.org/2000/svg','path');
-          var w=(Math.random()-0.5)*20;
-          path.setAttribute('d','M'+pcx+','+pcy+' C'+(pcx+w)+','+(midY-20)+' '+(cx-w)+','+(midY+20)+' '+cx+','+pos.y);
-          path.setAttribute('class',m.inlaw?'branch-female':'branch-main');
-          svg.appendChild(path);
-          var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-          dot.setAttribute('cx',cx); dot.setAttribute('cy',pos.y);
-          dot.setAttribute('r','4'); dot.setAttribute('class','branch-node');
-          svg.appendChild(dot);
+    function sortRow(row,members){
+      const placed=new Set(),result=[];
+      row.forEach(m=>{
+        if(placed.has(m.id)) return;
+        result.push(m); placed.add(m.id);
+        if(m.spouseId&&members[m.spouseId]&&row.find(r=>r.id===m.spouseId)&&!placed.has(m.spouseId)){
+          result.push(members[m.spouseId]); placed.add(m.spouseId);
         }
       });
-      // Spouse
-      if(m.spouseId&&positions[m.spouseId]){
-        var key=[m.id,m.spouseId].sort().join('-');
-        if(!drawnSpouses[key]){
-          drawnSpouses[key]=true;
-          var sp=positions[m.spouseId];
-          var x1=pos.x+CW, y1=pos.y+CH/2, x2=sp.x, y2=sp.y+CH/2;
-          var isFem=m.female&&!m.inlaw;
-          var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-          line.setAttribute('x1',x1); line.setAttribute('y1',y1);
-          line.setAttribute('x2',x2); line.setAttribute('y2',y2);
-          line.setAttribute('class',isFem?'branch-female':'branch-spouse');
-          svg.appendChild(line);
-          var heart=document.createElement('div');
-          heart.className='spouse-heart';
-          heart.style.left=((x1+x2)/2-10)+'px';
-          heart.style.top=((y1+y2)/2-10)+'px';
-          heart.textContent=isFem?'\uD83C\uDF38':'\uD83D\uDC9B';
-          cardsLayer.appendChild(heart);
-        }
+      return result;
+    }
+
+    // ── STATE ──
+    let showLines=true, zoom=1, selectedId=null;
+
+    // ── RENDER ──
+    function renderTree(){
+      const members=load('nukala_tree_data');
+      const list=Object.values(members);
+      const cardsLayer=document.getElementById('cardsLayer');
+      const svg=document.getElementById('branchSvg');
+      cardsLayer.innerHTML=''; svg.innerHTML='';
+
+      if(!list.length){
+        cardsLayer.innerHTML='<div class="empty-tree"><div style="font-size:48px;margin-bottom:16px;">&#127795;</div><h3>Your Family Tree Awaits</h3><p>Add members in Admin &rarr; Members to build your tree.</p></div>';
+        svg.setAttribute('width','800'); svg.setAttribute('height','500');
+        return;
       }
-    });
-  }
 
-  // Cards
-  list.forEach(function(m){
-    var pos=positions[m.id]; if(!pos) return;
-    var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
-    var short=name.length>18?name.substring(0,16)+'\u2026':name;
-    var cls=['pcard',m.female?'female':'',m.ancestor?'ancestor':'',m.deceased?'deceased':'',m.id===selectedId?'selected':''].filter(Boolean).join(' ');
-    var card=document.createElement('div');
-    card.className=cls;
-    card.style.left=pos.x+'px'; card.style.top=pos.y+'px';
-    var photo=m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.style.display=\'none\'">':(m.female?'\uD83D\uDC69':m.ancestor?'\uD83D\uDC74':'\uD83D\uDC68');
-    card.innerHTML='<div class="pc-ring"><div class="pc-photo">'+photo+(m.deceased?'<div style="position:absolute;bottom:0;right:0;font-size:.6rem;background:#888;color:white;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;">\u271D</div>':'')+'</div></div><div class="pc-name">'+short+'</div><div class="pc-role">'+(m.role||'&ndash;')+'</div><div class="pc-dates">'+(m.born?m.born+(m.died?'&ndash;'+m.died:''):'')+'</div>';
-    card.addEventListener('click',function(){ showPanel(m.id); });
-    cardsLayer.appendChild(card);
-  });
-}
+      const positions=layoutTree(members);
+      let maxX=800,maxY=500;
+      Object.values(positions).forEach(p=>{ maxX=Math.max(maxX,p.x+CW+100); maxY=Math.max(maxY,p.y+CH+100); });
+      svg.setAttribute('width',maxX); svg.setAttribute('height',maxY);
+      svg.style.width=maxX+'px'; svg.style.height=maxY+'px';
+      document.getElementById('treeCanvas').style.width=maxX+'px';
+      document.getElementById('treeCanvas').style.height=maxY+'px';
 
-// ── SIDE PANEL ──
-function showPanel(id){
-  var members=tLoad('nukala_tree_data');
-  var m=members[id]; if(!m) return;
-  var contacts=tLoad('nukala_contacts')||{};
-  var c=contacts[id]||{};
-  m=Object.assign({},m,{phone:m.phone||c.phone||'',whatsapp:m.whatsapp||c.whatsapp||'',email:m.email||c.email||'',city:m.city||c.city||''});
-  selectedId=id; renderTree();
-  var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
-  var all=Object.values(members);
-  var father=m.fatherId?members[m.fatherId]:null;
-  var mother=m.motherId?members[m.motherId]:null;
-  var spouse=m.spouseId?members[m.spouseId]:null;
-  var children=all.filter(function(x){return x.fatherId===id||x.motherId===id;});
-  var siblings=all.filter(function(x){return x.id!==id&&((m.fatherId&&x.fatherId===m.fatherId)||(m.motherId&&x.motherId===m.motherId));});
-  document.getElementById('spPhotoWrap').innerHTML='<div class="sp-photo-wrap"><div class="sp-photo-inner">'+(m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.textContent=\''+(m.female?'\uD83D\uDC69':'\uD83D\uDC68')+'\'">':'<span style="font-size:2rem;">'+(m.female?'\uD83D\uDC69':m.ancestor?'\uD83D\uDC74':'\uD83D\uDC68')+'</span>')+'</div></div>';
-  document.getElementById('spName').textContent=name;
-  document.getElementById('spRole').textContent=(m.role||'–')+(m.gen?' · Gen '+m.gen:'');
-  function chip(p,lbl){ if(!p) return ''; var n=[p.firstName,p.lastName].filter(Boolean).join(' '); return '<span class="sp-chip" onclick="showPanel(\''+p.id+'\')">'+lbl+': '+n+'</span>'; }
-  var rels=[father?chip(father,'Father'):'',mother?chip(mother,'Mother'):'',spouse?chip(spouse,'Spouse'):''].concat(children.map(function(ch){return chip(ch,'Child');})).concat(siblings.map(function(sb){return chip(sb,'Sibling');})).filter(Boolean).join('');
-  document.getElementById('spBody').innerHTML=
-    (m.born?'<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">'+m.born+'</div></div>':'')+
-    (m.died?'<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">'+m.died+'</div></div>':'')+
-    (m.city?'<div class="sp-row"><div class="sp-lbl">\uD83D\uDCCD City</div><div class="sp-val">'+m.city+'</div></div>':'')+
-    (m.phone?'<div class="sp-row"><div class="sp-lbl">\uD83D\uDCDE Phone</div><div class="sp-val"><a href="tel:'+m.phone+'" style="color:inherit;">'+m.phone+'</a></div></div>':'')+
-    (m.whatsapp?'<div class="sp-row"><div class="sp-lbl">\uD83D\uDCAC WA</div><div class="sp-val"><a href="https://wa.me/'+m.whatsapp.replace(/[^0-9]/g,'')+'" target="_blank" style="color:#5c7a5c;">Chat</a></div></div>':'')+
-    (m.email?'<div class="sp-row"><div class="sp-lbl">\u2709\uFE0F Email</div><div class="sp-val">'+m.email+'</div></div>':'')+
-    (m.notes?'<div class="sp-div"></div><div class="sp-notes">'+m.notes+'</div>':'')+
-    (rels?'<div class="sp-div"></div><div class="sp-rel-title">Family Connections</div>'+rels:'');
-  document.getElementById('sidePanel').classList.add('open');
-}
-function closePanel(){ selectedId=null; document.getElementById('sidePanel').classList.remove('open'); renderTree(); }
+      // Generation ribbons
+      const byGen={};
+      list.forEach(m=>{ const g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
+      const genNames={1:'Great-Great-Grandparents',2:'Great-Grandparents',3:'Grandparents',4:'Parents & Aunts/Uncles',5:'Your Generation',6:'Children',7:'Grandchildren',8:'Great-Grandchildren'};
+      Object.keys(byGen).map(Number).sort((a,b)=>a-b).forEach((gen,gi)=>{
+        const y=60+gi*(CH+VG);
+        const r=document.createElement('div');
+        r.className='gen-ribbon';
+        r.style.top=(y+CH/2-12)+'px';
+        r.innerHTML='Gen '+gen+(genNames[gen]?' &middot; '+genNames[gen]:'');
+        cardsLayer.appendChild(r);
+      });
 
-// ── CONTROLS ──
-function toggleLines(){ showLines=!showLines; var b=document.getElementById('btnLines'); b.textContent=showLines?'\uD83C\uDF3F Lines On':'\uD83C\uDF3F Lines Off'; b.classList.toggle('active',showLines); renderTree(); }
-function zoomIn(){ zoom=Math.min(zoom+0.1,2.5); applyZoom(); }
-function zoomOut(){ zoom=Math.max(zoom-0.1,0.3); applyZoom(); }
-function applyZoom(){ document.getElementById('treeCanvas').style.transform='scale('+zoom+')'; document.getElementById('zoomLbl').textContent=Math.round(zoom*100)+'%'; }
-function resetView(){ zoom=1; applyZoom(); document.getElementById('treeVp').scrollTo(0,0); }
-function fitToScreen(){ var vp=document.getElementById('treeVp'),canvas=document.getElementById('treeCanvas'); zoom=Math.min(vp.clientWidth/canvas.scrollWidth,vp.clientHeight/canvas.scrollHeight,1)*0.88; applyZoom(); }
+      // Lines
+      if(showLines){
+        const drawnSpouses=new Set();
+        let delay=0;
+        list.forEach(m=>{
+          const pos=positions[m.id]; if(!pos) return;
+          const cx=pos.x+CW/2;
+          ['fatherId','motherId'].forEach(rel=>{
+            if(m[rel]&&positions[m[rel]]){
+              const pp=positions[m[rel]];
+              const pcx=pp.x+CW/2,pcy=pp.y+CH;
+              const midY=pcy+(pos.y-pcy)/2;
+              const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+              const w=(Math.random()-0.5)*20;
+              path.setAttribute('d','M'+pcx+','+pcy+' C'+(pcx+w)+','+(midY-20)+' '+(cx-w)+','+(midY+20)+' '+cx+','+pos.y);
+              path.setAttribute('class',(m.inlaw?'branch-female':'branch-main')+' branch-animated');
+              path.style.animationDelay=(delay*0.1)+'s';
+              svg.appendChild(path);
+              const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+              dot.setAttribute('cx',cx); dot.setAttribute('cy',pos.y);
+              dot.setAttribute('r','4'); dot.setAttribute('class','branch-node');
+              svg.appendChild(dot);
+              delay++;
+            }
+          });
+          if(m.spouseId&&positions[m.spouseId]){
+            const key=[m.id,m.spouseId].sort().join('-');
+            if(!drawnSpouses.has(key)){
+              drawnSpouses.add(key);
+              const sp=positions[m.spouseId];
+              const x1=pos.x+CW,y1=pos.y+CH/2,x2=sp.x,y2=sp.y+CH/2;
+              const isFem=m.female&&!m.inlaw;
+              const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+              line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+              line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+              line.setAttribute('class',isFem?'branch-female':'branch-spouse');
+              svg.appendChild(line);
+              const heart=document.createElement('div');
+              heart.className='spouse-heart';
+              heart.style.left=((x1+x2)/2-10)+'px'; heart.style.top=((y1+y2)/2-10)+'px';
+              try{ var tc_h=JSON.parse(localStorage.getItem('nukala_tree_colours')||'{}'); heart.textContent=isFem?(tc_h.femaleHeart||'\uD83C\uDF38'):(tc_h.spouseHeart||'\uD83D\uDC9B'); }catch(e){ heart.textContent=isFem?'\uD83C\uDF38':'\uD83D\uDC9B'; }
+              cardsLayer.appendChild(heart);
+            }
+          }
+        });
+      }
 
-// ── DRAG PAN ──
-(function(){
-  var drag=false,dx,dy,sx,sy;
-  var vp=document.getElementById('treeVp');
-  vp.addEventListener('mousedown',function(e){ if(e.target.closest('.pcard,.gen-ribbon,.spouse-heart')) return; drag=true; dx=e.clientX; dy=e.clientY; sx=vp.scrollLeft; sy=vp.scrollTop; });
-  window.addEventListener('mousemove',function(e){ if(!drag) return; vp.scrollLeft=sx-(e.clientX-dx); vp.scrollTop=sy-(e.clientY-dy); });
-  window.addEventListener('mouseup',function(){ drag=false; });
-  vp.addEventListener('wheel',function(e){ e.preventDefault(); e.deltaY<0?zoomIn():zoomOut(); },{passive:false});
-  var lastD=0;
-  vp.addEventListener('touchstart',function(e){ if(e.touches.length===2) lastD=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); });
-  vp.addEventListener('touchmove',function(e){ if(e.touches.length===2){ var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); if(d>lastD+5)zoomIn(); else if(d<lastD-5)zoomOut(); lastD=d; }});
-})();
+      // Cards
+      list.forEach(m=>{
+        const pos=positions[m.id]; if(!pos) return;
+        const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+        const short=name.length>18?name.substring(0,16)+'\u2026':name;
+        const dates=m.born?(m.born+(m.died?'\u2013'+m.died:'')):'';
+        const cls=['pcard',m.female?'female':'',m.ancestor?'ancestor':'',m.deceased?'deceased':'',m.inlaw?'inlaw':'',m.id===selectedId?'selected':''].filter(Boolean).join(' ');
+        const card=document.createElement('div');
+        card.className=cls;
+        card.style.left=pos.x+'px'; card.style.top=pos.y+'px';
+        card.style.animationDelay=(Math.random()*0.3)+'s';
+        let photo=m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.style.display=\'none\'">':(m.female?'\uD83D\uDC69':m.ancestor?'\uD83D\uDC74':'\uD83D\uDC68');
+        card.innerHTML='<div class="pc-ring"><div class="pc-photo">'+photo+(m.deceased?'<div class="pc-deceased-badge">\u271D</div>':'')+'</div></div><div class="pc-name">'+short+'</div><div class="pc-role">'+( m.role||'\u2013')+'</div><div class="pc-dates">'+dates+'</div>';
+        card.addEventListener('click',()=>showPanel(m.id));
+        cardsLayer.appendChild(card);
+      });
+    }
 
-// ── INIT ──
-renderTree();
+    // ── SIDE PANEL ──
+    function showPanel(id){
+      const members=load('nukala_tree_data');
+      const raw=members[id]; if(!raw) return;
+      const contacts=load('nukala_contacts')||{};
+      const c=contacts[id]||{};
+      const m=Object.assign({},raw,{phone:raw.phone||c.phone||'',whatsapp:raw.whatsapp||c.whatsapp||'',email:raw.email||c.email||'',city:raw.city||c.city||''});
+      selectedId=id; renderTree();
+      const name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+      const all=Object.values(members);
+      const father=m.fatherId?members[m.fatherId]:null;
+      const mother=m.motherId?members[m.motherId]:null;
+      const spouse=m.spouseId?members[m.spouseId]:null;
+      const children=all.filter(x=>x.fatherId===id||x.motherId===id);
+      const siblings=all.filter(x=>x.id!==id&&((m.fatherId&&x.fatherId===m.fatherId)||(m.motherId&&x.motherId===m.motherId)));
+      const photoEmoji=m.female?'\uD83D\uDC69':m.ancestor?'\uD83D\uDC74':'\uD83D\uDC68';
+      document.getElementById('spPhotoWrap').innerHTML='<div class="sp-photo-wrap"><div class="sp-photo-inner">'+( m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.textContent=\'\uD83D\uDC68\'">':'<span style="font-size:32px;">'+photoEmoji+'</span>')+'</div></div>';
+      document.getElementById('spName').textContent=name;
+      document.getElementById('spRole').textContent=(m.role||'\u2013')+(m.gen?' \u00b7 Gen '+m.gen:'');
+      const chip=(p,lbl)=>{ if(!p) return ''; const n=[p.firstName,p.lastName].filter(Boolean).join(' '); return '<span class="sp-chip" onclick="showPanel(\'"+p.id+"\')">'+lbl+': '+n+'</span>'; };
+      const rels=[father?chip(father,'Father'):'',mother?chip(mother,'Mother'):'',spouse?chip(spouse,'Spouse'):'',...children.map(ch=>chip(ch,'Child')),...siblings.map(sb=>chip(sb,'Sibling'))].filter(Boolean).join('');
+      document.getElementById('spBody').innerHTML=
+        (m.born?'<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">'+m.born+'</div></div>':'')
+       +(m.died?'<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">'+m.died+'</div></div>':'')
+       +(m.place?'<div class="sp-row"><div class="sp-lbl">Birthplace</div><div class="sp-val">'+m.place+'</div></div>':'')
+       +((m.occ||m.occupation)?'<div class="sp-row"><div class="sp-lbl">Occupation</div><div class="sp-val">'+( m.occ||m.occupation)+'</div></div>':'')
+       +(m.city?'<div class="sp-row"><div class="sp-lbl">\uD83D\uDCCD City</div><div class="sp-val">'+m.city+'</div></div>':'')
+       +(m.phone?'<div class="sp-row"><div class="sp-lbl">\uD83D\uDCDE Phone</div><div class="sp-val"><a href="tel:'+m.phone+'" style="color:inherit;">'+m.phone+'</a></div></div>':'')
+       +(m.whatsapp?'<div class="sp-row"><div class="sp-lbl">\uD83D\uDCAC WA</div><div class="sp-val"><a href="https://wa.me/'+m.whatsapp.replace(/[^0-9]/g,'')+'" target="_blank" style="color:#5c7a5c;">Chat</a></div></div>':'')
+       +(m.email?'<div class="sp-row"><div class="sp-lbl">\u2709\uFE0F Email</div><div class="sp-val">'+m.email+'</div></div>':'')
+       +(m.notes?'<div class="sp-div"></div><div class="sp-notes">'+m.notes+'</div>':'')
+       +(rels?'<div class="sp-div"></div><div class="sp-rel-title">Family Connections</div>'+rels:'');
+      document.getElementById('sidePanel').classList.add('open');
+    }
 
-// ── MOBILE LIST VIEW ──
-var _view = 'tree';
+    function closePanel(){ selectedId=null; document.getElementById('sidePanel').classList.remove('open'); renderTree(); }
 
-function renderListView(){
-  var members = tLoad('nukala_tree_data');
-  var list = Object.values(members);
-  var el = document.getElementById('treeListView');
-  if(!el) return;
-  if(!list.length){
-    el.innerHTML = '<div style="text-align:center;padding:48px 20px;color:#aaa;"><div style="font-size:3rem;">&#127795;</div><p>No members yet.</p></div>';
-    return;
-  }
-  var byGen = {};
-  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
-  var genLabels = {1:'Great-Great-Grandparents',2:'Great-Grandparents',3:'Grandparents',4:'Parents & Aunts/Uncles',5:'Your Generation',6:'Children',7:'Grandchildren',8:'Great-Grandchildren'};
-  var gens = Object.keys(byGen).map(Number).sort(function(a,b){return a-b;});
-  el.innerHTML = gens.map(function(gen){
-    var rows = byGen[gen].map(function(m){
-      var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
-      var ac=m.ancestor?'ancestor':m.female?'female':'';
-      var av=m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.style.display='none'">':(m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;');
-      return '<div class="tlv-card" onclick="showPanel(''+m.id+'')"><div class="tlv-avatar '+ac+'">'+av+'</div><div style="flex:1;min-width:0;"><div class="tlv-name">'+name+'</div><div class="tlv-role">'+(m.role||'')+'</div></div><span style="color:#5c7a5c;">&#8250;</span></div>';
-    }).join('');
-    var title='Generation '+gen+(genLabels[gen]?' &middot; '+genLabels[gen]:'');
-    return '<div class="tlv-gen"><div class="tlv-gen-title" onclick="tlvToggle(this)">'+title+'<span class="tlv-arrow">&#9660;</span></div><div class="tlv-members">'+rows+'</div></div>';
-  }).join('');
-}
+    // ── CONTROLS ──
+    function toggleLines(){ showLines=!showLines; const b=document.getElementById('btnLines'); b.textContent=showLines?'\uD83C\uDF3F Lines On':'\uD83C\uDF3F Lines Off'; b.classList.toggle('active',showLines); renderTree(); }
+    function zoomIn(){ zoom=Math.min(zoom+0.1,2.5); applyZoom(); }
+    function zoomOut(){ zoom=Math.max(zoom-0.1,0.3); applyZoom(); }
+    function applyZoom(){ document.getElementById('treeCanvas').style.transform='scale('+zoom+')'; document.getElementById('zoomLbl').textContent=Math.round(zoom*100)+'%'; }
+    function resetView(){ zoom=1; applyZoom(); document.getElementById('treeVp').scrollTo(0,0); }
+    function fitToScreen(){ const vp=document.getElementById('treeVp'),canvas=document.getElementById('treeCanvas'); zoom=Math.min(vp.clientWidth/canvas.scrollWidth,vp.clientHeight/canvas.scrollHeight,1)*0.88; applyZoom(); }
 
-function tlvToggle(h){
-  h.classList.toggle('collapsed');
-  var m=h.nextElementSibling;
-  if(m) m.classList.toggle('hidden');
-}
+    // ── DRAG PAN ──
+    let drag=false,dx,dy,sx,sy;
+    const vp=document.getElementById('treeVp');
+    vp.addEventListener('mousedown',e=>{ if(e.target.closest('.pcard,.gen-ribbon,.spouse-heart')) return; drag=true; dx=e.clientX; dy=e.clientY; sx=vp.scrollLeft; sy=vp.scrollTop; });
+    window.addEventListener('mousemove',e=>{ if(!drag) return; vp.scrollLeft=sx-(e.clientX-dx); vp.scrollTop=sy-(e.clientY-dy); });
+    window.addEventListener('mouseup',()=>drag=false);
+    vp.addEventListener('wheel',e=>{ e.preventDefault(); e.deltaY<0?zoomIn():zoomOut(); },{passive:false});
+    let lastTD=0;
+    vp.addEventListener('touchstart',e=>{ if(e.touches.length===2) lastTD=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); });
+    vp.addEventListener('touchmove',e=>{ if(e.touches.length===2){ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); if(d>lastTD+5) zoomIn(); else if(d<lastTD-5) zoomOut(); lastTD=d; }});
 
-function toggleMobileView(){
-  var vp=document.getElementById('treeVp');
-  var lv=document.getElementById('treeListView');
-  var btn=document.getElementById('mobileViewBtn');
-  var tb=document.querySelector('.tree-toolbar');
-  if(_view==='tree'){
-    _view='list';
-    if(vp) vp.style.display='none';
-    if(tb) tb.style.display='none';
-    renderListView();
-    if(lv) lv.style.display='block';
-    if(btn){btn.innerHTML='&#127795; Tree View';btn.style.background='#9060b0';}
-  } else {
-    _view='tree';
-    if(vp) vp.style.display='';
-    if(tb) tb.style.display='';
-    if(lv){lv.style.display='none';lv.innerHTML='';}
-    if(btn){btn.innerHTML='&#9776; List View';btn.style.background='#5c7a5c';}
-  }
-}
-
+    renderTree();
 </script>
-
 <script>
 
 (function(){
@@ -691,9 +590,6 @@ function toggleMobileView(){
 })();
 
 </script>
-<!-- Mobile List/Tree toggle button -->
-<button id="mobileViewBtn" onclick="toggleMobileView()">&#9776; List View</button>
-
 <script src="nukala.js"></script>
 <script src="lang.js"></script>
 </body>
