@@ -64,13 +64,14 @@
 <body>
   <div class="logo-watermark"></div>
   <script>
-  // Fetch site-data.js — skip if admin is previewing so live edits show immediately
+  var _prev=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_preview_mode'));
+  if(_prev){ sessionStorage.setItem('nukala_auth','true'); }
   try{
-    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')&&!localStorage.getItem('nukala_preview_mode')){
-      var _xhr=new XMLHttpRequest();
-      _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
-      _xhr.send();
-      if(_xhr.status===200) eval(_xhr.responseText);
+    if(!_prev){
+      var _x=new XMLHttpRequest();
+      _x.open('GET','site-data.js?nocache='+Date.now(),false);
+      _x.send();
+      if(_x.status===200) eval(_x.responseText);
     }
   }catch(e){}
 </script>

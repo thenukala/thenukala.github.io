@@ -83,13 +83,14 @@
 <body>
   <div class="logo-watermark"></div>
   <script>
-  // Fetch site-data.js — skip if admin is previewing so live edits show immediately
+  var _prev=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_preview_mode'));
+  if(_prev){ sessionStorage.setItem('nukala_auth','true'); }
   try{
-    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')&&!localStorage.getItem('nukala_preview_mode')){
-      var _xhr=new XMLHttpRequest();
-      _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
-      _xhr.send();
-      if(_xhr.status===200) eval(_xhr.responseText);
+    if(!_prev){
+      var _x=new XMLHttpRequest();
+      _x.open('GET','site-data.js?nocache='+Date.now(),false);
+      _x.send();
+      if(_x.status===200) eval(_x.responseText);
     }
   }catch(e){}
 </script>
@@ -180,15 +181,45 @@
       const s = load('nukala_settings')||{};
       if(s.familyName){
         document.getElementById('navSiteName').textContent = s.familyName.toUpperCase();
-        var _fn=document.getElementById('footerText');if(_fn)_fn.textContent=s.familyName?'The '+s.familyName+' Family':'The Nukala Family';
+        var _fn=document.getElementById('footerText');if(_fn)_fn.textContent='The '+s.familyName+' Family';
       }
       allFacts = loadArr('nukala_facts');
+
+      // Apply facts page settings (from admin Page Editor > Facts)
+      try{
+        var fps = JSON.parse(localStorage.getItem('nukala_facts_page')||'{}');
+        // Hide category filter buttons based on admin settings
+        var catMap = {Achievement:'achievement',Milestone:'milestone',Tradition:'tradition',Record:'record','Fun Fact':'funfact'};
+        Object.keys(catMap).forEach(function(cat){
+          var key = catMap[cat];
+          if(fps.cats && fps.cats[key]===false){
+            document.querySelectorAll('.filter-btn').forEach(function(b){
+              if(b.textContent.indexOf(cat)!==-1) b.style.display='none';
+            });
+          }
+        });
+        // Add Timeline view button if enabled
+        if(fps.timeline!==false){
+          var fb = document.querySelector('.filter-bar');
+          if(fb && !document.getElementById('timelineBtn')){
+            var tb = document.createElement('button');
+            tb.className='filter-btn'; tb.id='timelineBtn';
+            tb.textContent='📅 Timeline';
+            tb.onclick=function(){ filterFacts('timeline', this); };
+            fb.appendChild(tb);
+          }
+        }
+      }catch(e){}
+
       renderFacts();
     }
 
     function renderFacts(){
       const list = document.getElementById('factsList');
-      const filtered = currentFilter==='all' ? allFacts : allFacts.filter(f=>f.category===currentFilter);
+      let filtered;
+      if(currentFilter==='all') filtered = allFacts;
+      else if(currentFilter==='timeline') filtered = allFacts.slice().sort((a,b)=>parseInt(a.year||9999)-parseInt(b.year||9999));
+      else filtered = allFacts.filter(f=>f.category===currentFilter);
       document.getElementById('factsCount').textContent = filtered.length + ' fact' + (filtered.length!==1?'s':'');
 
       if(!filtered.length){
