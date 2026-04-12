@@ -103,9 +103,11 @@
 </head>
 <body>
 <script>
-  // Fetch site-data.js — skip if admin is previewing so live edits show immediately
+  // Skip site-data.js if admin is previewing — same as tree.html
+  var _prev=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active')||localStorage.getItem('nukala_preview_mode'));
+  if(_prev){ sessionStorage.setItem('nukala_auth','true'); }
   try{
-    if(!sessionStorage.getItem('nukala_admin')&&!localStorage.getItem('nukala_admin_active')&&!localStorage.getItem('nukala_preview_mode')){
+    if(!_prev){
       var _xhr=new XMLHttpRequest();
       _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
       _xhr.send();
@@ -252,7 +254,7 @@ function init(){
   var cardMin = gs('cardSize')==='large'?'220px':gs('cardSize')==='small'?'150px':'190px';
   var styleEl = document.createElement('style');
   styleEl.textContent = '.members-grid{ grid-template-columns: repeat(auto-fill,minmax('+cardMin+',1fr))!important; }';
-  document.head.appendChild(styleEl);
+  if(document.head) document.head.appendChild(styleEl); else document.body.appendChild(styleEl);
 
   // Override gen labels
   for(var g=1;g<=8;g++){
@@ -350,47 +352,78 @@ function renderMembers(list){
   else renderByGen(list, el);
 }
 
-function avatarHtml(m, size, cls){
-  var name = [m.firstName,m.lastName].filter(Boolean).join(' ')||'?';
-  var emoji = m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
-  var photo = m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.style.display='none'">':emoji;
-  return '<div class="'+cls+'" style="width:'+size+'px;height:'+size+'px;border-radius:50%;padding:2px;background:linear-gradient(135deg,'+(m.ancestor?'#c9a84c,#a07020':m.female?'#d0a0e0,#9060b0':'#8aab8a,#5c7a5c')+')">'
-    +'<div style="width:100%;height:100%;border-radius:50%;background:#f5f3ee;display:flex;align-items:center;justify-content:center;font-size:'+(size*0.4)+'px;overflow:hidden;">'+photo+'</div>'
-    +(m.deceased?'<div style="position:absolute;bottom:0;right:0;width:18px;height:18px;background:#888;color:white;border-radius:50%;font-size:.5rem;display:flex;align-items:center;justify-content:center;border:2px solid white;">&#10013;</div>':'')
+function avatarHtml(m){
+  var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'?';
+  var emoji=m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
+  var grad=m.ancestor?'#c9a84c,#a07020':m.female?'#d0a0e0,#9060b0':'#8aab8a,#5c7a5c';
+  var inner=m.photo?('<img src="'+m.photo+'" alt="'+name+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'):emoji;
+  return '<div style="width:62px;height:62px;border-radius:50%;padding:2px;background:linear-gradient(135deg,'+grad+');margin:0 auto 10px;position:relative;">'
+    +'<div style="width:100%;height:100%;border-radius:50%;background:#f5f3ee;display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;">'+inner+'</div>'
+    +(m.deceased?'<div style="position:absolute;bottom:0;right:0;width:16px;height:16px;background:#888;color:white;border-radius:50%;font-size:.5rem;display:flex;align-items:center;justify-content:center;">&#10013;</div>':'')
     +'</div>';
 }
 
 function renderGrid(list, el){
-  el.innerHTML = '<div class="members-grid">'+list.map(function(m){
+  var html='<div class="members-grid">';
+  list.forEach(function(m){
     var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
     var cls='member-card'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
-    return '<div class="'+cls+'" onclick="showPanel(''+m.id+'')"><div style="position:relative;width:68px;margin:0 auto 12px;">'+avatarHtml(m,68,'')+'</div><div class="mc-name">'+name+'</div><div class="mc-role">'+(m.role||'')+'</div><div class="mc-meta">'+(m.city||'')+(m.born?' · b.'+m.born:'')+'</div>'+(m.gen?'<div class="mc-gen-badge">Gen '+m.gen+'</div>':'')+'</div>';
-  }).join('')+'</div>';
+    html+='<div class="'+cls+'" data-mid="'+m.id+'" onclick="showPanel(this.dataset.mid)">'
+      +avatarHtml(m)
+      +'<div class="mc-name">'+name+'</div>'
+      +'<div class="mc-role">'+(m.role||'')+'</div>'
+      +'<div class="mc-meta">'+(m.city||'')+(m.born?' &middot; b.'+m.born:'')+'</div>'
+      +(m.gen?'<div class="mc-gen-badge">Gen '+m.gen+'</div>':'')
+      +'</div>';
+  });
+  el.innerHTML=html+'</div>';
 }
 
 function renderList(list, el){
-  el.innerHTML = '<div class="members-list">'+list.map(function(m){
+  var html='<div class="members-list">';
+  list.forEach(function(m){
     var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
     var cls='member-row'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
-    var photo=m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.style.display='none'">':(m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;');
-    return '<div class="'+cls+'" onclick="showPanel(''+m.id+'')"><div class="mr-avatar"><div class="mr-inner">'+photo+'</div></div><div class="mr-info"><div class="mr-name">'+name+'</div><div class="mr-sub">'+(m.role||'–')+(m.city?' · '+m.city:'')+'</div></div>'+(m.gen?'<div class="mr-gen">Gen '+m.gen+'</div>':'')+'<div class="mr-arrow">&#8250;</div></div>';
-  }).join('')+'</div>';
+    var emoji=m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
+    var grad=m.ancestor?'#c9a84c,#a07020':m.female?'#d0a0e0,#9060b0':'#8aab8a,#5c7a5c';
+    var photo=m.photo?('<img src="'+m.photo+'" alt="'+name+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'):emoji;
+    html+='<div class="'+cls+'" data-mid="'+m.id+'" onclick="showPanel(this.dataset.mid)">'
+      +'<div class="mr-avatar" style="background:linear-gradient(135deg,'+grad+')"><div class="mr-inner">'+photo+'</div></div>'
+      +'<div class="mr-info"><div class="mr-name">'+name+'</div><div class="mr-sub">'+(m.role||'&ndash;')+(m.city?' &middot; '+m.city:'')+'</div></div>'
+      +(m.gen?'<div class="mr-gen">Gen '+m.gen+'</div>':'')
+      +'<div class="mr-arrow">&#8250;</div>'
+      +'</div>';
+  });
+  el.innerHTML=html+'</div>';
 }
 
 function renderByGen(list, el){
   var byGen={};
-  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g])byGen[g]=[]; byGen[g].push(m); });
+  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
   var gens=Object.keys(byGen).map(Number).sort(function(a,b){return a-b;});
-  el.innerHTML = gens.map(function(gen){
+  var html='';
+  gens.forEach(function(gen){
     var rows=byGen[gen];
     var title='Generation '+gen+(_genLabels[gen]?' &middot; '+_genLabels[gen]:'');
-    var cards=rows.map(function(m){
+    var cards='';
+    rows.forEach(function(m){
       var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
       var cls='member-card'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
-      return '<div class="'+cls+'" onclick="showPanel(''+m.id+'')"><div style="position:relative;width:68px;margin:0 auto 12px;">'+avatarHtml(m,68,'')+'</div><div class="mc-name">'+name+'</div><div class="mc-role">'+(m.role||'')+'</div></div>';
-    }).join('');
-    return '<div class="gen-section"><div class="gen-header" onclick="toggleGen(this)"><h3>'+title+'</h3><div style="display:flex;align-items:center;gap:10px;"><span class="gh-count">'+rows.length+' member'+(rows.length!==1?'s':'')+'</span><span class="gen-arrow">&#9660;</span></div></div><div class="gen-body"><div class="members-grid">'+cards+'</div></div></div>';
-  }).join('');
+      cards+='<div class="'+cls+'" data-mid="'+m.id+'" onclick="showPanel(this.dataset.mid)">'
+        +avatarHtml(m)
+        +'<div class="mc-name">'+name+'</div>'
+        +'<div class="mc-role">'+(m.role||'')+'</div>'
+        +'</div>';
+    });
+    html+='<div class="gen-section">'
+      +'<div class="gen-header" onclick="toggleGen(this)"><h3>'+title+'</h3>'
+      +'<div style="display:flex;align-items:center;gap:10px;">'
+      +'<span class="gh-count">'+rows.length+' member'+(rows.length!==1?'s':'')+'</span>'
+      +'<span class="gen-arrow">&#9660;</span></div></div>'
+      +'<div class="gen-body"><div class="members-grid">'+cards+'</div></div>'
+      +'</div>';
+  });
+  el.innerHTML=html;
 }
 
 function toggleGen(h){
@@ -409,11 +442,12 @@ function showPanel(id){
   var mother=m.motherId?members[m.motherId]:null;
   var spouse=m.spouseId?members[m.spouseId]:null;
   var children=all.filter(function(x){return x.fatherId===id||x.motherId===id;});
-  var photo=m.photo?'<img src="'+m.photo+'" alt="'+name+'" onerror="this.textContent=''+(m.female?'&#128105;':'&#128104;')+''">':'<span style="font-size:2.2rem;">'+(m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;')+'</span>';
+  var photoEmoji=m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
+      var photo=m.photo?('<img src="'+m.photo+'" alt="'+name+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'):('<span style="font-size:2.2rem;">'+photoEmoji+'</span>');
   document.getElementById('spPhotoWrap').innerHTML='<div class="sp-photo-wrap"><div class="sp-photo-inner">'+photo+'</div></div>';
   document.getElementById('spName').textContent=name;
   document.getElementById('spRole').textContent=(m.role||'–')+(m.gen?' · Gen '+m.gen:'');
-  function chip(p,lbl){ if(!p) return ''; var n=[p.firstName,p.lastName].filter(Boolean).join(' '); return '<span class="sp-chip" onclick="showPanel(''+p.id+'')">'+lbl+': '+n+'</span>'; }
+  function chip(p,lbl){ if(!p) return ''; var n=[p.firstName,p.lastName].filter(Boolean).join(' '); return '<span class="sp-chip" data-mid="'+p.id+'" onclick="showPanel(this.dataset.mid)">'+lbl+': '+n+'</span>'; }
   var rels=[chip(father,'Father'),chip(mother,'Mother'),chip(spouse,'Spouse')].concat(children.map(function(c){return chip(c,'Child');})).filter(Boolean).join('');
   document.getElementById('spBody').innerHTML=
     (m.born?'<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">'+m.born+'</div></div>':'')+
