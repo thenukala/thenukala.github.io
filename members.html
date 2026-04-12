@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="Nukala"/>
   <link rel="apple-touch-icon" href="icons/icon-152x152.png"/>
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#5c7a5c"/>
@@ -14,110 +13,97 @@
   <link rel="stylesheet" href="shared.css"/>
   <link rel="stylesheet" href="darkmode.css"/>
   <style>
-    /* ── View toggle ── */
-    .view-toggle { display:flex; gap:8px; margin-bottom:20px; }
-    .vt-btn { flex:1; padding:10px; border-radius:12px; border:1.5px solid var(--border,#e8e2d8); background:white; font-size:.8rem; font-weight:500; cursor:pointer; transition:all .2s; color:var(--text-dark); }
-    .vt-btn.active { background:#5c7a5c; color:white; border-color:#5c7a5c; }
-
-    /* ── Search / filter ── */
-    .search-bar { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
-    .search-bar input { flex:1; min-width:180px; padding:10px 14px; border:1.5px solid var(--border,#e8e2d8); border-radius:12px; font-size:.85rem; background:var(--warm-white,#faf8f4); color:var(--text-dark); }
-    .search-bar select { padding:10px 14px; border:1.5px solid var(--border,#e8e2d8); border-radius:12px; font-size:.82rem; background:var(--warm-white,#faf8f4); color:var(--text-dark); }
-
-    /* ── Stats bar ── */
-    .members-stats { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
-    .ms-card { background:rgba(255,255,255,0.8); border:1px solid var(--border,#e8e2d8); border-radius:12px; padding:12px 18px; text-align:center; flex:1; min-width:100px; }
-    .ms-num { font-size:1.4rem; font-weight:700; color:#5c7a5c; font-family:'Cormorant Garamond',serif; }
-    .ms-lbl { font-size:.68rem; color:#aaa; letter-spacing:.08em; text-transform:uppercase; }
-
-    /* ── Generation accordion ── */
-    .gen-section { margin-bottom:16px; }
-    .gen-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:linear-gradient(135deg,rgba(92,122,92,.08),rgba(92,122,92,.04)); border:1px solid rgba(92,122,92,.2); border-radius:14px; cursor:pointer; user-select:none; }
-    .gen-header h3 { font-size:.85rem; font-weight:600; color:#5c7a5c; margin:0; letter-spacing:.04em; }
-    .gen-header .gh-count { font-size:.72rem; color:#aaa; }
-    .gen-arrow { color:#5c7a5c; transition:transform .2s; font-size:.9rem; }
-    .gen-header.collapsed .gen-arrow { transform:rotate(-90deg); }
-    .gen-body { margin-top:8px; }
-    .gen-body.hidden { display:none; }
-
-    /* ── Card grid ── */
-    .members-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; }
-    .member-card { background:rgba(255,255,255,0.95); border:1.5px solid rgba(232,226,216,0.8); border-radius:20px; padding:20px 14px 16px; text-align:center; cursor:pointer; transition:all .25s; box-shadow:0 4px 16px rgba(0,0,0,.05); }
-    .member-card:hover { transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,0,0,.1); }
-    .member-card.female { border-color:rgba(208,192,240,.5); }
-    .member-card.ancestor { background:rgba(255,253,247,.97); border-color:rgba(201,168,76,.3); }
-    .mc-avatar { width:68px; height:68px; border-radius:50%; margin:0 auto 12px; background:linear-gradient(135deg,#8aab8a,#5c7a5c); padding:3px; position:relative; }
-    .member-card.female .mc-avatar { background:linear-gradient(135deg,#d0a0e0,#9060b0); }
-    .member-card.ancestor .mc-avatar { background:linear-gradient(135deg,#c9a84c,#a07020); }
-    .mc-inner { width:100%; height:100%; border-radius:50%; background:#f5f3ee; display:flex; align-items:center; justify-content:center; font-size:1.6rem; overflow:hidden; }
-    .mc-inner img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-    .mc-deceased { position:absolute; bottom:0; right:0; width:20px; height:20px; background:#888; color:white; border-radius:50%; font-size:.55rem; display:flex; align-items:center; justify-content:center; border:2px solid white; }
-    .mc-name { font-size:.9rem; font-weight:600; color:var(--text-dark,#2c2c2c); margin-bottom:4px; font-family:'Cormorant Garamond',serif; }
-    .mc-role { font-size:.68rem; color:#8aab8a; letter-spacing:.06em; text-transform:uppercase; margin-bottom:4px; }
-    .mc-meta { font-size:.65rem; color:#aaa; }
-    .mc-gen-badge { display:inline-block; background:rgba(92,122,92,.1); color:#5c7a5c; border-radius:20px; padding:2px 8px; font-size:.62rem; font-weight:600; margin-top:6px; }
-
-    /* ── List view ── */
-    .members-list { display:flex; flex-direction:column; gap:8px; }
-    .member-row { display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.95); border:1px solid rgba(232,226,216,0.8); border-radius:14px; padding:12px 16px; cursor:pointer; transition:all .2s; }
-    .member-row:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateX(4px); }
-    .mr-avatar { width:44px; height:44px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#8aab8a,#5c7a5c); padding:2px; }
-    .member-row.female .mr-avatar { background:linear-gradient(135deg,#d0a0e0,#9060b0); }
-    .member-row.ancestor .mr-avatar { background:linear-gradient(135deg,#c9a84c,#a07020); }
-    .mr-inner { width:100%; height:100%; border-radius:50%; background:#f5f3ee; display:flex; align-items:center; justify-content:center; font-size:1.1rem; overflow:hidden; }
-    .mr-inner img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-    .mr-info { flex:1; min-width:0; }
-    .mr-name { font-size:.88rem; font-weight:600; color:var(--text-dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .mr-sub { font-size:.72rem; color:#aaa; }
-    .mr-gen { font-size:.65rem; background:rgba(92,122,92,.1); color:#5c7a5c; border-radius:10px; padding:2px 8px; flex-shrink:0; }
-    .mr-arrow { color:#5c7a5c; font-size:1rem; flex-shrink:0; }
-
-    /* ── Empty state ── */
-    .empty-members { text-align:center; padding:80px 20px; color:#aaa; }
-    .empty-members h3 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:#5c7a5c; margin:12px 0 8px; }
-
-    /* ── Side panel (reused from tree) ── */
-    .side-panel { position:fixed; top:0; right:-420px; width:380px; height:100vh; background:white; box-shadow:-8px 0 40px rgba(0,0,0,.15); z-index:300; transition:right .3s; overflow-y:auto; padding:28px 24px; }
-    .side-panel.open { right:0; }
-    .sp-close { position:absolute; top:16px; right:16px; background:#f5f3ee; border:none; border-radius:50%; width:32px; height:32px; font-size:1rem; cursor:pointer; }
-    .sp-photo-wrap { width:80px; height:80px; border-radius:50%; margin:0 auto 12px; background:linear-gradient(135deg,#8aab8a,#5c7a5c); padding:3px; }
-    .sp-photo-inner { width:100%; height:100%; border-radius:50%; background:#f5f3ee; display:flex; align-items:center; justify-content:center; font-size:2rem; overflow:hidden; }
-    .sp-photo-inner img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-    .sp-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; text-align:center; margin-bottom:4px; color:var(--text-dark); }
-    .sp-role { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:#8aab8a; text-align:center; margin-bottom:16px; }
-    .sp-div { border-top:1px solid #f0ede8; margin:12px 0; }
-    .sp-row { display:flex; gap:12px; margin-bottom:8px; font-size:.82rem; }
-    .sp-lbl { color:#aaa; min-width:70px; font-size:.75rem; }
-    .sp-val { color:var(--text-dark); }
-    .sp-chip { display:inline-block; background:#f0f5f0; border:1px solid #c8ddc8; border-radius:20px; padding:4px 12px; font-size:.75rem; color:#5c7a5c; margin:3px; cursor:pointer; }
-    .sp-chip:hover { background:#5c7a5c; color:white; }
-
+    .mb-toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+    .mb-search{flex:1;min-width:180px;padding:10px 14px;border:1.5px solid var(--border,#e8e2d8);border-radius:12px;font-size:.85rem;background:var(--warm-white,#faf8f4);color:var(--text-dark);}
+    .mb-select{padding:10px 14px;border:1.5px solid var(--border,#e8e2d8);border-radius:12px;font-size:.82rem;background:var(--warm-white,#faf8f4);color:var(--text-dark);}
+    .mb-view-btns{display:flex;gap:6px;margin-bottom:16px;}
+    .mb-vb{flex:1;padding:10px;border-radius:12px;border:1.5px solid var(--border,#e8e2d8);background:white;font-size:.8rem;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text-dark);}
+    .mb-vb.active{background:#5c7a5c;color:white;border-color:#5c7a5c;}
+    .mb-stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+    .mb-sc{background:rgba(255,255,255,.8);border:1px solid var(--border,#e8e2d8);border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:90px;}
+    .mb-sn{font-size:1.4rem;font-weight:700;color:#5c7a5c;font-family:"Cormorant Garamond",serif;}
+    .mb-sl{font-size:.65rem;color:#aaa;letter-spacing:.08em;text-transform:uppercase;}
+    .mb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;}
+    .mb-card{background:rgba(255,255,255,.95);border:1.5px solid rgba(232,226,216,.8);border-radius:20px;padding:20px 14px 16px;text-align:center;cursor:pointer;transition:all .25s;box-shadow:0 4px 16px rgba(0,0,0,.05);}
+    .mb-card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,.1);}
+    .mb-card.female{border-color:rgba(208,192,240,.5);}
+    .mb-card.ancestor{background:rgba(255,253,247,.97);border-color:rgba(201,168,76,.3);}
+    .mb-avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;position:relative;}
+    .mb-av-ring{position:absolute;inset:-3px;border-radius:50%;background:linear-gradient(135deg,#8aab8a,#5c7a5c);}
+    .mb-card.female .mb-av-ring{background:linear-gradient(135deg,#d0a0e0,#9060b0);}
+    .mb-card.ancestor .mb-av-ring{background:linear-gradient(135deg,#c9a84c,#a07020);}
+    .mb-av-inner{position:absolute;inset:3px;border-radius:50%;background:#f5f3ee;display:flex;align-items:center;justify-content:center;font-size:1.5rem;overflow:hidden;}
+    .mb-av-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .mb-name{font-size:.9rem;font-weight:600;color:var(--text-dark,#2c2c2c);margin-bottom:3px;font-family:"Cormorant Garamond",serif;}
+    .mb-role{font-size:.68rem;color:#8aab8a;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;}
+    .mb-meta{font-size:.65rem;color:#aaa;}
+    .mb-gen{display:inline-block;background:rgba(92,122,92,.1);color:#5c7a5c;border-radius:20px;padding:2px 8px;font-size:.62rem;font-weight:600;margin-top:5px;}
+    .mb-list{display:flex;flex-direction:column;gap:8px;}
+    .mb-row{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.95);border:1px solid rgba(232,226,216,.8);border-radius:14px;padding:12px 16px;cursor:pointer;transition:all .2s;}
+    .mb-row:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateX(4px);}
+    .mb-row-av{width:44px;height:44px;border-radius:50%;flex-shrink:0;position:relative;}
+    .mb-row-ring{position:absolute;inset:-2px;border-radius:50%;background:linear-gradient(135deg,#8aab8a,#5c7a5c);}
+    .mb-row.female .mb-row-ring{background:linear-gradient(135deg,#d0a0e0,#9060b0);}
+    .mb-row.ancestor .mb-row-ring{background:linear-gradient(135deg,#c9a84c,#a07020);}
+    .mb-row-inner{position:absolute;inset:2px;border-radius:50%;background:#f5f3ee;display:flex;align-items:center;justify-content:center;font-size:1.1rem;overflow:hidden;}
+    .mb-row-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .mb-row-info{flex:1;min-width:0;}
+    .mb-row-name{font-size:.88rem;font-weight:600;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .mb-row-sub{font-size:.72rem;color:#aaa;}
+    .gen-section{margin-bottom:14px;}
+    .gen-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(92,122,92,.08);border:1px solid rgba(92,122,92,.2);border-radius:12px;cursor:pointer;user-select:none;}
+    .gen-hdr h3{font-size:.82rem;font-weight:600;color:#5c7a5c;margin:0;letter-spacing:.04em;}
+    .gen-hdr-count{font-size:.7rem;color:#aaa;}
+    .gen-arrow{color:#5c7a5c;font-size:.85rem;transition:transform .2s;}
+    .gen-hdr.collapsed .gen-arrow{transform:rotate(-90deg);}
+    .gen-body{margin-top:8px;}
+    .gen-body.hidden{display:none;}
+    .mb-empty{text-align:center;padding:80px 20px;color:#aaa;}
+    .mb-empty h3{font-family:"Cormorant Garamond",serif;font-size:1.5rem;color:#5c7a5c;margin:12px 0 8px;}
+    .sp{position:fixed;top:0;right:-420px;width:380px;height:100vh;background:white;box-shadow:-8px 0 40px rgba(0,0,0,.15);z-index:300;transition:right .3s cubic-bezier(.16,1,.3,1);overflow-y:auto;padding:28px 24px;}
+    .sp.open{right:0;}
+    [data-theme=dark] .sp{background:#1a1a1a;}
+    .sp-close{position:absolute;top:16px;right:16px;background:#f5f3ee;border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;}
+    .sp-av{width:80px;height:80px;border-radius:50%;margin:0 auto 12px;position:relative;}
+    .sp-av::before{content:"";position:absolute;inset:-3px;border-radius:50%;background:linear-gradient(135deg,#8aab8a,#c9a84c);}
+    .sp-av-in{position:absolute;inset:3px;border-radius:50%;background:#f5f3ee;display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;}
+    .sp-av-in img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .sp-name{font-family:"Cormorant Garamond",serif;font-size:1.4rem;text-align:center;margin-bottom:4px;color:var(--text-dark,#2c2c2c);}
+    .sp-role{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#8aab8a;text-align:center;margin-bottom:14px;}
+    .sp-div{border-top:1px solid var(--border,#f0ede8);margin:10px 0;}
+    .sp-row{display:flex;gap:10px;margin-bottom:7px;font-size:.82rem;}
+    .sp-lbl{color:#aaa;min-width:68px;font-size:.74rem;flex-shrink:0;}
+    .sp-val{color:var(--text-dark,#2c2c2c);}
+    .sp-chip{display:inline-block;background:#f0f5f0;border:1px solid #c8ddc8;border-radius:20px;padding:4px 12px;font-size:.74rem;color:#5c7a5c;margin:2px;cursor:pointer;}
+    .sp-chip:hover{background:#5c7a5c;color:white;}
+    .mb-quote{background:rgba(255,255,255,.7);border:1px solid rgba(138,171,138,.2);border-radius:16px;padding:20px 28px;text-align:center;margin-top:16px;}
+    .mb-contribute{background:linear-gradient(135deg,#f0f5f0,#faf8f4);border:1px solid #c8ddc8;border-radius:16px;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:16px;}
+    .mb-contribute p{font-size:.88rem;color:#5c7a5c;margin:0;line-height:1.5;}
+    .mb-contribute a{background:#5c7a5c;color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:500;}
     @media(max-width:768px){
-      .members-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
-      .side-panel { width:100%; right:-100%; }
+      .mb-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+      .sp{width:100%;right:-100%;}
+      .mb-toolbar{gap:8px;}
     }
-    @media(max-width:380px){
-      .members-grid { grid-template-columns:1fr; }
-    }
+    @media(max-width:380px){.mb-grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
 <script>
-  // Skip site-data.js if admin is previewing — same as tree.html
-  var _prev=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_admin_active')||localStorage.getItem('nukala_preview_mode'));
+  // Same guard as tree.html — skip site-data.js only for admin preview sessions
+  var _prev=!!(sessionStorage.getItem('nukala_admin')||localStorage.getItem('nukala_preview_mode'));
   if(_prev){ sessionStorage.setItem('nukala_auth','true'); }
   try{
     if(!_prev){
-      var _xhr=new XMLHttpRequest();
-      _xhr.open('GET','site-data.js?nocache='+Date.now(),false);
-      _xhr.send();
-      if(_xhr.status===200) eval(_xhr.responseText);
+      var _x=new XMLHttpRequest();
+      _x.open('GET','site-data.js?nocache='+Date.now(),false);
+      _x.send();
+      if(_x.status===200) eval(_x.responseText);
     }
   }catch(e){}
 </script>
 <script src="auth.js"></script>
 <div class="logo-watermark"></div>
-
 <nav>
     <a class="nav-brand" href="home.html"><img src="logo.png" alt="Logo"/> <span class="nav-site-name" id="navSiteName">NUKALA</span></a>
         <ul class="nav-links">
@@ -140,7 +126,6 @@
     </ul>
     <button class="nav-logout" onclick="logout()">Sign Out</button>
   </nav>
-
 <main>
   <div class="page-hero">
     <p class="eyebrow">Our Family</p>
@@ -148,18 +133,18 @@
     <div class="hero-divider"></div>
     <p>Every leaf of our family tree. Tap any member to see their full story.</p>
   </div>
-
   <div class="content-area">
-    <!-- Stats bar -->
-    <div class="members-stats" id="membersStats"></div>
 
-    <!-- Search and filter -->
-    <div class="search-bar">
-      <input type="text" id="memberSearch" placeholder="&#128269; Search by name, role, city..." oninput="filterMembers()"/>
-      <select id="genFilter" onchange="filterMembers()">
+    <!-- Stats -->
+    <div class="mb-stats" id="mbStats"></div>
+
+    <!-- Search + Filters -->
+    <div class="mb-toolbar">
+      <input type="text" class="mb-search" id="mbSearch" placeholder="&#128269; Search by name, role, city..." oninput="mbFilter()"/>
+      <select class="mb-select" id="mbGenFilter" onchange="mbFilter()">
         <option value="">All Generations</option>
       </select>
-      <select id="genderFilter" onchange="filterMembers()">
+      <select class="mb-select" id="mbTypeFilter" onchange="mbFilter()">
         <option value="">All Members</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
@@ -170,24 +155,37 @@
     </div>
 
     <!-- View toggle -->
-    <div class="view-toggle">
-      <button class="vt-btn active" id="vtGrid" onclick="setView('grid')">&#9638; Card View</button>
-      <button class="vt-btn" id="vtList" onclick="setView('list')">&#9776; List View</button>
-      <button class="vt-btn" id="vtGen" onclick="setView('gen')">&#127963; By Generation</button>
+    <div class="mb-view-btns">
+      <button class="mb-vb active" id="mbVgrid" onclick="mbSetView('grid')">&#9638; Card</button>
+      <button class="mb-vb" id="mbVlist" onclick="mbSetView('list')">&#9776; List</button>
+      <button class="mb-vb" id="mbVgen"  onclick="mbSetView('gen')">&#127963; By Generation</button>
     </div>
 
-    <!-- Members container -->
-    <div id="membersContainer"></div>
+    <!-- Members output -->
+    <div id="mbContainer"></div>
+
+    <!-- Quote -->
+    <div class="mb-quote">
+      <p style="font-size:1.05rem;font-weight:400;color:var(--text-mid,#666);font-style:italic;line-height:1.7;margin:0;">"Rejoice with your family in the beautiful land of life."</p>
+      <p style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-light,#aaa);margin-top:8px;">&#8212; Albert Einstein</p>
+    </div>
+
+    <!-- Contribute -->
+    <div class="mb-contribute">
+      <p><strong>Know a family member missing from the list?</strong><br/>Share details and we'll add them to the family archive.</p>
+      <a href="contact.html">+ Submit a Member</a>
+    </div>
+
   </div>
 </main>
 
 <!-- Side panel -->
-<div class="side-panel" id="sidePanel">
-  <button class="sp-close" onclick="closePanel()">&#215;</button>
-  <div id="spPhotoWrap"></div>
-  <div class="sp-name" id="spName"></div>
-  <div class="sp-role" id="spRole"></div>
-  <div id="spBody"></div>
+<div class="sp" id="mbPanel">
+  <button class="sp-close" onclick="mbClosePanel()">&#215;</button>
+  <div id="mbPanelAv"></div>
+  <div class="sp-name" id="mbPanelName"></div>
+  <div class="sp-role" id="mbPanelRole"></div>
+  <div id="mbPanelBody"></div>
 </div>
 
 <footer>
@@ -196,286 +194,196 @@
 
 <script>
 // ── DATA ──
-function mLoad(k){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):({}); }catch(e){ return {}; } }
+var _mbAll = [], _mbFiltered = [], _mbView = 'grid';
+var _mbGenLabels = {1:'Great-Great-Grandparents',2:'Great-Grandparents',3:'Grandparents',4:'Parents & Aunts/Uncles',5:'Your Generation',6:'Children',7:'Grandchildren',8:'Great-Grandchildren'};
 
-// ── STATE ──
-var _view = 'grid';
-var _allMembers = [];
-var _filtered = [];
-var _genLabels = {
-  1:'Great-Great-Grandparents', 2:'Great-Grandparents', 3:'Grandparents',
-  4:'Parents & Aunts/Uncles', 5:'Your Generation', 6:'Children',
-  7:'Grandchildren', 8:'Great-Grandchildren'
-};
-
-function setView(v){
-  _view = v;
-  ['grid','list','gen'].forEach(function(x){
-    document.getElementById('vt'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active', x===v);
-  });
-  renderMembers(_filtered);
+function mbLoad(){
+  try{ var v=localStorage.getItem('nukala_tree_data'); return v?JSON.parse(v):({}); }catch(e){ return {}; }
 }
 
 // ── INIT ──
-function init(){
-  // Load admin settings for this page
-  var mps = (function(){ try{ return JSON.parse(localStorage.getItem('nukala_members_page')||'{}'); }catch(e){ return {}; } })();
-  var D = {
-    title:'The Nukala Family Members',
-    subtitle:'Every leaf of our family tree. Tap any member to see their full story.',
-    defaultView:'grid', cardSize:'normal',
-    showFilter:true, showViewToggle:true,
-    statTotal:true, statLiving:true, statGens:true, statPhotos:true,
-    color:'#5c7a5c', herobg:'',
-    gen1:'Great-Great-Grandparents', gen2:'Great-Grandparents', gen3:'Grandparents',
-    gen4:'Parents & Aunts/Uncles', gen5:'Your Generation',
-    gen6:'Children', gen7:'Grandchildren', gen8:'Great-Grandchildren'
-  };
-  function gs(k){ return mps[k]!==undefined ? mps[k] : D[k]; }
+(function(){
+  var members = mbLoad();
+  _mbAll = Object.values(members);
 
-  // Apply title and subtitle
-  var titleEl = document.querySelector('.page-hero h1 em');
-  if(titleEl) titleEl.parentElement.innerHTML = gs('title').replace(/Nukala/,'<em>Nukala</em>');
-  var subEl = document.querySelector('.page-hero p');
-  if(subEl) subEl.textContent = gs('subtitle');
+  // Stats
+  var living=_mbAll.filter(function(x){return !x.deceased;});
+  var gens=_mbAll.map(function(x){return x.gen;}).filter(Boolean).filter(function(v,i,a){return a.indexOf(v)===i;});
+  var withPhoto=_mbAll.filter(function(x){return x.photo;});
+  var statsEl=document.getElementById('mbStats');
+  if(statsEl) statsEl.innerHTML=[
+    {n:_mbAll.length,l:'Total Members'},{n:living.length,l:'Living'},
+    {n:gens.length,l:'Generations'},{n:withPhoto.length,l:'With Photos'}
+  ].map(function(s){return '<div class="mb-sc"><div class="mb-sn">'+s.n+'</div><div class="mb-sl">'+s.l+'</div></div>';}).join('');
 
-  // Apply accent colour
-  if(gs('color') && gs('color') !== '#5c7a5c'){
-    document.documentElement.style.setProperty('--accent', gs('color'));
-  }
-
-  // Apply hero background
-  if(gs('herobg')){
-    var hero = document.querySelector('.page-hero');
-    if(hero){ hero.style.backgroundImage = "url('"+gs('herobg')+"')"; hero.style.backgroundSize='cover'; hero.style.backgroundPosition='center'; }
-  }
-
-  // Apply card size
-  var cardMin = gs('cardSize')==='large'?'220px':gs('cardSize')==='small'?'150px':'190px';
-  var styleEl = document.createElement('style');
-  styleEl.textContent = '.members-grid{ grid-template-columns: repeat(auto-fill,minmax('+cardMin+',1fr))!important; }';
-  if(document.head) document.head.appendChild(styleEl); else document.body.appendChild(styleEl);
-
-  // Override gen labels
-  for(var g=1;g<=8;g++){
-    var lbl = gs('gen'+g);
-    if(lbl) _genLabels[g] = lbl;
-  }
-
-  // Default view
-  _view = gs('defaultView') || 'grid';
-  document.getElementById('vt'+_view.charAt(0).toUpperCase()+_view.slice(1)).classList.add('active');
-  ['grid','list','gen'].filter(function(v){ return v!==_view; }).forEach(function(v){
-    document.getElementById('vt'+v.charAt(0).toUpperCase()+v.slice(1)).classList.remove('active');
+  // Gen filter
+  var genSel=document.getElementById('mbGenFilter');
+  if(genSel) gens.slice().sort(function(a,b){return parseInt(a)-parseInt(b);}).forEach(function(g){
+    var o=document.createElement('option'); o.value=g;
+    o.textContent='Gen '+g+(_mbGenLabels[g]?' — '+_mbGenLabels[g]:'');
+    genSel.appendChild(o);
   });
 
-  // Hide filter bar if disabled
-  if(gs('showFilter')===false){
-    var fb = document.querySelector('.search-bar');
-    if(fb) fb.style.display='none';
-  }
+  _mbFiltered=_mbAll.slice();
+  mbRender();
+})();
 
-  // Hide view toggle if disabled
-  if(gs('showViewToggle')===false){
-    var vt = document.querySelector('.view-toggle');
-    if(vt) vt.style.display='none';
-  }
-
-  var members = mLoad('nukala_tree_data');
-  _allMembers = Object.values(members);
-
-  // Stats bar — only show enabled stats
-  var living = _allMembers.filter(function(x){ return !x.deceased; });
-  var gens = Array.from ? Array.from(new Set(_allMembers.map(function(x){ return x.gen; }).filter(Boolean)))
-                        : _allMembers.map(function(x){ return x.gen; }).filter(function(x,i,a){ return a.indexOf(x)===i; }).filter(Boolean);
-  var withPhoto = _allMembers.filter(function(x){ return x.photo; });
-  var statsData = [
-    { k:'statTotal',  n:_allMembers.length, l:'Total Members' },
-    { k:'statLiving', n:living.length,       l:'Living' },
-    { k:'statGens',   n:gens.length,         l:'Generations' },
-    { k:'statPhotos', n:withPhoto.length,    l:'With Photos' }
-  ].filter(function(s){ return gs(s.k) !== false; });
-
-  var statsEl = document.getElementById('membersStats');
-  if(statsEl){
-    statsEl.innerHTML = statsData.map(function(s){
-      return '<div class="ms-card"><div class="ms-num">'+s.n+'</div><div class="ms-lbl">'+s.l+'</div></div>';
-    }).join('');
-  }
-
-  // Generation filter options
-  var genSel = document.getElementById('genFilter');
-  if(genSel){
-    gens.sort(function(a,b){ return parseInt(a)-parseInt(b); }).forEach(function(g){
-      var opt = document.createElement('option');
-      opt.value = g;
-      opt.textContent = 'Gen '+g+(_genLabels[g]?' — '+_genLabels[g]:'');
-      genSel.appendChild(opt);
-    });
-  }
-
-  _filtered = _allMembers.slice();
-  renderMembers(_filtered);
-}
-
-function filterMembers(){
-  var search = document.getElementById('memberSearch').value.toLowerCase().trim();
-  var gen = document.getElementById('genFilter').value;
-  var gender = document.getElementById('genderFilter').value;
-  _filtered = _allMembers.filter(function(m){
-    var name = ([m.firstName,m.lastName,m.role,m.city].filter(Boolean).join(' ')).toLowerCase();
-    if(search && name.indexOf(search)===-1) return false;
-    if(gen && String(m.gen)!==gen) return false;
-    if(gender==='male' && m.female) return false;
-    if(gender==='female' && !m.female) return false;
-    if(gender==='ancestor' && !m.ancestor) return false;
-    if(gender==='living' && m.deceased) return false;
-    if(gender==='deceased' && !m.deceased) return false;
+// ── FILTER ──
+function mbFilter(){
+  var q=(document.getElementById('mbSearch').value||'').toLowerCase().trim();
+  var gen=document.getElementById('mbGenFilter').value;
+  var type=document.getElementById('mbTypeFilter').value;
+  _mbFiltered=_mbAll.filter(function(m){
+    if(q){var t=([m.firstName,m.lastName,m.role,m.city].filter(Boolean).join(' ')).toLowerCase();if(t.indexOf(q)===-1)return false;}
+    if(gen&&String(m.gen)!==gen)return false;
+    if(type==='male'&&m.female)return false;
+    if(type==='female'&&!m.female)return false;
+    if(type==='ancestor'&&!m.ancestor)return false;
+    if(type==='living'&&m.deceased)return false;
+    if(type==='deceased'&&!m.deceased)return false;
     return true;
   });
-  renderMembers(_filtered);
+  mbRender();
+}
+
+// ── VIEW ──
+function mbSetView(v){
+  _mbView=v;
+  ['grid','list','gen'].forEach(function(x){
+    var b=document.getElementById('mbV'+x); if(b) b.classList.toggle('active',x===v);
+  });
+  mbRender();
 }
 
 // ── RENDER ──
-function renderMembers(list){
-  var el = document.getElementById('membersContainer');
-  if(!_allMembers.length){
-    el.innerHTML = '<div class="empty-members"><div style="font-size:48px;margin-bottom:12px;">&#128101;</div><h3>No Members Yet</h3><p>Add members in the Admin panel to see them here.</p><a href="tree.html" style="display:inline-block;margin-top:16px;background:#5c7a5c;color:white;padding:10px 20px;border-radius:10px;text-decoration:none;">&#127795; View Family Tree</a></div>';
+function mbRender(){
+  var el=document.getElementById('mbContainer');
+  if(!el) return;
+  if(!_mbAll.length){
+    el.innerHTML='<div class="mb-empty"><div style="font-size:48px;margin-bottom:12px;">&#128101;</div><h3>No Members Yet</h3><p>Add members in Admin &#8594; Members to see them here.</p><a href="tree.html" style="display:inline-block;margin-top:16px;background:#5c7a5c;color:white;padding:10px 20px;border-radius:10px;text-decoration:none;">&#127795; View Family Tree</a></div>';
     return;
   }
-  if(!list.length){
-    el.innerHTML = '<div class="empty-members"><div style="font-size:48px;">&#128269;</div><h3>No Results</h3><p>Try a different search or filter.</p></div>';
+  if(!_mbFiltered.length){
+    el.innerHTML='<div class="mb-empty"><div style="font-size:48px;">&#128269;</div><h3>No Results</h3><p>Try a different search or filter.</p></div>';
     return;
   }
-  if(_view==='grid') renderGrid(list, el);
-  else if(_view==='list') renderList(list, el);
-  else renderByGen(list, el);
+  if(_mbView==='grid') mbRenderGrid(el);
+  else if(_mbView==='list') mbRenderList(el);
+  else mbRenderGen(el);
 }
 
-function avatarHtml(m){
+function mbAvatar(m){
   var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'?';
+  var grad=m.ancestor?'linear-gradient(135deg,#c9a84c,#a07020)':m.female?'linear-gradient(135deg,#d0a0e0,#9060b0)':'linear-gradient(135deg,#8aab8a,#5c7a5c)';
   var emoji=m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
-  var grad=m.ancestor?'#c9a84c,#a07020':m.female?'#d0a0e0,#9060b0':'#8aab8a,#5c7a5c';
-  var inner=m.photo?('<img src="'+m.photo+'" alt="'+name+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'):emoji;
-  return '<div style="width:62px;height:62px;border-radius:50%;padding:2px;background:linear-gradient(135deg,'+grad+');margin:0 auto 10px;position:relative;">'
-    +'<div style="width:100%;height:100%;border-radius:50%;background:#f5f3ee;display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;">'+inner+'</div>'
-    +(m.deceased?'<div style="position:absolute;bottom:0;right:0;width:16px;height:16px;background:#888;color:white;border-radius:50%;font-size:.5rem;display:flex;align-items:center;justify-content:center;">&#10013;</div>':'')
-    +'</div>';
+  var inner=m.photo?'<img src="'+m.photo+'" alt="'+name+'">':emoji;
+  return '<div class="mb-avatar"><div class="mb-av-ring" style="background:'+grad+'"></div><div class="mb-av-inner">'+inner+'</div></div>';
 }
 
-function renderGrid(list, el){
-  var html='<div class="members-grid">';
-  list.forEach(function(m){
+function mbRenderGrid(el){
+  var h='<div class="mb-grid">';
+  _mbFiltered.forEach(function(m){
     var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
-    var cls='member-card'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
-    html+='<div class="'+cls+'" data-mid="'+m.id+'" onclick="showPanel(this.dataset.mid)">'
-      +avatarHtml(m)
-      +'<div class="mc-name">'+name+'</div>'
-      +'<div class="mc-role">'+(m.role||'')+'</div>'
-      +'<div class="mc-meta">'+(m.city||'')+(m.born?' &middot; b.'+m.born:'')+'</div>'
-      +(m.gen?'<div class="mc-gen-badge">Gen '+m.gen+'</div>':'')
+    var cls='mb-card'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
+    h+='<div class="'+cls+'" data-mid="'+m.id+'" onclick="mbShowPanel(this.dataset.mid)">'
+      +mbAvatar(m)
+      +'<div class="mb-name">'+name+'</div>'
+      +'<div class="mb-role">'+(m.role||'')+'</div>'
+      +'<div class="mb-meta">'+(m.city||'')+(m.born?' &middot; b.'+m.born:'')+'</div>'
+      +(m.gen?'<div class="mb-gen">Gen '+m.gen+'</div>':'')
       +'</div>';
   });
-  el.innerHTML=html+'</div>';
+  el.innerHTML=h+'</div>';
 }
 
-function renderList(list, el){
-  var html='<div class="members-list">';
-  list.forEach(function(m){
+function mbRenderList(el){
+  var h='<div class="mb-list">';
+  _mbFiltered.forEach(function(m){
     var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
-    var cls='member-row'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
+    var cls='mb-row'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
+    var grad=m.ancestor?'linear-gradient(135deg,#c9a84c,#a07020)':m.female?'linear-gradient(135deg,#d0a0e0,#9060b0)':'linear-gradient(135deg,#8aab8a,#5c7a5c)';
     var emoji=m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
-    var grad=m.ancestor?'#c9a84c,#a07020':m.female?'#d0a0e0,#9060b0':'#8aab8a,#5c7a5c';
-    var photo=m.photo?('<img src="'+m.photo+'" alt="'+name+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'):emoji;
-    html+='<div class="'+cls+'" data-mid="'+m.id+'" onclick="showPanel(this.dataset.mid)">'
-      +'<div class="mr-avatar" style="background:linear-gradient(135deg,'+grad+')"><div class="mr-inner">'+photo+'</div></div>'
-      +'<div class="mr-info"><div class="mr-name">'+name+'</div><div class="mr-sub">'+(m.role||'&ndash;')+(m.city?' &middot; '+m.city:'')+'</div></div>'
-      +(m.gen?'<div class="mr-gen">Gen '+m.gen+'</div>':'')
-      +'<div class="mr-arrow">&#8250;</div>'
+    var inner=m.photo?'<img src="'+m.photo+'" alt="'+name+'">':emoji;
+    h+='<div class="'+cls+'" data-mid="'+m.id+'" onclick="mbShowPanel(this.dataset.mid)">'
+      +'<div class="mb-row-av"><div class="mb-row-ring" style="background:'+grad+'"></div><div class="mb-row-inner">'+inner+'</div></div>'
+      +'<div class="mb-row-info"><div class="mb-row-name">'+name+'</div><div class="mb-row-sub">'+(m.role||'&ndash;')+(m.city?' &middot; '+m.city:'')+'</div></div>'
+      +(m.gen?'<div class="mb-gen" style="flex-shrink:0;">Gen '+m.gen+'</div>':'')
+      +'<div style="color:#5c7a5c;font-size:1rem;flex-shrink:0;">&#8250;</div>'
       +'</div>';
   });
-  el.innerHTML=html+'</div>';
+  el.innerHTML=h+'</div>';
 }
 
-function renderByGen(list, el){
+function mbRenderGen(el){
   var byGen={};
-  list.forEach(function(m){ var g=parseInt(m.gen)||9; if(!byGen[g]) byGen[g]=[]; byGen[g].push(m); });
+  _mbFiltered.forEach(function(m){var g=parseInt(m.gen)||9;if(!byGen[g])byGen[g]=[];byGen[g].push(m);});
   var gens=Object.keys(byGen).map(Number).sort(function(a,b){return a-b;});
-  var html='';
+  var h='';
   gens.forEach(function(gen){
     var rows=byGen[gen];
-    var title='Generation '+gen+(_genLabels[gen]?' &middot; '+_genLabels[gen]:'');
+    var title='Generation '+gen+(_mbGenLabels[gen]?' &middot; '+_mbGenLabels[gen]:'');
     var cards='';
     rows.forEach(function(m){
       var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
-      var cls='member-card'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
-      cards+='<div class="'+cls+'" data-mid="'+m.id+'" onclick="showPanel(this.dataset.mid)">'
-        +avatarHtml(m)
-        +'<div class="mc-name">'+name+'</div>'
-        +'<div class="mc-role">'+(m.role||'')+'</div>'
-        +'</div>';
+      var cls='mb-card'+(m.female?' female':'')+(m.ancestor?' ancestor':'');
+      cards+='<div class="'+cls+'" data-mid="'+m.id+'" onclick="mbShowPanel(this.dataset.mid)">'
+        +mbAvatar(m)+'<div class="mb-name">'+name+'</div><div class="mb-role">'+(m.role||'')+'</div></div>';
     });
-    html+='<div class="gen-section">'
-      +'<div class="gen-header" onclick="toggleGen(this)"><h3>'+title+'</h3>'
-      +'<div style="display:flex;align-items:center;gap:10px;">'
-      +'<span class="gh-count">'+rows.length+' member'+(rows.length!==1?'s':'')+'</span>'
+    h+='<div class="gen-section">'
+      +'<div class="gen-hdr" onclick="mbToggleGen(this)"><h3>'+title+'</h3>'
+      +'<div style="display:flex;align-items:center;gap:8px;"><span class="gen-hdr-count">'+rows.length+' member'+(rows.length!==1?'s':'')+'</span>'
       +'<span class="gen-arrow">&#9660;</span></div></div>'
-      +'<div class="gen-body"><div class="members-grid">'+cards+'</div></div>'
-      +'</div>';
+      +'<div class="gen-body"><div class="mb-grid">'+cards+'</div></div></div>';
   });
-  el.innerHTML=html;
+  el.innerHTML=h;
 }
 
-function toggleGen(h){
-  h.classList.toggle('collapsed');
-  var body=h.nextElementSibling;
-  if(body) body.classList.toggle('hidden');
-}
+function mbToggleGen(h){h.classList.toggle('collapsed');var b=h.nextElementSibling;if(b)b.classList.toggle('hidden');}
 
-// ── SIDE PANEL ──
-function showPanel(id){
-  var members=mLoad('nukala_tree_data');
+// ── PANEL ──
+function mbShowPanel(id){
+  var members=mbLoad();
   var m=members[id]; if(!m) return;
   var all=Object.values(members);
   var name=[m.firstName,m.lastName].filter(Boolean).join(' ')||'Unnamed';
+  var emoji=m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
+  var photo=m.photo?'<img src="'+m.photo+'" alt="'+name+'">':'<span style="font-size:2rem;">'+emoji+'</span>';
+  document.getElementById('mbPanelAv').innerHTML='<div class="sp-av"><div class="sp-av-in">'+photo+'</div></div>';
+  document.getElementById('mbPanelName').textContent=name;
+  document.getElementById('mbPanelRole').textContent=(m.role||'–')+(m.gen?' · Gen '+m.gen:'');
   var father=m.fatherId?members[m.fatherId]:null;
   var mother=m.motherId?members[m.motherId]:null;
   var spouse=m.spouseId?members[m.spouseId]:null;
   var children=all.filter(function(x){return x.fatherId===id||x.motherId===id;});
-  var photoEmoji=m.female?'&#128105;':m.ancestor?'&#128116;':'&#128104;';
-      var photo=m.photo?('<img src="'+m.photo+'" alt="'+name+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'):('<span style="font-size:2.2rem;">'+photoEmoji+'</span>');
-  document.getElementById('spPhotoWrap').innerHTML='<div class="sp-photo-wrap"><div class="sp-photo-inner">'+photo+'</div></div>';
-  document.getElementById('spName').textContent=name;
-  document.getElementById('spRole').textContent=(m.role||'–')+(m.gen?' · Gen '+m.gen:'');
-  function chip(p,lbl){ if(!p) return ''; var n=[p.firstName,p.lastName].filter(Boolean).join(' '); return '<span class="sp-chip" data-mid="'+p.id+'" onclick="showPanel(this.dataset.mid)">'+lbl+': '+n+'</span>'; }
+  function chip(p,lbl){if(!p)return '';var n=[p.firstName,p.lastName].filter(Boolean).join(' ');return '<span class="sp-chip" data-mid="'+p.id+'" onclick="mbShowPanel(this.dataset.mid)">'+lbl+': '+n+'</span>';}
   var rels=[chip(father,'Father'),chip(mother,'Mother'),chip(spouse,'Spouse')].concat(children.map(function(c){return chip(c,'Child');})).filter(Boolean).join('');
-  document.getElementById('spBody').innerHTML=
-    (m.born?'<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">'+m.born+'</div></div>':'')+
-    (m.died?'<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">'+m.died+'</div></div>':'')+
-    (m.city?'<div class="sp-row"><div class="sp-lbl">&#128205; City</div><div class="sp-val">'+m.city+'</div></div>':'')+
-    (m.occ?'<div class="sp-row"><div class="sp-lbl">Work</div><div class="sp-val">'+m.occ+'</div></div>':'')+
-    (m.phone?'<div class="sp-row"><div class="sp-lbl">&#128222; Phone</div><div class="sp-val"><a href="tel:'+m.phone+'" style="color:inherit;">'+m.phone+'</a></div></div>':'')+
-    (m.whatsapp?'<div class="sp-row"><div class="sp-lbl">&#128172; WA</div><div class="sp-val"><a href="https://wa.me/'+m.whatsapp.replace(/[^0-9]/g,'')+'" target="_blank" style="color:#5c7a5c;">Chat</a></div></div>':'')+
-    (m.email?'<div class="sp-row"><div class="sp-lbl">&#9993; Email</div><div class="sp-val">'+m.email+'</div></div>':'')+
-    (m.notes?'<div class="sp-div"></div><div style="font-size:.82rem;color:#666;line-height:1.6;font-style:italic;">'+m.notes+'</div>':'')+
-    (rels?'<div class="sp-div"></div><div style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:#aaa;margin-bottom:8px;">Family Connections</div>'+rels:'');
-  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('mbPanelBody').innerHTML=
+    (m.born?'<div class="sp-row"><div class="sp-lbl">Born</div><div class="sp-val">'+m.born+'</div></div>':'')
+   +(m.died?'<div class="sp-row"><div class="sp-lbl">Passed</div><div class="sp-val">'+m.died+'</div></div>':'')
+   +(m.place?'<div class="sp-row"><div class="sp-lbl">Birthplace</div><div class="sp-val">'+m.place+'</div></div>':'')
+   +((m.occ||m.occupation)?'<div class="sp-row"><div class="sp-lbl">Occupation</div><div class="sp-val">'+(m.occ||m.occupation)+'</div></div>':'')
+   +(m.city?'<div class="sp-row"><div class="sp-lbl">&#128205; City</div><div class="sp-val">'+m.city+'</div></div>':'')
+   +(m.phone?'<div class="sp-row"><div class="sp-lbl">&#128222; Phone</div><div class="sp-val"><a href="tel:'+m.phone+'" style="color:inherit;">'+m.phone+'</a></div></div>':'')
+   +(m.whatsapp?'<div class="sp-row"><div class="sp-lbl">&#128172; WA</div><div class="sp-val"><a href="https://wa.me/'+m.whatsapp.replace(/[^0-9]/g,'')+'" target="_blank" style="color:#5c7a5c;">Chat</a></div></div>':'')
+   +(m.email?'<div class="sp-row"><div class="sp-lbl">&#9993; Email</div><div class="sp-val">'+m.email+'</div></div>':'')
+   +(m.notes?'<div class="sp-div"></div><div style="font-size:.82rem;color:#666;line-height:1.6;font-style:italic;">'+m.notes+'</div>':'')
+   +(rels?'<div class="sp-div"></div><div style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:#aaa;margin-bottom:8px;">Family Connections</div>'+rels:'');
+  document.getElementById('mbPanel').classList.add('open');
 }
 
-function closePanel(){ document.getElementById('sidePanel').classList.remove('open'); }
+function mbClosePanel(){document.getElementById('mbPanel').classList.remove('open');}
 
 // ── SETTINGS ──
 (function(){
-  var s=mLoad('nukala_settings'),h=mLoad('nukala_home'),sw=mLoad('nukala_sitewide');
+  var s=JSON.parse(localStorage.getItem('nukala_settings')||'{}');
+  var h=JSON.parse(localStorage.getItem('nukala_home')||'{}');
+  var sw=JSON.parse(localStorage.getItem('nukala_sitewide')||'{}');
   var nn=document.getElementById('navSiteName');
-  if(nn) nn.textContent=(sw.navName||h.navName||(s.familyName?s.familyName.toUpperCase():'NUKALA'));
+  if(nn) nn.textContent=sw.navName||h.navName||(s.familyName?s.familyName.toUpperCase():'NUKALA');
   var fn=document.getElementById('footerText');
   if(fn&&s.familyName) fn.textContent='The '+s.familyName+' Family';
 })();
-
-init();
 </script>
-
 <script>
 
 (function(){
