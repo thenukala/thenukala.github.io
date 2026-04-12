@@ -571,6 +571,37 @@ document.getElementById('pwInput').focus();
                 <button class="btn bo bsm" id="preview-pe-map">&#128065; Preview Map</button>
               </div>
             </div>
+            <div class="panel">
+              <div class="pt">&#128064; Map Sections — Show / Hide</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+                <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;cursor:pointer;"><div class="sw"><input type="checkbox" id="mapShowInteractiveMap" checked/><span class="swt"></span></div>Interactive Map</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;cursor:pointer;"><div class="sw"><input type="checkbox" id="mapShowMemberChips" checked/><span class="swt"></span></div>Member Chips</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;cursor:pointer;"><div class="sw"><input type="checkbox" id="mapShowNearby" checked/><span class="swt"></span></div>Find Nearby</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;cursor:pointer;"><div class="sw"><input type="checkbox" id="mapShowGeoBreakdown" checked/><span class="swt"></span></div>City Breakdown</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;cursor:pointer;"><div class="sw"><input type="checkbox" id="mapShowContributeBar" checked/><span class="swt"></span></div>Contribute Bar</label>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="pt">&#127759; Default Map Style</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="radio" name="defaultMapType" value="street" checked/> &#128506; Street</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="radio" name="defaultMapType" value="satellite"/> &#128752; Satellite</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="radio" name="defaultMapType" value="terrain"/> &#9968; Terrain</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="radio" name="defaultMapType" value="dark"/> &#9790; Dark</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="radio" name="defaultMapType" value="topo"/> &#128208; Topo</label>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="pt">&#128270; Map Zoom &amp; Centre</div>
+              <div class="fr">
+                <div class="fg"><label>Default Zoom (1–18)</label><input type="number" class="fi" id="mapDefaultZoom" min="1" max="18" placeholder="3"/></div>
+                <div class="fg"><label>Centre Latitude</label><input type="text" class="fi" id="mapCentLat" placeholder="20"/></div>
+                <div class="fg"><label>Centre Longitude</label><input type="text" class="fi" id="mapCentLng" placeholder="78"/></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:6px;">
+              <button class="btn bg bsm" id="saveMapVisBtn">&#128190; Save Map Settings</button>
+            </div>
           </div>
         </details>
       </div>
@@ -2043,6 +2074,6 @@ document.getElementById('pwInput').focus();
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=55181"></script>
+<script src="admin.js?v=73095"></script>
 </body>
 </html>

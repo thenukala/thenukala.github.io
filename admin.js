@@ -131,7 +131,7 @@ var PAGE_LOADERS = {
   dash:renderDash, members:renderMembers, history:renderHist,
   gallery:renderGal, facts:renderFacts, events:renderEvts,
   recipes:renderRecs, polls:renderPolls,
-  stats:loadStatsAdmin, map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,
+  stats:loadStatsAdmin, map:function(){loadMapSettings();},  qr:function(){},  join:function(){}, about:renderAbout,
   contacts:renderContacts, announce:renderAnn,
   pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme'); loadTreeColours();}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
@@ -2524,4 +2524,45 @@ document.getElementById('addWishBtn').addEventListener('click', openWishM);
       }
     }catch(e){}
   })();
+})();
+
+// ━━ Load map settings into admin UI ━━
+function loadMapSettings(){
+  var ms=ldRaw('nukala_map_settings')||{};
+  var vis=ms.vis||{};
+  function setChk(id,val,def){ var e=document.getElementById(id); if(e) e.checked=(val===undefined?def:!!val); }
+  setChk('mapShowInteractiveMap', vis.interactiveMap, true);
+  setChk('mapShowMemberChips',    vis.memberChips,    true);
+  setChk('mapShowNearby',         vis.nearby,         true);
+  setChk('mapShowGeoBreakdown',   vis.geoBreakdown,   true);
+  setChk('mapShowContributeBar',  vis.contributeBar,  true);
+  var defType=ms.defaultType||'street';
+  document.querySelectorAll('input[name="defaultMapType"]').forEach(function(r){r.checked=(r.value===defType);});
+  var zEl=document.getElementById('mapDefaultZoom'); if(zEl) zEl.value=ms.zoom||'';
+  var latEl=document.getElementById('mapCentLat');   if(latEl) latEl.value=ms.lat||'';
+  var lngEl=document.getElementById('mapCentLng');   if(lngEl) lngEl.value=ms.lng||'';
+}
+
+// ━━ Save map settings ━━
+(function(){
+  var btn=document.getElementById('saveMapVisBtn');
+  if(!btn) return;
+  btn.addEventListener('click',function(){
+    var ms=ldRaw('nukala_map_settings')||{};
+    function getChk(id,def){ var e=document.getElementById(id); return e?e.checked:def; }
+    ms.vis={
+      interactiveMap: getChk('mapShowInteractiveMap',true),
+      memberChips:    getChk('mapShowMemberChips',true),
+      nearby:         getChk('mapShowNearby',true),
+      geoBreakdown:   getChk('mapShowGeoBreakdown',true),
+      contributeBar:  getChk('mapShowContributeBar',true)
+    };
+    var sel=document.querySelector('input[name="defaultMapType"]:checked');
+    if(sel) ms.defaultType=sel.value;
+    var z=document.getElementById('mapDefaultZoom'); if(z&&z.value) ms.zoom=parseInt(z.value);
+    var lat=document.getElementById('mapCentLat'); if(lat&&lat.value) ms.lat=parseFloat(lat.value);
+    var lng=document.getElementById('mapCentLng'); if(lng&&lng.value) ms.lng=parseFloat(lng.value);
+    svRaw('nukala_map_settings',ms);
+    toast('\u2705 Map settings saved! Click Publish to apply.');
+  });
 })();
