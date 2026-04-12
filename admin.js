@@ -403,6 +403,80 @@ wireImageUpload('mpBgUploadBtn', 'mpBgFileInput', 'mp-herobg', null, null);
   });
 })();
 
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PAGE EDITOR — PER-PAGE SETTINGS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(function(){
+  var PAGE_DEFS = [
+    {id:'members', fields:['title','sub','bg','view'], checks:['stats'],        page:'members.html'},
+    {id:'history', fields:['title','sub','eyebrow','bg'],                       page:'history.html'},
+    {id:'events',  fields:['title','sub','eyebrow','bg'],                       page:'events.html'},
+    {id:'polls',   fields:['title','sub','eyebrow','bg'],                       page:'polls.html'},
+    {id:'recipes', fields:['title','sub','eyebrow','bg'],                       page:'recipes.html'},
+    {id:'stats',   fields:['title','sub','bg'],          checks:['insights'],   page:'stats.html'},
+    {id:'about',   fields:['title','sub','eyebrow','bg'],                       page:'about.html'},
+    {id:'join',    fields:['title','sub','bg'],                                 page:'join.html'},
+  ];
+
+  // Wire upload buttons for background photos
+  PAGE_DEFS.forEach(function(def){
+    var btn = document.getElementById('pe-'+def.id+'-bgUploadBtn');
+    var inp = document.getElementById('pe-'+def.id+'-bgFile');
+    var urlF = document.getElementById('pe-'+def.id+'-bg');
+    if(btn && inp){
+      btn.addEventListener('click', function(){ inp.click(); });
+      inp.addEventListener('change', function(){
+        var file = this.files && this.files[0]; if(!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e){ if(urlF) urlF.value = "url('"+e.target.result+"')"; };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Save button
+    var saveBtn = document.getElementById('save-pe-'+def.id);
+    if(saveBtn) saveBtn.addEventListener('click', function(){
+      var s = {};
+      (def.fields||[]).forEach(function(f){
+        var el = document.getElementById('pe-'+def.id+'-'+f);
+        if(el) s[f] = el.tagName==='SELECT' ? el.value : el.value.trim();
+      });
+      (def.checks||[]).forEach(function(c){
+        var el = document.getElementById('pe-'+def.id+'-'+c);
+        if(el) s[c] = el.checked;
+      });
+      svRaw('nukala_page_'+def.id, s);
+      log('Page settings saved: '+def.id);
+      toast('\u2705 '+def.id[0].toUpperCase()+def.id.slice(1)+' page settings saved! Click Publish to apply.');
+    });
+
+    // Preview button
+    var prevBtn = document.getElementById('preview-pe-'+def.id);
+    if(prevBtn) prevBtn.addEventListener('click', function(){
+      sessionStorage.setItem('nukala_admin','true');
+      sessionStorage.setItem('nukala_auth','true');
+      localStorage.setItem('nukala_preview_mode','true');
+      setTimeout(function(){ localStorage.removeItem('nukala_preview_mode'); }, 30*60*1000);
+      window.open(def.page,'_blank');
+    });
+
+    // Load saved values when editor tab opens
+    var savedData = ldRaw('nukala_page_'+def.id)||{};
+    (def.fields||[]).forEach(function(f){
+      var el = document.getElementById('pe-'+def.id+'-'+f);
+      if(el && savedData[f]!==undefined){
+        if(el.tagName==='SELECT') el.value = savedData[f];
+        else el.value = savedData[f];
+      }
+    });
+    (def.checks||[]).forEach(function(c){
+      var el = document.getElementById('pe-'+def.id+'-'+c);
+      if(el && savedData[c]!==undefined) el.checked = savedData[c];
+    });
+  });
+})();
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // PREVIEW BUTTONS FOR ALL PAGES
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2020,6 +2094,17 @@ document.getElementById('publishBtn').addEventListener('click', function(){
     'nukala_sitewide','nukala_home','nukala_heropage','nukala_newpages',
     'nukala_contactpage2','nukala_gallerypage2','nukala_typography',
     'nukala_navmenu','nukala_loginpage','nukala_wishes','nukala_about','nukala_about'
+  ,
+    'nukala_page_members',
+    'nukala_page_history',
+    'nukala_page_events',
+    'nukala_page_polls',
+    'nukala_page_recipes',
+    'nukala_page_stats',
+    'nukala_page_about',
+    'nukala_page_join',
+    'nukala_facts_page',
+    'nukala_members_page'
   ];
   var DATA = {};
   KEYS.forEach(function(k){
