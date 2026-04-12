@@ -133,7 +133,7 @@ var PAGE_LOADERS = {
   recipes:renderRecs, polls:renderPolls,
   stats:loadStatsAdmin, map:function(){},  qr:function(){},  join:function(){}, about:renderAbout,
   contacts:renderContacts, announce:renderAnn,
-  pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme'); if(document.querySelector('.ptb[data-tab="tree"]')) loadTreeColours();}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
+  pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme'); loadTreeColours();}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
 
 document.querySelectorAll('.ni[data-page]').forEach(function(btn){
