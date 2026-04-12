@@ -2403,3 +2403,109 @@ document.getElementById('addWishBtn').addEventListener('click', openWishM);
     });
   }
 })();
+
+
+// ━━ Login Page — New Background Panel Wiring ━━
+(function(){
+  // Upload button 2 (the prominent one)
+  var btn2 = document.getElementById('lpeBgUploadBtn2');
+  var inp2 = document.getElementById('lpeBgFileInput2');
+  if(btn2 && inp2){
+    btn2.addEventListener('click', function(){ inp2.click(); });
+    inp2.addEventListener('change', function(){
+      var file = this.files && this.files[0]; if(!file) return;
+      if(file.size > 2*1024*1024) toast('⚠️ Photo is '+Math.round(file.size/1024)+'KB — consider resizing for faster login page load.');
+      var reader = new FileReader();
+      reader.onload = function(e){
+        var dataUrl = e.target.result;
+        // Fill the URL field
+        var urlField = document.getElementById('lpe-bg-url');
+        if(urlField){ urlField.value = "url('"+dataUrl+"')"; }
+        // Fill the hidden lpe-bg field used by save
+        var hidden = document.getElementById('lpe-bg');
+        if(hidden){ hidden.value = "url('"+dataUrl+"')"; }
+        // Fill old custom field too
+        var custom = document.getElementById('lpe-bg-custom');
+        if(custom){ custom.value = "url('"+dataUrl+"')"; }
+        // Show thumb preview
+        var thumb = document.getElementById('lpeBgThumb');
+        var wrap  = document.getElementById('lpeBgPreviewWrap');
+        if(thumb){ thumb.style.backgroundImage = "url('"+dataUrl+"')"; thumb.style.backgroundSize='cover'; }
+        if(wrap){ wrap.style.display='block'; }
+        // Update the login page preview panel
+        var prev = document.getElementById('lpe-theme-preview');
+        if(prev){ prev.style.backgroundImage="url('"+dataUrl+"')"; prev.style.backgroundSize='cover'; prev.style.backgroundPosition='center'; prev.textContent=''; }
+        toast('&#128247; Photo loaded — click Save Background to apply.');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // URL field syncs to hidden lpe-bg on input
+  var urlField = document.getElementById('lpe-bg-url');
+  if(urlField){
+    urlField.addEventListener('input', function(){
+      var v = this.value.trim();
+      var hidden = document.getElementById('lpe-bg');
+      var custom = document.getElementById('lpe-bg-custom');
+      if(hidden) hidden.value = v;
+      if(custom) custom.value = v;
+      var thumb = document.getElementById('lpeBgThumb');
+      var wrap  = document.getElementById('lpeBgPreviewWrap');
+      if(thumb){ thumb.style.background = v; thumb.style.backgroundSize='cover'; }
+      if(wrap && v){ wrap.style.display='block'; }
+    });
+  }
+
+  // Colour picker 2 syncs to URL field
+  var picker2 = document.getElementById('lpe-bg-picker2');
+  if(picker2){
+    picker2.addEventListener('input', function(){
+      var v = this.value;
+      var urlF = document.getElementById('lpe-bg-url');
+      var hidden = document.getElementById('lpe-bg');
+      var custom = document.getElementById('lpe-bg-custom');
+      var thumb  = document.getElementById('lpeBgThumb');
+      var wrap   = document.getElementById('lpeBgPreviewWrap');
+      var prev   = document.getElementById('lpe-theme-preview');
+      if(urlF) urlF.value = v;
+      if(hidden) hidden.value = v;
+      if(custom) custom.value = v;
+      if(thumb){ thumb.style.background = v; thumb.style.backgroundImage=''; }
+      if(wrap) wrap.style.display='block';
+      if(prev){ prev.style.background=v; prev.style.backgroundImage=''; prev.textContent=''; }
+    });
+  }
+
+  // Save Background button — triggers the main lpe save
+  var saveBtn = document.getElementById('lpeSaveBgBtn');
+  if(saveBtn){
+    saveBtn.addEventListener('click', function(){
+      // Sync url field to hidden lpe-bg then trigger main save
+      var urlF  = document.getElementById('lpe-bg-url');
+      var hidden = document.getElementById('lpe-bg');
+      var custom = document.getElementById('lpe-bg-custom');
+      if(urlF && hidden) hidden.value = urlF.value.trim();
+      if(urlF && custom) custom.value = urlF.value.trim();
+      // Trigger the main lpe save button
+      var mainSave = document.getElementById('lpeSaveBtn');
+      if(mainSave) mainSave.click();
+      else toast('\u2705 Background ready — click the main Save button to apply all login page settings.');
+    });
+  }
+
+  // On load: populate url field from saved lpe-bg value
+  (function(){
+    try{
+      var lp = JSON.parse(localStorage.getItem('nukala_loginpage')||'{}');
+      if(lp.bg){
+        var urlF = document.getElementById('lpe-bg-url');
+        if(urlF) urlF.value = lp.bg;
+        var thumb = document.getElementById('lpeBgThumb');
+        var wrap  = document.getElementById('lpeBgPreviewWrap');
+        if(thumb){ thumb.style.background=lp.bg; if(lp.bg.indexOf('url(')===0){ thumb.style.backgroundImage=lp.bg; thumb.style.backgroundSize='cover'; } }
+        if(wrap && lp.bg) wrap.style.display='block';
+      }
+    }catch(e){}
+  })();
+})();

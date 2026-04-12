@@ -1519,6 +1519,31 @@ document.getElementById('pwInput').focus();
           <div class="fg"><label>Footer Note (HTML allowed, e.g. &lt;strong&gt;Nukala family&lt;/strong&gt;)</label><textarea class="fi" id="lpe-footnote" rows="3" style="resize:vertical;" placeholder="This site is exclusively for the &lt;strong&gt;Nukala family&lt;/strong&gt;.&lt;br/&gt;Please contact the family administrator for access."></textarea></div>
         </div>
         <div class="panel">
+          <div class="pt">&#127912; Login Page Background</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Upload a photo or choose a colour/gradient for the login page background. The photo appears behind the login card.</p>
+          <div class="fg">
+            <label>&#128247; Upload Background Photo</label>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+              <button type="button" class="btn bg bsm" id="lpeBgUploadBtn2">&#128247; Choose Photo</button>
+              <input type="file" id="lpeBgFileInput2" accept="image/*" style="display:none;"/>
+              <span style="font-size:.72rem;color:var(--tl);">Converts to base64 — no hosting needed</span>
+            </div>
+            <label style="margin-top:8px;">Or paste URL / CSS colour / gradient</label>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+              <input type="color" id="lpe-bg-picker2" value="#f4f2ee" style="width:42px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;flex-shrink:0;" title="Pick colour"/>
+              <input type="text" class="fi" id="lpe-bg-url" placeholder="e.g. https://... or #f4f2ee or linear-gradient(...)" style="flex:1;" oninput="var pv=document.getElementById('lpe-theme-preview');if(pv){pv.style.background=this.value;pv.textContent='';}"/>
+            </div>
+            <div id="lpeBgPreviewWrap" style="margin-top:10px;display:none;">
+              <div style="font-size:.72rem;color:var(--tl);margin-bottom:4px;">Preview:</div>
+              <div id="lpeBgThumb" style="width:100%;height:80px;border-radius:10px;background:#f4f2ee;background-size:cover;background-position:center;border:1px solid var(--b);"></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button class="btn bg bsm" id="lpeSaveBgBtn">&#128190; Save Background</button>
+            <button class="btn bo bsm" onclick="document.getElementById('lpe-bg-url').value='';document.getElementById('lpe-bg-picker2').value='#f4f2ee';document.getElementById('lpeBgPreviewWrap').style.display='none';var pv=document.getElementById('lpe-theme-preview');if(pv){pv.style.background='';pv.textContent='Select a theme above';}">&#10005; Clear</button>
+          </div>
+        </div>
+        <div class="panel">
           <div class="pt">Theme Presets</div>
           <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">One-click themes for the login page. Each sets background, colours and feel.</p>
           <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;">
@@ -1530,7 +1555,7 @@ document.getElementById('pwInput').focus();
             <button class="btn bsm lpe-theme-btn" data-lpe-theme="sand"    style="background:linear-gradient(135deg,#f5f0e8,#ede5d5);border:1.5px solid #c8b89a;color:#5a4830;">🏖️ Sandy</button>
             <button class="btn bsm lpe-theme-btn" data-lpe-theme="custom"  style="border:1.5px dashed var(--b);color:var(--tm);">🎨 Custom…</button>
           </div>
-          <div id="lpe-custom-bg-wrap" style="display:none;">
+          <div id="lpe-custom-bg-wrap">
             <div class="fg">
               <label>Custom Background (photo, colour, or gradient)</label>
               <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
@@ -1905,6 +1930,6 @@ document.getElementById('pwInput').focus();
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=16514"></script>
+<script src="admin.js?v=58471"></script>
 </body>
 </html>
