@@ -51,6 +51,12 @@
     .contribute-bar p strong{color:var(--sage-dark,#5c7a5c);}
     .contribute-bar a{background:var(--sage-dark,#5c7a5c);color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:500;white-space:nowrap;}
     .contribute-bar a:hover{opacity:.9;}
+  
+    #citySearchInput:focus{border-color:var(--sage-dark,#5c7a5c);box-shadow:0 0 0 3px rgba(92,122,92,.12);}
+    .mchip:hover{background:rgba(92,122,92,.08)!important;border-color:var(--sage-dark,#5c7a5c)!important;transform:translateY(-1px);transition:all .15s;}
+    .mchip{transition:all .15s;}
+    #membersMapSection{animation:fadeIn .4s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   </style>
 </head>
 <body>
@@ -105,7 +111,23 @@
       <button class="mtype-btn" data-mtype="topo">&#128208; Topo</button>
     </div>
     <div id="familyMap"></div>
-    <div id="memberChips"></div>
+    <div id="membersMapSection" style="margin-top:28px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+        <div style="font-size:1rem;font-weight:600;color:var(--text-dark,#2c2c2c);">&#128101; Family Members</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div style="position:relative;">
+            <input type="text" id="citySearchInput" placeholder="&#128269; Search by city..." 
+              style="padding:7px 14px 7px 32px;border:1.5px solid var(--border,#ddd);border-radius:20px;font-size:.78rem;outline:none;background:var(--warm-white,#faf8f4);color:var(--text-dark,#2c2c2c);width:200px;"
+              oninput="filterMemberChips(this.value)"/>
+            <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.75rem;pointer-events:none;">&#128269;</span>
+          </div>
+          <button id="clearCityFilter" onclick="filterMemberChips('')" 
+            style="display:none;padding:6px 12px;border:1.5px solid var(--border,#ddd);border-radius:20px;font-size:.72rem;background:transparent;cursor:pointer;color:var(--text-mid,#666);">✕ Clear</button>
+        </div>
+      </div>
+      <div id="memberChips"></div>
+      <div id="noMemberMsg" style="display:none;font-size:.8rem;color:#aaa;padding:10px 0;">No members match that city.</div>
+    </div>
     <div class="mpanel" id="nearbyPanel">
       <div class="mpanel-title">&#128205; Family Near You</div>
       <p class="mpanel-sub">Find which family members live closest to you. Distances are straight-line (km).</p>
@@ -351,36 +373,72 @@
     }).join('');
   }
 
-  var chips=document.getElementById('memberChips');
-  if(!withCity.length){
-    chips.innerHTML=''; // no data message shown in geo panel below
-  } else {
-    chips.innerHTML=withCity.map(function(m){
-      var c=(contacts[m.id]||{});
-      var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-      var av=m.photo?'<img src="'+m.photo+'" alt="'+name+'">':'&#128100;';
-      var mCity=(c&&c.city)||m.city||'';
-      return '<div class="mchip"><div class="mchip-av">'+av+'</div><div style="line-height:1.3;"><div style="font-weight:500;">'+name+'</div><div style="font-size:.67rem;color:#aaa;">&#128205; '+mCity+'</div></div></div>';
-    }).join('');
-    (async function(){
-      var bounds=[];
-      for(var i=0;i<withCity.length;i++){
-        var m=withCity[i];
-        var c=contacts[m.id]||{};
-        var cityName=(c.city||m.city||'').trim();
-        if(!cityName) continue;
-        var gc=await geocity(cityName);
-        if(gc){
-          var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
-          var cat=getCatForMember(m);
-          var mk=makeMarker(gc.lat,gc.lng,cat).addTo(fmap);
-          mk.bindPopup('<strong>'+name+'</strong><br>'+(m.role||'')+(m.gen?'<br>Gen '+m.gen:'')+'<br>&#128205; '+cityName);
-          bounds.push([gc.lat,gc.lng]);
-        }
-      }
-      if(bounds.length){fmap.fitBounds(bounds,{padding:[50,50]});fmap.invalidateSize();}
-    })();
+  // ── Member Chips (all members) ──
+  var _allChipData = allMembers.map(function(m){
+    var c=(contacts[m.id]||{});
+    var city=(c.city||m.city||'').trim();
+    return {m:m, c:c, city:city, name:[m.firstName,m.lastName].filter(Boolean).join(' ')||'Member'};
+  });
+
+  function buildChip(d){
+    var av=d.m.photo?'<img src="'+d.m.photo+'" alt="'+d.name+'">':'&#128100;';
+    var cityBadge=d.city?'<div style="font-size:.67rem;color:#aaa;">&#128205; '+d.city+'</div>':'<div style="font-size:.67rem;color:#ccc;">No city set</div>';
+    return '<div class="mchip" data-city="'+d.city.toLowerCase()+'" style="cursor:pointer;" onclick="jumpToMember(''+d.city+'')">'      +'<div class="mchip-av">'+av+'</div>'      +'<div style="line-height:1.3;"><div style="font-weight:500;">'+d.name+'</div>'+cityBadge+'</div></div>';
   }
+
+  function filterMemberChips(q){
+    var chips=document.getElementById('memberChips');
+    var noMsg=document.getElementById('noMemberMsg');
+    var clrBtn=document.getElementById('clearCityFilter');
+    var inp=document.getElementById('citySearchInput');
+    if(inp && q !== undefined) inp.value=q;
+    if(clrBtn) clrBtn.style.display = q ? 'inline-block' : 'none';
+    if(!chips) return;
+    var filtered = q ? _allChipData.filter(function(d){ return d.city.toLowerCase().indexOf(q.toLowerCase())>-1; }) : _allChipData;
+    chips.innerHTML = filtered.map(buildChip).join('');
+    if(noMsg) noMsg.style.display = (!filtered.length && q) ? 'block' : 'none';
+    // Highlight matching chips
+    if(q){
+      chips.querySelectorAll('.mchip').forEach(function(el){
+        if(el.dataset.city && el.dataset.city.indexOf(q.toLowerCase())>-1){
+          el.style.background='rgba(92,122,92,.12)';
+          el.style.borderColor='var(--sage-dark,#5c7a5c)';
+        }
+      });
+    }
+  }
+  window.filterMemberChips = filterMemberChips;
+
+  function jumpToMember(city){
+    if(!city) return;
+    geocity(city).then(function(gc){
+      if(gc && fmap){ fmap.flyTo([gc.lat,gc.lng],10,{duration:1.2}); }
+    });
+  }
+  window.jumpToMember = jumpToMember;
+
+  // Initial render — all members
+  filterMemberChips('');
+
+  // Geocode members WITH cities and add markers
+  (async function(){
+    var bounds=[];
+    for(var i=0;i<withCity.length;i++){
+      var m=withCity[i];
+      var c=contacts[m.id]||{};
+      var cityName=(c.city||m.city||'').trim();
+      if(!cityName) continue;
+      var gc=await geocity(cityName);
+      if(gc){
+        var name=[m.firstName,m.lastName].filter(Boolean).join(' ');
+        var cat=getCatForMember(m);
+        var mk=makeMarker(gc.lat,gc.lng,cat).addTo(fmap);
+        mk.bindPopup('<strong>'+name+'</strong><br>'+(m.role||'')+(m.gen?'<br>Gen '+m.gen:'')+'<br>&#128205; '+cityName);
+        bounds.push([gc.lat,gc.lng]);
+      }
+    }
+    if(bounds.length){fmap.fitBounds(bounds,{padding:[50,50]});fmap.invalidateSize();}
+  })();
   renderGeo();
 })();
 </script>
