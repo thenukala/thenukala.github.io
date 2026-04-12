@@ -1455,12 +1455,21 @@ document.getElementById('saveContactBtn').addEventListener('click',function(){
 });
 document.getElementById('saveGalPageBtn').addEventListener('click',function(){
   var el = function(id){ return document.getElementById(id); };
+  var chk = function(id, def){ var e=el(id); return e ? e.checked : def; };
   var s = {
-    title:     (el('pe-gallery-title')||{}).value||'',
-    sub:       (el('pe-gallery-sub')||{}).value||'',
-    bg:        (el('pe-gallery-bg')||{}).value||'',
-    defaultcat:(el('pe-gal-defaultcat')||{}).value||'all',
-    showvideos: el('pe-gal-showvideos') ? el('pe-gal-showvideos').checked : true,
+    title:      (el('pe-gallery-title')||{}).value||'',
+    sub:        (el('pe-gallery-sub')||{}).value||'',
+    bg:         (el('pe-gallery-bg')||{}).value||'',
+    defaultcat: (el('pe-gal-defaultcat')||{}).value||'all',
+    showvideos: chk('pe-gal-show-videos', true),
+    showCats: {
+      family:       chk('pe-gal-show-family', true),
+      vintage:      chk('pe-gal-show-vintage', true),
+      celebrations: chk('pe-gal-show-celebrations', true),
+      travel:       chk('pe-gal-show-travel', true),
+      other:        chk('pe-gal-show-other', true),
+      videos:       chk('pe-gal-show-videos', true)
+    },
     catLabels: {
       all:          (el('pe-gal-cat-all')||{}).value||'',
       family:       (el('pe-gal-cat-family')||{}).value||'',
@@ -1504,7 +1513,13 @@ function loadPeTab(tab){
     setPe('pe-gallery-sub',   gp.sub);
     setPe('pe-gallery-bg',    gp.bg);
     var defCatEl=document.getElementById('pe-gal-defaultcat'); if(defCatEl&&gp.defaultcat) defCatEl.value=gp.defaultcat;
-    setChk('pe-gal-showvideos', gp.showvideos, true);
+    var sc=gp.showCats||{};
+    setChk('pe-gal-show-family',       sc.family,       true);
+    setChk('pe-gal-show-vintage',      sc.vintage,      true);
+    setChk('pe-gal-show-celebrations', sc.celebrations, true);
+    setChk('pe-gal-show-travel',       sc.travel,       true);
+    setChk('pe-gal-show-other',        sc.other,        true);
+    setChk('pe-gal-show-videos',       sc.videos!==undefined?sc.videos:(gp.showvideos!==undefined?gp.showvideos:true), true);
     var cl=gp.catLabels||{};
     setPe('pe-gal-cat-all',          cl.all);
     setPe('pe-gal-cat-family',       cl.family);

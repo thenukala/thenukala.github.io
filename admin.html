@@ -880,8 +880,28 @@ document.getElementById('pwInput').focus();
                 <option value="video">Videos</option>
               </select>
             </div>
-            <div class="fg"><label>Show Video tab</label>
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-gal-showvideos" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show the Videos tab in Gallery filter</span></label>
+            <div class="fg"><label>Show / Hide Category Tabs</label>
+              <p style="font-size:.72rem;color:var(--tl);margin:4px 0 10px;">Toggle which filter tabs appear on the Gallery page.</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;">
+                  <div class="sw"><input type="checkbox" id="pe-gal-show-family" checked/><span class="swt"></span></div>&#128101; Family
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;">
+                  <div class="sw"><input type="checkbox" id="pe-gal-show-vintage" checked/><span class="swt"></span></div>&#128254; Vintage
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;">
+                  <div class="sw"><input type="checkbox" id="pe-gal-show-celebrations" checked/><span class="swt"></span></div>&#127881; Celebrations
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;">
+                  <div class="sw"><input type="checkbox" id="pe-gal-show-travel" checked/><span class="swt"></span></div>&#9992; Travel
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;">
+                  <div class="sw"><input type="checkbox" id="pe-gal-show-other" checked/><span class="swt"></span></div>&#127800; Other
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;">
+                  <div class="sw"><input type="checkbox" id="pe-gal-show-videos" checked/><span class="swt"></span></div>&#127909; Videos
+                </label>
+              </div>
             </div>
           </div>
           <div style="display:flex;gap:8px;margin:4px 0 0 0;">
@@ -1265,13 +1285,13 @@ document.getElementById('pwInput').focus();
       <!-- PAGE EDITOR -->
       <div class="page" id="page-editor">
         <div class="sh">&#127912; <em>Theme Editor</em></div>
-        <p class="ss">Edit site-wide colours, fonts and tree appearance. Each page&#39;s content settings are now inside their own sidebar section.</p>
+        <p class="ss">Colours, fonts &amp; tree appearance. Page content is editable inside each page section below.</p>
         <div class="div"></div>
         <div class="ptabs">
-          <button class="ptb on" data-tab="theme">&#127912; Theme &amp; Colours</button>
+          <button class="ptb on" data-tab="theme">&#127912; Colours</button>
           <button class="ptb" data-tab="sitewide">&#127760; Site Wide</button>
           <button class="ptb" data-tab="fonts">&#9998; Fonts</button>
-          <button class="ptb" data-tab="tree">&#127795; Tree Colours</button>
+          <button class="ptb" data-tab="tree">&#127795; Tree &amp; Map</button>
         </div>
         <div class="pts on" id="pt-theme">
           <div class="panel">
@@ -1357,164 +1377,11 @@ document.getElementById('pwInput').focus();
             <button class="btn bg bsm" id="saveSiteWideBtn">💾 Save</button>
           </div>
         </div>
-        <div class="pts" id="pt-home">
-          <div class="panel">
-            <div class="pt">Hero Section</div>
-            <div class="fg"><label>Title</label><input type="text" class="fi" id="pe-htitle" placeholder="The Nukala Family Archive"/></div>
-            <div class="fg"><label>Tagline</label><input type="text" class="fi" id="pe-htagline" placeholder="A private space..."/></div>
-            <div class="fg"><label>Hero Background Image</label>
-              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                <button type="button" class="btn bo bsm" id="herobgUploadBtn" style="flex-shrink:0;">&#128247; Upload</button>
-                <input type="file" id="herobgFileInput" accept="image/*" style="display:none;"/>
-                <input type="text" class="fi" id="pe-herobg" placeholder="Or paste URL... leave blank for gradient" style="flex:1;min-width:180px;"/>
-              </div></div>
-          </div>
-          <div class="panel">
-            <div class="pt">Stats Bar</div>
-            <div class="fr"><div class="fg"><label>Stat 1 Number</label><input type="text" class="fi" id="pe-s1num" placeholder="6"/></div><div class="fg"><label>Stat 1 Label</label><input type="text" class="fi" id="pe-s1lbl" placeholder="Generations"/></div></div>
-            <div class="fr"><div class="fg"><label>Stat 2 Number</label><input type="text" class="fi" id="pe-s2num" placeholder="45"/></div><div class="fg"><label>Stat 2 Label</label><input type="text" class="fi" id="pe-s2lbl" placeholder="Family Members"/></div></div>
-            <div class="fr"><div class="fg"><label>Stat 3 Number</label><input type="text" class="fi" id="pe-s3num" placeholder="20"/></div><div class="fg"><label>Stat 3 Label</label><input type="text" class="fi" id="pe-s3lbl" placeholder="Stories Shared"/></div></div>
-          </div>
-          <div class="panel">
-            <div class="pt">About Section</div>
-            <div class="fg"><label>About Title</label><input type="text" class="fi" id="pe-abouttitle" placeholder="Our Roots Run Deep"/></div>
-            <div class="fg"><label>Paragraph 1</label><textarea class="fi" id="pe-about1" rows="3" style="resize:vertical;"></textarea></div>
-            <div class="fg"><label>Paragraph 2</label><textarea class="fi" id="pe-about2" rows="3" style="resize:vertical;"></textarea></div>
-            <div class="fg"><label>Paragraph 3</label><textarea class="fi" id="pe-about3" rows="3" style="resize:vertical;"></textarea></div>
-          </div>
-          <div class="panel">
-            <div class="pt">Coming Up — Home Page Panel</div>
-            <p style="font-size:.75rem;color:var(--tl);margin-bottom:10px;">The "Coming Up" panel on the Home page auto-shows events, birthdays and anniversaries in the next 14 days. To populate it:</p>
-            <ul style="font-size:.78rem;color:var(--tm);line-height:1.8;padding-left:18px;margin-bottom:10px;">
-              <li>🎂 <strong>Birthdays</strong> — set the <em>Birthday</em> field in Admin → Contacts for each member</li>
-              <li>💍 <strong>Anniversaries</strong> — set the <em>Anniversary</em> field in Admin → Contacts</li>
-              <li>📅 <strong>Events</strong> — add events in Admin → Events with a date</li>
-            </ul>
-            <p style="font-size:.75rem;color:var(--tl);">No manual editing needed — it updates automatically from your data.</p>
-          </div>
-          <button class="btn bg" id="saveHomeBtn">💾 Save Home Page</button>
-        </div>
-        <div class="pts" id="pt-pages">
-          <div class="notice">Edit the eyebrow text, title and description shown at the top of each page.</div>
-          <div id="pageTextsEditor"></div>
-          <button class="btn bg" id="savePageTextsBtn" style="margin-top:8px;">💾 Save All Page Texts</button>
-        </div>
-        <div class="pts" id="pt-contact">
-          <div class="panel">
-            <div class="pt">Contact Details</div>
-            <div class="fr"><div class="fg"><label>Contact Name</label><input type="text" class="fi" id="pe-cname" placeholder="Ramu Nukala"/></div><div class="fg"><label>Email</label><input type="text" class="fi" id="pe-cemail" placeholder="family@email.com"/></div></div>
-            <div class="fg"><label>Formspree ID (free at formspree.io)</label><input type="text" class="fi" id="pe-formspree" placeholder="e.g. xyzabc12"/></div>
-          </div>
-          <div class="panel">
-            <div class="pt">Form Dropdown Options (one per line)</div>
-            <textarea class="fi" id="pe-droptions" rows="7" style="resize:vertical;" placeholder="Add a family member&#10;Submit a photo&#10;Share a story&#10;Other"></textarea>
-          </div>
-          <button class="btn bg" id="saveContactBtn">💾 Save Contact Page</button>
-        </div>
-        <div class="pts" id="pt-gallery">
-          <div class="panel">
-            <div class="pt">&#128064; Gallery Page Header</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-gallery-title" placeholder="Family Gallery"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-gallery-sub" placeholder="Moments captured in time. Click any photo to view."/></div>
-            <div class="fg"><label>Hero Background</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-gallery-bgUploadBtn">&#128247; Upload Photo</button>
-                <input type="file" id="pe-gallery-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-gallery-bg" placeholder="Image URL or CSS colour"/>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="pt">&#127991; Category Tab Names</div>
-            <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Rename the category filter tabs shown on the Gallery page. Leave blank to keep the default.</p>
-            <div class="fr">
-              <div class="fg"><label>&#128247; All Photos tab</label><input type="text" class="fi" id="pe-gal-cat-all" placeholder="All Photos"/></div>
-              <div class="fg"><label>&#128101; Family tab</label><input type="text" class="fi" id="pe-gal-cat-family" placeholder="Family"/></div>
-            </div>
-            <div class="fr">
-              <div class="fg"><label>&#128254; Vintage tab</label><input type="text" class="fi" id="pe-gal-cat-vintage" placeholder="Vintage"/></div>
-              <div class="fg"><label>&#127881; Celebrations tab</label><input type="text" class="fi" id="pe-gal-cat-celebrations" placeholder="Celebrations"/></div>
-            </div>
-            <div class="fr">
-              <div class="fg"><label>&#9992; Travel tab</label><input type="text" class="fi" id="pe-gal-cat-travel" placeholder="Travel"/></div>
-              <div class="fg"><label>&#127800; Other tab</label><input type="text" class="fi" id="pe-gal-cat-other" placeholder="Other"/></div>
-            </div>
-            <div class="fg"><label>&#127909; Videos tab</label><input type="text" class="fi" id="pe-gal-cat-videos" placeholder="Videos"/></div>
-          </div>
-          <div class="panel">
-            <div class="pt">&#9881; Gallery Display Options</div>
-            <div class="fg"><label>Default Category shown on load</label>
-              <select class="fi" id="pe-gal-defaultcat">
-                <option value="all">All Photos</option>
-                <option value="family">Family</option>
-                <option value="vintage">Vintage</option>
-                <option value="celebrations">Celebrations</option>
-                <option value="travel">Travel</option>
-                <option value="other">Other</option>
-                <option value="video">Videos</option>
-              </select>
-            </div>
-            <div class="fg"><label>Show Video tab</label>
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-gal-showvideos" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show the Videos tab in Gallery filter</span></label>
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;margin:4px 0 0 0;">
-            <button class="btn bg bsm" id="saveGalPageBtn">&#128190; Save Gallery Settings</button>
-            <button class="btn bo bsm" id="previewGalPageBtn">&#128065; Preview Gallery</button>
-          </div>
-        </div>
-        <div class="pt-panel" id="pt-facts">
-          <div class="panel">
-            <div class="pt">&#128064; Facts &amp; Achievements Page Header</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-facts-title" placeholder="Family Facts &amp; Achievements"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-facts-sub" placeholder="Milestones, traditions and records of our family."/></div>
-            <div class="fg"><label>Hero Background</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-facts-bgUploadBtn">&#128247; Upload Photo</button>
-                <input type="file" id="pe-facts-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-facts-bg" placeholder="Image URL or colour"/>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="pt">&#127991; Category Tab Names</div>
-            <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Rename the filter tabs shown on the Facts page. Leave blank for defaults.</p>
-            <div class="fr">
-              <div class="fg"><label>&#127775; All tab</label><input type="text" class="fi" id="pe-facts-cat-all-label" placeholder="All"/></div>
-              <div class="fg"><label>&#127942; Achievement tab</label><input type="text" class="fi" id="pe-facts-cat-achievement-label" placeholder="Achievement"/></div>
-            </div>
-            <div class="fr">
-              <div class="fg"><label>&#127963; Milestone tab</label><input type="text" class="fi" id="pe-facts-cat-milestone-label" placeholder="Milestone"/></div>
-              <div class="fg"><label>&#127808; Tradition tab</label><input type="text" class="fi" id="pe-facts-cat-tradition-label" placeholder="Tradition"/></div>
-            </div>
-            <div class="fr">
-              <div class="fg"><label>&#128218; Record tab</label><input type="text" class="fi" id="pe-facts-cat-record-label" placeholder="Record"/></div>
-              <div class="fg"><label>&#128512; Fun Fact tab</label><input type="text" class="fi" id="pe-facts-cat-funfact-label" placeholder="Fun Fact"/></div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="pt">&#9881; Display Options</div>
-            <div class="fg"><label>Show Year Badge on Cards</label>
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-facts-showYear" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show year on fact cards</span></label>
-            </div>
-            <div class="fg"><label>Enable Timeline View (sorted by year)</label>
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-facts-timeline" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show &#128197; Timeline filter tab on facts page</span></label>
-            </div>
-            <div class="fg"><label>Show / Hide Category Filters</label>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-achievement" checked/> Achievements</label>
-                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-milestone" checked/> Milestones</label>
-                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-tradition" checked/> Traditions</label>
-                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-record" checked/> Records</label>
-                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-funfact" checked/> Fun Facts</label>
-              </div>
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;margin:4px 0 0 0;">
-            <button class="btn bg bsm" id="saveFactsPageBtn">&#128190; Save Facts Settings</button>
-            <button class="btn bo bsm" id="previewFactsPageBtn2">&#128065; Preview Facts</button>
-          </div>
-        </div>
+
+
+
+
+
         <div class="pts" id="pt-fonts">
           <div class="panel">
             <div class="pt">Typography</div>
@@ -1736,164 +1603,14 @@ document.getElementById('pwInput').focus();
         </div>
 
 
-        <div class="pt-panel" id="pt-members">
-          <div class="panel">
-            <div class="pt">Family Members Page</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-members-title" placeholder="The Nukala Family Members"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-members-sub" placeholder="Every leaf of our family tree."/></div>
-            <div class="fg"><label>Hero Background Photo</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-members-bgUploadBtn">&#128247; Upload</button>
-                <input type="file" id="pe-members-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-members-bg" placeholder="Image URL or CSS colour"/>
-            </div>
-            <div class="fg"><label>Default View</label>
-              <select class="fi" id="pe-members-view"><option value="grid">&#9638; Card View</option><option value="list">&#9776; List View</option><option value="gen">&#127963; By Generation</option></select>
-            </div>
-            <div class="fg"><label>Show Stats Bar</label>
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-members-stats" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show Total / Living / Generations / Photos stats</span></label>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:10px;">
-              <button class="btn bg bsm" id="save-pe-members">&#128190; Save Members Settings</button>
-              <button class="btn bo bsm" id="preview-pe-members">&#128065; Preview</button>
-            </div>
-          </div>
-        </div>
-        <div class="pt-panel" id="pt-history">
-          <div class="panel">
-            <div class="pt">History Page</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-history-title" placeholder="Our Family History"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-history-sub" placeholder="A journey through time and generations."/></div>
-            <div class="fg"><label>Eyebrow Text</label><input type="text" class="fi" id="pe-history-eyebrow" placeholder="Our Story"/></div>
-            <div class="fg"><label>Hero Background</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-history-bgUploadBtn">&#128247; Upload</button>
-                <input type="file" id="pe-history-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-history-bg" placeholder="Image URL or colour"/>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:10px;">
-              <button class="btn bg bsm" id="save-pe-history">&#128190; Save History Settings</button>
-              <button class="btn bo bsm" id="preview-pe-history">&#128065; Preview</button>
-            </div>
-          </div>
-        </div>
-        <div class="pt-panel" id="pt-events">
-          <div class="panel">
-            <div class="pt">Events Page</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-events-title" placeholder="Family Events"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-events-sub" placeholder="Celebrating milestones together."/></div>
-            <div class="fg"><label>Eyebrow Text</label><input type="text" class="fi" id="pe-events-eyebrow" placeholder="Upcoming &amp; Past"/></div>
-            <div class="fg"><label>Hero Background</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-events-bgUploadBtn">&#128247; Upload</button>
-                <input type="file" id="pe-events-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-events-bg" placeholder="Image URL or colour"/>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:10px;">
-              <button class="btn bg bsm" id="save-pe-events">&#128190; Save Events Settings</button>
-              <button class="btn bo bsm" id="preview-pe-events">&#128065; Preview</button>
-            </div>
-          </div>
-        </div>
-        <div class="pt-panel" id="pt-polls">
-          <div class="panel">
-            <div class="pt">Polls Page</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-polls-title" placeholder="Family Polls"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-polls-sub" placeholder="Your voice shapes our family decisions."/></div>
-            <div class="fg"><label>Eyebrow Text</label><input type="text" class="fi" id="pe-polls-eyebrow" placeholder="Have Your Say"/></div>
-            <div class="fg"><label>Hero Background</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-polls-bgUploadBtn">&#128247; Upload</button>
-                <input type="file" id="pe-polls-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-polls-bg" placeholder="Image URL or colour"/>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:10px;">
-              <button class="btn bg bsm" id="save-pe-polls">&#128190; Save Polls Settings</button>
-              <button class="btn bo bsm" id="preview-pe-polls">&#128065; Preview</button>
-            </div>
-          </div>
-        </div>
-        <div class="pt-panel" id="pt-recipes">
-          <div class="panel">
-            <div class="pt">Recipes Page</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-recipes-title" placeholder="Family Recipes"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-recipes-sub" placeholder="Flavours passed down through generations."/></div>
-            <div class="fg"><label>Eyebrow Text</label><input type="text" class="fi" id="pe-recipes-eyebrow" placeholder="From Our Kitchen"/></div>
-            <div class="fg"><label>Hero Background</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-recipes-bgUploadBtn">&#128247; Upload</button>
-                <input type="file" id="pe-recipes-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-recipes-bg" placeholder="Image URL or colour"/>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:10px;">
-              <button class="btn bg bsm" id="save-pe-recipes">&#128190; Save Recipes Settings</button>
-              <button class="btn bo bsm" id="preview-pe-recipes">&#128065; Preview</button>
-            </div>
-          </div>
-        </div>
-        <div class="pt-panel" id="pt-stats">
-          <div class="panel">
-            <div class="pt">Stats Page</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-stats-title" placeholder="Family Statistics"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-stats-sub" placeholder="By the numbers."/></div>
-            <div class="fg"><label>Hero Background</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-stats-bgUploadBtn">&#128247; Upload</button>
-                <input type="file" id="pe-stats-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-stats-bg" placeholder="Image URL or colour"/>
-            </div>
-            <div class="fg"><label>Show Insights Section</label>
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-stats-insights" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show Most Children, Oldest, Youngest cards</span></label>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:10px;">
-              <button class="btn bg bsm" id="save-pe-stats">&#128190; Save Stats Settings</button>
-              <button class="btn bo bsm" id="preview-pe-stats">&#128065; Preview</button>
-            </div>
-          </div>
-        </div>
-        <div class="pt-panel" id="pt-about">
-          <div class="panel">
-            <div class="pt">About Page</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-about-title" placeholder="About the Nukala Family"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-about-sub" placeholder="Our story, our people, our legacy."/></div>
-            <div class="fg"><label>Eyebrow Text</label><input type="text" class="fi" id="pe-about-eyebrow" placeholder="Who We Are"/></div>
-            <div class="fg"><label>Hero Background</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-about-bgUploadBtn">&#128247; Upload</button>
-                <input type="file" id="pe-about-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-about-bg" placeholder="Image URL or colour"/>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:10px;">
-              <button class="btn bg bsm" id="save-pe-about">&#128190; Save About Settings</button>
-              <button class="btn bo bsm" id="preview-pe-about">&#128065; Preview</button>
-            </div>
-          </div>
-        </div>
-        <div class="pt-panel" id="pt-join">
-          <div class="panel">
-            <div class="pt">Join Tree Page</div>
-            <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-join-title" placeholder="Join the Family Tree"/></div>
-            <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-join-sub" placeholder="Help us build the most complete record of our family."/></div>
-            <div class="fg"><label>Hero Background</label>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                <button type="button" class="btn bo bsm" id="pe-join-bgUploadBtn">&#128247; Upload</button>
-                <input type="file" id="pe-join-bgFile" accept="image/*" style="display:none;"/>
-              </div>
-              <input type="text" class="fi" id="pe-join-bg" placeholder="Image URL or colour"/>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:10px;">
-              <button class="btn bg bsm" id="save-pe-join">&#128190; Save Join Settings</button>
-              <button class="btn bo bsm" id="preview-pe-join">&#128065; Preview</button>
-            </div>
-          </div>
-        </div>
+
+
+
+
+
+
+
+
       </div>
       </div><!-- /page-editor -->
 
@@ -2251,7 +1968,7 @@ document.getElementById('pwInput').focus();
   <div class="fr"><div class="fg"><label>Made by</label><input type="text" class="fi" id="recBy"/></div><div class="fg"><label>Cook Time</label><input type="text" class="fi" id="recTime"/></div></div>
   <div class="fg"><label>Ingredients (one per line)</label><textarea class="fi" id="recIng" rows="5" style="resize:vertical;" placeholder="2 cups rice&#10;1 cup dal"></textarea></div>
   <div class="fg"><label>Steps (one per line)</label><textarea class="fi" id="recSteps" rows="5" style="resize:vertical;" placeholder="Wash rice&#10;Boil water"></textarea></div>
-  <div class="mft"><button class="btn bg" style="flex:1;" id="saveRecBtn">💾 Save</button><button class="btn bo" data-close="recModal">Cancel</button></div>
+  <div class="mft"><button class="btn bg" style="flex:1;" id="saveRecBtn2">💾 Save</button><button class="btn bo" data-close="recModal">Cancel</button></div>
 </div></div>
 
 <div class="mb" id="achModal"><div class="mo" style="max-width:460px;">
@@ -2351,6 +2068,6 @@ document.getElementById('pwInput').focus();
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=56593"></script>
+<script src="admin.js?v=56603"></script>
 </body>
 </html>
