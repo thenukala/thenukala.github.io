@@ -267,25 +267,31 @@
 </script>
 
 <script>
-  // Apply admin page settings
+  // Apply admin page settings (Gallery)
   (function(){
     try{
       var ps = JSON.parse(localStorage.getItem('nukala_page_gallery')||'{}');
-      if(ps.title){
-        var hEl = document.querySelector('.page-hero h1');
-        if(hEl) hEl.textContent = ps.title;
-      }
-      if(ps.sub){
-        var sEl = document.querySelector('.page-hero > p');
-        if(sEl) sEl.textContent = ps.sub;
-      }
-      if(ps.eyebrow){
-        var eEl = document.querySelector('.eyebrow');
-        if(eEl) eEl.textContent = ps.eyebrow;
-      }
+      if(ps.title){ var hEl=document.querySelector('.page-hero h1'); if(hEl) hEl.textContent=ps.title; }
+      if(ps.sub){ var sEl=document.querySelector('.page-hero > p'); if(sEl) sEl.textContent=ps.sub; }
       if(ps.bg){
-        var hero = document.querySelector('.page-hero');
-        if(hero){ hero.style.backgroundImage = ps.bg.startsWith('url') ? ps.bg : ''; hero.style.background = ps.bg.startsWith('url') ? '' : ps.bg; hero.style.backgroundSize='cover'; hero.style.backgroundPosition='center'; }
+        var hero=document.querySelector('.page-hero');
+        if(hero){ if(ps.bg.startsWith('url')){ hero.style.backgroundImage=ps.bg; hero.style.backgroundSize='cover'; hero.style.backgroundPosition='center'; } else { hero.style.background=ps.bg; } }
+      }
+      // Apply custom category labels
+      if(ps.catLabels){
+        var keyMap = {all:'all',family:'family',vintage:'vintage',celebrations:'celebrations',travel:'travel',other:'other',videos:'videos'};
+        Object.keys(keyMap).forEach(function(k){
+          var label = ps.catLabels[k];
+          if(!label) return;
+          var btn = document.querySelector('[data-filter-key="'+k+'"]');
+          if(btn) btn.textContent = label;
+        });
+      }
+      // Hide video tab if disabled
+      if(ps.showvideos===false){
+        var vBtn=document.querySelector('[data-filter-key="videos"]');
+        if(vBtn&&vBtn.parentElement) vBtn.parentElement.style.display='none';
+        else if(vBtn) vBtn.style.display='none';
       }
     }catch(e){}
   })();

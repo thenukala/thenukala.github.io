@@ -112,9 +112,10 @@
       if(!polls.length){ el.innerHTML='<div class="empty-section"><div style="font-size:48px;margin-bottom:12px;">🗳️</div><p>No polls yet.</p></div>'; return; }
       el.innerHTML=polls.map((p,pi)=>{
         const myVote=voted[pi];
-        const totalVotes=(p.votes||[]).reduce((a,b)=>a+(b||0),0);
+        const vArr=Array.isArray(p.votes)?p.votes:new Array((p.options||[]).length).fill(0);
+          const totalVotes=vArr.reduce((a,b)=>a+(b||0),0);
         const opts=(p.options||[]).map((opt,oi)=>{
-          const votes=(p.votes||[])[oi]||0;
+          const votes=vArr[oi]||0;
           const pct=totalVotes?Math.round((votes/totalVotes)*100):0;
           const isMyVote=myVote===oi;
           return `<div class="poll-option">

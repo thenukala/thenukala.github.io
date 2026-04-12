@@ -145,10 +145,10 @@
   var fyel=document.getElementById('footerYear');
   if(fyel)fyel.textContent=new Date().getFullYear();
 
-  var withCity=allMembers.filter(function(m){return contacts[m.id]&&(contacts[m.id].city||'').trim();});
+  var withCity=allMembers.filter(function(m){ var c=contacts[m.id]||{}; return (c.city||m.city||'').trim(); });
   var cityGroups={};
   withCity.forEach(function(m){
-    var city=(contacts[m.id].city||'').trim();
+    var c2=contacts[m.id]||{}; var city=(c2.city||m.city||'').trim();
     if(!city)return;
     if(!cityGroups[city])cityGroups[city]=[];
     cityGroups[city].push(m);
