@@ -37,7 +37,7 @@ body{font-family:'Jost',sans-serif;background:var(--c);color:var(--td);min-heigh
 body::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
 width:420px;height:420px;background:url('logo.png') no-repeat center/contain;
 opacity:0.04;pointer-events:none;z-index:0;}
-#loginPage,#adminPage{position:relative;z-index:1;}
+#loginPage,#adminPage{position:relative;z-index:1;display:none;}
 /* LOGIN */
 #loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;}
 .lbox{background:var(--w);border:1px solid var(--b);border-radius:20px;padding:44px;width:100%;max-width:400px;box-shadow:0 4px 32px rgba(0,0,0,.07);text-align:center;}
@@ -192,15 +192,31 @@ opacity:0.04;pointer-events:none;z-index:0;}
 
 <script>
 // Inline login — works even if admin.js fails to load
+var _adminLoggedIn = false;
 function doAdminLogin(){
   var pw = document.getElementById('pwInput').value;
   var correct = localStorage.getItem('nukala_admin_pass') || 'nukala_admin_2024';
   if(pw === correct){
     sessionStorage.setItem('nukala_admin','true');
     localStorage.setItem('nukala_admin_active','true');
+    _adminLoggedIn = true;
     document.getElementById('loginPage').style.display='none';
     document.getElementById('adminPage').style.display='block';
-    if(typeof initAdmin === 'function') initAdmin();
+    // Init admin - poll until admin.js is ready (handles fast clicks)
+    var _initTries = 0;
+    function tryInit(){
+      if(typeof initAdmin === 'function'){
+        initAdmin();
+      } else if(_initTries < 20){
+        _initTries++;
+        setTimeout(tryInit, 200);
+      } else {
+        document.getElementById('adminPage').innerHTML +=
+          '<div style="padding:40px;text-align:center;color:#c06040;font-family:sans-serif;">' +
+          '&#9888; Admin script failed to load. Please hard-refresh (Ctrl+Shift+R).</div>';
+      }
+    }
+    tryInit();
   } else {
     var e = document.getElementById('errMsg');
     e.textContent = 'Incorrect password. Try: nukala_admin_2024';
@@ -1627,6 +1643,6 @@ document.getElementById('pwInput').focus();
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=62067"></script>
+<script src="admin.js?v=76868"></script>
 </body>
 </html>
