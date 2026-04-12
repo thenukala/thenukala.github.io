@@ -449,7 +449,7 @@ document.getElementById('pwInput').focus();
           <div class="pt">Custom Stat Cards</div>
           <p style="font-size:.75rem;color:var(--tl);margin-bottom:14px;">Add your own stat cards with a custom label and value. These appear in the stats hero row alongside the auto-calculated ones.</p>
           <div id="customStatsList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;"></div>
-          <button class="btn bo bsm" id="addCustomStatBtn">&#43; Add Custom Stat</button>
+          <button class="btn bo bsm" id="addCustomStatBtn">&#43; Add Custom Stat</button><button class="btn bo bsm" id="previewStatsBtn" style="margin-left:6px;">&#128065; Preview Stats</button>
           <p style="font-size:.7rem;color:var(--tl);margin-top:6px;">Example: "Years of Legacy · 100" or "Countries · 5"</p>
           <button class="btn bg bsm" id="saveCustomStatsBtn" style="margin-top:12px;">💾 Save Custom Stats</button>
         </div>
@@ -634,7 +634,7 @@ document.getElementById('pwInput').focus();
         <div class="sh">Family <em>History</em></div>
         <p class="ss">Add timeline events for the History page.</p>
         <div class="div"></div>
-        <button class="btn bg bsm" id="addHistBtn" style="margin-bottom:14px;">+ Add Event</button>
+        <button class="btn bg bsm" id="addHistBtn" style="margin-bottom:14px;">+ Add Event</button><button class="btn bo bsm" id="previewHistBtn" style="margin-left:6px;">&#128065; Preview History</button>
         <div id="histList"></div>
       </div>
 
@@ -643,7 +643,7 @@ document.getElementById('pwInput').focus();
         <div class="sh">Photo <em>Gallery</em></div>
         <p class="ss">Add photos by URL. Use imgbb.com (free) to host images.</p>
         <div class="div"></div>
-        <button class="btn bg bsm" id="addGalBtn" style="margin-bottom:14px;">+ Add Photo</button>
+        <button class="btn bg bsm" id="addGalBtn" style="margin-bottom:14px;">+ Add Photo</button><button class="btn bo bsm" id="previewGalBtn" style="margin-left:6px;">&#128065; Preview Gallery</button>
         <div class="gg" id="galGrid"></div>
       </div>
 
@@ -652,7 +652,7 @@ document.getElementById('pwInput').focus();
         <div class="sh">Interesting <em>Facts</em></div>
         <p class="ss">Add family firsts, achievements and traditions.</p>
         <div class="div"></div>
-        <button class="btn bg bsm" id="addFactBtn" style="margin-bottom:14px;">+ Add Fact</button>
+        <button class="btn bg bsm" id="addFactBtn" style="margin-bottom:14px;">+ Add Fact</button><button class="btn bo bsm" id="previewFactsBtn" style="margin-left:6px;">&#128065; Preview Facts</button>
         <div id="factsList"></div>
       </div>
 
@@ -730,8 +730,8 @@ document.getElementById('pwInput').focus();
               </div>
             </div>
             <div class="modal-actions">
-              <button class="btn bg" id="saveRecBtn">💾 Save Recipe</button>
-              <button class="btn bo" data-close="recModal">Cancel</button>
+              <button class="btn bg" id="saveRecBtn">💾 Save Recipe</button><button class="btn bo bsm" id="previewRecBtn" style="margin-left:6px;">&#128065; Preview Recipes</button><button class="btn bo bsm" id="previewEvtsBtn" style="margin-left:6px;">&#128065; Preview Events</button>
+              <button class="btn bo" data-close="recModal">Cancel</button><button class="btn bo bsm" id="previewMapBtn" style="margin-left:6px;">&#128065; Preview Map</button>
             </div>
           </div>
         </div>
@@ -813,7 +813,7 @@ document.getElementById('pwInput').focus();
         </div>
 
         <div style="display:flex;gap:8px;margin-top:4px;">
-          <button class="btn bg" id="saveAboutBtn">💾 Save About Page</button>
+          <button class="btn bg" id="saveAboutBtn">💾 Save About Page</button><button class="btn bo bsm" id="previewAboutBtn" style="margin-left:6px;">&#128065; Preview About</button><button class="btn bo bsm" id="previewContactBtn" style="margin-left:6px;">&#128065; Preview Contacts</button><button class="btn bo bsm" id="previewPollsBtn" style="margin-left:6px;">&#128065; Preview Polls</button>
           <a href="about.html" target="_blank" class="btn bo" style="text-decoration:none;">👁️ Preview</a>
         </div>
       </div>
@@ -847,6 +847,7 @@ document.getElementById('pwInput').focus();
           <button class="ptb" data-tab="pages">📄 Page Texts</button>
           <button class="ptb" data-tab="contact">✉️ Contact</button>
           <button class="ptb" data-tab="gallery">🖼️ Gallery</button>
+          <button class="ptb" data-tab="facts">⭐ Facts</button>
           <button class="ptb" data-tab="fonts">✍️ Fonts</button>
           <button class="ptb" data-tab="map">🗺️ Map</button>
           <button class="ptb" data-tab="tree">🌳 Tree</button>
@@ -994,6 +995,30 @@ document.getElementById('pwInput').focus();
             <div class="pt">Filter Categories (one per line)</div>
             <textarea class="fi" id="pe-galcats" rows="8" style="resize:vertical;" placeholder="All Photos&#10;Family&#10;Vintage&#10;Celebrations&#10;Travel&#10;Other"></textarea>
             <button class="btn bg bsm" id="saveGalPageBtn" style="margin-top:10px;">💾 Save</button>
+          </div>
+        </div>
+        <div class="pt-panel" id="pt-facts">
+          <div class="panel">
+            <div class="pt">Facts &amp; Achievements Page</div>
+            <div class="fg"><label>Show Year Badge on Cards</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-facts-showYear" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show year on fact cards</span></label>
+            </div>
+            <div class="fg"><label>Enable Timeline View (sorted by year)</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><div class="sw"><input type="checkbox" id="pe-facts-timeline" checked/><span class="swt"></span></div><span style="font-size:.8rem;">Show &#128197; Timeline tab on facts page</span></label>
+            </div>
+            <div class="fg"><label>Show Category Filters</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-achievement" checked/> Achievements</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-milestone" checked/> Milestones</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-tradition" checked/> Traditions</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-record" checked/> Records</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="pe-facts-cat-funfact" checked/> Fun Facts</label>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+              <button class="btn bg bsm" id="saveFactsPageBtn">&#128190; Save Facts Settings</button>
+              <button class="btn bo bsm" id="previewFactsPageBtn2">&#128065; Preview Facts</button>
+            </div>
           </div>
         </div>
         <div class="pts" id="pt-fonts">
@@ -1643,6 +1668,6 @@ document.getElementById('pwInput').focus();
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=76093"></script>
+<script src="admin.js?v=22185"></script>
 </body>
 </html>
