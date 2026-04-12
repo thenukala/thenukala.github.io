@@ -143,6 +143,28 @@ initAbout();
 </script>
 
 <script>
+  // Apply admin page settings
+  (function(){
+    try{
+      var ps = JSON.parse(localStorage.getItem('nukala_page_about')||'{}');
+      if(ps.title){
+        var hEl = document.querySelector('.page-hero h1');
+        if(hEl) hEl.textContent = ps.title;
+      }
+      if(ps.sub){
+        var sEl = document.querySelector('.page-hero > p');
+        if(sEl) sEl.textContent = ps.sub;
+      }
+      if(ps.eyebrow){
+        var eEl = document.querySelector('.eyebrow');
+        if(eEl) eEl.textContent = ps.eyebrow;
+      }
+      if(ps.bg){
+        var hero = document.querySelector('.page-hero');
+        if(hero){ hero.style.backgroundImage = ps.bg.startsWith('url') ? ps.bg : ''; hero.style.background = ps.bg.startsWith('url') ? '' : ps.bg; hero.style.backgroundSize='cover'; hero.style.backgroundPosition='center'; }
+      }
+    }catch(e){}
+  })();
 (function(){
   function load(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
 

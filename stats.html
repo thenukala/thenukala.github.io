@@ -113,6 +113,28 @@
   </div>
     
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Apply admin page settings
+  (function(){
+    try{
+      var ps = JSON.parse(localStorage.getItem('nukala_page_stats')||'{}');
+      if(ps.title){
+        var hEl = document.querySelector('.page-hero h1');
+        if(hEl) hEl.textContent = ps.title;
+      }
+      if(ps.sub){
+        var sEl = document.querySelector('.page-hero > p');
+        if(sEl) sEl.textContent = ps.sub;
+      }
+      if(ps.eyebrow){
+        var eEl = document.querySelector('.eyebrow');
+        if(eEl) eEl.textContent = ps.eyebrow;
+      }
+      if(ps.bg){
+        var hero = document.querySelector('.page-hero');
+        if(hero){ hero.style.backgroundImage = ps.bg.startsWith('url') ? ps.bg : ''; hero.style.background = ps.bg.startsWith('url') ? '' : ps.bg; hero.style.backgroundSize='cover'; hero.style.backgroundPosition='center'; }
+      }
+    }catch(e){}
+  })();
     const load=k=>JSON.parse(localStorage.getItem(k)||'{}');
     const s=load('nukala_settings'),h=load('nukala_home');
     const nn=(h.navName||s.familyName||'NUKALA').toUpperCase();
