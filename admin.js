@@ -841,7 +841,8 @@ document.getElementById('sendAllRemindersBtn').addEventListener('click', functio
 // RECIPES
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.getElementById('addRecBtn').addEventListener('click', openRecM);
-document.getElementById('saveRecBtn').addEventListener('click', saveRec);
+var _srb=document.getElementById('saveRecBtn'); if(_srb) _srb.addEventListener('click', saveRec);
+var _srb2=document.getElementById('saveRecBtn2'); if(_srb2) _srb2.addEventListener('click', saveRec);
 
 function openRecM(){document.getElementById('recId').value='';document.getElementById('recMH').textContent='Add Recipe';['recTitle','recBy','recTime','recIng','recSteps'].forEach(function(id){document.getElementById(id).value='';});openM('recModal');}
 function editRec(i){var l=lda('recipes'),r=l[i];document.getElementById('recId').value=i;document.getElementById('recMH').textContent='Edit Recipe';document.getElementById('recTitle').value=r.title||'';document.getElementById('recBy').value=r.by||'';document.getElementById('recTime').value=r.time||'';document.getElementById('recIng').value=(r.ingredients||[]).join('\n');document.getElementById('recSteps').value=(r.steps||[]).join('\n');document.getElementById('recCat').value=r.cat||'Curry';var _riEl=document.getElementById('recImg');if(_riEl){_riEl.value=r.img||'';var _rw=document.getElementById('recImgWrap');if(r.img){document.getElementById('recImgPrev').src=r.img;if(_rw)_rw.style.display='flex';}else{if(_rw)_rw.style.display='none';}}openM('recModal');}
@@ -852,7 +853,7 @@ function renderRecs(){var list=lda('recipes'),el=document.getElementById('recLis
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ACHIEVEMENTS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-if(document.getElementById('addAchBtn')) document.getElementById('addAchBtn').addEventListener('click', openAchM);
+if(document.getElementById('addAchBtn')) var _aab=document.getElementById('addAchBtn'); if(_aab) _aab.addEventListener('click', openAchM);
 if(document.getElementById('saveAchBtn')) document.getElementById('saveAchBtn').addEventListener('click', saveAch);
 
 function openAchM(){document.getElementById('achId').value='';document.getElementById('achMH').textContent='Add Achievement';['achTitle','achPerson','achYear','achIcon','achDesc'].forEach(function(id){document.getElementById(id).value='';});openM('achModal');}
@@ -864,7 +865,7 @@ function renderAchs(){var list=lda('achievements'),el=document.getElementById('a
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // VIDEOS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-if(document.getElementById('addVidBtn')) document.getElementById('addVidBtn').addEventListener('click', openVidM);
+if(document.getElementById('addVidBtn')) var _avb=document.getElementById('addVidBtn'); if(_avb) _avb.addEventListener('click', openVidM);
 if(document.getElementById('saveVidBtn')) document.getElementById('saveVidBtn').addEventListener('click', saveVid);
 
 function openVidM(){document.getElementById('vidId').value='';document.getElementById('vidMH').textContent='Add Video';['vidTitle','vidUrl','vidDesc'].forEach(function(id){document.getElementById(id).value='';});openM('vidModal');}
@@ -1444,7 +1445,7 @@ document.getElementById('saveHomeBtn').addEventListener('click',function(){
   hd.aboutTitle=document.getElementById('pe-abouttitle').value.trim();hd.about1=document.getElementById('pe-about1').value.trim();hd.about2=document.getElementById('pe-about2').value.trim();hd.about3=document.getElementById('pe-about3').value.trim();
   svRaw('nukala_home',hd);var hp=ldRaw('nukala_heropage')||{};hp.homeImgUrl=document.getElementById('pe-herobg').value.trim();svRaw('nukala_heropage',hp);log('Home saved');toast('Home page saved!');
 });
-document.getElementById('savePageTextsBtn').addEventListener('click',function(){
+var _sptb=document.getElementById('savePageTextsBtn'); if(_sptb) _sptb.addEventListener('click',function(){
   var np=ldRaw('nukala_newpages')||{};
   PAGE_TEXTS.forEach(function(pg){np[pg.key]={eye:document.getElementById('np-'+pg.key+'-eye').value.trim(),title:document.getElementById('np-'+pg.key+'-title').value.trim(),desc:document.getElementById('np-'+pg.key+'-desc').value.trim()};});
   svRaw('nukala_newpages',np);log('Page texts saved');toast('All page texts saved!');
@@ -2006,7 +2007,7 @@ function renderPageNames(){
 }
 
 function renderPageNamesPreview(pages){
-  var el = document.getElementById('pnPreview');
+  var el = document.getElementById('pageNamesPreview');
   if(!el || !pages) return;
   el.innerHTML = pages.map(function(p){
     return '<span style="padding:4px 10px;border-radius:20px;font-size:.71rem;font-weight:500;background:#c8ddc8;color:#5c7a5c;display:inline-block;margin:2px;">'+p.label+'</span>';

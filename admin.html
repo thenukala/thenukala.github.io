@@ -587,6 +587,35 @@ document.getElementById('pwInput').focus();
         </div>
       </div>
 
+      
+        <details class="page-edit-details" style="margin-top:20px;">
+          <summary style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:linear-gradient(135deg,rgba(92,122,92,.1),rgba(92,122,92,.05));border:1px solid rgba(92,122,92,.2);border-radius:12px;cursor:pointer;user-select:none;list-style:none;font-size:.85rem;font-weight:600;color:#5c7a5c;">
+            <span>&#9998;</span> Edit QR Code Page Appearance
+            <span style="margin-left:auto;font-size:.7rem;color:#aaa;font-weight:400;">click to expand</span>
+          </summary>
+          <div style="margin-top:10px;">
+            <div class="panel">
+              <div class="pt">&#128243; QR Code Page Header</div>
+              <div class="fg"><label>Page Title</label><input type="text" class="fi" id="pe-qr-title" placeholder="Family QR Code"/></div>
+              <div class="fg"><label>Subtitle</label><input type="text" class="fi" id="pe-qr-sub" placeholder="Scan to access the family site instantly."/></div>
+              <div class="fg"><label>Hero Background</label>
+                <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+                  <button type="button" class="btn bo bsm" id="pe-qr-bgUploadBtn">&#128247; Upload Photo</button>
+                  <input type="file" id="pe-qr-bgFile" accept="image/*" style="display:none;"/>
+                </div>
+                <input type="text" class="fi" id="pe-qr-bg" placeholder="Image URL or CSS colour"/>
+              </div>
+              <div class="fg"><label>QR Code Instruction Text</label>
+                <input type="text" class="fi" id="pe-qr-instruction" placeholder="Point your phone camera at this code to open the site."/>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="btn bg bsm" id="save-pe-qr">&#128190; Save QR Settings</button>
+                <button class="btn bo bsm" id="preview-pe-qr">&#128065; Preview</button>
+              </div>
+            </div>
+          </div>
+        </details>
+
       <!-- JOIN TREE PAGE INFO -->
       <div class="page" id="page-join">
         <div class="sh">Join Tree <em>Form</em></div>
@@ -1032,59 +1061,7 @@ document.getElementById('pwInput').focus();
         <div class="div"></div>
         <button class="btn bg bsm" id="addRecBtn" style="margin-bottom:14px;">+ Add Recipe</button>
         <div class="gg" id="recGrid"></div>
-        <div class="modal" id="recModal">
-          <div class="modal-box">
-            <div class="modal-title">Recipe</div>
-            <input type="hidden" id="recId"/>
-            <input type="hidden" id="recMH"/>
-            <div class="fr">
-              <div class="fg"><label>Title *</label><input type="text" class="fi" id="recTitle" placeholder="e.g. Grandma's Biryani"/></div>
-              <div class="fg"><label>Category</label>
-                <select class="fi" id="recCat">
-                  <option value="Main Course">Main Course</option>
-                  <option value="Snack">Snack</option>
-                  <option value="Dessert">Dessert</option>
-                  <option value="Breakfast">Breakfast</option>
-                  <option value="Drink">Drink</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-            </div>
-            <div class="fr">
-              <div class="fg"><label>Made By</label><input type="text" class="fi" id="recBy" placeholder="e.g. Grandma Nukala"/></div>
-              <div class="fg"><label>Prep Time</label><input type="text" class="fi" id="recTime" placeholder="e.g. 45 minutes"/></div>
-            </div>
-            <div class="fg"><label>Ingredients (one per line)</label><textarea class="fi" id="recIng" rows="5" style="resize:vertical;"></textarea></div>
-            <div class="fg"><label>Steps (one per line)</label><textarea class="fi" id="recSteps" rows="6" style="resize:vertical;"></textarea></div>
-            <div class="fg"><label>Photo (optional)</label>
-    <div style="display:flex;flex-direction:column;gap:6px;">
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button type="button" class="btn bo bsm" id="recImgUploadBtn">&#128247; Upload</button>
-        <input type="file" id="recImgFile" accept="image/*" style="display:none;"/>
-        <input type="text" class="fi" id="recImg" placeholder="Or paste image URL..." style="flex:1;min-width:0;"/>
-      </div>
-      <div id="recImgWrap" style="display:none;align-items:center;gap:8px;">
-        <img id="recImgPrev" style="width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--b);"/>
-        <button type="button" class="btn bo bsm" onclick="document.getElementById('recImg').value='';document.getElementById('recImgWrap').style.display='none';document.getElementById('recImgFile').value='';">&#10005; Clear</button>
-      </div>
-    </div>
-  </div>
-            <div class="fg"><label>Video (optional)</label>
-              <div style="display:flex;flex-direction:column;gap:6px;">
-                <div style="display:flex;gap:8px;align-items:center;">
-                  <button type="button" class="btn bo bsm" id="recVideoUploadBtn" style="flex-shrink:0;">&#127909; Upload Video</button>
-                  <input type="file" id="recVideoFile" accept="video/*" style="display:none;"/>
-                  <input type="text" class="fi" id="recVideo" placeholder="Or paste YouTube/video URL..." style="flex:1;"/>
-                </div>
-                <p style="font-size:.7rem;color:var(--tl);margin:0;">Upload an MP4 or paste a YouTube link for a cooking video.</p>
-              </div>
-            </div>
-            <div class="modal-actions">
-              <button class="btn bg" id="saveRecBtn">💾 Save Recipe</button><button class="btn bo bsm" id="previewRecBtn" style="margin-left:6px;">&#128065; Preview Recipes</button><button class="btn bo bsm" id="previewEvtsBtn" style="margin-left:6px;">&#128065; Preview Events</button>
-              <button class="btn bo" data-close="recModal">Cancel</button><button class="btn bo bsm" id="previewMapBtn" style="margin-left:6px;">&#128065; Preview Map</button>
-            </div>
-          </div>
-        </div>
+        
       
         <details class="page-edit-details" style="margin-top:20px;">
           <summary style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:linear-gradient(135deg,rgba(92,122,92,.1),rgba(92,122,92,.05));border:1px solid rgba(92,122,92,.2);border-radius:12px;cursor:pointer;user-select:none;list-style:none;font-size:.85rem;font-weight:600;color:#5c7a5c;">
@@ -1335,8 +1312,8 @@ document.getElementById('pwInput').focus();
             <div class="fg">
               <label>Custom Background (colour, gradient, or photo)</label>
               <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
-                <button type="button" class="btn bo bsm" id="lpeBgUploadBtn" style="flex-shrink:0;">&#128247; Upload Photo</button>
-                <input type="file" id="lpeBgFileInput" accept="image/*" style="display:none;"/>
+                <button type="button" class="btn bo bsm" id="lpeBgUploadBtn_ed" style="flex-shrink:0;">&#128247; Upload Photo</button>
+                <input type="file" id="lpeBgFileInput_ed" accept="image/*" style="display:none;"/>
               </div>
               <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
                 <input type="color" id="bgColorPicker" value="#faf8f4" style="width:42px;height:36px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;padding:2px;flex-shrink:0;" oninput="document.getElementById('bgCustomInput').value=this.value;document.getElementById('bgPreview').style.background=this.value;document.getElementById('bgPreview').textContent='';" title="Pick a colour"/>
@@ -2068,6 +2045,6 @@ document.getElementById('pwInput').focus();
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=56603"></script>
+<script src="admin.js?v=92015"></script>
 </body>
 </html>
