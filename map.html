@@ -383,8 +383,13 @@
 
   function buildChip(d){
     var av=d.m.photo?'<img src="'+d.m.photo+'" alt="'+d.name+'">':'&#128100;';
-    var cityBadge=d.city?'<div style="font-size:.67rem;color:#aaa;">&#128205; '+d.city+'</div>':'<div style="font-size:.67rem;color:#ccc;">No city set</div>';
-    return '<div class="mchip" data-city="'+d.city.toLowerCase()+'" style="cursor:pointer;" onclick="jumpToMember(''+d.city+'')">'      +'<div class="mchip-av">'+av+'</div>'      +'<div style="line-height:1.3;"><div style="font-weight:500;">'+d.name+'</div>'+cityBadge+'</div></div>';
+    var cityBadge=d.city
+      ?'<div style="font-size:.67rem;color:#aaa;">&#128205; '+d.city+'</div>'
+      :'<div style="font-size:.67rem;color:#ccc;">No city set</div>';
+    var safeCity=(d.city||'').replace(/"/g,'&quot;');
+    return '<div class="mchip" data-jumpcity="'+safeCity+'" style="cursor:pointer;">'
+      +'<div class="mchip-av">'+av+'</div>'
+      +'<div style="line-height:1.3;"><div style="font-weight:500;">'+d.name+'</div>'+cityBadge+'</div></div>';
   }
 
   function filterMemberChips(q){
@@ -417,6 +422,12 @@
     });
   }
   window.jumpToMember = jumpToMember;
+
+  // Event delegation — chip clicks jump map to city
+  document.getElementById('memberChips').addEventListener('click', function(e){
+    var chip = e.target.closest('[data-jumpcity]');
+    if(chip){ var city=chip.getAttribute('data-jumpcity'); if(city) jumpToMember(city); }
+  });
 
   // Initial render — all members
   filterMemberChips('');
