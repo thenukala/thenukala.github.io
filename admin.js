@@ -133,7 +133,7 @@ var PAGE_LOADERS = {
   recipes:renderRecs, polls:renderPolls,
   stats:loadStatsAdmin, map:function(){loadMapSettings();},  qr:function(){},  join:function(){}, about:renderAbout,
   contacts:renderContacts, announce:renderAnn,
-  pagevis:renderVis, pagenames:renderPageNames, editor:function(){loadPeTab('theme'); loadTreeColours();}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
+  pagevis:renderVis, pagenames:renderPageNames, notifications:loadNotificationsPage, familyai:loadFamilyAIPage, editor:function(){loadPeTab('theme'); loadTreeColours();}, loginpage:loadLoginPageEditor, analytics:renderAnalytics, settings:loadSettings
 };
 
 document.querySelectorAll('.ni[data-page]').forEach(function(btn){
@@ -2564,5 +2564,187 @@ function loadMapSettings(){
     var lng=document.getElementById('mapCentLng'); if(lng&&lng.value) ms.lng=parseFloat(lng.value);
     svRaw('nukala_map_settings',ms);
     toast('\u2705 Map settings saved! Click Publish to apply.');
+  });
+})();
+
+
+// ════════════════════════════════════════════
+// NOTIFICATIONS ADMIN
+// ════════════════════════════════════════════
+function loadNotificationsPage(){
+  // Load saved config
+  var cfg = ldRaw('nukala_notif_config')||{};
+  var urlEl = document.getElementById('notif-worker-url');
+  var secEl = document.getElementById('notif-admin-secret');
+  if(urlEl && cfg.workerUrl) urlEl.value = cfg.workerUrl;
+  if(secEl && cfg.adminSecret) secEl.value = cfg.adminSecret;
+  refreshSubCount();
+}
+
+(function(){
+  // Save config
+  var saveBtn = document.getElementById('saveNotifConfigBtn');
+  if(saveBtn) saveBtn.addEventListener('click', function(){
+    var url = (document.getElementById('notif-worker-url')||{}).value||'';
+    var secret = (document.getElementById('notif-admin-secret')||{}).value||'';
+    if(!url){ toast('\u26a0\ufe0f Enter your Worker URL first'); return; }
+    svRaw('nukala_notif_config', {workerUrl: url.replace(/\/+$/,''), adminSecret: secret});
+    var st = document.getElementById('notifConfigStatus');
+    if(st){ st.textContent = '\u2705 Config saved'; st.style.color='#5c7a5c'; }
+    toast('\u2705 Notification config saved');
+  });
+
+  // Test connection
+  var testBtn = document.getElementById('testNotifConnectionBtn');
+  if(testBtn) testBtn.addEventListener('click', async function(){
+    var cfg = ldRaw('nukala_notif_config')||{};
+    if(!cfg.workerUrl){ toast('\u26a0\ufe0f Save your Worker URL first'); return; }
+    var st = document.getElementById('notifConfigStatus');
+    if(st){ st.textContent = 'Testing...'; st.style.color='#aaa'; }
+    try{
+      var r = await fetch(cfg.workerUrl+'/count');
+      var d = await r.json();
+      var msg = '\u2705 Connected! '+d.count+' subscriber'+(d.count!==1?'s':'');
+      if(st){ st.textContent = msg; st.style.color='#5c7a5c'; }
+      var cnt = document.getElementById('notifSubCount');
+      if(cnt) cnt.textContent = d.count;
+      toast(msg);
+    }catch(e){
+      var errMsg = '\u274c Could not connect: '+e.message;
+      if(st){ st.textContent = errMsg; st.style.color='#c0392b'; }
+      toast(errMsg);
+    }
+  });
+
+  // Refresh count
+  var refBtn = document.getElementById('refreshSubCountBtn');
+  if(refBtn) refBtn.addEventListener('click', refreshSubCount);
+
+  // Send notification
+  var sendBtn = document.getElementById('sendNotifBtn');
+  if(sendBtn) sendBtn.addEventListener('click', async function(){
+    var cfg = ldRaw('nukala_notif_config')||{};
+    if(!cfg.workerUrl || !cfg.adminSecret){ toast('\u26a0\ufe0f Configure Worker URL and Admin Secret first'); return; }
+    var title = (document.getElementById('notif-title')||{}).value||'';
+    var message = (document.getElementById('notif-message')||{}).value||'';
+    var link = (document.getElementById('notif-link')||{}).value||'';
+    if(!title || !message){ toast('\u26a0\ufe0f Enter a title and message'); return; }
+    var st = document.getElementById('notifSendStatus');
+    if(st){ st.innerHTML = '&#9203; Sending notifications...'; st.style.color='#aaa'; }
+    sendBtn.disabled = true; sendBtn.textContent = 'Sending...';
+    try{
+      var r = await fetch(cfg.workerUrl+'/send', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','X-Admin-Secret':cfg.adminSecret},
+        body: JSON.stringify({title:title, message:message, url:link, icon:'/icons/icon-192x192.png'})
+      });
+      var d = await r.json();
+      if(d.ok){
+        var msg = '\u2705 Sent to '+d.sent+' subscriber'+(d.sent!==1?'s':'');
+        if(d.failed) msg += ' ('+d.failed+' failed)';
+        if(st){ st.innerHTML = msg; st.style.color='#5c7a5c'; }
+        toast(msg);
+      } else {
+        if(st){ st.innerHTML = '\u274c '+d.error; st.style.color='#c0392b'; }
+        toast('\u274c '+d.error);
+      }
+    }catch(e){
+      if(st){ st.innerHTML = '\u274c Error: '+e.message; st.style.color='#c0392b'; }
+      toast('\u274c Error: '+e.message);
+    }
+    sendBtn.disabled = false; sendBtn.textContent = '\u{1F4E8} Send to All Subscribers';
+  });
+})();
+
+async function refreshSubCount(){
+  var cfg = ldRaw('nukala_notif_config')||{};
+  if(!cfg.workerUrl) return;
+  try{
+    var r = await fetch(cfg.workerUrl+'/count');
+    var d = await r.json();
+    var cnt = document.getElementById('notifSubCount');
+    if(cnt) cnt.textContent = d.count;
+  }catch(e){}
+}
+
+
+// ════════════════════════════════════════════
+// FAMILY AI ADMIN
+// ════════════════════════════════════════════
+function loadFamilyAIPage(){
+  var cfg = (function(){ try{ return JSON.parse(localStorage.getItem('nukala_ai_config')||'{}'); }catch(e){ return {}; } })();
+  function setEl(id, val){ var e=document.getElementById(id); if(e && val!==undefined) e.value=val; }
+  function setChk(id, val){ var e=document.getElementById(id); if(e) e.checked=(val!==false); }
+  setEl('ai-api-key', cfg.apiKey);
+  setEl('ai-name', cfg.aiName);
+  setEl('ai-greeting', cfg.greeting);
+  setChk('ai-enabled', cfg.enabled);
+  // Show usage
+  var u = (function(){ try{ var d=JSON.parse(localStorage.getItem('nukala_ai_usage')||'{}'); var today=new Date().toISOString().slice(0,10); return d.date===today?d.count||0:0; }catch(e){ return 0; } })();
+  var cnt=document.getElementById('aiUsageCount'); if(cnt) cnt.textContent=u;
+  var bar=document.getElementById('aiUsageBar'); if(bar) bar.style.width=Math.min(100,Math.round(u/14.99))+'%';
+}
+
+(function(){
+  // Save config
+  var saveBtn=document.getElementById('saveAiConfigBtn');
+  if(saveBtn) saveBtn.addEventListener('click', function(){
+    var key=(document.getElementById('ai-api-key')||{}).value||'';
+    var name=(document.getElementById('ai-name')||{}).value||'Family Assistant';
+    var greeting=(document.getElementById('ai-greeting')||{}).value||'';
+    var enabled=document.getElementById('ai-enabled')?document.getElementById('ai-enabled').checked:true;
+    if(!key){ toast('\u26a0\ufe0f Paste your Gemini API key first'); return; }
+    var cfg={ apiKey:key, aiName:name, greeting:greeting, enabled:enabled };
+    try{ localStorage.setItem('nukala_ai_config', JSON.stringify(cfg)); }catch(e){}
+    var st=document.getElementById('aiConfigStatus');
+    if(st){ st.textContent='\u2705 Saved! The AI chat button will appear on all pages. Add push-subscribe.js and family-ai.js to GitHub for it to work.'; st.style.color='#5c7a5c'; }
+    toast('\u2705 Family AI configuration saved!');
+    // Also need to publish so site-data.js carries the config
+    // Actually ai config reads directly from localStorage so no publish needed
+  });
+
+  // Test chat button (opens test panel)
+  var testBtn=document.getElementById('testAiBtn');
+  if(testBtn) testBtn.addEventListener('click', function(){
+    var panel=document.getElementById('aiTestResult');
+    if(panel){ panel.style.display='block'; panel.innerHTML='<em>Ask a question below to test the AI...</em>'; }
+  });
+
+  // Test send
+  var testSend=document.getElementById('aiTestSendBtn');
+  if(testSend) testSend.addEventListener('click', async function(){
+    var q=(document.getElementById('aiTestInput')||{}).value||'';
+    if(!q){ toast('\u26a0\ufe0f Enter a test question'); return; }
+    var result=document.getElementById('aiTestResult');
+    if(result){ result.style.display='block'; result.innerHTML='<em>Asking Gemini...</em>'; }
+    testSend.disabled=true;
+
+    var cfg=(function(){ try{ return JSON.parse(localStorage.getItem('nukala_ai_config')||'{}'); }catch(e){ return {}; } })();
+    if(!cfg.apiKey){ if(result) result.innerHTML='<strong style="color:#c0392b">\u274c No API key saved. Enter and save your key first.</strong>'; testSend.disabled=false; return; }
+
+    // Build quick context
+    var st=load('nukala_settings')||{};
+    var members=Object.values(load('nukala_tree_data')||{});
+    var fname=cfg.familyName||st.familyName||'Our Family';
+    var sysPrompt='You are '+cfg.aiName+' for the '+fname+' family site. Members: '+members.length+'. Answer from family data only. Keep answer to 2-3 sentences.\n\nFamily members: '+members.slice(0,20).map(function(m){return [m.firstName,m.lastName].filter(Boolean).join(' ')+(m.role?' ('+m.role+')':'');}).join(', ');
+
+    try{
+      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+cfg.apiKey,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          system_instruction:{parts:[{text:sysPrompt}]},
+          contents:[{role:'user',parts:[{text:q}]}],
+          generationConfig:{maxOutputTokens:200,temperature:0.7}
+        })
+      });
+      var data=await res.json();
+      if(!res.ok){ throw new Error(data.error&&data.error.message||'API error'); }
+      var answer=((((data.candidates||[])[0]||{}).content||{}).parts||[{text:'No response'}])[0].text||'No response';
+      if(result){ result.innerHTML='<strong>\uD83E\uDD16 '+cfg.aiName+':</strong><br/>'+answer; result.style.color='#2c2c2c'; }
+    }catch(e){
+      if(result){ result.innerHTML='<strong style="color:#c0392b">\u274c Error: '+e.message+'</strong><br/><small>Check your API key is correct.</small>'; }
+    }
+    testSend.disabled=false;
   });
 })();

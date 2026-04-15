@@ -281,6 +281,8 @@ document.getElementById('pwInput').focus();
       <div class="nsec">Site Control</div>
       <button class="ni" data-page="pagevis">👁️ Page Visibility</button>
       <button class="ni" data-page="pagenames">📝 Page Names</button>
+      <button class="ni" data-page="notifications">🔔 Notifications</button>
+      <button class="ni" data-page="familyai">🤖 Family AI</button>
       <button class="ni" data-page="editor">🎨 Page Editor</button>
       <button class="ni" data-page="loginpage">🔐 Login Page</button>
       <button class="ni" data-page="analytics">📈 Analytics</button>
@@ -1288,6 +1290,156 @@ document.getElementById('pwInput').focus();
         <div class="panel"><div class="pt">Preview</div><div id="visPreview" style="display:flex;flex-wrap:wrap;gap:6px;"></div></div>
       </div>
 
+      <!-- FAMILY AI -->
+      <div class="page" id="page-familyai">
+        <div class="sh">&#129302; <em>Family AI</em></div>
+        <p class="ss">Add a free AI assistant to your family site. Family members can ask questions about the family and get instant answers.</p>
+        <div class="div"></div>
+
+        <div class="notice" style="background:#f0f5f0;border-color:#c8ddc8;color:#3a5a3a;">
+          &#128161; <strong>Setup takes 2 minutes.</strong> Get your free API key at <a href="https://aistudio.google.com" target="_blank" style="color:#5c7a5c;">aistudio.google.com</a> — no credit card needed. Free limit: 1,500 questions/day (resets at midnight).
+        </div>
+
+        <div class="panel">
+          <div class="pt">&#9881; Configuration</div>
+          <div class="fg">
+            <label>Gemini API Key <span style="font-size:.7rem;color:var(--tl);">(from aistudio.google.com → Get API Key)</span></label>
+            <input type="password" class="fi" id="ai-api-key" placeholder="AIzaSy..."/>
+          </div>
+          <div class="fg">
+            <label>AI Assistant Name</label>
+            <input type="text" class="fi" id="ai-name" placeholder="Family Assistant"/>
+          </div>
+          <div class="fg">
+            <label>Welcome Message (shown when chat opens)</label>
+            <textarea class="fi" id="ai-greeting" rows="2" style="resize:vertical;" placeholder="Hi! I'm your family assistant. Ask me anything about the family!"></textarea>
+          </div>
+          <div class="fg">
+            <label>Enable AI on site</label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:4px;">
+              <div class="sw"><input type="checkbox" id="ai-enabled" checked/><span class="swt"></span></div>
+              <span style="font-size:.8rem;">Show the AI chat button on all pages</span>
+            </label>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button class="btn bg bsm" id="saveAiConfigBtn">&#128190; Save &amp; Apply</button>
+            <button class="btn bo bsm" id="testAiBtn">&#128172; Test Chat</button>
+          </div>
+          <div id="aiConfigStatus" style="margin-top:8px;font-size:.75rem;"></div>
+        </div>
+
+        <div class="panel">
+          <div class="pt">&#128202; Usage Today</div>
+          <div style="display:flex;align-items:center;gap:16px;padding:8px 0;">
+            <div style="font-size:2rem;font-weight:300;color:var(--p);" id="aiUsageCount">—</div>
+            <div>
+              <div style="font-size:.82rem;font-weight:500;">questions answered today</div>
+              <div style="font-size:.72rem;color:var(--tl);">Free limit: 1,500 / day — resets at midnight</div>
+            </div>
+          </div>
+          <div style="background:#eee;border-radius:20px;height:8px;overflow:hidden;margin-top:4px;">
+            <div id="aiUsageBar" style="background:var(--p);height:100%;border-radius:20px;width:0%;transition:width .5s;"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="pt">&#128172; Test the AI</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:10px;">Ask a test question to make sure it is working.</p>
+          <div style="display:flex;gap:8px;">
+            <input type="text" class="fi" id="aiTestInput" placeholder="e.g. How many members do we have?" style="flex:1;"/>
+            <button class="btn bg bsm" id="aiTestSendBtn" style="flex-shrink:0;">Ask</button>
+          </div>
+          <div id="aiTestResult" style="margin-top:10px;padding:12px;background:#f5f3ef;border-radius:10px;font-size:.8rem;line-height:1.6;display:none;"></div>
+        </div>
+
+        <div class="panel">
+          <div class="pt">&#128161; How it Works</div>
+          <p style="font-size:.78rem;color:var(--tm);line-height:1.8;">
+            1. Family members see a <strong>🤖</strong> button on every page of the site<br/>
+            2. They click it and a chat panel opens — no login needed<br/>
+            3. They ask questions like <em>"Who is the oldest member?"</em> or <em>"What events are coming up?"</em><br/>
+            4. The AI reads your family data (members, history, events, recipes, facts) and answers instantly<br/>
+            5. When the daily limit is reached, a friendly message shows the reset countdown<br/>
+            6. The limit resets every day at midnight — completely free, forever
+          </p>
+          <p style="font-size:.72rem;color:var(--tl);margin-top:8px;">The AI never makes up information — it only answers from your actual family data. All questions stay private and are never stored anywhere.</p>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="page" id="page-notifications">
+        <div class="sh">&#128276; <em>Notifications</em></div>
+        <p class="ss">Send push notifications to all family members who have subscribed. They will receive an alert on their phone or browser instantly.</p>
+        <div class="div"></div>
+
+        <div class="panel">
+          <div class="pt">&#9881; Setup — Cloudflare Worker URL</div>
+          <p style="font-size:.75rem;color:var(--tl);margin-bottom:12px;">Enter your Cloudflare Worker URL and Admin Secret once. These are saved locally to your browser.</p>
+          <div class="fg">
+            <label>Worker URL</label>
+            <input type="text" class="fi" id="notif-worker-url" placeholder="https://nukala-push.YOUR-NAME.workers.dev"/>
+          </div>
+          <div class="fg">
+            <label>Admin Secret (set this in your Worker secrets)</label>
+            <input type="password" class="fi" id="notif-admin-secret" placeholder="Your secret passphrase"/>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button class="btn bg bsm" id="saveNotifConfigBtn">&#128190; Save Config</button>
+            <button class="btn bo bsm" id="testNotifConnectionBtn">&#128268; Test Connection</button>
+          </div>
+          <div id="notifConfigStatus" style="margin-top:8px;font-size:.75rem;"></div>
+        </div>
+
+        <div class="panel">
+          <div class="pt">&#128101; Subscribers</div>
+          <div style="display:flex;align-items:center;gap:16px;padding:10px 0;">
+            <div style="font-size:2rem;font-weight:300;color:var(--p);" id="notifSubCount">—</div>
+            <div style="font-size:.78rem;color:var(--tl);">family members subscribed to push notifications</div>
+          </div>
+          <button class="btn bo bsm" id="refreshSubCountBtn">&#8635; Refresh Count</button>
+        </div>
+
+        <div class="panel">
+          <div class="pt">&#128228; Send Notification</div>
+          <div class="fg">
+            <label>Title</label>
+            <input type="text" class="fi" id="notif-title" placeholder="e.g. New Event Added!"/>
+          </div>
+          <div class="fg">
+            <label>Message</label>
+            <textarea class="fi" id="notif-message" rows="3" placeholder="e.g. The annual family reunion has been scheduled for December 20th. Check the Events page for details." style="resize:vertical;"></textarea>
+          </div>
+          <div class="fg">
+            <label>Link (optional — which page to open)</label>
+            <select class="fi" id="notif-link">
+              <option value="https://www.nukalafamily.com/home.html">Home</option>
+              <option value="https://www.nukalafamily.com/events.html" selected>Events</option>
+              <option value="https://www.nukalafamily.com/gallery.html">Gallery</option>
+              <option value="https://www.nukalafamily.com/history.html">History</option>
+              <option value="https://www.nukalafamily.com/polls.html">Polls</option>
+              <option value="https://www.nukalafamily.com/recipes.html">Recipes</option>
+              <option value="https://www.nukalafamily.com/facts.html">Facts</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button class="btn bg" id="sendNotifBtn">&#128228; Send to All Subscribers</button>
+          </div>
+          <div id="notifSendStatus" style="margin-top:10px;font-size:.78rem;"></div>
+        </div>
+
+        <div class="panel">
+          <div class="pt">&#128161; How It Works</div>
+          <p style="font-size:.78rem;color:var(--tm);line-height:1.8;">
+            1. Family members visit the site and see a <strong>&#128276; Subscribe for notifications</strong> banner<br/>
+            2. They click Allow — their browser registers and the token is stored in your Cloudflare Worker<br/>
+            3. You come here, write a title &amp; message, and click Send<br/>
+            4. Everyone who subscribed gets a push notification on their phone or desktop instantly<br/>
+            5. Tapping the notification opens the relevant page on the family site
+          </p>
+          <p style="font-size:.75rem;color:var(--tl);margin-top:8px;">Works on Chrome, Edge, Firefox, and Safari (iOS 16.4+). Does not require the site to be open.</p>
+        </div>
+      </div>
+
       <!-- PAGE EDITOR -->
       <div class="page" id="page-editor">
         <div class="sh">&#127912; <em>Theme Editor</em></div>
@@ -2074,6 +2226,6 @@ document.getElementById('pwInput').focus();
   <div class="mft"><button class="btn bg" style="flex:1;" id="saveWishBtn">💾 Save</button><button class="btn bo" data-close="wishModal">Cancel</button></div>
 </div></div>
 
-<script src="admin.js?v=73095"></script>
+<script src="admin.js?v=28985"></script>
 </body>
 </html>
