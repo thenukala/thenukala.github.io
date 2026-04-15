@@ -82,7 +82,7 @@
         var data = await resp.json();
 
         if (resp.status === 404) continue; // try next model
-        if (resp.status === 429) throw new Error('RATE_LIMIT');
+        if (resp.status === 429) { if (i < MODELS.length-1) continue; throw new Error('TOO_MANY_REQUESTS'); }
         if (resp.status === 400 || resp.status === 401 || resp.status === 403) {
           throw new Error('BAD_KEY: ' + ((data&&data.error&&data.error.message)||'Invalid key'));
         }
@@ -235,6 +235,7 @@
         var msg;
         if(e.message==='NO_API_KEY')           msg='The family AI hasn\'t been set up yet.';
         else if(e.message==='RATE_LIMIT')      msg='🌙 Daily limit reached. Back in '+fmtCountdown(msToMidnight())+'!';
+        else if(e.message==='TOO_MANY_REQUESTS') msg='⏳ Too many requests right now. Please wait 1 minute and try again.';
         else if(e.message==='TIMEOUT')         msg='⏱ Request timed out. Please try again.';
         else if(e.message.indexOf('BAD_KEY')===0) msg='🔑 Invalid API key. Go to aistudio.google.com to get a free key, then update it in admin.';
         else                                   msg='⚠️ '+e.message;
