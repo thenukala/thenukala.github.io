@@ -8,11 +8,8 @@
 
   // Models to try in order — covers all key types
   var MODELS = [
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=',
     'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=',
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=',
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=',
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key='
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='
   ];
 
   function load(k) {
@@ -86,7 +83,12 @@
         console.log('AI model', modelName, 'status:', resp.status, data.error ? data.error.message : 'ok');
 
         if (resp.status === 404) { continue; }
-        if (resp.status === 429) { statusLog.push('(rate limited)'); continue; }
+        if (resp.status === 429) {
+          statusLog.push(modelName+':429');
+          // Wait 5s then retry this model once before giving up
+          await new Promise(function(r){ setTimeout(r, 5000); });
+          continue;
+        }
         if (resp.status === 400 || resp.status === 401 || resp.status === 403) {
           throw new Error('BAD_KEY: ' + ((data&&data.error&&data.error.message)||'HTTP '+resp.status));
         }
@@ -104,7 +106,7 @@
         if (i === MODELS.length - 1) throw new Error('NETWORK: ' + e.message);
       }
     }
-    throw new Error('All models failed: ' + statusLog.join(', ') + '. Visit aistudio.google.com to verify your key.');
+    throw new Error('The AI is temporarily rate limited by Google. Please wait 1 minute and try again.');
   }
 
   async function askGemini(question, history) {
