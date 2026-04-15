@@ -147,17 +147,24 @@
     // Add current question
     contents.push({ role: 'user', parts: [{ text: userQuestion }] });
 
+    // Inject system prompt as first user message (works with all Gemini models)
+    contents.unshift({ role: 'user', parts: [{ text: systemPrompt }] });
+    contents.unshift({ role: 'model', parts: [{ text: 'Understood. I will act as the family assistant and only answer from the family data provided.' }] });
+
     var body = {
-      system_instruction: { parts: [{ text: systemPrompt }] },
       contents: contents,
       generationConfig: { maxOutputTokens: 400, temperature: 0.7, topP: 0.9 }
     };
 
+    var controller = new AbortController();
+    var tout = setTimeout(function(){ controller.abort(); }, 15000);
     var res = await fetch(GEMINI_ENDPOINT + cfg.apiKey, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify(body)
     });
+    clearTimeout(tout);
 
     if (res.status === 429) throw new Error('RATE_LIMIT');
     if (!res.ok) {
@@ -345,7 +352,9 @@
         updateUsageBar();
       } catch (e) {
         removeTyping();
-        if (e.message === 'RATE_LIMIT') {
+        if (e.name === 'AbortError') {
+          addMsg('The request timed out. Please check your internet connection and try again.', 'system');
+        } else if (e.message === 'RATE_LIMIT') {
           var countdown = fmtCountdown(msToMidnight());
           addMsg('Our family assistant has answered a lot of questions today! 🌙 It will be back in ' + countdown + '. Browse the site in the meantime!', 'system');
         } else if (e.message === 'NO_API_KEY') {

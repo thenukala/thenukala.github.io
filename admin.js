@@ -2733,8 +2733,7 @@ function loadFamilyAIPage(){
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
-          system_instruction:{parts:[{text:sysPrompt}]},
-          contents:[{role:'user',parts:[{text:q}]}],
+          contents:[{role:'user',parts:[{text:sysPrompt+'\n\nQuestion: '+q}]}],
           generationConfig:{maxOutputTokens:200,temperature:0.7}
         })
       });
