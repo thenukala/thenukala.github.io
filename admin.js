@@ -2191,7 +2191,9 @@ document.getElementById('publishBtn').addEventListener('click', function(){
     'nukala_page_about',
     'nukala_page_join',
     'nukala_facts_page',
-    'nukala_members_page'
+    'nukala_members_page',
+    'nukala_ai_config',
+    'nukala_notif_config'
   ];
   var DATA = {};
   KEYS.forEach(function(k){
@@ -2729,7 +2731,7 @@ function loadFamilyAIPage(){
     var sysPrompt='You are '+cfg.aiName+' for the '+fname+' family site. Members: '+members.length+'. Answer from family data only. Keep answer to 2-3 sentences.\n\nFamily members: '+members.slice(0,20).map(function(m){return [m.firstName,m.lastName].filter(Boolean).join(' ')+(m.role?' ('+m.role+')':'');}).join(', ');
 
     try{
-      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+cfg.apiKey,{
+      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+cfg.apiKey,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({

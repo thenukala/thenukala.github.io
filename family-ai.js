@@ -116,70 +116,61 @@
   }
 
   // ── Gemini API call ──────────────────────────────────────
-  async function askGemini(userQuestion, history) {
+  async function askGemini(userQuestion, chatHistory) {
     var cfg = getConfig();
     if (!cfg.apiKey) throw new Error('NO_API_KEY');
     if (isLimitReached()) throw new Error('RATE_LIMIT');
 
     var familyContext = buildFamilyContext();
-    var cfg2 = getConfig();
-    var aiName = cfg2.aiName || 'Family Assistant';
-    var familyName = (load('nukala_settings') || {}).familyName || 'our family';
+    var aiName = cfg.aiName || 'Family Assistant';
+    var st = load('nukala_settings') || {};
+    var familyName = st.familyName || 'our family';
 
-    var systemPrompt = [
-      'You are ' + aiName + ', the AI assistant for the ' + familyName + ' family archive website.',
-      'You help family members discover facts about their family — members, history, events, recipes, achievements and more.',
-      'Be warm, friendly, conversational and concise. Use the family data below to answer accurately.',
-      'If a question is not about the family or if the data does not contain the answer, say so politely.',
-      'Keep answers to 2-4 sentences unless detail is specifically requested.',
-      'Never make up information not in the data.',
-      '',
-      familyContext
-    ].join('\n');
+    // Build full prompt with context injected directly into the question
+    var fullPrompt = 'You are ' + aiName + ', the friendly AI assistant for the ' + familyName + ' family website. '
+      + 'Answer questions using ONLY the family data below. Be warm, concise (2-4 sentences). '
+      + 'Never invent information not in the data below.\n\n'
+      + familyContext
+      + '\n\n--- CONVERSATION HISTORY ---\n'
+      + chatHistory.slice(-4).map(function(m){ return (m.role==='user'?'Family member':'Assistant') + ': ' + m.text; }).join('\n')
+      + '\n\n--- NEW QUESTION ---\nFamily member: ' + userQuestion
+      + '\nAssistant:';
 
-    // Build conversation contents
-    var contents = [];
-    // Add history (last 6 messages)
-    var recent = history.slice(-6);
-    recent.forEach(function (msg) {
-      contents.push({ role: msg.role === 'ai' ? 'model' : 'user', parts: [{ text: msg.text }] });
-    });
-    // Add current question
-    contents.push({ role: 'user', parts: [{ text: userQuestion }] });
-
-    // Inject system prompt as first user message (works with all Gemini models)
-    contents.unshift({ role: 'user', parts: [{ text: systemPrompt }] });
-    contents.unshift({ role: 'model', parts: [{ text: 'Understood. I will act as the family assistant and only answer from the family data provided.' }] });
-
-    var body = {
-      contents: contents,
-      generationConfig: { maxOutputTokens: 400, temperature: 0.7, topP: 0.9 }
-    };
-
+    // Timeout controller
     var controller = new AbortController();
-    var tout = setTimeout(function(){ controller.abort(); }, 15000);
-    var res = await fetch(GEMINI_ENDPOINT + cfg.apiKey, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      signal: controller.signal,
-      body: JSON.stringify(body)
-    });
-    clearTimeout(tout);
+    var tout = setTimeout(function(){ controller.abort(); }, 20000);
 
-    if (res.status === 429) throw new Error('RATE_LIMIT');
-    if (!res.ok) {
-      var err = await res.json().catch(() => ({}));
-      if (err.error && err.error.message && err.error.message.includes('API_KEY')) throw new Error('BAD_API_KEY');
-      throw new Error('API_ERROR');
+    var res;
+    try {
+      res = await fetch(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + cfg.apiKey,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+            generationConfig: { maxOutputTokens: 300, temperature: 0.7, topP: 0.9 }
+          })
+        }
+      );
+    } finally {
+      clearTimeout(tout);
     }
 
+    if (res.status === 429) throw new Error('RATE_LIMIT');
+    if (res.status === 400) throw new Error('BAD_API_KEY');
+    if (!res.ok) throw new Error('API_ERROR_' + res.status);
+
     var data = await res.json();
-    var text = ((data.candidates || [])[0] || {});
-    var answer = ((text.content || {}).parts || [{ text: '' }])[0].text || '';
+    if (data.error) throw new Error(data.error.message || 'API_ERROR');
+
+    var text = ((((data.candidates || [])[0] || {}).content || {}).parts || [])[0];
+    var answer = (text && text.text) ? text.text.trim() : '';
     if (!answer) throw new Error('EMPTY_RESPONSE');
 
     incrementUsage();
-    return answer.trim();
+    return answer;
   }
 
   // ── UI Builder ───────────────────────────────────────────
@@ -352,8 +343,9 @@
         updateUsageBar();
       } catch (e) {
         removeTyping();
+        console.error('Family AI Error:', e.message, e);
         if (e.name === 'AbortError') {
-          addMsg('The request timed out. Please check your internet connection and try again.', 'system');
+          addMsg('The request timed out (15s). Check your internet connection.', 'system');
         } else if (e.message === 'RATE_LIMIT') {
           var countdown = fmtCountdown(msToMidnight());
           addMsg('Our family assistant has answered a lot of questions today! 🌙 It will be back in ' + countdown + '. Browse the site in the meantime!', 'system');
