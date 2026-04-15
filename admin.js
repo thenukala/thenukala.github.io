@@ -2731,7 +2731,7 @@ function loadFamilyAIPage(){
     var sysPrompt='You are '+cfg.aiName+' for the '+fname+' family site. Members: '+members.length+'. Answer from family data only. Keep answer to 2-3 sentences.\n\nFamily members: '+members.slice(0,20).map(function(m){return [m.firstName,m.lastName].filter(Boolean).join(' ')+(m.role?' ('+m.role+')':'');}).join(', ');
 
     try{
-      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+cfg.apiKey,{
+      var res=await fetch('https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key='+cfg.apiKey,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({

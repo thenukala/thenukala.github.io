@@ -87,7 +87,7 @@
     var resp, data;
     try {
       resp = await fetch(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + cfg.apiKey,
+        'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=' + cfg.apiKey,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
