@@ -68,7 +68,9 @@
       generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
     });
 
+    var statusLog = [];
     for (var i = 0; i < MODELS.length; i++) {
+      var modelName = MODELS[i].match(/models\/([^:]+)/)[1];
       var ctrl = new AbortController();
       var timer = setTimeout(function(){ ctrl.abort(); }, 20000);
       try {
@@ -80,27 +82,29 @@
         });
         clearTimeout(timer);
         var data = await resp.json();
+        statusLog.push(modelName + ':' + resp.status);
+        console.log('AI model', modelName, 'status:', resp.status, data.error ? data.error.message : 'ok');
 
-        if (resp.status === 404) { console.log('AI: 404 on model '+i+', trying next'); continue; }
-        if (resp.status === 429) { if (i < MODELS.length-1) continue; throw new Error('TOO_MANY_REQUESTS'); }
+        if (resp.status === 404) { continue; }
+        if (resp.status === 429) { statusLog.push('(rate limited)'); continue; }
         if (resp.status === 400 || resp.status === 401 || resp.status === 403) {
-          throw new Error('BAD_KEY: ' + ((data&&data.error&&data.error.message)||'Invalid key'));
+          throw new Error('BAD_KEY: ' + ((data&&data.error&&data.error.message)||'HTTP '+resp.status));
         }
-        if (!resp.ok) continue; // try next model
+        if (!resp.ok) { continue; }
 
         var part = ((((data.candidates||[])[0]||{}).content||{}).parts||[])[0];
         var text = (part && part.text) ? part.text.trim() : '';
-        if (text) return text; // success!
-        continue; // empty response, try next
+        if (text) return text;
+        continue;
       } catch(e) {
         clearTimeout(timer);
-        if (e.message === 'RATE_LIMIT') throw e;
         if (e.message.indexOf('BAD_KEY') === 0) throw e;
         if (e.name === 'AbortError') throw new Error('TIMEOUT');
+        statusLog.push(modelName + ':error(' + e.message + ')');
         if (i === MODELS.length - 1) throw new Error('NETWORK: ' + e.message);
       }
     }
-    throw new Error('API key may be invalid or not yet active. Please verify at aistudio.google.com and wait 1 minute after creating.');
+    throw new Error('All models failed: ' + statusLog.join(', ') + '. Visit aistudio.google.com to verify your key.');
   }
 
   async function askGemini(question, history) {
