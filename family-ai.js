@@ -8,11 +8,11 @@
 
   // Models to try in order — covers all key types
   var MODELS = [
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=',
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=',
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=',
     'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=',
-    'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=',
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=',
-    'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key='
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=',
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key='
   ];
 
   function load(k) {
@@ -81,7 +81,7 @@
         clearTimeout(timer);
         var data = await resp.json();
 
-        if (resp.status === 404) continue; // try next model
+        if (resp.status === 404) { console.log('AI: 404 on model '+i+', trying next'); continue; }
         if (resp.status === 429) { if (i < MODELS.length-1) continue; throw new Error('TOO_MANY_REQUESTS'); }
         if (resp.status === 400 || resp.status === 401 || resp.status === 403) {
           throw new Error('BAD_KEY: ' + ((data&&data.error&&data.error.message)||'Invalid key'));
@@ -100,7 +100,7 @@
         if (i === MODELS.length - 1) throw new Error('NETWORK: ' + e.message);
       }
     }
-    throw new Error('No Gemini model responded. Check API key at aistudio.google.com');
+    throw new Error('API key may be invalid or not yet active. Please verify at aistudio.google.com and wait 1 minute after creating.');
   }
 
   async function askGemini(question, history) {
